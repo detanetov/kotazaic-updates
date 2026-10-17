@@ -1,9 +1,9 @@
 {
- "version": 25,
- "label": "1.4.1",
- "name": "Версия 1.4.1: GUI 3 ещё ближе к оригиналу",
+ "version": 26,
+ "label": "1.4.2",
+ "name": "Версия 1.4.2: надпись gs в GUI 3",
  "file": "game.html",
- "sha256": "e3f6b5b130b2ca3620112750e07cec4a54b9d0a30edc967958eedf5c50004873",
+ "sha256": "e9e11f7801c6cd7cc0d734650cc3094f9368255582bd736de59e198c2ed7b18d",
  "date": "2026-10-17",
  "exe": {
   "version": 3,
