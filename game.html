@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=14;window.KZ_VNAME='1.8';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=15;window.KZ_VNAME='1.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -424,6 +424,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
       <div class="mglist">
         <div class="mgcard"><div class="mgic">❌⭕</div><div class="mgtx"><b>Крестики-нолики</b><small>Собери 3 в ряд</small></div><button class="btn sm mint" data-mgopen="ttt">Открыть</button></div>
         <div class="mgcard"><div class="mgic">🃏</div><div class="mgtx"><b>Дурак</b><small>Обычный и переводной, 36 карт</small></div><button class="btn sm mint" data-mgopen="durak">Открыть</button></div>
+        <div class="mgcard"><div class="mgic">🤸</div><div class="mgtx"><b>NoomiClone</b><small>Котозаяц-гимнаст: раскачайся на перекладине, отпусти, сделай сальто и поймай следующую</small></div><button class="btn sm mint" data-noomi="1">Открыть</button></div>
         <div class="mgcard"><div class="mgic">♟️</div><div class="mgtx"><b>Шахматы</b><small>Классические шахматы, рокировка, взятие на проходе</small></div><button class="btn sm mint" data-mgopen="chess">Открыть</button></div>
       </div>
     </div>
@@ -562,6 +563,17 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
     </div>
     <div id="mgStep"></div>
     <div id="mgBoard"></div>
+  </div>
+</div>
+
+<div class="screen" id="noomi">
+  <div class="panel" style="max-width:1000px;padding:14px">
+    <div class="row" style="justify-content:space-between"><h2>🤸 NoomiClone</h2><div class="row" style="gap:8px"><span class="chip" id="nmBest"></span><button class="btn sm ghost" id="nmBack">← Мини-игры</button></div></div>
+    <canvas id="nmcv" style="width:100%;height:auto;display:block;border:4px solid var(--ink);border-radius:16px;background:#1b1442;touch-action:none"></canvas>
+    <div class="row" style="gap:8px;margin-top:8px;justify-content:center">
+      <button class="btn sm vio" id="nmArch">⬅ Прогиб</button><button class="btn sm mint" id="nmTuck">␣ Группировка</button><button class="btn sm pink" id="nmRel">⬆ Отпустить</button><button class="btn sm ghost" id="nmReset">R Заново</button>
+    </div>
+    <p class="hint" style="text-align:center">Раскачивайся прогибом (← или A), в нужный момент отпусти (↑ или W), в воздухе группируйся (пробел), чтобы крутиться быстрее. Выпрямись перед перекладиной, и котозаяц сам её схватит. Приземлиться на ноги тоже можно.</p>
   </div>
 </div>
 
@@ -732,7 +744,7 @@ function logout(){persist();user=null;S=null;applyShader();applyFlip();lsDel('kz
 
 /* ---------------- UI helpers ---------------- */
 let cur='auth';
-const SCREENS=['auth','menu','bp','ev','cos','set','adm','kg','give','gpe','mg','pause','over'];
+const SCREENS=['auth','menu','bp','ev','cos','set','adm','kg','give','gpe','mg','noomi','pause','over'];
 function show(id){
   cur=id;
   for(const s of SCREENS)$('#'+s).classList.toggle('on',s===id);
@@ -2000,6 +2012,69 @@ const CODES={
   spin:()=>{poke.spin=3;sfx(400,.5,'triangle',.04,900);say('Вжууух! 🌀',1.6);return 'Котозаяц крутится'},'крутись':()=>CODES.spin(),
   purr:()=>{for(let i=0;i<3;i++)setTimeout(()=>{sfx(700+i*150,.3,'sawtooth',.04,-350);poke.vy=-400},i*350);say('Мур-мур-МУР! 😻',2);return 'Котозаяц замурлыкал'}
 };
+/* ---------------- NoomiClone: kotozayac gymnast ---------------- */
+const NM={cv:null,c:null,w:960,h:540,st:null,keys:{},touch:{}};
+const NM_G=1500,NM_S=.78,NM_LB=150*NM_S,NM_D=NM_LB*.58,NM_FLOOR=500;
+function nmInput(k){return NM.keys[k]||NM.touch[k]}
+function nmBars(){const b=[];let x=220,y=170;for(let i=0;i<60;i++){b.push({x,y});x+=rnd(170,215)+Math.min(60,i*3);y=clamp(y+rnd(-40,40),140,240)}return b}
+function noomiNew(){const bars=nmBars();NM.st={bars,mode:'bar',bar:0,th:.35,om:0,t:0,score:0,flips:0,regrabs:0,combo:0,airRot:0,lastBar:0,relT:0,pos:{x:0,y:0},v:{x:0,y:0},Lm:0,cam:0,msg:null,over:false,best:false,reward:0,trail:[]}}
+function openNoomi(){if(!NM.cv){NM.cv=$('#nmcv');NM.c=NM.cv.getContext('2d');NM.cv.width=NM.w;NM.cv.height=NM.h}noomiNew();show('noomi');nmBestTxt()}
+function nmBestTxt(){$('#nmBest').textContent='🏆 Рекорд: '+((S&&S.stats.noomiBest)||0)}
+function nmMsg(t,col){NM.st.msg={t,col:col||'#ffe066',life:1.6}}
+function nmSegDist(px,py,ax,ay,bx,by){const vx=bx-ax,vy=by-ay,l=vx*vx+vy*vy||1;const k=clamp(((px-ax)*vx+(py-ay)*vy)/l,0,1);return Math.hypot(px-ax-vx*k,py-ay-vy*k)}
+function nmBodyDir(th){return{x:Math.sin(th),y:Math.cos(th)}}
+function nmRelease(){const st=NM.st;if(st.mode!=='bar')return;const b=st.bars[st.bar],d=nmBodyDir(st.th);
+  st.pos={x:b.x+d.x*NM_D,y:b.y+d.y*NM_D};st.v={x:st.om*NM_D*Math.cos(st.th)*1.15,y:-st.om*NM_D*Math.sin(st.th)*1.15};st.Lm=st.om;st.mode='air';st.relT=0;st.airRot=0;st.lastBar=st.bar;sfx(700,.06,'triangle',.04,300)}
+function nmGrab(i){const st=NM.st,b=st.bars[i],dx=st.pos.x-b.x,dy=st.pos.y-b.y;const th=Math.atan2(dx,dy);const tang={x:Math.cos(th),y:-Math.sin(th)};
+  const flips=Math.floor(Math.abs(st.airRot)/(Math.PI*2)+.12);st.mode='bar';st.bar=i;st.th=th;st.om=(st.v.x*tang.x+st.v.y*tang.y)/NM_D;
+  const fwd=i>st.lastBar,base=fwd?150:80,pts=Math.round((base+flips*200)*(1+st.combo*.25));st.combo++;st.score+=pts;st.regrabs++;st.flips+=flips;
+  if(flips>0)stat('noomiFlipGrab');
+  nmMsg((flips?(flips>1?flips+'× сальто':'Сальто')+' и перехват!':fwd?'Перелёт!':'Перехват!')+' +'+pts+(st.combo>1?' (комбо x'+st.combo+')':''),flips?'#5ee6c1':'#ffe066');
+  SND.pink()}
+function nmEnd(landed){const st=NM.st;if(st.over)return;st.over=true;st.mode='done';
+  if(landed){const flips=Math.floor(Math.abs(st.airRot)/(Math.PI*2)+.12),pts=300+flips*250;st.score+=pts;st.flips+=flips;nmMsg('Чистое приземление! +'+pts,'#5ee6c1');SND.win()}else{nmMsg(pick(['Упал! 🙈','Ой-ой, на мат!','Котозаяц шлёпнулся 😵']),'#ff7eb6');SND.hit()}
+  const best=(S.stats.noomiBest||0);st.best=st.score>best;if(st.best)S.stats.noomiBest=st.score;st.reward=Math.min(150,Math.floor(st.score/40));S.coins+=st.reward;checkAch();persist();refreshTop();nmBestTxt()}
+function noomiStep(dt){const st=NM.st;if(!st)return;const c=NM.c,W2=NM.w,H2=NM.h;st.t+=dt;
+  const arch=nmInput('arch'),tuck=nmInput('tuck');
+  if(st.mode==='bar'){const b=st.bars[st.bar];let acc=-(NM_G/NM_D)*Math.sin(st.th)-.35*st.om;if(arch){acc+=9*Math.sign(st.om||1)*(Math.cos(st.th)>-0.2?1:.4)}if(tuck)acc*=1.08;st.om+=acc*dt;st.om=clamp(st.om,-11,11);st.th+=st.om*dt;
+    if(nmInput('rel')){NM.keys.rel=false;NM.touch.rel=false;nmRelease()}}
+  else if(st.mode==='air'){st.relT+=dt;const I=tuck?.38:1,om=st.Lm/I;st.th+=om*dt;st.airRot+=om*dt;st.v.y+=NM_G*dt;st.pos.x+=st.v.x*dt;st.pos.y+=st.v.y*dt;
+    const d=nmBodyDir(st.th),hx=st.pos.x-d.x*NM_D,hy=st.pos.y-d.y*NM_D,fy=st.pos.y+d.y*(NM_LB-NM_D);
+    if(!tuck&&st.relT>.22){for(let i=Math.max(0,st.lastBar-1);i<Math.min(st.bars.length,st.lastBar+4);i++){const b=st.bars[i];if(nmSegDist(b.x,b.y,hx,hy,st.pos.x,st.pos.y)<34){nmGrab(i);break}}}
+    if(st.mode==='air'&&(fy>NM_FLOOR||st.pos.y>NM_FLOOR)){const up=Math.cos(st.th),sp=Math.hypot(st.v.x,st.v.y);st.pos.y=Math.min(st.pos.y,NM_FLOOR-(NM_LB-NM_D)*Math.max(0,up));nmEnd(up>.72&&!tuck&&sp<1500)}}
+  if(nmInput('reset')){NM.keys.reset=false;NM.touch.reset=false;noomiNew();return}
+  // camera
+  const fx=st.mode==='bar'?st.bars[st.bar].x:st.pos.x;st.cam+=(fx-W2*.38-st.cam)*Math.min(1,dt*3);
+  if(NM.noDraw)return;
+  // draw
+  const g=c.createLinearGradient(0,0,0,H2);g.addColorStop(0,'#1b1442');g.addColorStop(1,'#3a2a7a');c.fillStyle=g;c.fillRect(0,0,W2,H2);
+  c.save();c.translate(-st.cam*.3,0);for(let i=0;i<40;i++){const x=(i*173)%3000,y=(i*97)%300;c.globalAlpha=.4+.4*Math.sin(st.t*2+i);c.fillStyle='#fff';c.fillRect(x,y,2,2)}c.restore();c.globalAlpha=1;
+  c.save();c.translate(-st.cam,0);
+  c.fillStyle='#2a1f5e';c.fillRect(st.cam-50,NM_FLOOR,W2+100,H2-NM_FLOOR);c.fillStyle='#4a6bff';for(let x=Math.floor(st.cam/200)*200;x<st.cam+W2+200;x+=200){c.fillRect(x+10,NM_FLOOR,180,16)}
+  for(let i=0;i<st.bars.length;i++){const b=st.bars[i];if(b.x<st.cam-100||b.x>st.cam+W2+100)continue;c.strokeStyle='#9aa4b8';c.lineWidth=5;c.beginPath();c.moveTo(b.x-60,b.y);c.lineTo(b.x-60,NM_FLOOR);c.moveTo(b.x+60,b.y);c.lineTo(b.x+60,NM_FLOOR);c.stroke();c.lineWidth=7;c.strokeStyle=i===st.bar&&st.mode==='bar'?'#ffe066':'#e8eef8';c.beginPath();c.moveTo(b.x-62,b.y);c.lineTo(b.x+62,b.y);c.stroke();c.fillStyle='rgba(255,255,255,.5)';c.font='700 12px Trebuchet MS';c.textAlign='center';c.fillText(i+1,b.x,b.y-14)}
+  // kotozayac
+  let px,py;if(st.mode==='bar'){const b=st.bars[st.bar];px=b.x;py=b.y}else{const d=nmBodyDir(st.th);px=st.pos.x-d.x*NM_D;py=st.pos.y-d.y*NM_D}
+  c.save();c.translate(px,py);c.rotate(-st.th+Math.PI);
+  // body frame: hands at origin, feet at +y (after rotation)... draw kotozayac upside so that head is near hands
+  c.rotate(Math.PI);c.translate(0,NM_LB);const sq=tuck?.7:arch?1.06:1;c.scale(1,sq);
+  drawKZ(c,0,0,NM_S,S.eq,st.t,0);
+  c.restore();
+  // arms from shoulders to hands
+  {const d=nmBodyDir(st.th),sx=px+d.x*NM_LB*.56,sy=py+d.y*NM_LB*.56;c.lineCap='round';for(const off of[-27,27]){const ox=d.y*off,oy=-d.x*off;c.lineWidth=9;c.strokeStyle=INK;c.beginPath();c.moveTo(sx+ox,sy+oy);c.lineTo(px+ox*.22,py+oy*.22);c.stroke();c.lineWidth=5;c.strokeStyle=(SKINS[S.eq.skin]||SKINS.grey).base;c.stroke()}}
+  c.restore();
+  // hud
+  c.font='900 22px Trebuchet MS';c.textAlign='left';c.lineWidth=4;c.strokeStyle=INK;const hud=`Очки: ${st.score}   Сальто: ${st.flips}   Перехваты: ${st.regrabs}`;c.strokeText(hud,16,32);c.fillStyle='#fff';c.fillText(hud,16,32);
+  if(st.mode==='air'){const fl=Math.abs(st.airRot)/(Math.PI*2);c.textAlign='right';const t2=fl>=.9?'🌀 '+Math.floor(fl+.12)+' оборот(а)':'';c.strokeText(t2,W2-16,32);c.fillStyle='#5ee6c1';c.fillText(t2,W2-16,32)}
+  if(st.msg){st.msg.life-=dt;c.globalAlpha=Math.max(0,Math.min(1,st.msg.life*1.5));c.textAlign='center';c.font='900 30px Trebuchet MS';c.strokeText(st.msg.t,W2/2,90);c.fillStyle=st.msg.col;c.fillText(st.msg.t,W2/2,90);c.globalAlpha=1;if(st.msg.life<=0&&!st.over)st.msg=null}
+  if(st.over){c.fillStyle='rgba(10,6,30,.6)';c.fillRect(0,0,W2,H2);c.textAlign='center';c.font='900 40px Trebuchet MS';c.strokeText(st.best?'Новый рекорд! 🏆':'Попытка окончена',W2/2,H2/2-50);c.fillStyle='#ffe066';c.fillText(st.best?'Новый рекорд! 🏆':'Попытка окончена',W2/2,H2/2-50);
+    c.font='900 24px Trebuchet MS';const l2=`Очки: ${st.score} · Сальто: ${st.flips} · Перехваты: ${st.regrabs}`,l3=`+${st.reward} 🪙   ·   R или «Заново» — ещё раз`;c.strokeText(l2,W2/2,H2/2);c.fillStyle='#fff';c.fillText(l2,W2/2,H2/2);c.strokeText(l3,W2/2,H2/2+40);c.fillStyle='#5ee6c1';c.fillText(l3,W2/2,H2/2+40)}
+}
+addEventListener('keydown',e=>{if(cur!=='noomi')return;const k={ArrowLeft:'arch',KeyA:'arch',Space:'tuck',ArrowDown:'tuck',KeyS:'tuck',ArrowUp:'rel',KeyW:'rel',KeyR:'reset'}[e.code];if(k){e.preventDefault();if(k==='rel'||k==='reset'){if(!e.repeat)NM.keys[k]=true}else NM.keys[k]=true}});
+addEventListener('keyup',e=>{const k={ArrowLeft:'arch',KeyA:'arch',Space:'tuck',ArrowDown:'tuck',KeyS:'tuck'}[e.code];if(k)NM.keys[k]=false});
+for(const[id,k]of[['#nmArch','arch'],['#nmTuck','tuck']]){const el=$(id);el.addEventListener('pointerdown',e=>{e.preventDefault();NM.touch[k]=true});for(const ev of['pointerup','pointerleave','pointercancel'])el.addEventListener(ev,()=>{NM.touch[k]=false})}
+$('#nmRel').addEventListener('pointerdown',e=>{e.preventDefault();NM.touch.rel=true});$('#nmReset').onclick=()=>{NM.touch.reset=true};
+$('#nmBack').onclick=()=>{show('set');setSetTab('mg')};
+document.addEventListener('click',e=>{if(e.target.closest('[data-noomi]'))openNoomi()});
 let codeBuf='',admBoostUntil=+(lsGet('kz_boost')||0);
 const funFx={snow:0,love:0,boom:0,ghost:0,notes:0,cloud:0};
 function playTune(notes,ms){notes.forEach((f,i)=>setTimeout(()=>sfx(f,ms/1000*.9,'triangle',.05),i*ms))}
@@ -2033,6 +2108,7 @@ function loop(now){
   if(G){if(!G.paused&&!G.over)update(dt);if(G)drawGame(T,dt)}else drawMenuScene(T,dt);
   if(cur==='cos'&&S){pvDt=dt;drawPreview(T)}
   if(cur==='kg'&&S)drawDial(T,dt);
+  if(cur==='noomi'&&S)noomiStep(dt);
   if(hatchAnim)drawHatch(dt);
   requestAnimationFrame(loop);
 }
@@ -2485,6 +2561,7 @@ const MG_INFO={chess:{n:'Шахматы',i:'♟️',rules:'Обычные шах
 const DIFF={easy:{n:'Легко',p:.25,r:5},mid:{n:'Средне',p:.5,r:10},hard:{n:'Сложно',p:.8,r:20}};
 const DK_MODE={classic:'Дурак — обычная игра',transfer:'Дурак — переводной'};
 ACH.push({id:'codes2',n:'Мастер приколов',d:'Найти 20 разных секретных кодов',k:'codes',goal:20,r:300,i:'🤡'},{id:'carrots',n:'Морковный король',d:'Поймать 50 морковок в морковный дождь',k:'carrots',goal:50,r:120,i:'🥕'});
+ACH.push({id:'noomi',n:'Гимнаст',d:'NoomiClone: сделать сальто и поймать перекладину',k:'noomiFlipGrab',goal:1,r:100,i:'🤸'},{id:'noomi2',n:'Олимпиец',d:'NoomiClone: набрать 3000 очков за попытку',k:'noomiBest',goal:3000,r:250,i:'🥇'});
 ACH.push({id:'chess',n:'Гроссмейстер',d:'Обыграть сложного бота в шахматы',k:'chessHard',goal:1,r:150,i:'♟️'},{id:'durak',n:'Не дурак',d:'Выиграть в дурака 3 раза',k:'durakWins',goal:3,r:80,i:'🃏'},{id:'ttt',n:'Крестоносец',d:'Обыграть сложного бота в крестики-нолики',k:'tttHard',goal:1,r:60,i:'❌'});
 let chessWhite=0,mgGame='ttt',mg=null,mgStep=null,mgPend={},mgBotTok=0,srch=null,tttFirst=0;
 const MM_ID=Math.random().toString(36).slice(2,10)+Date.now().toString(36);
