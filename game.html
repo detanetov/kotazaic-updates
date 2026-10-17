@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=18;window.KZ_VNAME='1.3.4';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=19;window.KZ_VNAME='1.3.5';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -498,6 +498,13 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
         <div class="row" style="margin-top:6px"><span>🌻 Мой сад:</span><button class="btn sm mint" id="adGrow">Вырастить всё</button><button class="btn sm ghost" id="adSeeds">Все семена ×10</button><button class="btn sm ghost" id="adGLvl">+5 уровней сада</button></div>
         <div class="opt tg"><label>❤ Бесконечные жизни в HUD (9 жизней на старте)</label><input type="checkbox" id="adNine"></div>
         <p class="hint">Во время игры: B — босс сейчас, N — следующая волна, H — +1 жизнь, T — TAS, G — золотая звезда, M — убрать все метеориты.</p></div>
+      <div class="box"><h3>🤸 NoomiClone</h3>
+        <div class="opt tg"><label>🧲 Всегда цепляться (притягивает к перекладине)</label><input type="checkbox" data-nmc="nmGrab"></div>
+        <div class="opt tg"><label>🚀 Супер-прыжок</label><input type="checkbox" data-nmc="nmPower"></div>
+        <div class="opt tg"><label>🐢 Замедление в воздухе</label><input type="checkbox" data-nmc="nmSlow"></div>
+        <div class="opt tg"><label>🛡 Нельзя упасть (вернёт на перекладину)</label><input type="checkbox" data-nmc="nmNoFall"></div>
+        <div class="opt tg"><label>🤖 Автоигра — котозаяц сам крутит сальто</label><input type="checkbox" data-nmc="nmBot"></div>
+        <div class="row" style="margin-top:6px"><button class="btn sm mint" data-noomi="1">▶ Открыть NoomiClone</button><button class="btn sm ghost" id="adNmRec">Сбросить мой рекорд</button></div></div>
       <div class="box"><h3>📜 Журнал действий</h3><div id="adLog" style="font-size:13px;max-height:200px;overflow:auto"></div><button class="btn sm ghost" id="adLogClr" style="margin-top:6px">Очистить</button></div>
     </div>
     <div class="row" style="margin:18px 0 8px;justify-content:space-between">
@@ -2035,7 +2042,12 @@ const CODES={
 /* ---------------- NoomiClone: kotozayac gymnast ---------------- */
 const NM={cv:null,c:null,w:960,h:540,st:null,keys:{},touch:{}};
 const NM_G=1500,NM_S=.78,NM_LB=150*NM_S,NM_D=NM_LB*.58,NM_FLOOR=500;
-function nmInput(k){return NM.keys[k]||NM.touch[k]}
+function nmInput(k){return NM.keys[k]||NM.touch[k]||(NM.botK&&NM.botK[k])}
+function nmCheat(k){return isAdm()&&S.adm&&!!S.adm[k]}
+// ADM auto-play: pump, let go on the forward rise, tuck to flip, open up before the bar
+function nmBot(st){const K={};if(st.mode==='bar'){const P=NM.botP||(nmCheat('nmGrab')?{w:5,a:.2,b:.6}:nmCheat('nmPower')?{w:7,a:.35,b:.8}:{w:8.2,a:.5,b:1}),n=Math.atan2(Math.sin(st.th),Math.cos(st.th));if(st.om>0||Math.abs(st.om)<3)K.arch=true;if(st.om>P.w&&n>P.a&&n<P.b){K.rel=true}}
+  else if(st.mode==='air'){const b=st.bars[st.lastBar+1];const turns=Math.abs(st.airRot)/(Math.PI*2),frac=turns-Math.floor(turns);const t2=b?(b.x-st.pos.x)/Math.max(60,st.v.x):1;K.tuck=st.relT>.08&&t2>.28&&!(frac>.7&&t2<.45)}
+  NM.botK=K}
 function nmBars(){const b=[];let x=220,y=170;for(let i=0;i<60;i++){b.push({x,y});x+=rnd(170,215)+Math.min(60,i*3);y=clamp(y+rnd(-40,40),140,240)}return b}
 function noomiNew(){const bars=nmBars();NM.st={bars,mode:'bar',bar:0,th:.35,om:0,t:0,score:0,flips:0,regrabs:0,combo:0,airRot:0,lastBar:0,relT:0,pos:{x:0,y:0},v:{x:0,y:0},Lm:0,cam:0,msg:null,over:false,best:false,reward:0,trail:[]}}
 function openNoomi(){if(!NM.cv){NM.cv=$('#nmcv');NM.c=NM.cv.getContext('2d');NM.cv.width=NM.w;NM.cv.height=NM.h}noomiNew();show('noomi');nmBestTxt()}
@@ -2044,7 +2056,7 @@ function nmMsg(t,col){NM.st.msg={t,col:col||'#ffe066',life:1.6}}
 function nmSegDist(px,py,ax,ay,bx,by){const vx=bx-ax,vy=by-ay,l=vx*vx+vy*vy||1;const k=clamp(((px-ax)*vx+(py-ay)*vy)/l,0,1);return Math.hypot(px-ax-vx*k,py-ay-vy*k)}
 function nmBodyDir(th){return{x:Math.sin(th),y:Math.cos(th)}}
 function nmRelease(){const st=NM.st;if(st.mode!=='bar')return;const b=st.bars[st.bar],d=nmBodyDir(st.th);
-  st.pos={x:b.x+d.x*NM_D,y:b.y+d.y*NM_D};st.v={x:st.om*NM_D*Math.cos(st.th)*1.15,y:-st.om*NM_D*Math.sin(st.th)*1.15};st.Lm=st.om;st.mode='air';st.relT=0;st.airRot=0;st.lastBar=st.bar;sfx(700,.06,'triangle',.04,300)}
+  st.pos={x:b.x+d.x*NM_D,y:b.y+d.y*NM_D};const pw=nmCheat('nmPower')?1.55:1.15;st.v={x:st.om*NM_D*Math.cos(st.th)*pw,y:-st.om*NM_D*Math.sin(st.th)*pw};st.Lm=st.om;st.mode='air';st.relT=0;st.airRot=0;st.lastBar=st.bar;sfx(700,.06,'triangle',.04,300)}
 function nmGrab(i){const st=NM.st,b=st.bars[i],dx=st.pos.x-b.x,dy=st.pos.y-b.y;const th=Math.atan2(dx,dy);const tang={x:Math.cos(th),y:-Math.sin(th)};
   const flips=Math.floor(Math.abs(st.airRot)/(Math.PI*2)+.12);st.mode='bar';st.bar=i;st.th=th;st.om=(st.v.x*tang.x+st.v.y*tang.y)/NM_D;
   const fwd=i>st.lastBar,base=fwd?150:80,pts=Math.round((base+flips*200)*(1+st.combo*.25));st.combo++;st.score+=pts;st.regrabs++;st.flips+=flips;
@@ -2054,14 +2066,18 @@ function nmGrab(i){const st=NM.st,b=st.bars[i],dx=st.pos.x-b.x,dy=st.pos.y-b.y;c
 function nmEnd(landed){const st=NM.st;if(st.over)return;st.over=true;st.mode='done';
   if(landed){const flips=Math.floor(Math.abs(st.airRot)/(Math.PI*2)+.12),pts=300+flips*250;st.score+=pts;st.flips+=flips;nmMsg('Чистое приземление! +'+pts,'#5ee6c1');SND.win()}else{nmMsg(pick(['Упал! 🙈','Ой-ой, на мат!','Котозаяц шлёпнулся 😵']),'#ff7eb6');SND.hit()}
   const best=(S.stats.noomiBest||0);st.best=st.score>best;if(st.best)S.stats.noomiBest=st.score;st.reward=Math.min(150,Math.floor(st.score/40));S.coins+=st.reward;checkAch();persist();refreshTop();nmBestTxt()}
-function noomiStep(dt){const st=NM.st;if(!st)return;const c=NM.c,W2=NM.w,H2=NM.h;st.t+=dt;
+function noomiStep(dt){const st=NM.st;if(!st)return;const c=NM.c,W2=NM.w,H2=NM.h;st.t+=dt;if(nmCheat('nmBot')&&!st.over)nmBot(st);else NM.botK=null;if(st.mode==='air'&&nmCheat('nmSlow'))dt*=.5;
   const arch=nmInput('arch'),tuck=nmInput('tuck');
   if(st.mode==='bar'){const b=st.bars[st.bar];let acc=-(NM_G/NM_D)*Math.sin(st.th)-.35*st.om;if(arch){acc+=9*Math.sign(st.om||1)*(Math.cos(st.th)>-0.2?1:.4)}if(tuck)acc*=1.08;st.om+=acc*dt;st.om=clamp(st.om,-11,11);st.th+=st.om*dt;
-    if(nmInput('rel')){NM.keys.rel=false;NM.touch.rel=false;nmRelease()}}
+    if(nmInput('rel')){NM.keys.rel=false;NM.touch.rel=false;if(NM.botK)NM.botK.rel=false;nmRelease()}}
   else if(st.mode==='air'){st.relT+=dt;const I=tuck?.38:1,om=st.Lm/I;st.th+=om*dt;st.airRot+=om*dt;st.v.y+=NM_G*dt;st.pos.x+=st.v.x*dt;st.pos.y+=st.v.y*dt;
     const d=nmBodyDir(st.th),hx=st.pos.x-d.x*NM_D,hy=st.pos.y-d.y*NM_D,fy=st.pos.y+d.y*(NM_LB-NM_D);
-    if(!tuck&&st.relT>.22){for(let i=Math.max(0,st.lastBar-1);i<Math.min(st.bars.length,st.lastBar+4);i++){const b=st.bars[i];if(nmSegDist(b.x,b.y,hx,hy,st.pos.x,st.pos.y)<34){nmGrab(i);break}}}
+    const ag=nmCheat('nmGrab');
+    if(ag&&st.relT>.15){const nb=st.bars[st.lastBar+1];if(nb){const tx=nb.x,ty=nb.y+NM_D*.6,dx=tx-st.pos.x,dy=ty-st.pos.y,d=Math.hypot(dx,dy);if(d<460){const k=Math.min(1,dt*3.2);st.v.x+=(dx/d*Math.max(520,d*2.2)-st.v.x)*k;st.v.y+=(dy/d*Math.max(520,d*2.2)-st.v.y)*k-NM_G*dt*.9}}}
+    if((!tuck||ag)&&st.relT>(ag?.15:.22)){for(let i=Math.max(0,st.lastBar-1);i<Math.min(st.bars.length,st.lastBar+4);i++){const b=st.bars[i];if(ag&&i<=st.lastBar&&st.relT<.6)continue;if(nmSegDist(b.x,b.y,hx,hy,st.pos.x,st.pos.y)<(ag?90:34)){nmGrab(i);break}}}
+    if(st.mode==='air'&&(fy>NM_FLOOR||st.pos.y>NM_FLOOR)&&nmCheat('nmNoFall')){st.mode='bar';st.bar=st.lastBar;st.th=.3;st.om=0;st.combo=0;nmMsg('🛠 ADM: обратно на перекладину','#c39bff')}
     if(st.mode==='air'&&(fy>NM_FLOOR||st.pos.y>NM_FLOOR)){const up=Math.cos(st.th),sp=Math.hypot(st.v.x,st.v.y);st.pos.y=Math.min(st.pos.y,NM_FLOOR-(NM_LB-NM_D)*Math.max(0,up));nmEnd(up>.72&&!tuck&&sp<1500)}}
+  if(st.bars.length-st.bar<8||st.bars.length-st.lastBar<8){const L=st.bars[st.bars.length-1];let x=L.x,y=L.y;for(let i=0;i<20;i++){x+=rnd(170,215)+60;y=clamp(y+rnd(-40,40),140,240);st.bars.push({x,y})}}
   if(nmInput('reset')){NM.keys.reset=false;NM.touch.reset=false;noomiNew();return}
   // camera
   const fx=st.mode==='bar'?st.bars[st.bar].x:st.pos.x;st.cam+=(fx-W2*.38-st.cam)*Math.min(1,dt*3);
@@ -2083,7 +2099,7 @@ function noomiStep(dt){const st=NM.st;if(!st)return;const c=NM.c,W2=NM.w,H2=NM.h
   {const d=nmBodyDir(st.th),sx=px+d.x*NM_LB*.56,sy=py+d.y*NM_LB*.56;c.lineCap='round';for(const off of[-27,27]){const ox=d.y*off,oy=-d.x*off;c.lineWidth=9;c.strokeStyle=INK;c.beginPath();c.moveTo(sx+ox,sy+oy);c.lineTo(px+ox*.22,py+oy*.22);c.stroke();c.lineWidth=5;c.strokeStyle=(SKINS[S.eq.skin]||SKINS.grey).base;c.stroke()}}
   c.restore();
   // hud
-  c.font='900 22px Trebuchet MS';c.textAlign='left';c.lineWidth=4;c.strokeStyle=INK;const hud=`Очки: ${st.score}   Сальто: ${st.flips}   Перехваты: ${st.regrabs}`;c.strokeText(hud,16,32);c.fillStyle='#fff';c.fillText(hud,16,32);
+  c.font='900 22px Trebuchet MS';c.textAlign='left';c.lineWidth=4;c.strokeStyle=INK;const ch=['nmGrab','nmPower','nmSlow','nmNoFall','nmBot'].filter(nmCheat).length,hud=`Очки: ${st.score}   Сальто: ${st.flips}   Перехваты: ${st.regrabs}`+(ch?'   🛠 ADM':'');c.strokeText(hud,16,32);c.fillStyle='#fff';c.fillText(hud,16,32);
   if(st.mode==='air'){const fl=Math.abs(st.airRot)/(Math.PI*2);c.textAlign='right';const t2=fl>=.9?'🌀 '+Math.floor(fl+.12)+' оборот(а)':'';c.strokeText(t2,W2-16,32);c.fillStyle='#5ee6c1';c.fillText(t2,W2-16,32)}
   if(st.msg){st.msg.life-=dt;c.globalAlpha=Math.max(0,Math.min(1,st.msg.life*1.5));c.textAlign='center';c.font='900 30px Trebuchet MS';c.strokeText(st.msg.t,W2/2,90);c.fillStyle=st.msg.col;c.fillText(st.msg.t,W2/2,90);c.globalAlpha=1;if(st.msg.life<=0&&!st.over)st.msg=null}
   if(st.over){c.fillStyle='rgba(10,6,30,.6)';c.fillRect(0,0,W2,H2);c.textAlign='center';c.font='900 40px Trebuchet MS';c.strokeText(st.best?'Новый рекорд! 🏆':'Попытка окончена',W2/2,H2/2-50);c.fillStyle='#ffe066';c.fillText(st.best?'Новый рекорд! 🏆':'Попытка окончена',W2/2,H2/2-50);
@@ -3037,7 +3053,7 @@ function admWave(){if(!G||G.boss)return;endPhase()}
 function admLife(){if(!G)return;G.lives=Math.min(G.maxLives,G.lives+1);updHud()}
 function renderAdm(){
   $('#adBp').value=Math.min(BP_LV,Math.floor(S.bpXp/BP_XP));$('#adEv').value=Math.min(EV_LV,Math.floor(S.evXp/EV_XP));
-  $('#adSpeed').value=String(S.adm.speed||1);$('#adKgWin').checked=!!S.adm.kgwin;renderAdmLog();renderAdmStats();$('#adSlowMet').checked=!!S.adm.slowmet;$('#adNine').checked=!!S.adm.nine;$('#adGod').checked=S.adm.god;$('#adMag').checked=S.adm.mag;$('#adTas').checked=!!S.adm.tas;
+  for(const el of document.querySelectorAll('[data-nmc]'))el.checked=!!S.adm[el.dataset.nmc];$('#adSpeed').value=String(S.adm.speed||1);$('#adKgWin').checked=!!S.adm.kgwin;renderAdmLog();renderAdmStats();$('#adSlowMet').checked=!!S.adm.slowmet;$('#adNine').checked=!!S.adm.nine;$('#adGod').checked=S.adm.god;$('#adMag').checked=S.adm.mag;$('#adTas').checked=!!S.adm.tas;
   renderAccList()}
 let adFilter='all';
 document.addEventListener('click',e=>{const b=e.target.closest('[data-adf]');if(!b)return;adFilter=b.dataset.adf;for(const x of document.querySelectorAll('[data-adf]'))x.classList.toggle('mint',x===b);renderAccList()});
@@ -3075,6 +3091,8 @@ $('#adKgWin').onchange=e=>{S.adm.kgwin=e.target.checked;persist();toast(S.adm.kg
 $('#adGrow').onclick=()=>{const g=gData();let n=0;for(const pl of g.plots)if(pl.id&&pl.p<1){pl.p=1;n++}persist();toast('🌻 Выросло растений: '+n);admLog('🌻 мой сад: вырастить всё')};
 $('#adSeeds').onclick=()=>{const g=gData();for(const id in PLANTS)g.seeds[id]=(g.seeds[id]||0)+10;persist();toast('🌱 +10 всех семян');admLog('🌱 мой сад: семена ×10')};
 $('#adGLvl').onclick=()=>{const g=gData();g.xp=gLvXp(gLevel()+5);persist();toast('🌻 Уровень сада: '+gLevel());admLog('🌻 мой сад: +5 уровней')};
+document.addEventListener('change',e=>{const el=e.target.closest('[data-nmc]');if(!el||!isAdm())return;S.adm[el.dataset.nmc]=el.checked;persist();toast((el.checked?'✅ ':'⛔ ')+el.closest('.opt').querySelector('label').textContent);admLog('🤸 '+el.closest('.opt').querySelector('label').textContent+(el.checked?': вкл':': выкл'))});
+$('#adNmRec').onclick=()=>{S.stats.noomiBest=0;persist();nmBestTxt();toast('Рекорд NoomiClone сброшен')};
 $('#adLogClr').onclick=()=>{S.adm.log=[];persist();renderAdmLog()};
 $('#adAllFunGo').onclick=()=>{const k=$('#adAllFun').value;netBroadcast('fun',{k},'прикол «'+$('#adAllFun').selectedOptions[0].textContent+'»');admLog('😜 всем: '+$('#adAllFun').selectedOptions[0].textContent)};
 $('#adLockGo').onclick=()=>{const m=clamp(Math.round(+$('#adLockMin').value||10),1,240);if(!confirm('Включить технические работы на '+m+' мин? Игроки не смогут играть.'))return;netBroadcast('lock',{m},'техработы '+m+' мин');admLog('🛠 техработы '+m+' мин')};
