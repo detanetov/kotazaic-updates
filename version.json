@@ -1,8 +1,13 @@
 {
- "version": 7,
+ "version": 8,
  "label": "1.2",
- "name": "Версия 1.2: +80 новых вещей в Cosmetics",
+ "name": "Версия 1.2: обновления сразу, без задержки GitHub",
  "file": "game.html",
- "sha256": "a3ff8c49ccd6aeff05ba42b85ded86211ff49116180ab333a79c357f92d2a051",
- "date": "2026-10-17"
+ "sha256": "16d58583ca1c70042e8b4d4d40c311318c4731d4c44d74c4a61950cc857c7f6f",
+ "date": "2026-10-17",
+ "exe": {
+  "version": 3,
+  "file": "KotazaicAndStars.exe",
+  "sha256": "865e1576ba9d4e15cbdb05e23971e3f0a38b9613b365e0b623fbe2f9d48b99bb"
+ }
 }
