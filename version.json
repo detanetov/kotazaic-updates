@@ -1,9 +1,9 @@
 {
- "version": 22,
- "label": "1.3.8",
- "name": "Версия 1.3.8: GUI 2 — прозрачность, значки и логотип как на фото",
+ "version": 23,
+ "label": "1.3.9",
+ "name": "Версия 1.3.9: кнопки справа в стиле GUI 2",
  "file": "game.html",
- "sha256": "5ae20ff04ec958609dae7d3973fad6cced3787e15812e6762834ec7093caba76",
+ "sha256": "d92bba87a64578a7a27098dd65473315cdce9f9cad85720671da4e801f4d2ebd",
  "date": "2026-10-17",
  "exe": {
   "version": 3,
