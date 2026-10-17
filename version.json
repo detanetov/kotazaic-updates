@@ -1,7 +1,8 @@
 {
- "version": 6,
- "name": "+80 новых вещей: по 10 в каждый раздел Cosmetics",
+ "version": 7,
+ "label": "1.2",
+ "name": "Версия 1.2: +80 новых вещей в Cosmetics",
  "file": "game.html",
- "sha256": "cec2479f3ea4ae60cbea658c0415e8ca92d9266c7b8b38b97299eb2daa72c362",
+ "sha256": "a3ff8c49ccd6aeff05ba42b85ded86211ff49116180ab333a79c357f92d2a051",
  "date": "2026-10-17"
 }

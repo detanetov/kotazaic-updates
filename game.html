@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=6;window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=7;window.KZ_VNAME='1.2';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -2417,7 +2417,7 @@ addEventListener('storage',e=>{
   refreshTop();if(cur==='menu')refreshMenu();if(cur==='bp'||cur==='ev')renderPass(cur);if(cur==='cos')renderCos();if(cur==='adm')renderAdm();
 });
 $('#mGift').onclick=()=>claimDaily();
-$('#vVer').textContent='v'+window.KZ_VER+({exe:' · ПК',android:' · телефон',web:' · браузер'}[window.KZ_MODE]||'');$('#sUpd').onclick=()=>checkUpdate(true);
+$('#vVer').textContent='v'+(window.KZ_VNAME||window.KZ_VER)+({exe:' · ПК',android:' · телефон',web:' · браузер'}[window.KZ_MODE]||'');$('#sUpd').onclick=()=>checkUpdate(true);
 $('#mLogo').onclick=()=>{const L=$('#mLogo');logoClicks++;sfx(500+logoClicks*60,.08,'triangle',.04);if(logoClicks>=7){logoClicks=0;L.classList.toggle('flip');toast(L.classList.contains('flip')?'Логотип перевернулся 🙃 (нажми ещё 7 раз)':'Логотип на месте 😌');stat('logo');return}L.classList.remove('wob');void L.offsetWidth;L.classList.add('wob')};
 $('#sCodeGo').onclick=()=>{const c=$('#sCode').value.trim().toLowerCase();if(!c)return;if(CODES[c]){runCode(c);$('#sCode').value=''}else{toast('Такого кода нет 🤔');sfx(200,.15,'square',.03)}};
 $('#sCode').addEventListener('keydown',e=>{if(e.key==='Enter')$('#sCodeGo').click()});
@@ -2523,11 +2523,11 @@ async function checkUpdate(manual){
       if(manual)updSplash('🔄 Проверяю обновления…');
       const j=await(await fetch('/upd-check',{cache:'no-store'})).json();updSplash(null);
       if(j.updated||(+j.version>window.KZ_VER)){applyUpdate(()=>location.reload());return}
-      if(manual)toast(j.ok===false?'Не удалось проверить обновления':'У тебя последняя версия ✓ (v'+window.KZ_VER+')');return}
+      if(manual)toast(j.ok===false?'Не удалось проверить обновления':'У тебя последняя версия ✓ (v'+(window.KZ_VNAME||window.KZ_VER)+')');return}
     const base=window.KZ_UPD;if(!base){if(manual)toast('Сервер обновлений не настроен');return}
     const r=await fetch(base+'version.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();
     let bad=0;try{bad=+localStorage.getItem('kz_upd_bad')||0}catch(e){}
-    if(!(+j.version>window.KZ_VER)||+j.version===bad){if(manual)toast('У тебя последняя версия ✓ (v'+window.KZ_VER+')');return}
+    if(!(+j.version>window.KZ_VER)||+j.version===bad){if(manual)toast('У тебя последняя версия ✓ (v'+(window.KZ_VNAME||window.KZ_VER)+')');return}
     updSplash('⬇ Скачиваю обновление'+(j.name?' «'+j.name+'»':'')+'…');
     const h=await(await fetch(base+(j.file||'game.html')+'?t='+Date.now(),{cache:'no-store'})).text();
     if(h.indexOf('window.KZ_VER='+j.version+';')<0||(j.sha256&&await sha256hex(h)!==j.sha256))throw 1;
