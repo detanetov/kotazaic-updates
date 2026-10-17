@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=24;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=25;window.KZ_VNAME='1.4.1';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -47,12 +47,12 @@ html,body{height:100%;overflow:hidden;background:#0f0c2e;font-family:"Trebuchet 
 .gpbtn{display:none;align-items:center;gap:6px;height:24px;background:rgba(44,40,56,.86);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:0;border-radius:3px;padding:0 10px;box-shadow:0 0 7px 3px rgba(44,40,56,.6);color:#8a8697;font:700 12.5px "Segoe UI",Tahoma,Arial,sans-serif;letter-spacing:.2px;cursor:pointer;line-height:1}
 .gpbtn:hover{color:#c8c4d4;background:rgba(54,50,70,.9)}.gpbtn:active{transform:translateY(1px)}.gpbtn svg{width:14px;height:13px;fill:#2a5bd0;filter:drop-shadow(0 0 1px rgba(60,110,230,.6))}
 html.gui2 #bMute,html.gui2 #bOut{display:none}html.gui2 .gpbtn{display:flex}
-.gsbar,.gsbtn{display:none;align-items:center;height:22px;background:rgba(22,8,28,.58);border-top:1px solid rgba(0,0,0,.35);border-bottom:1px solid rgba(255,255,255,.04);font-family:Verdana,Tahoma,"DejaVu Sans",sans-serif;color:#d6c8de;text-shadow:1px 1px 0 #000,-1px 0 0 rgba(0,0,0,.6),0 -1px 0 rgba(0,0,0,.6)}
-.gsbar{gap:16px;padding:0 12px 0 10px}.gsbar>span{display:flex;align-items:baseline;gap:3px;white-space:nowrap}
-.gsbar .gsname{font:bold 12px Verdana,Tahoma,sans-serif;letter-spacing:.3px;color:#d8cbe0;margin-right:4px}
-.gsbar b,.gsbtn b{font:bold 13px Verdana,Tahoma,sans-serif;color:#e9e1d6}.gsbar b.y{color:#f2e2a3}.gsbar b.r{color:#ff8a8a}.gsbar b.g{color:#bff0b0}
-.gsbar small,.gsbtn small{font:bold 8.5px Verdana,Tahoma,sans-serif;letter-spacing:.6px;color:#b8a9c2}
-.gsbtn{gap:5px;padding:0 10px;border-left:0;border-right:0;cursor:pointer}.gsbtn:hover{background:rgba(40,16,50,.7)}.gsbtn b{font-size:11.5px}.gsbtn{margin-left:-4px}.gsbtn small{font-size:9.5px;color:#d6c8de}
+.gsbar,.gsbtn{display:none;align-items:center;height:20px;background:rgba(20,6,26,.55);box-shadow:0 0 0 1px rgba(10,0,14,.25);font-family:Verdana,Tahoma,"DejaVu Sans",sans-serif;-webkit-font-smoothing:none;font-smooth:never;color:#d6cbe0;text-shadow:1px 1px 0 #0a000c,0 0 2px rgba(0,0,0,.8)}
+.gsbar{gap:14px;padding:0 13px 0 11px}.gsbar>span{display:flex;align-items:baseline;gap:3px;white-space:nowrap}
+.gsbar .gsname{font:bold 11px Verdana,Tahoma,sans-serif;letter-spacing:.5px;color:#d8cde2;margin-right:6px}
+.gsbar b,.gsbtn b{font:bold 12px Verdana,Tahoma,sans-serif;letter-spacing:.2px;color:#ece4d8}.gsbar b.y{color:#f4e3a0;text-shadow:1px 1px 0 #0a000c,0 0 5px rgba(240,215,110,.75)}.gsbar b.r{color:#ff8a8a}
+.gsbar small,.gsbtn small{font:bold 8.5px Verdana,Tahoma,sans-serif;letter-spacing:.9px;color:#c4b6cd;text-transform:uppercase}
+.gsbtn{gap:4px;padding:0 10px;cursor:pointer;margin-left:-4px;border:0}.gsbtn:hover{background:rgba(36,12,46,.7)}.gsbtn b{font-size:11px}
 html.gui3 #top .gc,html.gui3 #bMute,html.gui3 #bOut{display:none}html.gui3 .gsbar,html.gui3 .gsbtn{display:flex}
 .gpi{width:15px;height:11px;fill:#2a5bd0;filter:drop-shadow(0 0 1px rgba(60,110,230,.6))}.gpemb{width:19px;height:19px;flex:none;margin-left:-2px}.guipv .gpill{transform-origin:right center}
 html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}

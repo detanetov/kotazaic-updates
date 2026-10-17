@@ -1,9 +1,9 @@
 {
- "version": 24,
- "label": "1.4.0",
- "name": "Версия 1.4.0: GUI 3 — тёмная полоса FPS/PING/CPU/LOSS",
+ "version": 25,
+ "label": "1.4.1",
+ "name": "Версия 1.4.1: GUI 3 ещё ближе к оригиналу",
  "file": "game.html",
- "sha256": "6a3a2ad31d1bce27b1121dbe05798ac22c1bbc16512c7766079e2f6badf609c3",
+ "sha256": "e3f6b5b130b2ca3620112750e07cec4a54b9d0a30edc967958eedf5c50004873",
  "date": "2026-10-17",
  "exe": {
   "version": 3,
