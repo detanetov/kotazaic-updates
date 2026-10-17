@@ -1,7 +1,7 @@
 {
- "version": 4,
- "name": "Свитшоты с нашивкой и брызгами — только Kotograde, 10000",
+ "version": 5,
+ "name": "ADM: выбор игрока кликом и выдача на другие устройства",
  "file": "game.html",
- "sha256": "36cb7bcb90078bd33f5e8f88d50149f78286e05b41b469c4323797f99286e4dd",
+ "sha256": "b4ea97ce09acdb1ff16b80c10eec207ebc3ac3c6fed47584d0a17d16f9cf8fca",
  "date": "2026-10-17"
 }
