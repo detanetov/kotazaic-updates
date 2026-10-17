@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=3;window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=4;window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -632,7 +632,7 @@ Object.assign(ITEMS.caps,{duck:{n:'Кепка-утёнок',price:160},propeller
 Object.assign(ITEMS.shoes,{flipflops:{n:'Шлёпанцы',price:60},kedy:{n:'Кеды',price:100},flippers:{n:'Ласты',price:150}});
 Object.assign(ITEMS.trail,{leaves:{n:'Листопад',price:130},confetti:{n:'Конфетти',price:150},lightning:{n:'Молнии',price:240}});
 Object.assign(ITEMS.aura,{music:{n:'Музыкальная',price:200},sakura:{n:'Сакура',price:300},dark:{n:'Тьма',price:340}});
-ITEMS.top={none:{n:'Без кофты',price:0},hoodie:{n:'Серая толстовка',price:90},stripes:{n:'Полосатый свитер',price:110},carrot:{n:'Свитшот с морковкой',price:130},heart:{n:'Свитер с сердечком',price:150},knit:{n:'Вязаный свитер с косами',price:180},xmas:{n:'Новогодний свитер',price:220},rainbow:{n:'Радужный свитер',price:260},splash:{n:'Синий свитшот с брызгами',price:380},black:{n:'Чёрный свитшот с нашивкой',price:340},galaxy:{n:'Космический свитер',price:420},neon:{n:'Неоновый свитер',price:480},gold:{n:'Золотой свитер',price:550}};
+ITEMS.top={none:{n:'Без кофты',price:0},hoodie:{n:'Серая толстовка',price:90},stripes:{n:'Полосатый свитер',price:110},carrot:{n:'Свитшот с морковкой',price:130},heart:{n:'Свитер с сердечком',price:150},knit:{n:'Вязаный свитер с косами',price:180},xmas:{n:'Новогодний свитер',price:220},rainbow:{n:'Радужный свитер',price:260},splash:{n:'Синий свитшот с брызгами',src:'kg'},black:{n:'Чёрный свитшот с нашивкой',src:'kg'},galaxy:{n:'Космический свитер',price:420},neon:{n:'Неоновый свитер',price:480},gold:{n:'Золотой свитер',price:550}};
 const SLOTS=['skin','head','caps','acc','top','shoes','trail','aura'];
 const SLOT_NAMES={top:'Кофты',skin:'Скин',head:'Голова',caps:'Кепки',acc:'Аксессуар',shoes:'Обувь',trail:'След',aura:'Аура'};
 const SLOT_ICON={top:'🧥',skin:'🐰',head:'👑',caps:'🧢',acc:'🎀',shoes:'👟',trail:'✨',aura:'🔮'};
@@ -648,7 +648,7 @@ function evReward(l){return EV_SPECIAL[l]||{t:'coins',v:l%5===0?60+l*2:15+l*3}}
 
 /* ---------------- save / accounts ---------------- */
 function newSave(){return{coins:0,best:0,bpXp:0,bpClaimed:[],evXp:0,evClaimed:[],own:{top:['none'],skin:['grey','smoke','milk'],head:['none'],caps:['none'],shoes:['none'],acc:['none'],trail:['none'],aura:['none']},eq:{top:'none',skin:'grey',head:'none',caps:'none',shoes:'none',acc:'none',trail:'none',aura:'none'},set:defSet(),adm:{god:false,mag:false},fun:{disco:false,big:false,tiny:false,flip:false,grav:false},stats:{},ach:{},daily:''}}
-const EXCL_VAL={'acc:crystal':4000,'acc:phoenix':3000,'shoes:valenki':2000,'acc:moustache':300,'head:pizza':300,'trail:bananas':300,'caps:legend':5000,'skin:golden':900,'skin:pumpkin':800,'head:helmet':600,'head:halo':500,'head:witch':420,'head:pkcrown':700,'acc:cape':450,'acc:vamp':480,'acc:pkbag':400,'trail:dust':420,'trail:candies':380,'trail:bats':450,'aura:galaxy':650,'aura:pkflame':550,'aura:ghosts':600};
+const EXCL_VAL={'top:splash':10000,'top:black':10000,'acc:crystal':4000,'acc:phoenix':3000,'shoes:valenki':2000,'acc:moustache':300,'head:pizza':300,'trail:bananas':300,'caps:legend':5000,'skin:golden':900,'skin:pumpkin':800,'head:helmet':600,'head:halo':500,'head:witch':420,'head:pkcrown':700,'acc:cape':450,'acc:vamp':480,'acc:pkbag':400,'trail:dust':420,'trail:candies':380,'trail:bats':450,'aura:galaxy':650,'aura:pkflame':550,'aura:ghosts':600};
 function itemDef(slot,id){return slot==='skin'?SKINS[id]:ITEMS[slot][id]}
 function itemVal(slot,id){const d=itemDef(slot,id);if(!d)return 0;return d.price||EXCL_VAL[slot+':'+id]||(d.src?400:0)}
 function allPaid(){const out=[];for(const id of SKIN_ORDER)if(itemVal('skin',id)>0)out.push('skin:'+id);for(const sl of ['head','caps','acc','top','shoes','trail','aura'])for(const id of Object.keys(ITEMS[sl]))if(itemVal(sl,id)>0)out.push(sl+':'+id);return out}
