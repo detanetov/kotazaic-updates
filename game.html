@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=15;window.KZ_VNAME='1.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=16;window.KZ_VNAME='2.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -424,6 +424,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
       <div class="mglist">
         <div class="mgcard"><div class="mgic">❌⭕</div><div class="mgtx"><b>Крестики-нолики</b><small>Собери 3 в ряд</small></div><button class="btn sm mint" data-mgopen="ttt">Открыть</button></div>
         <div class="mgcard"><div class="mgic">🃏</div><div class="mgtx"><b>Дурак</b><small>Обычный и переводной, 36 карт</small></div><button class="btn sm mint" data-mgopen="durak">Открыть</button></div>
+        <div class="mgcard"><div class="mgic">🌻</div><div class="mgtx"><b>Сад котозайца</b><small>Покупай семена, сажай, поливай, собирай урожай и продавай. Растения растут даже когда игра закрыта</small></div><button class="btn sm mint" data-garden="1">Открыть</button></div>
         <div class="mgcard"><div class="mgic">🤸</div><div class="mgtx"><b>NoomiClone</b><small>Котозаяц-гимнаст: раскачайся на перекладине, отпусти, сделай сальто и поймай следующую</small></div><button class="btn sm mint" data-noomi="1">Открыть</button></div>
         <div class="mgcard"><div class="mgic">♟️</div><div class="mgtx"><b>Шахматы</b><small>Классические шахматы, рокировка, взятие на проходе</small></div><button class="btn sm mint" data-mgopen="chess">Открыть</button></div>
       </div>
@@ -563,6 +564,17 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
     </div>
     <div id="mgStep"></div>
     <div id="mgBoard"></div>
+  </div>
+</div>
+
+<div class="screen" id="garden">
+  <div class="panel" style="max-width:1000px;padding:14px">
+    <div class="row" style="justify-content:space-between"><h2>🌻 Сад котозайца</h2><div class="row" style="gap:8px"><span class="chip" id="gLvl"></span><span class="chip" id="gCoins"></span><button class="btn sm ghost" id="gBack">← Мини-игры</button></div></div>
+    <div class="bar" style="height:10px;margin:6px 0 8px"><i id="gXp" style="display:block;height:100%;width:0;background:var(--mint);border-radius:8px"></i></div>
+    <canvas id="gcv" style="width:100%;height:auto;display:block;border:4px solid var(--ink);border-radius:16px;background:#7cc46a;touch-action:manipulation"></canvas>
+    <div class="row" id="gTools" style="gap:6px;margin-top:8px;justify-content:center"></div>
+    <div class="tabs" id="gTabs" style="margin-top:10px"><button class="btn sm cur" data-gt="shop">🛒 Семена</button><button class="btn sm" data-gt="inv">🎒 Склад и продажа</button><button class="btn sm" data-gt="up">⬆ Улучшения</button></div>
+    <div id="gPanel"></div>
   </div>
 </div>
 
@@ -744,7 +756,7 @@ function logout(){persist();user=null;S=null;applyShader();applyFlip();lsDel('kz
 
 /* ---------------- UI helpers ---------------- */
 let cur='auth';
-const SCREENS=['auth','menu','bp','ev','cos','set','adm','kg','give','gpe','mg','noomi','pause','over'];
+const SCREENS=['auth','menu','bp','ev','cos','set','adm','kg','give','gpe','mg','noomi','garden','pause','over'];
 function show(id){
   cur=id;
   for(const s of SCREENS)$('#'+s).classList.toggle('on',s===id);
@@ -2075,6 +2087,118 @@ for(const[id,k]of[['#nmArch','arch'],['#nmTuck','tuck']]){const el=$(id);el.addE
 $('#nmRel').addEventListener('pointerdown',e=>{e.preventDefault();NM.touch.rel=true});$('#nmReset').onclick=()=>{NM.touch.reset=true};
 $('#nmBack').onclick=()=>{show('set');setSetTab('mg')};
 document.addEventListener('click',e=>{if(e.target.closest('[data-noomi]'))openNoomi()});
+/* ---------------- Garden simulator ---------------- */
+const PLANTS={
+  carrot:{n:'Морковка',e:'🥕',cost:5,time:30,sell:9,lv:1,leaf:'#3fae6a'},
+  radish:{n:'Редиска',e:'🌶',cost:8,time:45,sell:15,lv:1,leaf:'#4fbf5a'},
+  straw:{n:'Клубника',e:'🍓',cost:15,time:90,sell:30,lv:2,leaf:'#3a9e4a'},
+  tomato:{n:'Помидор',e:'🍅',cost:20,time:120,sell:40,lv:2,leaf:'#2f8a3a'},
+  corn:{n:'Кукуруза',e:'🌽',cost:30,time:180,sell:62,lv:3,leaf:'#7cc44a'},
+  sun:{n:'Подсолнух',e:'🌻',cost:40,time:240,sell:85,lv:4,leaf:'#4fae3a'},
+  pumpkin:{n:'Тыква',e:'🎃',cost:60,time:360,sell:130,lv:5,leaf:'#3a8a2a'},
+  melon:{n:'Арбуз',e:'🍉',cost:90,time:480,sell:200,lv:6,leaf:'#2f7a2a'},
+  grape:{n:'Виноград',e:'🍇',cost:120,time:540,sell:265,lv:7,leaf:'#5a9e3a'},
+  starflower:{n:'Звёздный цветок',e:'⭐',cost:160,time:600,sell:350,lv:8,leaf:'#5ee6c1'},
+  goldcarrot:{n:'Золотая морковка',e:'🥕',cost:250,time:900,sell:600,lv:9,leaf:'#ffcf33',gold:true},
+  moonrose:{n:'Лунная роза',e:'🌹',cost:400,time:1200,sell:950,lv:10,leaf:'#8b6cff'}};
+const G_MAXPLOTS=16;
+function gData(){if(!S.garden)S.garden={plots:Array.from({length:6},()=>({id:null,p:0,w:false,t:0})),seeds:{carrot:3},crops:{},gold:{},xp:0,fert:1,sprinkler:false,scare:false,harvested:0};return S.garden}
+function gLevel(){return Math.floor(Math.sqrt(gData().xp/40))+1}
+function gLvXp(l){return (l-1)*(l-1)*40}
+function gUpdate(now){const g=gData();for(const pl of g.plots){if(!pl.id){pl.t=now;continue}const P=PLANTS[pl.id];if(!P){pl.id=null;continue}const el=Math.min(7*86400,Math.max(0,(now-(pl.t||now))/1000));if(g.sprinkler)pl.w=true;pl.p=Math.min(1,pl.p+el/P.time*(pl.w?2:1));pl.t=now}}
+let gTool={k:'seed',id:'carrot'},gTab='shop',GV=null,gSaveT=0,gCrow=null,gCrowT=50,gRainT=0,gFx=[],gNextRain=rnd(90,180);
+function openGarden(){if(!GV){GV={cv:$('#gcv')};GV.c=GV.cv.getContext('2d');GV.cv.width=960;GV.cv.height=470}gData();gUpdate(Date.now());show('garden');gRender();persist()}
+function gPlotRect(i){const cols=4,w=150,h=74,gx=22,gy=12,x0=232,y0=128;return{x:x0+(i%cols)*(w+gx),y:y0+Math.floor(i/cols)*(h+gy),w,h}}
+function gStage(pl){return !pl.id?-1:pl.p>=1?4:pl.p>.66?3:pl.p>.33?2:pl.p>.08?1:0}
+function gFmt(sec){sec=Math.max(0,Math.ceil(sec));if(sec<60)return sec+' с';const m=Math.floor(sec/60);if(m<60)return m+' мин '+(sec%60?(sec%60)+' с':'');return Math.floor(m/60)+' ч '+(m%60)+' мин'}
+function gTip(t,col){gFx.push({t,x:480,y:30,life:1.6,col:col||'#fff'})}
+function gClick(e){const r=GV.cv.getBoundingClientRect(),x=(e.clientX-r.left)*GV.cv.width/r.width,y=(e.clientY-r.top)*GV.cv.height/r.height,g=gData();
+  if(gCrow&&Math.hypot(x-gCrow.x,y-gCrow.y)<40){gCrow.flee=true;S.coins+=2;gTip('Кыш, ворона! +2 🪙','#ffe066');SND.boing&&SND.boing();sfx(900,.1,'square',.04,-400);refreshTop();return}
+  for(let i=0;i<g.plots.length;i++){const R=gPlotRect(i);if(x<R.x||x>R.x+R.w||y<R.y||y>R.y+R.h)continue;const pl=g.plots[i];gAct(i,pl,R);return}}
+function gAct(i,pl,R){const g=gData(),st=gStage(pl);
+  if(st===4){const P=PLANTS[pl.id],gold=!P.gold&&Math.random()<.06;if(gold){g.gold[pl.id]=(g.gold[pl.id]||0)+1;stat('gGold');gTip('✨ Золотой урожай: '+P.n+'!','#ffe066');confetti(40)}else{g.crops[pl.id]=(g.crops[pl.id]||0)+1;gTip('+1 '+P.e+' '+P.n,'#fff')}
+    const lv0=gLevel();g.xp+=Math.ceil(P.sell/3);g.harvested++;stat('gHarvest');const lv1=gLevel();if(lv1>lv0){S.stats.gLevel=lv1;checkAch();gTip('🎉 Уровень сада '+lv1+'! Новые семена','#5ee6c1');SND.win()}else SND.star();
+    for(let k=0;k<10;k++)gFx.push({p:1,x:R.x+R.w/2,y:R.y+R.h/2,vx:rnd(-80,80),vy:rnd(-160,-60),life:.8,col:P.leaf});pl.id=null;pl.p=0;pl.w=false;gRender();persist();return}
+  if(gTool.k==='shovel'){if(pl.id){pl.id=null;pl.p=0;pl.w=false;gTip('Грядка очищена');sfx(200,.1,'square',.03);gRender();persist()}return}
+  if(!pl.id){if(gTool.k!=='seed'){gTip('Выбери семена внизу 🌱');return}const id=gTool.id;if(!(g.seeds[id]>0)){gTip('Нет семян «'+PLANTS[id].n+'» — купи в магазине');return}g.seeds[id]--;pl.id=id;pl.p=0;pl.w=g.sprinkler;pl.t=Date.now();gTip('Посажено: '+PLANTS[id].e+' '+PLANTS[id].n);sfx(500,.06,'triangle',.04,200);if(!(g.seeds[id]>0)){const nx=Object.keys(g.seeds).find(k=>g.seeds[k]>0);if(nx)gTool={k:'seed',id:nx}}gRender();persist();return}
+  if(gTool.k==='water'){if(pl.w){gTip('Уже полито 💧');return}pl.w=true;gTip('Полито! Растёт в 2 раза быстрее 💧','#8fe3ff');for(let k=0;k<8;k++)gFx.push({p:1,x:R.x+R.w/2+rnd(-30,30),y:R.y,vx:0,vy:rnd(60,120),life:.6,col:'#8fe3ff'});sfx(700,.12,'sine',.03,-300);persist();return}
+  if(gTool.k==='fert'){if(!(g.fert>0)){gTip('Нет удобрений — купи в «Улучшениях»');return}g.fert--;pl.p=Math.min(1,pl.p+.5);gTip('🧪 Удобрение: +50% роста','#c39bff');sfx(400,.15,'triangle',.04,500);gRender();persist();return}
+  const P=PLANTS[pl.id];gTip(P.e+' '+P.n+': ещё '+gFmt((1-pl.p)*P.time/(pl.w?2:1))+(pl.w?'':' (полей — будет быстрее)'))}
+function gRender(){const g=gData(),lv=gLevel();$('#gLvl').textContent='🌱 Уровень сада '+lv;$('#gCoins').textContent='🪙 '+S.coins;const a=gLvXp(lv),b=gLvXp(lv+1);$('#gXp').style.width=Math.min(100,(g.xp-a)/(b-a)*100)+'%';
+  let t='';for(const[id,P]of Object.entries(PLANTS)){if(!(g.seeds[id]>0))continue;t+=`<button class="btn sm ${gTool.k==='seed'&&gTool.id===id?'mint':'ghost'}" data-gtool="seed:${id}">${P.e} ${g.seeds[id]}</button>`}
+  t+=`<button class="btn sm ${gTool.k==='water'?'mint':'ghost'}" data-gtool="water">💧 Полить</button><button class="btn sm ${gTool.k==='fert'?'mint':'ghost'}" data-gtool="fert">🧪 Удобрение (${g.fert})</button><button class="btn sm ${gTool.k==='shovel'?'mint':'ghost'}" data-gtool="shovel">🪏 Выкопать</button><button class="btn sm" data-gtool="harvest">🧺 Собрать всё</button>`;
+  $('#gTools').innerHTML=t;
+  let h='';
+  if(gTab==='shop'){h='<div class="items" style="margin-top:8px">';for(const[id,P]of Object.entries(PLANTS)){const lock=P.lv>lv;h+=`<div class="it" style="${lock?'opacity:.5':''}"><div class="ihead"><div class="itx"><b>${P.e} ${P.n}</b><small>Растёт ${gFmt(P.time)} · продаётся за ${P.sell} 🪙${P.gold?' · ✨':''}</small><small>${lock?'🔒 с '+P.lv+' уровня сада':'У тебя: '+(g.seeds[id]||0)+' шт.'}</small></div></div>${lock?'':`<div class="row" style="gap:6px"><button class="btn sm" data-gbuy="${id}:1" ${S.coins<P.cost?'disabled':''}>Купить 🪙 ${P.cost}</button><button class="btn sm ghost" data-gbuy="${id}:5" ${S.coins<P.cost*5?'disabled':''}>×5 🪙 ${P.cost*5}</button></div>`}</div>`}h+='</div>'}
+  if(gTab==='inv'){let tot=0;h='<div class="items" style="margin-top:8px">';for(const[id,P]of Object.entries(PLANTS)){const n=g.crops[id]||0,gn=g.gold[id]||0;if(!n&&!gn)continue;tot+=n*P.sell+gn*P.sell*5;
+      if(n)h+=`<div class="it"><div class="ihead"><div class="itx"><b>${P.e} ${P.n} ×${n}</b><small>${P.sell} 🪙 за штуку</small></div></div><div class="row" style="gap:6px"><button class="btn sm" data-gsell="${id}:1">Продать 1</button><button class="btn sm mint" data-gsell="${id}:all">Все за ${n*P.sell} 🪙</button></div></div>`;
+      if(gn)h+=`<div class="it" style="border-color:#ffc93c;background:#fff8d8"><div class="ihead"><div class="itx"><b>✨ Золот. ${P.n} ×${gn}</b><small>${P.sell*5} 🪙 за штуку (×5)</small></div></div><button class="btn sm mint" data-gsell="gold_${id}:all">Продать за ${gn*P.sell*5} 🪙</button></div>`}
+    h+='</div>';h=tot?`<div class="row" style="justify-content:space-between;margin-top:8px"><b>Урожай на ${tot} 🪙</b><button class="btn sm pink" data-gsell="all:all">💰 Продать всё</button></div>`+h:'<p class="hint" style="margin-top:10px">Склад пуст — собери урожай с грядок.</p>';
+    const sd=Object.entries(g.seeds).filter(([k,v])=>v>0&&PLANTS[k]).map(([k,v])=>PLANTS[k].e+' '+PLANTS[k].n+' ×'+v).join(' · ');h+=`<p class="hint">🌱 Семена: ${sd||'нет'}</p><p class="hint">Всего собрано: ${g.harvested}</p>`}
+  if(gTab==='up'){const pc=gPlotCost();h=`<div class="items" style="margin-top:8px">
+    <div class="it"><div class="ihead"><div class="itx"><b>🟫 Новая грядка</b><small>Грядок: ${g.plots.length} из ${G_MAXPLOTS}</small></div></div>${g.plots.length<G_MAXPLOTS?`<button class="btn sm" data-gup="plot" ${S.coins<pc?'disabled':''}>Купить 🪙 ${pc}</button>`:'<b>✓ Максимум</b>'}</div>
+    <div class="it"><div class="ihead"><div class="itx"><b>🧪 Удобрения ×5</b><small>Сразу +50% роста растения. Есть: ${g.fert}</small></div></div><button class="btn sm" data-gup="fert" ${S.coins<60?'disabled':''}>Купить 🪙 60</button></div>
+    <div class="it"><div class="ihead"><div class="itx"><b>🚿 Автополив</b><small>Все растения сами поливаются и растут ×2</small></div></div>${g.sprinkler?'<b>✓ Есть</b>':`<button class="btn sm" data-gup="sprinkler" ${S.coins<800?'disabled':''}>Купить 🪙 800</button>`}</div>
+    <div class="it"><div class="ihead"><div class="itx"><b>🧑‍🌾 Пугало</b><small>Вороны больше не крадут урожай</small></div></div>${g.scare?'<b>✓ Есть</b>':`<button class="btn sm" data-gup="scare" ${S.coins<300?'disabled':''}>Купить 🪙 300</button>`}</div></div>`}
+  $('#gPanel').innerHTML=h;refreshTop()}
+function gPlotCost(){return Math.round(120*Math.pow(1.45,gData().plots.length-6))}
+document.addEventListener('click',e=>{if(cur!=='garden'&&!e.target.closest('[data-garden]'))return;
+  if(e.target.closest('[data-garden]')){openGarden();return}
+  const g=S&&gData();if(!g)return;
+  const tb=e.target.closest('[data-gtool]');if(tb){const v=tb.dataset.gtool;if(v==='harvest'){let n=0;g.plots.forEach((pl,i)=>{if(gStage(pl)===4){gAct(i,pl,gPlotRect(i));n++}});if(!n)gTip('Пока нечего собирать');return}gTool=v.startsWith('seed:')?{k:'seed',id:v.slice(5)}:{k:v};SND.click();gRender();return}
+  const gt=e.target.closest('[data-gt]');if(gt){gTab=gt.dataset.gt;for(const x of document.querySelectorAll('#gTabs [data-gt]'))x.classList.toggle('cur',x===gt);SND.click();gRender();return}
+  const bb=e.target.closest('[data-gbuy]');if(bb){const[id,n]=bb.dataset.gbuy.split(':'),P=PLANTS[id],cost=P.cost*(+n);if(S.coins<cost)return;S.coins-=cost;g.seeds[id]=(g.seeds[id]||0)+(+n);gTool={k:'seed',id};SND.buy();gTip('Куплено: '+P.e+' ×'+n);gRender();persist();return}
+  const sb=e.target.closest('[data-gsell]');if(sb){const[k,n]=sb.dataset.gsell.split(':');let earn=0;const sellOne=(id,gold,cnt)=>{const P=PLANTS[id],box=gold?g.gold:g.crops,have=box[id]||0,q=cnt==='all'?have:Math.min(have,1);box[id]=have-q;earn+=q*P.sell*(gold?5:1)};
+    if(k==='all'){for(const id in PLANTS){sellOne(id,false,'all');sellOne(id,true,'all')}}else if(k.startsWith('gold_'))sellOne(k.slice(5),true,n);else sellOne(k,false,n);
+    if(earn){S.coins+=earn;SND.gold?SND.gold():SND.buy();gTip('Продано на '+earn+' 🪙','#ffe066');stat('gEarned',earn)}gRender();persist();return}
+  const ub=e.target.closest('[data-gup]');if(ub){const k=ub.dataset.gup;
+    if(k==='plot'){const c=gPlotCost();if(S.coins<c||g.plots.length>=G_MAXPLOTS)return;S.coins-=c;g.plots.push({id:null,p:0,w:false,t:Date.now()})}
+    if(k==='fert'){if(S.coins<60)return;S.coins-=60;g.fert+=5}
+    if(k==='sprinkler'){if(S.coins<800||g.sprinkler)return;S.coins-=800;g.sprinkler=true;for(const pl of g.plots)if(pl.id)pl.w=true}
+    if(k==='scare'){if(S.coins<300||g.scare)return;S.coins-=300;g.scare=true}
+    SND.buy();gRender();persist();return}});
+$('#gcv').addEventListener('click',e=>{if(cur==='garden')gClick(e)});
+$('#gBack').onclick=()=>{persist();show('set');setSetTab('mg')};
+function gDrawPlant(c,P,st,x,y,t,pl){const sw=Math.sin(t*2+x)*.06;c.save();c.translate(x,y);
+  if(st===0){ell(c,0,-4,12,6);c.fillStyle='#5a3a22';c.fill();ell(c,0,-6,3,2.5);c.fillStyle='#e8d9a8';c.fill();c.restore();return}
+  const h=[0,14,26,38,44][st];c.rotate(sw);c.strokeStyle='#2f7a2a';c.lineWidth=3;c.beginPath();c.moveTo(0,0);c.lineTo(0,-h);c.stroke();
+  for(let k=0;k<Math.min(st+1,4);k++){const yy=-h*(.3+k*.2),side=k%2?1:-1;ell(c,side*9,yy,10,5,side*.5);c.fillStyle=P.leaf;c.fill();c.lineWidth=1.5;c.strokeStyle='rgba(0,0,0,.25)';c.stroke()}
+  if(st>=3){c.font=`${st===4?28:16}px serif`;c.textAlign='center';c.textBaseline='middle';if(st===4&&P.gold){c.save();c.shadowColor='#ffe066';c.shadowBlur=14;c.filter='saturate(2) hue-rotate(15deg)';c.fillText(P.e,0,-h-8);c.restore()}else c.fillText(P.e,0,-h-8);
+    if(st===4&&Math.sin(t*4+x)>.3){starPath(c,14,-h-18,4,t*3);c.fillStyle='#fff6b0';c.fill()}}
+  c.restore()}
+function gardenStep(dt){if(!GV)return;const c=GV.c,W2=960,H2=470,g=gData(),now=Date.now(),t=performance.now()/1000;gUpdate(now);
+  gSaveT+=dt;if(gSaveT>6){gSaveT=0;persist()}
+  // rain event
+  gNextRain-=dt;if(gNextRain<=0&&!gRainT){gRainT=8;gNextRain=rnd(150,260);for(const pl of g.plots)if(pl.id)pl.w=true;gTip('🌧 Пошёл дождь — все грядки политы!','#8fe3ff')}
+  if(gRainT>0)gRainT=Math.max(0,gRainT-dt);
+  // crow
+  gCrowT-=dt;if(!gCrow&&gCrowT<=0){gCrowT=rnd(45,90);const ripe=g.plots.map((pl,i)=>[pl,i]).filter(([pl])=>gStage(pl)===4);if(ripe.length&&!g.scare){const[pl,i]=pick(ripe),R=gPlotRect(i);gCrow={i,x:-40,y:60,tx:R.x+R.w/2,ty:R.y+20,stage:0,t:0};sfx(300,.2,'sawtooth',.04,-100);gTip('🐦 Летит ворона! Нажми на неё, чтобы прогнать','#ff9cc8')}}
+  if(gCrow){const k=gCrow;k.t+=dt;if(k.flee){k.x+=420*dt;k.y-=260*dt;if(k.y<-60)gCrow=null}else if(k.stage===0){const dx=k.tx-k.x,dy=k.ty-k.y,d=Math.hypot(dx,dy);if(d<6){k.stage=1;k.t=0}else{k.x+=dx/d*Math.min(d,160*dt);k.y+=dy/d*Math.min(d,160*dt)}}else if(k.stage===1&&k.t>2.2){const pl=g.plots[k.i];if(pl&&gStage(pl)===4){gTip('Ворона утащила '+PLANTS[pl.id].e+'! Купи пугало 🧑‍🌾','#ff7eb6');pl.id=null;pl.p=0;pl.w=false;persist()}k.flee=true}}
+  // draw
+  const sky=c.createLinearGradient(0,0,0,H2);sky.addColorStop(0,gRainT?'#7a8aa8':'#9fdcff');sky.addColorStop(.25,gRainT?'#8a9ab8':'#c8f0ff');sky.addColorStop(.26,'#7cc46a');sky.addColorStop(1,'#5eae4a');c.fillStyle=sky;c.fillRect(0,0,W2,H2);
+  if(!gRainT){c.save();c.shadowColor='#ffe066';c.shadowBlur=30;ell(c,900,30,28,28);c.fillStyle='#ffe066';c.fill();c.restore()}
+  for(let i=0;i<3;i++){const cx=((t*12+i*340)%1200)-120;c.fillStyle='rgba(255,255,255,.85)';for(const[dx,dy,r]of[[0,0,20],[20,-8,16],[38,2,14]]){ell(c,cx+dx,40+i*18+dy,r,r*.75);c.fill()}}
+  // fence
+  c.fillStyle='#d9b07a';for(let x=0;x<W2;x+=34){c.fillRect(x+12,96,8,30)}c.fillRect(0,104,W2,5);c.fillRect(0,116,W2,5);
+  // kotozayac gardener
+  drawKZ(c,110,400+Math.abs(Math.sin(t*2))*-3,.95,Object.assign({},S.eq),t,Math.sin(t*1.2)*.04);
+  c.save();c.translate(170,390);c.rotate(-.5);c.fillStyle='#5b8ac8';c.beginPath();c.roundRect(-14,-16,28,22,5);c.fill();c.lineWidth=3;c.strokeStyle=INK;c.stroke();c.beginPath();c.moveTo(14,-10);c.lineTo(32,-24);c.stroke();c.restore();
+  if(g.scare){c.save();c.translate(80,250);c.strokeStyle='#8a5a3c';c.lineWidth=5;c.beginPath();c.moveTo(0,40);c.lineTo(0,-30);c.moveTo(-26,-10);c.lineTo(26,-10);c.stroke();ell(c,0,-38,13,13);fs(c,'#f3d9a8',3);c.fillStyle='#c8a24a';c.beginPath();c.moveTo(-20,-44);c.lineTo(20,-44);c.lineTo(0,-64);c.closePath();c.fill();c.fillStyle=INK;ell(c,-4,-40,1.8,1.8);c.fill();ell(c,4,-40,1.8,1.8);c.fill();c.restore()}
+  if(g.sprinkler){c.fillStyle='#9aa4b8';c.fillRect(212,128,6,4*86-12);for(let r=0;r<4;r++){ell(c,215,140+r*86,7,7);c.fill()}}
+  for(let i=0;i<g.plots.length;i++){const R=gPlotRect(i),pl=g.plots[i],st=gStage(pl);c.beginPath();c.roundRect(R.x,R.y,R.w,R.h,12);c.fillStyle=pl.w&&pl.id?'#5a3a22':'#7a5232';c.fill();c.lineWidth=3;c.strokeStyle='#3e2614';c.stroke();
+    c.strokeStyle='rgba(0,0,0,.18)';c.lineWidth=2;for(let k=1;k<3;k++){c.beginPath();c.moveTo(R.x+8,R.y+R.h*k/3);c.lineTo(R.x+R.w-8,R.y+R.h*k/3);c.stroke()}
+    if(pl.id){const P=PLANTS[pl.id];for(const dx of[-38,0,38])gDrawPlant(c,P,st,R.x+R.w/2+dx,R.y+R.h-14,t,pl);
+      if(st<4){c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.roundRect(R.x+10,R.y+R.h-9,R.w-20,6,3);c.fill();c.fillStyle=pl.w?'#8fe3ff':'#ffe066';c.beginPath();c.roundRect(R.x+10,R.y+R.h-9,(R.w-20)*pl.p,6,3);c.fill()}
+      else{c.font='900 13px Trebuchet MS';c.textAlign='center';c.lineWidth=3;c.strokeStyle=INK;c.strokeText('Собрать!',R.x+R.w/2,R.y+14);c.fillStyle='#ffe066';c.fillText('Собрать!',R.x+R.w/2,R.y+14)}
+      if(pl.w&&st<4){c.font='14px serif';c.textAlign='left';c.fillText('💧',R.x+6,R.y+16)}}
+    else{c.font='700 12px Trebuchet MS';c.textAlign='center';c.fillStyle='rgba(255,255,255,.55)';c.fillText(gTool.k==='seed'?'посадить '+PLANTS[gTool.id].e:'пусто',R.x+R.w/2,R.y+R.h/2+4)}}
+  if(g.plots.length<G_MAXPLOTS){const R=gPlotRect(g.plots.length);c.setLineDash([6,6]);c.lineWidth=3;c.strokeStyle='rgba(255,255,255,.5)';c.beginPath();c.roundRect(R.x,R.y,R.w,R.h,12);c.stroke();c.setLineDash([]);c.font='700 12px Trebuchet MS';c.textAlign='center';c.fillStyle='rgba(255,255,255,.7)';c.fillText('+ грядка в «Улучшениях»',R.x+R.w/2,R.y+R.h/2+4)}
+  if(gRainT){c.strokeStyle='rgba(200,230,255,.6)';c.lineWidth=1.5;for(let i=0;i<120;i++){const x=(i*97+t*80)%W2,y=(i*53+t*600)%H2;c.beginPath();c.moveTo(x,y);c.lineTo(x-3,y+12);c.stroke()}}
+  if(gCrow){const k=gCrow;c.save();c.translate(k.x,k.y);const f=Math.sin(t*16)*.6;c.fillStyle='#1d1838';ell(c,0,0,16,11);c.fill();ell(c,13,-6,9,8);c.fill();c.beginPath();c.moveTo(20,-6);c.lineTo(30,-3);c.lineTo(20,-1);c.fillStyle='#ffb030';c.fill();c.fillStyle='#fff';ell(c,15,-8,2,2);c.fill();c.fillStyle='#1d1838';for(const s of[-1,1]){c.beginPath();c.moveTo(-4,-4);c.quadraticCurveTo(-14,-22*(s>0?1:.6)*(1+f),-26,-6);c.lineTo(-2,2);c.fill()}c.restore()}
+  for(const f of gFx){f.life-=dt;if(f.p){f.x+=f.vx*dt;f.y+=f.vy*dt;f.vy+=300*dt;c.globalAlpha=Math.max(0,f.life/.8);ell(c,f.x,f.y,3,3);c.fillStyle=f.col;c.fill()}else{c.globalAlpha=Math.max(0,Math.min(1,f.life*1.4));c.font='900 20px Trebuchet MS';c.textAlign='center';c.lineWidth=4;c.strokeStyle=INK;c.strokeText(f.t,W2/2,f.y+(1.6-f.life)*-8+52);c.fillStyle=f.col;c.fillText(f.t,W2/2,f.y+(1.6-f.life)*-8+52)}}
+  c.globalAlpha=1;gFx=gFx.filter(f=>f.life>0);if(gFx.filter(f=>!f.p).length>1)gFx.splice(gFx.findIndex(f=>!f.p),1);
+  // refresh tool counts sometimes
+  if(Math.random()<dt)$('#gCoins').textContent='🪙 '+S.coins}
 let codeBuf='',admBoostUntil=+(lsGet('kz_boost')||0);
 const funFx={snow:0,love:0,boom:0,ghost:0,notes:0,cloud:0};
 function playTune(notes,ms){notes.forEach((f,i)=>setTimeout(()=>sfx(f,ms/1000*.9,'triangle',.05),i*ms))}
@@ -2109,6 +2233,7 @@ function loop(now){
   if(cur==='cos'&&S){pvDt=dt;drawPreview(T)}
   if(cur==='kg'&&S)drawDial(T,dt);
   if(cur==='noomi'&&S)noomiStep(dt);
+  if(cur==='garden'&&S)gardenStep(dt);
   if(hatchAnim)drawHatch(dt);
   requestAnimationFrame(loop);
 }
@@ -2561,6 +2686,7 @@ const MG_INFO={chess:{n:'Шахматы',i:'♟️',rules:'Обычные шах
 const DIFF={easy:{n:'Легко',p:.25,r:5},mid:{n:'Средне',p:.5,r:10},hard:{n:'Сложно',p:.8,r:20}};
 const DK_MODE={classic:'Дурак — обычная игра',transfer:'Дурак — переводной'};
 ACH.push({id:'codes2',n:'Мастер приколов',d:'Найти 20 разных секретных кодов',k:'codes',goal:20,r:300,i:'🤡'},{id:'carrots',n:'Морковный король',d:'Поймать 50 морковок в морковный дождь',k:'carrots',goal:50,r:120,i:'🥕'});
+ACH.push({id:'garden1',n:'Садовод',d:'Собрать 50 растений в саду',k:'gHarvest',goal:50,r:150,i:'🌻'},{id:'garden2',n:'Фермер',d:'Достичь 5 уровня сада',k:'gLevel',goal:5,r:300,i:'🚜'},{id:'garden3',n:'Золотые руки',d:'Вырастить золотое растение',k:'gGold',goal:1,r:120,i:'✨'});
 ACH.push({id:'noomi',n:'Гимнаст',d:'NoomiClone: сделать сальто и поймать перекладину',k:'noomiFlipGrab',goal:1,r:100,i:'🤸'},{id:'noomi2',n:'Олимпиец',d:'NoomiClone: набрать 3000 очков за попытку',k:'noomiBest',goal:3000,r:250,i:'🥇'});
 ACH.push({id:'chess',n:'Гроссмейстер',d:'Обыграть сложного бота в шахматы',k:'chessHard',goal:1,r:150,i:'♟️'},{id:'durak',n:'Не дурак',d:'Выиграть в дурака 3 раза',k:'durakWins',goal:3,r:80,i:'🃏'},{id:'ttt',n:'Крестоносец',d:'Обыграть сложного бота в крестики-нолики',k:'tttHard',goal:1,r:60,i:'❌'});
 let chessWhite=0,mgGame='ttt',mg=null,mgStep=null,mgPend={},mgBotTok=0,srch=null,tttFirst=0;

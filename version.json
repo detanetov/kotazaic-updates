@@ -1,9 +1,9 @@
 {
- "version": 15,
- "label": "1.9",
- "name": "Версия 1.9: мини-игра NoomiClone",
+ "version": 16,
+ "label": "2.0",
+ "name": "Версия 2.0: Сад котозайца",
  "file": "game.html",
- "sha256": "a0ea50cd9d0b3be9af872d1c96ffd0fc76559b01914a3c976d6fcf1ef25f66c1",
+ "sha256": "0eb1bf8a49b6b334fd5c000d6207e0fd34a903dd1442683c144530f2ec94d0f8",
  "date": "2026-10-17",
  "exe": {
   "version": 3,
