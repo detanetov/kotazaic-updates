@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=20;window.KZ_VNAME='1.3.6';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=21;window.KZ_VNAME='1.3.7';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -41,8 +41,8 @@ html,body{height:100%;overflow:hidden;background:#0f0c2e;font-family:"Trebuchet 
 #top.on{display:flex}
 .chip{background:var(--paper);border:3px solid var(--ink);border-radius:999px;padding:6px 14px;font-weight:900;box-shadow:0 3px 0 var(--ink);display:flex;gap:6px;align-items:center}
 #top .sp{flex:1}
-.gpill{display:none;align-items:center;gap:12px;background:rgba(18,16,30,.82);color:#e8eef8;border-radius:6px;padding:5px 12px;font:700 13px "Segoe UI",system-ui,sans-serif;letter-spacing:.2px;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.gpill span{white-space:nowrap}.guipv .gpill{gap:7px!important;padding:4px 8px;font-size:10px!important}.gpill b{color:#fff}.gpill #gpTag{font-weight:900;font-size:14px}.gpill .gpi{font-style:normal;color:#3fd36a;font-size:11px}.gpsep{width:1px;height:16px;background:rgba(255,255,255,.25)}
+.gpill{display:none;align-items:center;gap:14px;background:rgba(32,32,36,.86);color:#f2f2f2;border-radius:4px;padding:6px 12px;font:700 13px "Segoe UI",Arial,sans-serif;line-height:1;letter-spacing:.1px}
+.gpill>span{display:flex;align-items:center;gap:5px;white-space:nowrap}.gpill i{font-style:normal}.gpill .gptag{font-weight:800;font-size:13px;margin-right:2px}.gpi{width:13px;height:13px;fill:#29d36b;stroke:#29d36b}.guipv .gpill{transform-origin:right center}
 html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
 .guiwrap{display:grid;grid-template-columns:240px 1fr;gap:14px;align-items:start}@media (max-width:640px){.guiwrap{grid-template-columns:1fr}}
 .guiopt{display:block;width:100%;text-align:left;margin-bottom:8px;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px 12px;cursor:pointer;box-shadow:0 3px 0 var(--ink);font:inherit}.guiopt.cur{background:var(--mint)}.guiopt b{font-size:16px}.guiopt small{display:block;opacity:.75}
@@ -302,7 +302,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
   <div class="chip gc">🐰 <span id="tNick">—</span></div>
   <div class="chip gc">🪙 <span id="tCoins">0</span></div>
   <div class="sp"></div>
-  <div id="guiPill" class="gpill"><b id="gpTag">KZ</b><span class="gpsep"></span><span><i class="gpi">◉</i> <b id="gpFps">0</b> FPS</span><span><i class="gpi">📶</i> <b id="gpMs">—</b> MS</span><span><i class="gpi">📡</i> <b id="gpLoss">0</b>% LOSS</span><span class="gpsep"></span><span>🪙 <b id="gpCoins">0</b></span></div>
+  <div id="guiPill" class="gpill"><span class="gptag" id="gpTag">NL</span><span><svg class="gpi" viewBox="0 0 16 16"><rect x="1" y="9" width="3" height="6" rx="1"/><rect x="6.5" y="5" width="3" height="10" rx="1"/><rect x="12" y="1" width="3" height="14" rx="1"/></svg><i><span id="gpFps">0</span> FPS</i></span><span><svg class="gpi" viewBox="0 0 16 16"><path d="M8 13.5a1.6 1.6 0 1 0 0 .01zM3.2 9.6a6.8 6.8 0 0 1 9.6 0l-1.4 1.4a4.8 4.8 0 0 0-6.8 0zM.4 6.8a10.8 10.8 0 0 1 15.2 0L14.2 8.2a8.8 8.8 0 0 0-12.4 0z"/></svg><i><span id="gpMs">0</span> MS</i></span><span><svg class="gpi" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke-width="2.4"/><circle cx="8" cy="8" r="2.2"/></svg><i><span id="gpLoss">0</span>% LOSS</i></span><b id="gpCoins" style="display:none"></b></div>
   <button class="btn sm ghost" id="bMute">🔊</button>
   <button class="btn sm ghost" id="bOut">Выйти</button>
 </div>
@@ -801,7 +801,7 @@ function show(id){
   if(id==='kg'){syncInv();kgSel={};kgTarget=null;kgResult=null;renderKG()}
   refreshTop();
 }
-function refreshTop(){if(!S)return;$('#tNick').textContent=nick;$('#tCoins').textContent=S.coins;try{$('#gpCoins').textContent=S.coins;$('#gpTag').textContent=guiTag()}catch(e){}$('#bMute').textContent=muted?'🔇':'🔊'}
+function refreshTop(){if(!S)return;$('#tNick').textContent=nick;$('#tCoins').textContent=S.coins;$('#bMute').textContent=muted?'🔇':'🔊'}
 function refreshMenu(){if(!S)return;refreshFunChips();$('#mAdm').style.display=isAdm()?'flex':'none';$('#mBp').textContent='ур. '+Math.min(BP_LV,Math.floor(S.bpXp/BP_XP));$('#mEv').textContent='ур. '+Math.min(EV_LV,Math.floor(S.evXp/EV_XP));$('#mBest').textContent=S.best}
 let toastT=0;
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),1900)}
@@ -2485,12 +2485,12 @@ function musicKick(){try{AC=AC||new(window.AudioContext||window.webkitAudioConte
     musicNote(ch[[0,1,2,3,2,1,2,3][i]]*(G&&G.boss?1.5:1),.22,'triangle',.035);if(i===0)musicNote(ch[0]/2,.9,'sine',.05);if(i%2===1&&Math.random()<.35)musicNote(ch[3]*2,.12,'sine',.012);musStep++},G&&G.boss?150:190)}
 addEventListener('pointerdown',()=>{if(S&&S.set.music&&!musT)musicKick()},{passive:true});
 /* ---------------- GUI layouts ---------------- */
-const GUIS={classic:{n:'1 — Классический',d:'Ник и монеты слева, звук и выход справа'},compact:{n:'2 — Компактный',d:'Тёмная панель справа: FPS, пинг (MS), потери (LOSS) и монеты'}};
+const GUIS={classic:{n:'1 — Классический',d:'Ник и монеты слева, звук и выход справа'},compact:{n:'2 — Компактный',d:'Тёмная панель справа: NL · FPS · MS · LOSS'}};
 let guiPrev=null;
 function guiTag(){const n=(nick||'KZ').replace(/[^A-Za-zА-Яа-яЁё0-9]/g,'');return (n.slice(0,2)||'KZ').toUpperCase()}
-function applyGui(){const on=S&&S.set.gui==='compact';document.documentElement.classList.toggle('gui2',!!on);if(on){NET.start();$('#gpTag').textContent=guiTag()}}
+function applyGui(){const on=S&&S.set.gui==='compact';document.documentElement.classList.toggle('gui2',!!on);if(on)NET.start()}
 function pvHtml(id){const nk=esc(nick||'Игрок'),co=S?S.coins:0;
-  if(id==='compact')return `<div class="pvbar"><div class="sp"></div><div class="gpill" style="display:flex;font-size:11px;gap:9px"><b>${esc(guiTag())}</b><span class="gpsep"></span><span><i class="gpi">◉</i> <b>${netStat.fps}</b> FPS</span><span><i class="gpi">📶</i> <b>${netStat.ms??'—'}</b> MS</span><span><i class="gpi">📡</i> <b>${netStat.loss}</b>% LOSS</span><span class="gpsep"></span><span>🪙 <b>${co}</b></span></div><button class="btn sm ghost">🔊</button><button class="btn sm ghost">Выйти</button></div>`;
+  if(id==='compact')return `<div class="pvbar"><div class="sp"></div><div class="gpill" style="display:flex"><span class="gptag">NL</span><span><svg class="gpi" viewBox="0 0 16 16"><rect x="1" y="9" width="3" height="6" rx="1"/><rect x="6.5" y="5" width="3" height="10" rx="1"/><rect x="12" y="1" width="3" height="14" rx="1"/></svg><i>${netStat.fps} FPS</i></span><span><svg class="gpi" viewBox="0 0 16 16"><path d="M8 13.5a1.6 1.6 0 1 0 0 .01zM3.2 9.6a6.8 6.8 0 0 1 9.6 0l-1.4 1.4a4.8 4.8 0 0 0-6.8 0zM.4 6.8a10.8 10.8 0 0 1 15.2 0L14.2 8.2a8.8 8.8 0 0 0-12.4 0z"/></svg><i>${netStat.ms??0} MS</i></span><span><svg class="gpi" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke-width="2.4"/><circle cx="8" cy="8" r="2.2"/></svg><i>${netStat.loss}% LOSS</i></span></div><button class="btn sm ghost">🔊</button><button class="btn sm ghost">Выйти</button></div>`;
   return `<div class="pvbar"><div class="chip">🐰 ${nk}</div><div class="chip">🪙 ${co}</div><div class="sp"></div><button class="btn sm ghost">🔊</button><button class="btn sm ghost">Выйти</button></div>`}
 function renderGui(){const curG=S.set.gui||'classic',pv=guiPrev||curG;let h='';for(const[id,g]of Object.entries(GUIS))h+=`<button class="guiopt ${curG===id?'cur':''}" data-gui="${id}" onmouseenter="guiPrev='${id}';renderGuiPv()" onmouseleave="guiPrev=null;renderGuiPv()"><b>${g.n}</b><small>${g.d}</small>${curG===id?'<small>✓ Включено</small>':''}</button>`;$('#guiOpts').innerHTML=h;renderGuiPv()}
 function renderGuiPv(){if(!S)return;const pv=guiPrev||S.set.gui||'classic';$('#guiPv').innerHTML=pvHtml(pv)+`<canvas class="pvkz" width="240" height="240"></canvas>`;const c=$('#guiPv canvas').getContext('2d');c.scale(2,2);drawKZ(c,60,118,.62,S.eq,1.2,0);$('#guiPvTxt').textContent='Предпросмотр: '+GUIS[pv].n+(pv===S.set.gui?' (сейчас включён)':' — нажми, чтобы включить')}
@@ -2499,7 +2499,7 @@ const netStat={fps:0,ms:null,loss:0,sent:[],fN:0,fT:0};
 setInterval(()=>{if(!S||S.set.gui!=='compact')return;const c=NET.cl.find(x=>x.ok);const now=performance.now();netStat.sent=netStat.sent.filter(p=>now-p.t<20000);
   if(c){netStat.sent.push({t:now,ok:false});c.pingT=now;c.raw(new Uint8Array([0xC0,0]))}
   const old=netStat.sent.filter(p=>now-p.t>2500);netStat.loss=old.length?Math.round(old.filter(p=>!p.ok).length/old.length*100):(c?0:100);if(!NET.ok()){netStat.ms=null;netStat.loss=100}
-  $('#gpMs').textContent=netStat.ms??'—';$('#gpLoss').textContent=netStat.loss;$('#gpCoins').textContent=S.coins;$('#gpFps').textContent=netStat.fps;if(cur==='set'&&setTab==='gui'&&!guiPrev)renderGuiPv()},1000);
+  $('#gpMs').textContent=netStat.ms??0;$('#gpLoss').textContent=netStat.loss;$('#gpCoins').textContent=S.coins;$('#gpFps').textContent=netStat.fps;if(cur==='set'&&setTab==='gui'&&!guiPrev)renderGuiPv()},1000);
 function guiPong(c){const now=performance.now();if(c.pingT){netStat.ms=Math.round(now-c.pingT);c.pingT=0;const p=netStat.sent.slice().reverse().find(x=>!x.ok);if(p)p.ok=true}}
 let grainT=0;
 function animateGrain(dt){grainT+=dt;if(grainT>.06){grainT=0;const gr=document.querySelector('#fx .grain');if(gr&&gr.style.opacity>0)gr.style.backgroundPosition=`${Math.random()*160|0}px ${Math.random()*160|0}px`}}

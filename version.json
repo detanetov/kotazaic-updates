@@ -1,9 +1,9 @@
 {
- "version": 20,
- "label": "1.3.6",
- "name": "Версия 1.3.6: раздел GUI в настройках",
+ "version": 21,
+ "label": "1.3.7",
+ "name": "Версия 1.3.7: GUI 2 точь-в-точь как на фото",
  "file": "game.html",
- "sha256": "c121efe49f85b59cc727c3f1f8caee973ef211eff8b245ab95eb16e428014144",
+ "sha256": "93c5d52d094b0c84e1edbba0f3ddffb323d08a54c88b1f5b6f66461deb5a6d2a",
  "date": "2026-10-17",
  "exe": {
   "version": 3,
