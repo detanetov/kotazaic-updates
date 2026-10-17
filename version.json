@@ -1,9 +1,9 @@
 {
- "version": 16,
- "label": "2.0",
- "name": "Версия 2.0: Сад котозайца",
+ "version": 17,
+ "label": "2.1",
+ "name": "Версия 2.1: ещё больше функций в ADM",
  "file": "game.html",
- "sha256": "0eb1bf8a49b6b334fd5c000d6207e0fd34a903dd1442683c144530f2ec94d0f8",
+ "sha256": "d030f230d1bd02a53ff84bd7f44510321bfe399a757e45cfd8a63a562052fdbf",
  "date": "2026-10-17",
  "exe": {
   "version": 3,
