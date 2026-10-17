@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=9;window.KZ_VNAME='1.3';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=10;window.KZ_VNAME='1.4';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -650,7 +650,7 @@ ITEMS.top={none:{n:'Без кофты',price:0},hoodie:{n:'Серая толст
 const SLOTS=['skin','head','caps','acc','top','shoes','trail','aura'];
 const SLOT_NAMES={top:'Кофты',skin:'Скин',head:'Голова',caps:'Кепки',acc:'Аксессуар',shoes:'Обувь',trail:'След',aura:'Аура'};
 const SLOT_ICON={top:'🧥',skin:'🐰',head:'👑',caps:'🧢',acc:'🎀',shoes:'👟',trail:'✨',aura:'🔮'};
-function rarity(def){if(def.src==='secret')return{n:'Секрет 🤫',c:'#ff9cf0'};if(def.src==='kg')return{n:'Kotograde',c:'#ff5e8a'};if(def.src)return{n:def.src==='bp'?'Battle Pass':'Halloween',c:def.src==='bp'?'#5ee6c1':'#ff8a3d'};const p=def.price;if(!p)return{n:'Бесплатно',c:'#d8d2c4'};if(p<100)return{n:'Обычный',c:'#cfd6e6'};if(p<200)return{n:'Редкий',c:'#8fc4ff'};if(p<400)return{n:'Эпический',c:'#c39bff'};return{n:'Легендарный',c:'#ffc93c'}}
+function rarity(def){if(def.src==='secret')return{n:'Секрет 🤫',c:'#ff9cf0'};if(def.src==='kg')return{n:'Kotograde',c:'#ff5e8a'};if(def.src==='brand'){const B=BRANDS[def.brand];return{n:'💎 '+B.n,c:B.tag}}if(def.src)return{n:def.src==='bp'?'Battle Pass':'Halloween',c:def.src==='bp'?'#5ee6c1':'#ff8a3d'};const p=def.price;if(!p)return{n:'Бесплатно',c:'#d8d2c4'};if(p<100)return{n:'Обычный',c:'#cfd6e6'};if(p<200)return{n:'Редкий',c:'#8fc4ff'};if(p<400)return{n:'Эпический',c:'#c39bff'};return{n:'Легендарный',c:'#ffc93c'}}
 function itemName(t,id){return t==='skin'?SKINS[id].n:ITEMS[t][id].n}
 
 /* ---------------- passes ---------------- */
@@ -869,7 +869,7 @@ function gemShape(c,x,y,s,col){c.beginPath();c.moveTo(x,y-s);c.lineTo(x+s*.8,y-s
 function bflyShape(c,x,y,s,t,col){c.save();c.translate(x,y);const f=Math.abs(Math.sin(t*14))*.7+.3;for(const g of[-1,1]){ell(c,g*s*.55*f,-s*.25,s*.6*f,s*.5);c.fillStyle=col;c.fill();ell(c,g*s*.4*f,s*.35,s*.4*f,s*.32);c.fill()}c.fillStyle=INK;ell(c,0,0,s*.12,s*.55);c.fill();c.restore()}
 
 /* ---- head ---- */
-function drawHead2(c,h,t){drawHeadKG(c,h,t);
+function drawHead2(c,h,t){drawHeadKG(c,h,t);drawHeadBR(c,h,t);
   if(h==='party'){c.beginPath();c.moveTo(-22,-118);c.lineTo(4,-176);c.lineTo(24,-118);c.closePath();fs(c,'#8b6cff');c.save();c.clip();for(let i=0;i<5;i++){c.beginPath();c.moveTo(-30,-122-i*12);c.lineTo(30,-134-i*12);c.lineWidth=5;c.strokeStyle=i%2?'#ffe066':'#ff7eb6';c.stroke()}c.restore();c.beginPath();c.moveTo(-22,-118);c.lineTo(4,-176);c.lineTo(24,-118);c.closePath();c.lineWidth=3.5;c.strokeStyle=INK;c.stroke();for(let i=0;i<6;i++){const a=i*1.05+t*2;ell(c,4+Math.cos(a)*6,-178+Math.sin(a)*6,3,3);c.fillStyle=['#ff5e8a','#ffd21f','#5ee6c1'][i%3];c.fill()}}
   if(h==='chef'){c.beginPath();c.roundRect(-24,-134,48,18,3);fs(c,'#fff');for(const[x,y,r]of[[-18,-148,14],[0,-158,17],[18,-148,14]]){ell(c,x,y,r,r*.9);fs(c,'#fff',3.5)}c.beginPath();c.roundRect(-24,-134,48,18,3);c.fillStyle='#fff';c.fill();c.lineWidth=3.5;c.strokeStyle=INK;c.stroke();c.strokeStyle='#d8d2c4';c.lineWidth=2;c.beginPath();for(const x of[-12,0,12]){c.moveTo(x,-132);c.lineTo(x,-118)}c.stroke()}
   if(h==='santa'){const sw=Math.sin(t*3)*4;c.beginPath();c.moveTo(-34,-118);c.quadraticCurveTo(-20,-160,10,-168);c.quadraticCurveTo(40,-162,46+sw,-136);c.lineTo(30,-124);c.quadraticCurveTo(20,-140,8,-142);c.lineTo(34,-118);c.closePath();fs(c,'#e8283c');c.beginPath();c.roundRect(-38,-128,76,14,7);fs(c,'#fff');ell(c,46+sw,-134,8,8);fs(c,'#fff',3)}
@@ -882,7 +882,7 @@ function drawHead2(c,h,t){drawHeadKG(c,h,t);
   if(h==='icecrown'){c.save();c.shadowColor='#aeeaff';c.shadowBlur=14;c.beginPath();c.moveTo(-28,-118);for(let i=0;i<=6;i++){const x=-28+i*56/6,hh=i%2?18:34+(i===3?10:0);c.lineTo(x,-120-hh);c.lineTo(x+56/12,-124)}c.lineTo(28,-118);c.closePath();c.fillStyle='rgba(190,240,255,.88)';c.fill();c.restore();c.lineWidth=3;c.strokeStyle='#2a6fe0';c.stroke();for(let i=0;i<3;i++){gemShape(c,-14+i*14,-128,4,'#7fd8ff')}}
 }
 /* ---- caps ---- */
-function drawCap2(c,id,t){drawCapKG(c,id,t);
+function drawCap2(c,id,t){drawCapKG(c,id,t);drawCapBR(c,id,t);
   const clipDome=()=>{c.beginPath();c.arc(0,-116,31,Math.PI,0);c.closePath();c.clip()},rim=()=>{c.beginPath();c.arc(0,-116,33,Math.PI,0);c.lineWidth=4;c.strokeStyle=INK;c.stroke()};
   if(id==='green')capBase(c,'#3fae6a','#2a8a50');
   if(id==='pink')capBase(c,'#ff8fc0','#ff5ea0');
@@ -896,11 +896,11 @@ function drawCap2(c,id,t){drawCapKG(c,id,t);
   if(id==='diamond'){c.save();c.shadowColor='#bff3ff';c.shadowBlur=14;capBase(c,'#bfefff','#7fd8ff');c.restore();c.save();clipDome();for(let i=0;i<9;i++){const x=-28+(i%5)*14+(i>4?7:0),y=i>4?-138:-124;c.beginPath();c.moveTo(x,y-8);c.lineTo(x+7,y);c.lineTo(x,y+8);c.lineTo(x-7,y);c.closePath();c.fillStyle=i%2?'rgba(255,255,255,.65)':'rgba(140,215,255,.6)';c.fill()}c.restore();rim();for(let i=0;i<3;i++){const a=t*2.4+i*2.1;starPath(c,Math.cos(a)*40,-132+Math.sin(a)*12,3.5,a);c.fillStyle='#fff';c.fill()}}
 }
 /* ---- accessories ---- */
-function drawAccBack2(c,a,t){drawAccBackKG(c,a,t);
+function drawAccBack2(c,a,t){drawAccBackKG(c,a,t);drawAccBackBR(c,a,t);
   if(a==='shell'){ell(c,0,-44,47,44);fs(c,'#5e9c4a');ell(c,0,-44,47,44);c.save();c.clip();c.strokeStyle='#3e6e30';c.lineWidth=3;for(const[x,y]of[[0,-40],[-22,-58],[22,-58],[-24,-20],[24,-20],[0,-74],[0,-6]]){c.beginPath();for(let k=0;k<6;k++){const b=k*Math.PI/3;c.lineTo(x+Math.cos(b)*12,y+Math.sin(b)*12)}c.closePath();c.fillStyle='#7cbc5e';c.fill();c.stroke()}c.restore()}
   if(a==='fairy'){const f=Math.sin(t*9)*.22;for(const g of[-1,1]){c.save();c.translate(g*20,-62);c.scale(g*1.4,1.4);c.rotate(-(.3+f));c.beginPath();c.moveTo(0,0);c.bezierCurveTo(10,-46,52,-52,46,-16);c.quadraticCurveTo(30,-4,0,0);c.fillStyle='rgba(200,240,255,.55)';c.fill();c.lineWidth=2;c.strokeStyle='#8fc4ff';c.stroke();c.beginPath();c.moveTo(0,2);c.bezierCurveTo(30,4,38,30,14,26);c.quadraticCurveTo(4,16,0,2);c.fillStyle='rgba(255,200,240,.55)';c.fill();c.strokeStyle='#ff9cc8';c.stroke();c.restore()}if(Math.random()<.35){starPath(c,rnd(-80,80),rnd(-130,-30),2.5,0);c.fillStyle='#fff6b0';c.fill()}}
 }
-function drawAccFront2(c,a,t){drawAccFrontKG(c,a,t);
+function drawAccFront2(c,a,t){drawAccFrontKG(c,a,t);drawAccFrontBR(c,a,t);
   if(a==='carrot')carrotShape(c,40,-50,1.3,.5);
   if(a==='donut'){c.save();c.translate(40,-50);c.rotate(Math.sin(t*2)*.1);ell(c,0,0,14,12);fs(c,'#e8a85a',2.5);c.beginPath();c.ellipse(0,-1,12,10,0,0,Math.PI*2);c.fillStyle='#ff8fc0';c.fill();ell(c,0,0,4.5,4);c.fillStyle='#fff8ee';c.fill();c.lineWidth=2;c.strokeStyle=INK;c.stroke();for(let i=0;i<9;i++){const b=i*.7;c.save();c.translate(Math.cos(b)*8,Math.sin(b)*7);c.rotate(b*3);c.fillStyle=['#ffe066','#5ee6c1','#fff','#8fc4ff'][i%4];c.fillRect(-2,-.7,4,1.4);c.restore()}c.restore()}
   if(a==='cocoa'){c.save();c.translate(40,-48);c.beginPath();c.roundRect(-10,-12,20,22,4);fs(c,'#e8355d',2.5);ell(c,11,-2,5,6);c.lineWidth=3;c.strokeStyle=INK;c.stroke();ell(c,0,-12,10,3);fs(c,'#7a3e1e',2);ell(c,-3,-14,3,2.5);c.fillStyle='#fff';c.fill();ell(c,3,-13,2.5,2);c.fill();c.strokeStyle='rgba(255,255,255,.7)';c.lineWidth=2;for(const x of[-4,4]){c.beginPath();c.moveTo(x,-18);c.quadraticCurveTo(x+4+Math.sin(t*3+x)*2,-24,x,-30);c.stroke()}heartPath(c,0,0,5);c.fillStyle='#fff';c.fill();c.restore()}
@@ -913,7 +913,7 @@ function drawAccFront2(c,a,t){drawAccFrontKG(c,a,t);
 }
 /* ---- sweaters ---- */
 Object.assign(TOP_COL,{sailor:'#ffffff',polka:'#3d8bff',checker:'#e8355d',camo:'#6b7f45',cow:'#ffffff',jersey:'#3d5bd9',melon:'#3fae6a',tuxedo:'#1d1d22',icy:'#bfefff',lava:'#3a1410'});
-function topPattern2(c,id,t){topPatternKG(c,id,t);
+function topPattern2(c,id,t){topPatternKG(c,id,t);topPatternBR(c,id,t);
   if(id==='sailor'){c.fillStyle='#2a3fb0';for(let y=-72;y<-12;y+=9)c.fillRect(-40,y,80,4)}
   if(id==='polka'){c.fillStyle='#fff';for(let i=0;i<24;i++){const x=-34+(i%6)*13+(Math.floor(i/6)%2)*6,y=-72+Math.floor(i/6)*15;ell(c,x,y,3.4,3.4);c.fill()}}
   if(id==='checker'){c.fillStyle='rgba(40,10,20,.35)';for(let x=-40;x<40;x+=12)c.fillRect(x,-80,5,70);for(let y=-78;y<-10;y+=12)c.fillRect(-40,y,80,5);c.fillStyle='rgba(255,255,255,.25)';for(let x=-36;x<40;x+=12)c.fillRect(x,-80,1.5,70)}
@@ -926,7 +926,7 @@ function topPattern2(c,id,t){topPatternKG(c,id,t);
   if(id==='lava'){c.strokeStyle='#ff7a1a';c.shadowColor='#ffb03b';c.shadowBlur=8;c.lineWidth=3;for(let i=0;i<5;i++){c.beginPath();let x=-30+i*15,y=-78;c.moveTo(x,y);for(let k=0;k<6;k++){x+=(rr2(i,k)-.5)*14;y+=12;c.lineTo(x,y)}c.globalAlpha=.6+.4*Math.sin(t*3+i);c.stroke()}c.globalAlpha=1;c.shadowBlur=0}
 }
 /* ---- shoes ---- */
-function drawShoes2(c,id,t){drawShoesKG(c,id,t);
+function drawShoes2(c,id,t){drawShoesKG(c,id,t);drawShoesBR(c,id,t);
   if(!ITEMS.shoes[id]||!['ballet','crocs','frog','hiking','cleats','clown','skates','skis','springs','winged'].includes(id))return;
   for(const g of[-1,1]){c.save();c.translate(g*17,-6);if(g<0)c.scale(-1,1);
     if(id==='ballet'){ell(c,2,1,15,8);fs(c,'#ffb6d5');ell(c,0,-2,8,4);c.fillStyle='#fff0f6';c.fill();c.lineWidth=2;c.strokeStyle='#ff7eb6';c.beginPath();c.moveTo(-8,-2);c.lineTo(-12,-16);c.moveTo(4,-4);c.lineTo(-6,-18);c.stroke();ell(c,6,-5,3.5,2.4);fs(c,'#ff7eb6',1.5)}
@@ -942,7 +942,7 @@ function drawShoes2(c,id,t){drawShoesKG(c,id,t);
     c.restore()}
 }
 /* ---- trails ---- */
-function emitTrail2(kind,p,t){{const k=emitTrailKG(kind,p,t);if(k!==null)return k}
+function emitTrail2(kind,p,t){{const k=emitTrailKG(kind,p,t);if(k!==null)return k}{const k=emitTrailBR(kind,p,t);if(k!==null)return k}
   const pick=a=>a[Math.floor(Math.random()*a.length)];
   if(kind==='smoke'){p.kind='smoke';p.col='#c9c4d8';p.size=rnd(6,11);p.vy=rnd(-40,-15);p.max=1.1;return true}
   if(kind==='drops'){if(Math.random()<.4)return false;p.kind='drop';p.col=pick(['#5eb6ff','#8fe3ff','#3d8bff']);p.size=rnd(4,6);p.vy=rnd(0,30);p.max=.9;return true}
@@ -955,7 +955,7 @@ function emitTrail2(kind,p,t){{const k=emitTrailKG(kind,p,t);if(k!==null)return 
   if(kind==='magic'){p.kind=Math.random()<.5?'star':'glow';p.col=pick(['#c39bff','#ff9be0','#8fc4ff']);p.size=p.kind==='star'?rnd(3,6):rnd(5,9);p.vy=rnd(-40,-10);p.max=.9;return true}
   if(kind==='gems'){if(Math.random()<.55)return false;p.kind='gem';p.col=pick(['#7fd8ff','#ff7eb6','#5ee6a1','#c39bff']);p.size=rnd(4,7);p.vy=rnd(-40,0);p.max=1;return true}
   return null}
-function drawPart2(c,p,t){if(drawPartKG(c,p,t))return true;
+function drawPart2(c,p,t){if(drawPartKG(c,p,t)||drawPartBR(c,p,t))return true;
   if(p.kind==='smoke'){const k=p.life/p.max;c.globalAlpha=(1-k)*.55;ell(c,p.x,p.y,p.size*(1+k*1.5),p.size*(1+k*1.5));c.fillStyle=p.col;c.fill();return true}
   if(p.kind==='drop'){c.beginPath();c.moveTo(p.x,p.y-p.size*1.4);c.quadraticCurveTo(p.x+p.size,p.y,p.x,p.y+p.size*.8);c.quadraticCurveTo(p.x-p.size,p.y,p.x,p.y-p.size*1.4);c.fillStyle=p.col;c.fill();return true}
   if(p.kind==='pix'){c.fillStyle=p.col;c.fillRect(Math.round(p.x),Math.round(p.y),p.size,p.size);return true}
@@ -967,7 +967,7 @@ function drawPart2(c,p,t){if(drawPartKG(c,p,t))return true;
   if(p.kind==='gem'){gemShape(c,p.x,p.y,p.size,p.col);return true}
   return false}
 /* ---- auras ---- */
-function drawAura2(c,id,t,layer){drawAuraKG(c,id,t,layer);
+function drawAura2(c,id,t,layer){drawAuraKG(c,id,t,layer);drawAuraBR(c,id,t,layer);
   const back=layer==='back';
   if(id==='bubbles'){if(back)softGlow(c,'#bff3ff',100,.35);orbit(c,7,68,24,-64,t,.9,layer,(x,y,a)=>{const r=5+(Math.floor(a*5)%3)*2;ell(c,x,y+Math.sin(t*3+a)*5,r,r);c.lineWidth=2;c.strokeStyle='#bff3ff';c.stroke();ell(c,x-r*.35,y-r*.35,r*.25,r*.25);c.fillStyle='#fff';c.fill()})}
   if(id==='leaves'){if(back)softGlow(c,'#a8d65a',105,.4);orbit(c,7,72,26,-64,t,1,layer,(x,y,a)=>{c.save();c.translate(x,y);c.rotate(a*2);ell(c,0,0,8,4);c.fillStyle=['#5ec46a','#a8d65a','#ffb03b','#3fae6a'][Math.floor(a*3)%4];c.fill();c.strokeStyle='rgba(0,0,0,.3)';c.lineWidth=1;c.beginPath();c.moveTo(-8,0);c.lineTo(8,0);c.stroke();c.restore()})}
@@ -1147,6 +1147,144 @@ function tasMove(dt,top,cx,cy,R){
       else{const w=it.k==='heart'?(G.lives<G.maxLives?40:0):it.k==='gold'?80:({pink:4,candy:6,pumpkin:9,fish:4}[it.k]||2);if(hit)s+=w*14/(1+ht*2);else if(!mag){const d=Math.abs(x-(it.x+it.vx*f.t1));if(d<f.rr*3)s+=w*.8/(1+f.t0*2)}}}
     if(s>bs){bs=s;best=x}}
   G.tasX=best;G.pvx=clamp((best-px)*22,-spd,spd)}
+/* ---------------- Exclusive brand pack (invented in-game brands, 10 per section) ---------------- */
+const BRANDS={
+  zayka:{n:'ZAYKA',c:'#1d1d22',c2:'#ffffff',a:'#ff8a3d',tag:'#ff8a3d'},
+  maison:{n:'Maison Morkov',c:'#3a2414',c2:'#f3e3c3',a:'#d4a640',tag:'#d4a640'},
+  ushki:{n:'USHKI',c:'#ff5ea0',c2:'#1d1d22',a:'#ffffff',tag:'#ff5ea0'},
+  koto:{n:'KOTO',c:'#c9c4bc',c2:'#f6f3ee',a:'#24203a',tag:'#9a958c'},
+  lunar:{n:'Lunar Lab',c:'#8a94a8',c2:'#e8eef8',a:'#5ee6ff',tag:'#5ee6ff'},
+  pushistik:{n:'Pushistik',c:'#ffd0e8',c2:'#d8f0ff',a:'#b9a9ff',tag:'#b9a9ff'},
+  zvezda:{n:'Zvezda',c:'#c8283c',c2:'#ffffff',a:'#ffcf33',tag:'#e8355d'}
+};
+function brandLogo(c,b,x,y,s,col){c.save();c.translate(x,y);c.scale(s,s);c.fillStyle=col;c.strokeStyle=col;c.lineCap='round';c.lineJoin='round';
+  if(b==='zayka'){c.font='italic 900 9px Trebuchet MS,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('ZAYKA',0,-1);c.lineWidth=1.6;c.beginPath();c.moveTo(-12,5);c.quadraticCurveTo(0,8,13,3);c.stroke()}
+  if(b==='maison'){c.lineWidth=1.3;c.beginPath();c.arc(0,0,8,0,Math.PI*2);c.stroke();c.font='700 10px Georgia,serif';c.textAlign='center';c.textBaseline='middle';c.fillText('M',0,.5)}
+  if(b==='ushki'){for(const g of[-1,1]){c.beginPath();c.ellipse(g*3.5,-2,2.6,7,g*.25,0,Math.PI*2);c.fill()}c.beginPath();c.arc(0,5,4.5,0,Math.PI*2);c.fill()}
+  if(b==='koto'){c.font='300 7px Trebuchet MS,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('K O T O',0,0)}
+  if(b==='lunar'){c.beginPath();c.arc(0,0,7,Math.PI*.3,Math.PI*1.7);c.arc(3,-1,5.5,Math.PI*1.45,Math.PI*.55,true);c.closePath();c.fill();c.beginPath();c.arc(6,-5,1.4,0,Math.PI*2);c.fill()}
+  if(b==='pushistik'){for(const[px,py,r]of[[-4,1,4],[0,-2,5],[4,1,4]]){c.beginPath();c.arc(px,py,r,0,Math.PI*2);c.fill()}c.fillStyle='#fff';c.font='900 6px Trebuchet MS,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('P',0,0)}
+  if(b==='zvezda'){starPath(c,0,0,8,0);c.fill();c.fillStyle='#fff';c.font='900 6px Trebuchet MS,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('Z',0,.5)}
+  c.restore()}
+const BR=(n,brand)=>({n,src:'brand',brand});
+Object.assign(SKINS,{
+  br_noir:{n:'ZAYKA Noir',base:'#24242a',belly:'#f4f4f4',inner:'#ff8a3d',src:'brand',brand:'zayka'},
+  br_volt:{n:'ZAYKA Volt',base:'#c8ff3a',belly:'#1d1d22',inner:'#24242a',src:'brand',brand:'zayka',glow:'#c8ff3a'},
+  br_champ:{n:'Maison Champagne',base:'#ead6a8',belly:'#fff8e6',inner:'#d4a640',src:'brand',brand:'maison',glow:'#f3e3c3'},
+  br_velvet:{n:'Maison Velvet',base:'#6a1a30',belly:'#e8c8b0',inner:'#d4a640',src:'brand',brand:'maison'},
+  br_gum:{n:'USHKI Bubblegum',base:'#ff8fc8',belly:'#ffe6f1',inner:'#1d1d22',src:'brand',brand:'ushki'},
+  br_stone:{n:'KOTO Stone',base:'#b8b2a8',belly:'#f6f3ee',inner:'#e8c8c0',src:'brand',brand:'koto'},
+  br_silver:{n:'Lunar Silver',base:'#d8dde6',belly:'#ffffff',inner:'#5ee6ff',src:'brand',brand:'lunar',glow:'#e8eef8'},
+  br_eclipse:{n:'Lunar Eclipse',base:'#1a1d2a',belly:'#3a4058',inner:'#5ee6ff',src:'brand',brand:'lunar',glow:'#5ee6ff'},
+  br_cotton:{n:'Pushistik Cotton',base:'#ffd0e8',belly:'#ffffff',inner:'#b9a9ff',src:'brand',brand:'pushistik',pulse:['#ffd0e8','#d8f0ff']},
+  br_red:{n:'Zvezda Red',base:'#d8344a',belly:'#fff0e0',inner:'#ffcf33',src:'brand',brand:'zvezda'}
+});
+SKIN_ORDER.length=0;SKIN_ORDER.push(...Object.keys(SKINS));
+Object.assign(ITEMS.head,{br_beanie:BR('Шапка ZAYKA','zayka'),br_band:BR('Спортивная повязка ZAYKA','zayka'),br_bucket:BR('Панама USHKI','ushki'),br_beret:BR('Берет Maison Morkov','maison'),br_silk:BR('Шёлковый платок Maison','maison'),br_muffs:BR('Наушники-меховушки Pushistik','pushistik'),br_visor:BR('Козырёк KOTO','koto'),br_goggles:BR('Горнолыжная маска Lunar Lab','lunar'),br_ushanka:BR('Ушанка Zvezda','zvezda'),br_tophat:BR('Цилиндр KOTO','koto')});
+Object.assign(ITEMS.caps,{br_zblack:BR('Кепка ZAYKA чёрная','zayka'),br_zwhite:BR('Кепка ZAYKA белая','zayka'),br_mono:BR('Кепка-монограмма Maison','maison'),br_mgold:BR('Золотая кепка Maison','maison'),br_upink:BR('Кепка USHKI','ushki'),br_collab:BR('Кепка USHKI × ZAYKA','ushki'),br_koto:BR('Кепка KOTO','koto'),br_refl:BR('Светоотражающая кепка Lunar','lunar'),br_pastel:BR('Пастельная кепка Pushistik','pushistik'),br_zv:BR('Кепка Zvezda','zvezda')});
+Object.assign(ITEMS.acc,{br_chain:BR('Золотая цепь Maison','maison'),br_shop:BR('Пакеты с покупками Maison','maison'),br_scarf:BR('Шарф-монограмма Maison','maison'),br_bag:BR('Сумка через плечо USHKI','ushki'),br_deck:BR('Скейт USHKI','ushki'),br_glasses:BR('Дизайнерские очки KOTO','koto'),br_phone:BR('Телефон KOTO','koto'),br_phones:BR('Наушники Lunar Lab','lunar'),br_pack:BR('Рюкзак ZAYKA','zayka'),br_boa:BR('Пушистое боа Pushistik','pushistik')});
+Object.assign(ITEMS.top,{br_hoodie:BR('Худи ZAYKA','zayka'),br_track:BR('Олимпийка ZAYKA','zayka'),br_monosw:BR('Свитер-монограмма Maison','maison'),br_puffer:BR('Золотой пуховик Maison','maison'),br_tee:BR('Футболка USHKI','ushki'),br_varsity:BR('Бомбер USHKI','ushki'),br_kotosw:BR('Свитшот KOTO','koto'),br_tech:BR('Техно-куртка Lunar Lab','lunar'),br_fleece:BR('Флиска Pushistik','pushistik'),br_retro:BR('Ретро-олимпийка Zvezda','zvezda')});
+Object.assign(ITEMS.shoes,{br_run:BR('Беговые ZAYKA','zayka'),br_high:BR('Высокие кеды ZAYKA','zayka'),br_loafer:BR('Лоферы Maison Morkov','maison'),br_goldsn:BR('Золотые кроссовки Maison','maison'),br_plat:BR('Кроссовки на платформе USHKI','ushki'),br_slides:BR('Шлёпки USHKI','ushki'),br_white:BR('Белые кроссовки KOTO','koto'),br_moon:BR('Луноходы Lunar Lab','lunar'),br_fluffy:BR('Пушистые тапки Pushistik','pushistik'),br_zvsn:BR('Ретро-кеды Zvezda','zvezda')});
+Object.assign(ITEMS.trail,{br_tzayka:BR('След ZAYKA','zayka'),br_tmaison:BR('Монограммы Maison','maison'),br_tushki:BR('Ушки USHKI','ushki'),br_tkoto:BR('След KOTO','koto'),br_tlunar:BR('Луны Lunar Lab','lunar'),br_tpush:BR('Облачка Pushistik','pushistik'),br_tzv:BR('Звёзды Zvezda','zvezda'),br_money:BR('Денежный дождь Maison','maison'),br_bling:BR('Блеск ZAYKA','zayka'),br_tags:BR('Ценники USHKI','ushki')});
+Object.assign(ITEMS.aura,{br_azayka:BR('Аура ZAYKA','zayka'),br_amaison:BR('Аура Maison Morkov','maison'),br_aushki:BR('Аура USHKI','ushki'),br_akoto:BR('Аура KOTO','koto'),br_alunar:BR('Аура Lunar Lab','lunar'),br_apush:BR('Аура Pushistik','pushistik'),br_azv:BR('Аура Zvezda','zvezda'),br_flash:BR('Фотовспышки Maison','maison'),br_runway:BR('Подиум KOTO','koto'),br_hype:BR('Хайп ZAYKA','zayka')});
+(()=>{const v={skin:[2600,3400,4200,3800,2800,2400,4600,5200,3000,2600],head:[1800,1600,2200,3200,3600,2600,2000,3400,2400,3800],caps:[2000,2000,3600,5200,2200,4400,1800,3000,2400,2200],acc:[6000,3200,3800,2800,3000,2600,2200,3400,2400,4200],top:[3000,2600,4800,6400,2000,3600,2200,4400,2800,3200],shoes:[2800,3000,3600,6000,3400,1800,2600,4200,2400,2600],trail:[2400,3600,2200,2000,2800,2200,2400,5200,3000,2000],aura:[4200,6000,3600,3400,4400,3000,3200,5600,4800,7000]};
+  const ids={skin:Object.keys(SKINS).filter(k=>k.startsWith('br_'))};for(const sl of['head','caps','acc','top','shoes','trail','aura'])ids[sl]=Object.keys(ITEMS[sl]).filter(k=>k.startsWith('br_'));
+  for(const sl in ids)ids[sl].forEach((id,i)=>EXCL_VAL[sl+':'+id]=v[sl][i])})();
+
+/* head */
+function drawHeadBR(c,h,t){if(!h||!h.startsWith('br_'))return;const B=BRANDS[ITEMS.head[h].brand];
+  if(h==='br_beanie'){c.beginPath();c.arc(0,-114,35,Math.PI,0);c.closePath();fs(c,B.c);c.beginPath();c.roundRect(-38,-126,76,16,7);fs(c,'#2e2e36');brandLogo(c,'zayka',0,-118,1.2,B.a)}
+  if(h==='br_band'){c.beginPath();c.roundRect(-38,-124,76,12,6);fs(c,'#fff');c.fillStyle=B.a;c.fillRect(-36,-120,72,3);brandLogo(c,'zayka',0,-118,1,B.c)}
+  if(h==='br_bucket'){c.beginPath();c.moveTo(-46,-116);c.quadraticCurveTo(0,-106,46,-116);c.lineTo(30,-128);c.lineTo(-30,-128);c.closePath();fs(c,B.c);c.beginPath();c.moveTo(-30,-126);c.quadraticCurveTo(-28,-152,0,-152);c.quadraticCurveTo(28,-152,30,-126);c.closePath();fs(c,B.c);c.save();c.clip();for(let i=0;i<6;i++)for(let j=0;j<2;j++)brandLogo(c,'ushki',-25+i*10+(j%2)*5,-146+j*12,.6,'rgba(29,29,34,.55)');c.restore()}
+  if(h==='br_beret'){c.save();c.translate(-4,-124);c.rotate(-.18);ell(c,0,0,40,13);fs(c,B.c);ell(c,0,4,30,5);fs(c,'#2a1a0e',2.5);c.beginPath();c.moveTo(0,-13);c.lineTo(2,-21);fs(c,B.c,3);brandLogo(c,'maison',18,-2,.9,B.a);c.restore()}
+  if(h==='br_silk'){c.beginPath();c.arc(0,-110,37,Math.PI,0);c.closePath();fs(c,B.c2);c.save();c.beginPath();c.arc(0,-110,35,Math.PI,0);c.closePath();c.clip();for(let i=0;i<5;i++)for(let j=0;j<3;j++)brandLogo(c,'maison',-28+i*14+(j%2)*7,-114-j*11,.55,B.a);c.restore();c.beginPath();c.moveTo(-34,-108);c.lineTo(-46,-86+Math.sin(t*4)*3);c.lineTo(-36,-84);c.closePath();fs(c,B.c2,2.5)}
+  if(h==='br_muffs'){c.beginPath();c.arc(0,-104,40,Math.PI*1.1,Math.PI*1.9);c.lineWidth=6;c.strokeStyle=B.a;c.stroke();for(const g of[-1,1]){for(let k=0;k<7;k++){const a=k*.9;ell(c,g*40+Math.cos(a)*7,-96+Math.sin(a)*7,6,6);c.fillStyle=B.c;c.fill()}ell(c,g*40,-96,9,9);fs(c,B.c,2.5);brandLogo(c,'pushistik',g*40,-96,.8,B.a)}}
+  if(h==='br_visor'){c.beginPath();c.roundRect(-36,-124,72,10,5);fs(c,B.c2);ell(c,26,-117,24,6,-.06);fs(c,B.a);brandLogo(c,'koto',-6,-119,1,B.a)}
+  if(h==='br_goggles'){c.beginPath();c.roundRect(-38,-122,76,8,4);fs(c,'#24203a',2.5);c.beginPath();c.roundRect(-28,-138,56,22,10);const g=c.createLinearGradient(-28,-138,28,-116);g.addColorStop(0,'#5ee6ff');g.addColorStop(.5,'#b46bff');g.addColorStop(1,'#ff9be0');c.fillStyle=g;c.fill();c.lineWidth=3.5;c.strokeStyle=B.c;c.stroke();ell(c,-12,-132,6,3,.4);c.fillStyle='rgba(255,255,255,.6)';c.fill();brandLogo(c,'lunar',0,-118,.6,'#fff')}
+  if(h==='br_ushanka'){for(const g of[-1,1]){ell(c,g*36,-100,10,19);fs(c,'#3a2a2a');ell(c,g*36,-96,6,12);c.fillStyle='#e8dcc8';c.fill()}ell(c,0,-124,36,20);fs(c,'#3a2a2a');c.beginPath();c.roundRect(-39,-124,78,14,7);fs(c,'#e8dcc8');brandLogo(c,'zvezda',0,-136,1.1,B.c)}
+  if(h==='br_tophat'){ell(c,0,-122,36,8);fs(c,B.c2);c.beginPath();c.roundRect(-22,-170,44,48,4);fs(c,B.c2);c.fillStyle=B.a;c.fillRect(-22,-134,44,8);brandLogo(c,'koto',0,-150,1.1,B.a)}
+}
+/* caps */
+function drawCapBR(c,id,t){if(!id||!id.startsWith('br_'))return;const B=BRANDS[ITEMS.caps[id].brand];
+  const clip=()=>{c.beginPath();c.arc(0,-116,31,Math.PI,0);c.closePath();c.clip()},rim=()=>{c.beginPath();c.arc(0,-116,33,Math.PI,0);c.lineWidth=4;c.strokeStyle=INK;c.stroke()};
+  if(id==='br_zblack'){capBase(c,'#1d1d22','#111');brandLogo(c,'zayka',-3,-130,1.1,'#fff')}
+  if(id==='br_zwhite'){capBase(c,'#f6f6f6','#ff8a3d');brandLogo(c,'zayka',-3,-130,1.1,'#1d1d22')}
+  if(id==='br_mono'){capBase(c,'#5a3a22','#3a2414');c.save();clip();for(let i=0;i<5;i++)for(let j=0;j<3;j++)brandLogo(c,'maison',-26+i*13+(j%2)*6,-122-j*11,.55,'#d4a640');c.restore();rim()}
+  if(id==='br_mgold'){c.save();glowOn(c,'#ffe9a0',12);capBase(c,'#e8c060','#b8902a');c.restore();brandLogo(c,'maison',-3,-130,1.3,'#5a3a22')}
+  if(id==='br_upink'){capBase(c,'#ff5ea0','#1d1d22');brandLogo(c,'ushki',-3,-131,1.2,'#1d1d22')}
+  if(id==='br_collab'){capBase(c,'#ff5ea0','#1d1d22');c.save();clip();c.fillStyle='#1d1d22';c.fillRect(0,-150,40,40);c.restore();rim();brandLogo(c,'ushki',-14,-130,.8,'#1d1d22');brandLogo(c,'zayka',12,-130,.75,'#ff8a3d');c.font='900 7px sans-serif';c.fillStyle='#fff';c.textAlign='center';c.fillText('×',0,-129)}
+  if(id==='br_koto'){capBase(c,'#c9c4bc','#9a958c');brandLogo(c,'koto',-3,-130,1.2,'#24203a')}
+  if(id==='br_refl'){capBase(c,'#8a94a8','#5b6478');c.save();clip();const sx=((t*60)%100)-50;c.fillStyle='rgba(255,255,255,.55)';c.beginPath();c.moveTo(sx,-150);c.lineTo(sx+10,-150);c.lineTo(sx-6,-116);c.lineTo(sx-16,-116);c.fill();c.fillStyle='#e8eef8';c.fillRect(-34,-126,68,3);c.restore();rim();brandLogo(c,'lunar',-3,-134,1,'#5ee6ff')}
+  if(id==='br_pastel'){capBase(c,'#ffd0e8','#b9a9ff');c.save();clip();c.fillStyle='#d8f0ff';c.beginPath();c.arc(0,-116,20,Math.PI,0);c.fill();c.restore();rim();brandLogo(c,'pushistik',-3,-128,1.2,'#b9a9ff')}
+  if(id==='br_zv'){capBase(c,'#c8283c','#8a1a28');brandLogo(c,'zvezda',-3,-131,1.2,'#ffcf33')}
+}
+/* accessories */
+function drawAccBackBR(c,a,t){
+  if(a==='br_pack'){c.beginPath();c.roundRect(-46,-82,92,58,12);fs(c,'#1d1d22');c.beginPath();c.roundRect(-40,-78,80,14,10);fs(c,'#2e2e36',3);brandLogo(c,'zayka',0,-50,1.4,'#ff8a3d')}
+  if(a==='br_deck'){c.save();c.translate(-34,-56);c.rotate(-.55);c.beginPath();c.roundRect(-14,-56,28,112,14);fs(c,'#1d1d22');c.save();c.clip();c.fillStyle='#ff5ea0';c.fillRect(-14,-20,28,40);c.restore();brandLogo(c,'ushki',0,0,1.6,'#1d1d22');c.restore()}
+}
+function drawAccFrontBR(c,a,t){if(!a||!a.startsWith('br_'))return;
+  if(a==='br_chain'){c.save();glowOn(c,'#ffe066',8);c.lineWidth=4;c.strokeStyle='#e8c060';c.setLineDash([4,2]);c.beginPath();c.moveTo(-24,-70);c.quadraticCurveTo(0,-40,24,-70);c.stroke();c.setLineDash([]);ell(c,0,-46,11,11);fs(c,'#e8c060',2.5);c.restore();brandLogo(c,'maison',0,-46,1,'#5a3a22')}
+  if(a==='br_shop'){for(const[x,col,rot]of[[34,'#f3e3c3',-.1],[46,'#1d1d22',.15]]){c.save();c.translate(x,-34);c.rotate(rot);c.beginPath();c.roundRect(-11,-14,22,26,2);fs(c,col,2.5);c.beginPath();c.arc(0,-14,6,Math.PI,0);c.lineWidth=2;c.strokeStyle=INK;c.stroke();brandLogo(c,'maison',0,0,.75,col==='#1d1d22'?'#d4a640':'#5a3a22');c.restore()}}
+  if(a==='br_scarf'){ell(c,0,-64,31,9);c.save();c.clip();c.fillStyle='#f3e3c3';c.fillRect(-34,-74,68,20);for(let i=0;i<5;i++)brandLogo(c,'maison',-24+i*12,-64,.45,'#8a5a2a');c.restore();ell(c,0,-64,31,9);c.lineWidth=3;c.strokeStyle=INK;c.stroke();c.beginPath();c.moveTo(12,-62);c.lineTo(26,-30+Math.sin(t*5)*3);c.lineTo(14,-28);c.lineTo(4,-60);c.closePath();fs(c,'#f3e3c3',3);brandLogo(c,'maison',17,-38,.5,'#8a5a2a')}
+  if(a==='br_bag'){c.lineWidth=4;c.strokeStyle='#1d1d22';c.beginPath();c.moveTo(-22,-68);c.quadraticCurveTo(4,-50,28,-30);c.stroke();c.beginPath();c.roundRect(18,-36,26,20,5);fs(c,'#ff5ea0',2.5);brandLogo(c,'ushki',31,-26,.7,'#1d1d22')}
+  if(a==='br_glasses'){for(const g of[-1,1]){c.beginPath();c.roundRect(g*14-12,-105,24,15,3);c.fillStyle='rgba(36,32,58,.85)';c.fill();c.lineWidth=3;c.strokeStyle='#c9c4bc';c.stroke()}c.strokeStyle='#c9c4bc';c.lineWidth=3;c.beginPath();c.moveTo(-2,-99);c.lineTo(2,-99);c.stroke();c.fillStyle='#fff';c.font='300 4px sans-serif';c.textAlign='center';c.fillText('KOTO',-20,-102)}
+  if(a==='br_phone'){c.save();c.translate(40,-50);c.rotate(-.2);c.beginPath();c.roundRect(-8,-15,16,28,3);fs(c,'#f6f3ee',2.5);c.beginPath();c.roundRect(-6,-12,12,20,2);c.fillStyle=`hsl(${(t*40)%360},70%,60%)`;c.fill();brandLogo(c,'koto',0,10,.45,'#24203a');c.restore()}
+  if(a==='br_phones'){c.beginPath();c.arc(0,-100,44,Math.PI*1.08,Math.PI*1.92);c.lineWidth=11;c.strokeStyle=INK;c.stroke();c.lineWidth=6;c.strokeStyle='#8a94a8';c.stroke();for(const g of[-1,1]){c.beginPath();c.roundRect(g*44-9,-116,18,32,8);fs(c,'#e8eef8',3);brandLogo(c,'lunar',g*44,-100,.65,'#5ee6ff')}}
+  if(a==='br_pack'){c.lineWidth=5;c.strokeStyle='#1d1d22';c.beginPath();c.moveTo(-22,-68);c.quadraticCurveTo(-26,-46,-24,-26);c.moveTo(22,-68);c.quadraticCurveTo(26,-46,24,-26);c.stroke()}
+  if(a==='br_boa'){for(let i=0;i<16;i++){const b=Math.PI*(.05+i*.06),x=Math.cos(b)*30,y=-66+Math.sin(b)*12+(i>12?(i-12)*7:0);ell(c,x+(i>12?14:0),y,7,6);c.fillStyle=i%2?'#ffd0e8':'#d8f0ff';c.fill()}}
+}
+/* sweaters */
+Object.assign(TOP_COL,{br_hoodie:'#1d1d22',br_track:'#24242a',br_monosw:'#5a3a22',br_puffer:'#e8c060',br_tee:'#ffffff',br_varsity:'#ff5ea0',br_kotosw:'#c9c4bc',br_tech:'#5b6478',br_fleece:'#ffd0e8',br_retro:'#c8283c'});
+function topPatternBR(c,id,t){if(!id||!id.startsWith('br_'))return;
+  if(id==='br_hoodie'){brandLogo(c,'zayka',0,-52,1.45,'#ff8a3d');c.beginPath();c.roundRect(-15,-34,30,14,5);fs(c,'#2e2e36',2.5);c.strokeStyle='#fff';c.lineWidth=2;c.beginPath();c.moveTo(-6,-76);c.lineTo(-7,-62);c.moveTo(6,-76);c.lineTo(7,-62);c.stroke()}
+  if(id==='br_track'){c.fillStyle='#ff8a3d';c.fillRect(-2,-80,4,70);c.fillStyle='#fff';c.fillRect(-36,-80,6,70);c.fillRect(30,-80,6,70);brandLogo(c,'zayka',-14,-62,.8,'#fff')}
+  if(id==='br_monosw'){for(let i=0;i<6;i++)for(let j=0;j<5;j++)brandLogo(c,'maison',-32+i*13+(j%2)*6,-72+j*13,.6,'#d4a640')}
+  if(id==='br_puffer'){c.strokeStyle='#b8902a';c.lineWidth=2.5;for(let y=-70;y<-12;y+=12){c.beginPath();c.moveTo(-40,y);c.quadraticCurveTo(0,y+5,40,y);c.stroke()}c.fillStyle='rgba(255,255,255,.35)';const sx=((t*40)%110)-55;c.fillRect(sx,-80,8,70);brandLogo(c,'maison',14,-58,.9,'#5a3a22')}
+  if(id==='br_tee'){brandLogo(c,'ushki',0,-46,2.4,'#ff5ea0');c.fillStyle='#1d1d22';c.font='900 8px Trebuchet MS,sans-serif';c.textAlign='center';c.fillText('USHKI',0,-22)}
+  if(id==='br_varsity'){c.fillStyle='#1d1d22';c.fillRect(-40,-80,80,8);c.fillStyle='#fff';for(const y of[-52,-40,-28])ell(c,0,y,1.8,1.8),c.fill();brandLogo(c,'ushki',-16,-56,1,'#fff');c.font='900 14px Georgia,serif';c.fillStyle='#fff';c.textAlign='center';c.fillText('U',16,-48)}
+  if(id==='br_kotosw'){c.fillStyle='#24203a';c.font='300 9px Trebuchet MS,sans-serif';c.textAlign='center';c.fillText('K  O  T  O',0,-46);c.fillRect(-14,-40,28,1)}
+  if(id==='br_tech'){c.fillStyle='#e8eef8';c.fillRect(-40,-56,80,3);c.fillRect(-40,-34,80,3);c.fillStyle='#5ee6ff';c.save();glowOn(c,'#5ee6ff',8);c.fillRect(-2,-80,4,70);c.restore();brandLogo(c,'lunar',-16,-66,.9,'#5ee6ff');c.beginPath();c.roundRect(10,-30,16,10,2);fs(c,'#3a4058',2)}
+  if(id==='br_fleece'){for(let i=0;i<40;i++){ell(c,-34+rr2(i,21)*68,-76+rr2(i,22)*64,3,2.5);c.fillStyle=i%2?'#ffe6f1':'#d8f0ff';c.fill()}brandLogo(c,'pushistik',14,-58,1.1,'#b9a9ff')}
+  if(id==='br_retro'){c.fillStyle='#fff';c.fillRect(-40,-62,80,5);c.fillStyle='#1d1d22';c.fillRect(-40,-57,80,3);brandLogo(c,'zvezda',-14,-70,.9,'#ffcf33');c.fillStyle='#ffcf33';c.fillRect(-2,-80,4,70)}
+}
+/* shoes */
+function drawShoesBR(c,id,t){if(!id||!id.startsWith('br_'))return;
+  for(const g of[-1,1]){c.save();c.translate(g*17,-6);if(g<0)c.scale(-1,1);
+    const sneaker=(body,sole,stripe,logoB,logoCol,high)=>{if(high){c.beginPath();c.roundRect(-11,-16,22,18,5);fs(c,body)}c.beginPath();c.roundRect(-15,4,32,5,3);fs(c,sole,2.5);ell(c,1,0,16,9);fs(c,body);if(stripe){c.strokeStyle=stripe;c.lineWidth=3;c.beginPath();c.moveTo(-10,3);c.quadraticCurveTo(2,-4,13,2);c.stroke()}c.save();if(g<0)c.scale(-1,1);brandLogo(c,logoB,g<0?2:-2,high?-8:-2,.5,logoCol);c.restore()};
+    if(id==='br_run')sneaker('#1d1d22','#ff8a3d','#ffffff','zayka','#ff8a3d');
+    if(id==='br_high')sneaker('#ffffff','#1d1d22','#ff8a3d','zayka','#1d1d22',true);
+    if(id==='br_loafer'){c.beginPath();c.moveTo(-10,4);c.quadraticCurveTo(-10,-8,4,-7);c.quadraticCurveTo(18,-4,20,4);c.closePath();fs(c,'#3a2414');c.beginPath();c.roundRect(-12,4,34,4,2);fs(c,'#1d1208',2);c.beginPath();c.roundRect(0,-6,10,4,2);fs(c,'#d4a640',1.5)}
+    if(id==='br_goldsn'){c.save();glowOn(c,'#ffe9a0',10);sneaker('#e8c060','#fff8e6','#5a3a22','maison','#5a3a22');c.restore()}
+    if(id==='br_plat'){c.beginPath();c.roundRect(-15,0,32,11,4);fs(c,'#ffffff',2.5);c.fillStyle='#ff5ea0';c.fillRect(-14,5,30,2);ell(c,1,-3,16,9);fs(c,'#ff5ea0');c.save();if(g<0)c.scale(-1,1);brandLogo(c,'ushki',0,-4,.5,'#1d1d22');c.restore()}
+    if(id==='br_slides'){ell(c,3,5,17,5);fs(c,'#1d1d22',2.5);c.beginPath();c.roundRect(-8,-6,20,10,4);fs(c,'#ff5ea0',2.5);c.save();if(g<0)c.scale(-1,1);brandLogo(c,'ushki',g<0?-2:2,-1,.45,'#1d1d22');c.restore()}
+    if(id==='br_white')sneaker('#f6f3ee','#ffffff',null,'koto','#9a958c');
+    if(id==='br_moon'){c.beginPath();c.roundRect(-13,-20,26,24,8);fs(c,'#e8eef8');ell(c,2,0,17,10);fs(c,'#e8eef8');c.beginPath();c.roundRect(-16,6,36,6,3);fs(c,'#8a94a8',2.5);c.strokeStyle='#5ee6ff';c.lineWidth=2;c.beginPath();c.moveTo(-12,-12);c.lineTo(12,-12);c.stroke();c.save();if(g<0)c.scale(-1,1);brandLogo(c,'lunar',0,-4,.6,'#5ee6ff');c.restore()}
+    if(id==='br_fluffy'){for(let k=0;k<9;k++){const a=k*.7;ell(c,2+Math.cos(a)*11,-1+Math.sin(a)*6,6,5);c.fillStyle=k%2?'#ffd0e8':'#d8f0ff';c.fill()}ell(c,2,0,12,7);fs(c,'#ffe6f1',2)}
+    if(id==='br_zvsn')sneaker('#ffffff','#c8283c','#c8283c','zvezda','#c8283c',true);
+    c.restore()}
+}
+/* trails */
+const BR_TRAIL={br_tzayka:'zayka',br_tmaison:'maison',br_tushki:'ushki',br_tkoto:'koto',br_tlunar:'lunar',br_tpush:'pushistik',br_tzv:'zvezda'};
+function emitTrailBR(kind,p,t){
+  if(BR_TRAIL[kind]){if(Math.random()<.6)return false;const b=BR_TRAIL[kind];p.kind='blogo';p.b=b;p.col=b==='koto'?'#f6f3ee':BRANDS[b].tag;p.size=rnd(.9,1.4);p.vy=rnd(-55,-20);p.vx=rnd(-25,25);p.max=1.1;return true}
+  if(kind==='br_money'){if(Math.random()<.55)return false;p.kind='bill';p.size=rnd(6,9);p.vy=rnd(10,40);p.vx=rnd(-40,40);p.max=1.4;return true}
+  if(kind==='br_bling'){p.kind='star';p.col=Math.random()<.5?'#ffffff':'#ffe066';p.size=rnd(3,6);p.vy=rnd(-30,10);p.max=.6;return true}
+  if(kind==='br_tags'){if(Math.random()<.65)return false;p.kind='ptag';p.size=rnd(6,9);p.vy=rnd(-40,0);p.vx=rnd(-30,30);p.max=1.1;return true}
+  return null}
+function drawPartBR(c,p,t){
+  if(p.kind==='blogo'){c.save();glowOn(c,p.col,6);brandLogo(c,p.b,p.x,p.y,p.size,p.col);c.restore();return true}
+  if(p.kind==='bill'){c.save();c.translate(p.x,p.y);c.rotate(Math.sin(p.life*5)*.6);c.beginPath();c.roundRect(-p.size,-p.size*.5,p.size*2,p.size,1.5);c.fillStyle='#7cc46a';c.fill();c.lineWidth=1;c.strokeStyle='#2f6b3a';c.stroke();ell(c,0,0,p.size*.3,p.size*.3);c.stroke();c.restore();return true}
+  if(p.kind==='ptag'){c.save();c.translate(p.x,p.y);c.rotate(p.life*3);c.beginPath();c.moveTo(-p.size,-p.size*.5);c.lineTo(p.size*.5,-p.size*.5);c.lineTo(p.size,0);c.lineTo(p.size*.5,p.size*.5);c.lineTo(-p.size,p.size*.5);c.closePath();c.fillStyle='#ff5ea0';c.fill();ell(c,p.size*.4,0,1.2,1.2);c.fillStyle='#fff';c.fill();c.restore();return true}
+  return false}
+/* auras */
+const BR_AURA={br_azayka:'zayka',br_amaison:'maison',br_aushki:'ushki',br_akoto:'koto',br_alunar:'lunar',br_apush:'pushistik',br_azv:'zvezda'};
+function drawAuraBR(c,id,t,layer){if(!id||!id.startsWith('br_'))return;const back=layer==='back';
+  if(BR_AURA[id]){const b=BR_AURA[id],B=BRANDS[b],col=b==='koto'?'#f6f3ee':B.tag;if(back){softGlow(c,col,115,.45);c.save();c.translate(0,-68);c.rotate(t*.4);c.beginPath();c.arc(0,0,82,0,Math.PI*2);c.setLineDash([6,8]);c.lineWidth=3;c.strokeStyle=col;c.globalAlpha=.6;c.stroke();c.setLineDash([]);c.restore();c.globalAlpha=1}orbit(c,4,78,24,-66,t,1,layer,(x,y)=>{c.save();glowOn(c,col,10);if(b!=='koto'&&b!=='zayka'){ell(c,x,y,11,11);c.fillStyle=b==='maison'?'#3a2414':'#fff';c.globalAlpha=.85;c.fill();c.globalAlpha=1}brandLogo(c,b,x,y,1.2,b==='koto'?'#24203a':b==='zayka'?'#ff8a3d':col);c.restore()})}
+  if(id==='br_flash'){if(back)softGlow(c,'#ffffff',110,.3);else for(let i=0;i<6;i++){const ph=(t*1.7+i*.37)%1;if(ph<.12){const x=Math.cos(i*2.4)*80,y=-70+Math.sin(i*1.7)*70;c.save();c.globalAlpha=1-ph/.12;const g=c.createRadialGradient(x,y,0,x,y,30);g.addColorStop(0,'#fff');g.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=g;c.fillRect(x-30,y-30,60,60);c.strokeStyle='#fff';c.lineWidth=2;c.beginPath();c.moveTo(x-16,y);c.lineTo(x+16,y);c.moveTo(x,y-16);c.lineTo(x,y+16);c.stroke();c.restore()}}}
+  if(id==='br_runway'&&back){c.save();const g=c.createLinearGradient(0,-220,0,10);g.addColorStop(0,'rgba(255,255,240,.0)');g.addColorStop(1,'rgba(255,255,240,.45)');c.fillStyle=g;c.beginPath();c.moveTo(-14,-220);c.lineTo(14,-220);c.lineTo(70,10);c.lineTo(-70,10);c.closePath();c.fill();ell(c,0,8,70,10);c.fillStyle='rgba(255,255,240,.35)';c.fill();for(let i=0;i<8;i++){ell(c,-90+i*26,14,3,3);c.fillStyle=Math.sin(t*6+i)>0?'#fff6b0':'#9a958c';c.fill()}c.restore()}
+  if(id==='br_hype'){if(back){softGlow(c,'#ff8a3d',125,.55);flameRing(c,t,['#ff8a3d','#1d1d22','#ffffff'])}orbit(c,3,74,20,-60,t,1.5,layer,(x,y)=>{c.save();c.font='900 11px Trebuchet MS,sans-serif';c.textAlign='center';c.textBaseline='middle';c.lineWidth=3;c.strokeStyle=INK;c.strokeText('HYPE',x,y);c.fillStyle='#ff8a3d';c.fillText('HYPE',x,y);c.restore()})}
+}
 
 function drawShoes(c,id,t){
   if(!id||id==='none')return;
@@ -1631,7 +1769,7 @@ function claimAll(which){const maxL=which==='bp'?BP_LV:EV_LV;let n=0;for(let l=1
 /* ---------------- cosmetics UI ---------------- */
 let cosTab='skin',cosSkin=0,tryOn={};
 const pv=$('#pv'),pc=pv.getContext('2d');
-function srcText(src){return src==='secret'?'🔒 секретный код 🤫':src==='kg'?'🔒 только в Kotograde':src==='bp'?'🔒 из Battle Pass':'🔒 из Halloween-пасса'}
+function srcText(src){return src==='secret'?'🔒 секретный код 🤫':src==='kg'?'🔒 только в Kotograde':src==='brand'?'💎 эксклюзив — только в Kotograde':src==='bp'?'🔒 из Battle Pass':'🔒 из Halloween-пасса'}
 function renderCos(){
   let h='';for(const k of SLOTS)h+=`<div class="slot ${cosTab===k?'cur':''}" data-tab="${k}"><b>${SLOT_ICON[k]} ${SLOT_NAMES[k]}</b><span>${itemName(k,S.eq[k])}</span></div>`;
   $('#slots').innerHTML=h;

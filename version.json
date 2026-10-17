@@ -1,9 +1,9 @@
 {
- "version": 9,
- "label": "1.3",
- "name": "Версия 1.3: 80 вещей Kotograde и TAS в ADM",
+ "version": 10,
+ "label": "1.4",
+ "name": "Версия 1.4: 80 эксклюзивных брендовых вещей",
  "file": "game.html",
- "sha256": "a137c0f1d5753313b452006dd3013ea8904f81579900e18cbd0bed6e02bc9d35",
+ "sha256": "3820864382f4accadab79bae2dc39cf79935248bf546e62db4ba657945ae97ff",
  "date": "2026-10-17",
  "exe": {
   "version": 3,
