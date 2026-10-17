@@ -1,9 +1,9 @@
 {
- "version": 23,
- "label": "1.3.9",
- "name": "Версия 1.3.9: кнопки справа в стиле GUI 2",
+ "version": 24,
+ "label": "1.4.0",
+ "name": "Версия 1.4.0: GUI 3 — тёмная полоса FPS/PING/CPU/LOSS",
  "file": "game.html",
- "sha256": "d92bba87a64578a7a27098dd65473315cdce9f9cad85720671da4e801f4d2ebd",
+ "sha256": "6a3a2ad31d1bce27b1121dbe05798ac22c1bbc16512c7766079e2f6badf609c3",
  "date": "2026-10-17",
  "exe": {
   "version": 3,
