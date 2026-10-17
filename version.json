@@ -1,7 +1,7 @@
 {
- "version": 2,
- "name": "ADM: все игроки со всех устройств",
+ "version": 3,
+ "name": "Новый раздел Кофты",
  "file": "game.html",
- "sha256": "a75723e5381f23584ed49af843a2b1b50d5b931bdbea37cb32b6ab3128c59c28",
+ "sha256": "97f0c9a0e9230c3a1b946f47716b04854913a593d32571fac484a7bce28648c3",
  "date": "2026-10-17"
 }
