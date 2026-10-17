@@ -1,9 +1,9 @@
 {
- "version": 19,
- "label": "1.3.5",
- "name": "Версия 1.3.5: NoomiClone в ADM — всегда цепляться, автоигра и др.",
+ "version": 20,
+ "label": "1.3.6",
+ "name": "Версия 1.3.6: раздел GUI в настройках",
  "file": "game.html",
- "sha256": "f86249ab100261d89b9b5a5b37c388ec00fea9ae9f396a00b6d918f2e2958a3c",
+ "sha256": "c121efe49f85b59cc727c3f1f8caee973ef211eff8b245ab95eb16e428014144",
  "date": "2026-10-17",
  "exe": {
   "version": 3,

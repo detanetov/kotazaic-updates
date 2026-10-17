@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=19;window.KZ_VNAME='1.3.5';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=20;window.KZ_VNAME='1.3.6';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -41,6 +41,14 @@ html,body{height:100%;overflow:hidden;background:#0f0c2e;font-family:"Trebuchet 
 #top.on{display:flex}
 .chip{background:var(--paper);border:3px solid var(--ink);border-radius:999px;padding:6px 14px;font-weight:900;box-shadow:0 3px 0 var(--ink);display:flex;gap:6px;align-items:center}
 #top .sp{flex:1}
+.gpill{display:none;align-items:center;gap:12px;background:rgba(18,16,30,.82);color:#e8eef8;border-radius:6px;padding:5px 12px;font:700 13px "Segoe UI",system-ui,sans-serif;letter-spacing:.2px;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.gpill span{white-space:nowrap}.guipv .gpill{gap:7px!important;padding:4px 8px;font-size:10px!important}.gpill b{color:#fff}.gpill #gpTag{font-weight:900;font-size:14px}.gpill .gpi{font-style:normal;color:#3fd36a;font-size:11px}.gpsep{width:1px;height:16px;background:rgba(255,255,255,.25)}
+html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
+.guiwrap{display:grid;grid-template-columns:240px 1fr;gap:14px;align-items:start}@media (max-width:640px){.guiwrap{grid-template-columns:1fr}}
+.guiopt{display:block;width:100%;text-align:left;margin-bottom:8px;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px 12px;cursor:pointer;box-shadow:0 3px 0 var(--ink);font:inherit}.guiopt.cur{background:var(--mint)}.guiopt b{font-size:16px}.guiopt small{display:block;opacity:.75}
+.guipv{border:3px solid var(--ink);border-radius:14px;background:linear-gradient(180deg,#3a4fa8,#4a62b8);min-height:190px;position:relative;overflow:hidden;padding:10px}
+.guipv .pvbar{display:flex;align-items:center;gap:8px}.guipv .sp{flex:1}.guipv .chip{font-size:12px;padding:3px 10px}.guipv .btn{font-size:11px;padding:3px 7px;border-width:3px}.guipv .pvbar{gap:5px}
+.guipv .pvkz{position:absolute;right:30px;bottom:-10px;width:120px;height:120px}
 /* menu */
 #menu{justify-content:flex-start;align-items:center}
 #menu .col{display:flex;flex-direction:column;gap:14px;margin-left:clamp(0px,6vw,90px);max-width:380px;width:100%}
@@ -291,9 +299,10 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
 <div id="fps"></div><div id="fx"><div class="tint"></div><div class="vig"></div><div class="scan"></div><div class="grain"></div></div>
 
 <div id="top">
-  <div class="chip">🐰 <span id="tNick">—</span></div>
-  <div class="chip">🪙 <span id="tCoins">0</span></div>
+  <div class="chip gc">🐰 <span id="tNick">—</span></div>
+  <div class="chip gc">🪙 <span id="tCoins">0</span></div>
   <div class="sp"></div>
+  <div id="guiPill" class="gpill"><b id="gpTag">KZ</b><span class="gpsep"></span><span><i class="gpi">◉</i> <b id="gpFps">0</b> FPS</span><span><i class="gpi">📶</i> <b id="gpMs">—</b> MS</span><span><i class="gpi">📡</i> <b id="gpLoss">0</b>% LOSS</span><span class="gpsep"></span><span>🪙 <b id="gpCoins">0</b></span></div>
   <button class="btn sm ghost" id="bMute">🔊</button>
   <button class="btn sm ghost" id="bOut">Выйти</button>
 </div>
@@ -381,7 +390,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
 <div class="screen" id="set">
   <div class="panel" style="max-width:720px">
     <div class="row" style="justify-content:space-between"><h2>⚙ Settings</h2><button class="btn sm ghost" data-go="menu">← Меню</button></div>
-    <div class="tabs" id="setTabs"><button class="btn sm cur" data-st="main">⚙ Основное</button><button class="btn sm" data-st="acc">👤 Аккаунты</button><button class="btn sm" data-st="top">🏆 Топ игроков</button><button class="btn sm" data-st="cus">🎨 Кастомизация</button><button class="btn sm" data-st="ach">🏅 Достижения</button><button class="btn sm" data-st="mg">🎮 Мини-игры</button><button class="btn sm" data-st="eggs">🥚 Eggs</button></div>
+    <div class="tabs" id="setTabs"><button class="btn sm cur" data-st="main">⚙ Основное</button><button class="btn sm" data-st="acc">👤 Аккаунты</button><button class="btn sm" data-st="top">🏆 Топ игроков</button><button class="btn sm" data-st="cus">🎨 Кастомизация</button><button class="btn sm" data-st="ach">🏅 Достижения</button><button class="btn sm" data-st="mg">🎮 Мини-игры</button><button class="btn sm" data-st="eggs">🥚 Eggs</button><button class="btn sm" data-st="gui">🖥 GUI</button></div>
     <div id="stMain">
     <p class="sub">Настройки сохраняются в твоём аккаунте. Кстати, в меню есть секретные коды… 🤫</p>
     <div class="opt"><label>🔊 Громкость звуков <b id="vVol"></b></label><input type="range" min="0" max="100" step="5" id="sVol"></div>
@@ -428,6 +437,10 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
         <div class="mgcard"><div class="mgic">🤸</div><div class="mgtx"><b>NoomiClone</b><small>Котозаяц-гимнаст: раскачайся на перекладине, отпусти, сделай сальто и поймай следующую</small></div><button class="btn sm mint" data-noomi="1">Открыть</button></div>
         <div class="mgcard"><div class="mgic">♟️</div><div class="mgtx"><b>Шахматы</b><small>Классические шахматы, рокировка, взятие на проходе</small></div><button class="btn sm mint" data-mgopen="chess">Открыть</button></div>
       </div>
+    </div>
+    <div id="stGui" style="display:none">
+      <p class="sub">Выбери вид интерфейса. Справа — предпросмотр.</p>
+      <div class="guiwrap"><div id="guiOpts"></div><div><div class="guipv" id="guiPv"></div><p class="hint" id="guiPvTxt"></p></div></div>
     </div>
     <div id="stCus" style="display:none">
       <h3 class="sec">🖼 Интерфейс</h3>
@@ -741,7 +754,7 @@ function syncInv(sv){sv=sv||S;if(!sv)return;sv.inv=sv.inv||{};for(const sl of SL
 function addItemTo(sv,sl,id,n=1){const k=sl+':'+id;if(!sv.own[sl].includes(id))sv.own[sl].push(id);if(itemVal(sl,id)>0)sv.inv[k]=(sv.inv[k]||0)+n}
 function addItem(sl,id,n=1){addItemTo(S,sl,id,n)}
 function removeItem(sl,id,n=1){const k=sl+':'+id;S.inv[k]=(S.inv[k]||0)-n;if(S.inv[k]<=0){delete S.inv[k];S.own[sl]=S.own[sl].filter(x=>x!==id);if(S.eq[sl]===id)S.eq[sl]=sl==='skin'?'grey':'none'}}
-function defSet(){return{vol:70,spd:100,mouse:true,parts:true,shake:true,auto:true,sky:'night',custom:defCustom(),shader:'none',shStr:70,diff:'normal',zen:false,music:false,mvol:40,talk:true,floats:true,vib:true,fps:false,hideTop:false,ui:'classic',font:'normal',scale:100,cursor:'normal',body:'moon',land:'hills',weather:'none',stars:100,shoot:true}}
+function defSet(){return{vol:70,spd:100,mouse:true,parts:true,shake:true,auto:true,sky:'night',custom:defCustom(),shader:'none',shStr:70,diff:'normal',zen:false,music:false,mvol:40,talk:true,floats:true,vib:true,fps:false,hideTop:false,gui:'classic',ui:'classic',font:'normal',scale:100,cursor:'normal',body:'moon',land:'hills',weather:'none',stars:100,shoot:true}}
 function defCustom(){return{top:'#1b0f3a',mid:'#3a2a7a',bot:'#d26a9a',hill:'#24164a',moon:'#fff3c4',moonOn:true,stars:true,clouds:false,aurora:false}}
 const isAdm=()=>user==='deta';
 function fixSave(s){const d=newSave();s=Object.assign(d,s||{});if(!s.gid)s.gid='g'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);s.own=Object.assign(newSave().own,s.own||{});s.eq=Object.assign(newSave().eq,s.eq||{});s.set=Object.assign(defSet(),s.set||{});s.set.custom=Object.assign(defCustom(),s.set.custom||{});s.adm=Object.assign({god:false,mag:false},s.adm||{});s.fun=Object.assign({disco:false,big:false,tiny:false,flip:false,grav:false},s.fun||{});s.stats=s.stats||{};s.ach=s.ach||{};s.inv=s.inv||{};s.eggs=s.eggs||{};s.pets=s.pets||{};if(s.pet===undefined)s.pet=null;
@@ -761,7 +774,7 @@ function persist(){if(!user)return;if(S)S.last=Date.now();clearTimeout(window._p
 function login(u){
   if(u==='__guest'){user=u;nick='Гость';try{S=fixSave(JSON.parse(lsGet('kz_guest')))}catch(e){S=newSave()}}
   else{const db=loadDB();if(!db[u])return false;user=u;nick=db[u].nick;S=fixSave(db[u].save)}
-  applyShader();applyFlip();try{applyLook();makeSky();if(S.set.music)musicKick()}catch(e){}if(u!=='__guest')persist();lsSet('kz_session',u);addKnown(u);backUser=null;$('#aBack').style.display='none';refreshTop();show('menu');return true}
+  applyShader();applyFlip();try{applyLook();applyGui();makeSky();if(S.set.music)musicKick()}catch(e){}if(u!=='__guest')persist();lsSet('kz_session',u);addKnown(u);backUser=null;$('#aBack').style.display='none';refreshTop();show('menu');return true}
 let backUser=null;
 function getKnown(){try{const k=JSON.parse(lsGet('kz_known'));return Array.isArray(k)?k:[]}catch(e){return[]}}
 function addKnown(u){const k=getKnown().filter(x=>x!==u);k.unshift(u);lsSet('kz_known',JSON.stringify(k.slice(0,20)))}
@@ -788,7 +801,7 @@ function show(id){
   if(id==='kg'){syncInv();kgSel={};kgTarget=null;kgResult=null;renderKG()}
   refreshTop();
 }
-function refreshTop(){if(!S)return;$('#tNick').textContent=nick;$('#tCoins').textContent=S.coins;$('#bMute').textContent=muted?'🔇':'🔊'}
+function refreshTop(){if(!S)return;$('#tNick').textContent=nick;$('#tCoins').textContent=S.coins;try{$('#gpCoins').textContent=S.coins;$('#gpTag').textContent=guiTag()}catch(e){}$('#bMute').textContent=muted?'🔇':'🔊'}
 function refreshMenu(){if(!S)return;refreshFunChips();$('#mAdm').style.display=isAdm()?'flex':'none';$('#mBp').textContent='ур. '+Math.min(BP_LV,Math.floor(S.bpXp/BP_XP));$('#mEv').textContent='ур. '+Math.min(EV_LV,Math.floor(S.evXp/EV_XP));$('#mBest').textContent=S.best}
 let toastT=0;
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),1900)}
@@ -2251,7 +2264,7 @@ addEventListener('keydown',e=>{
 
 let last=performance.now(),T=0,fpsN=0,fpsAcc=0,fpsLast=0;
 function loop(now){
-  const dt=Math.min(.05,(now-last)/1000);last=now;T+=dt;animateGrain(dt);
+  const dt=Math.min(.05,(now-last)/1000);last=now;T+=dt;animateGrain(dt);netStat.fN++;netStat.fT+=dt;if(netStat.fT>=.5){netStat.fps=Math.round(netStat.fN/netStat.fT);netStat.fN=0;netStat.fT=0}
   if(S&&S.set.fps){fpsN++;fpsAcc+=now-(fpsLast||now);fpsLast=now;if(fpsAcc>500){$('#fps').textContent=Math.round(fpsN*1000/fpsAcc)+' FPS';fpsN=0;fpsAcc=0}}
   if(G){if(!G.paused&&!G.over){const sp=isAdm()&&S.adm.speed?+S.adm.speed:1;if(sp===1)update(dt);else{const n=Math.ceil(sp);for(let i=0;i<n&&G&&!G.over;i++)update(dt*sp/n)}}if(G)drawGame(T,dt)}else drawMenuScene(T,dt);
   if(cur==='cos'&&S){pvDt=dt;drawPreview(T)}
@@ -2374,7 +2387,7 @@ $('#sWipe').onclick=()=>{if(!confirm('Точно удалить весь про�
 
 let setTab='main',topTab='best';
 function setSetTab(t){setTab=t;for(const b of document.querySelectorAll('#setTabs [data-st]'))b.classList.toggle('cur',b.dataset.st===t);
-  $('#stMain').style.display=t==='main'?'block':'none';$('#stAcc').style.display=t==='acc'?'block':'none';$('#stTop').style.display=t==='top'?'block':'none';$('#stCus').style.display=t==='cus'?'block':'none';if(t==='cus')renderLook();$('#stAch').style.display=t==='ach'?'block':'none';$('#stMg').style.display=t==='mg'?'block':'none';$('#stEggs').style.display=t==='eggs'?'block':'none';if(t==='eggs')renderEggs();if(t==='ach')renderAch();if(t==='cus')renderCus();
+  $('#stMain').style.display=t==='main'?'block':'none';$('#stGui').style.display=t==='gui'?'block':'none';if(t==='gui')renderGui();$('#stAcc').style.display=t==='acc'?'block':'none';$('#stTop').style.display=t==='top'?'block':'none';$('#stCus').style.display=t==='cus'?'block':'none';if(t==='cus')renderLook();$('#stAch').style.display=t==='ach'?'block':'none';$('#stMg').style.display=t==='mg'?'block':'none';$('#stEggs').style.display=t==='eggs'?'block':'none';if(t==='eggs')renderEggs();if(t==='ach')renderAch();if(t==='cus')renderCus();
   if(t==='acc')renderAccounts();if(t==='top'){NET.start();NET.sub(TP+'players/+');try{publishPresence()}catch(e){}renderTop()}}
 document.querySelector('#setTabs').addEventListener('click',e=>{const b=e.target.closest('[data-st]');if(b){SND.click();setSetTab(b.dataset.st)}});
 document.querySelector('#topTabs').addEventListener('click',e=>{const b=e.target.closest('[data-tt]');if(!b)return;topTab=b.dataset.tt;SND.click();for(const x of document.querySelectorAll('#topTabs [data-tt]'))x.classList.toggle('cur',x===b);renderTop()});
@@ -2471,6 +2484,23 @@ function musicKick(){try{AC=AC||new(window.AudioContext||window.webkitAudioConte
   if(musT||!S||!S.set.music)return;musT=setInterval(()=>{if(!S||!S.set.music){clearInterval(musT);musT=null;return}const ch=MUS_PROG[Math.floor(musStep/8)%4],i=musStep%8;
     musicNote(ch[[0,1,2,3,2,1,2,3][i]]*(G&&G.boss?1.5:1),.22,'triangle',.035);if(i===0)musicNote(ch[0]/2,.9,'sine',.05);if(i%2===1&&Math.random()<.35)musicNote(ch[3]*2,.12,'sine',.012);musStep++},G&&G.boss?150:190)}
 addEventListener('pointerdown',()=>{if(S&&S.set.music&&!musT)musicKick()},{passive:true});
+/* ---------------- GUI layouts ---------------- */
+const GUIS={classic:{n:'1 — Классический',d:'Ник и монеты слева, звук и выход справа'},compact:{n:'2 — Компактный',d:'Тёмная панель справа: FPS, пинг (MS), потери (LOSS) и монеты'}};
+let guiPrev=null;
+function guiTag(){const n=(nick||'KZ').replace(/[^A-Za-zА-Яа-яЁё0-9]/g,'');return (n.slice(0,2)||'KZ').toUpperCase()}
+function applyGui(){const on=S&&S.set.gui==='compact';document.documentElement.classList.toggle('gui2',!!on);if(on){NET.start();$('#gpTag').textContent=guiTag()}}
+function pvHtml(id){const nk=esc(nick||'Игрок'),co=S?S.coins:0;
+  if(id==='compact')return `<div class="pvbar"><div class="sp"></div><div class="gpill" style="display:flex;font-size:11px;gap:9px"><b>${esc(guiTag())}</b><span class="gpsep"></span><span><i class="gpi">◉</i> <b>${netStat.fps}</b> FPS</span><span><i class="gpi">📶</i> <b>${netStat.ms??'—'}</b> MS</span><span><i class="gpi">📡</i> <b>${netStat.loss}</b>% LOSS</span><span class="gpsep"></span><span>🪙 <b>${co}</b></span></div><button class="btn sm ghost">🔊</button><button class="btn sm ghost">Выйти</button></div>`;
+  return `<div class="pvbar"><div class="chip">🐰 ${nk}</div><div class="chip">🪙 ${co}</div><div class="sp"></div><button class="btn sm ghost">🔊</button><button class="btn sm ghost">Выйти</button></div>`}
+function renderGui(){const curG=S.set.gui||'classic',pv=guiPrev||curG;let h='';for(const[id,g]of Object.entries(GUIS))h+=`<button class="guiopt ${curG===id?'cur':''}" data-gui="${id}" onmouseenter="guiPrev='${id}';renderGuiPv()" onmouseleave="guiPrev=null;renderGuiPv()"><b>${g.n}</b><small>${g.d}</small>${curG===id?'<small>✓ Включено</small>':''}</button>`;$('#guiOpts').innerHTML=h;renderGuiPv()}
+function renderGuiPv(){if(!S)return;const pv=guiPrev||S.set.gui||'classic';$('#guiPv').innerHTML=pvHtml(pv)+`<canvas class="pvkz" width="240" height="240"></canvas>`;const c=$('#guiPv canvas').getContext('2d');c.scale(2,2);drawKZ(c,60,118,.62,S.eq,1.2,0);$('#guiPvTxt').textContent='Предпросмотр: '+GUIS[pv].n+(pv===S.set.gui?' (сейчас включён)':' — нажми, чтобы включить')}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-gui]');if(!b||!S)return;S.set.gui=b.dataset.gui;persist();applyGui();SND.click();renderGui();toast('🖥 GUI: '+GUIS[S.set.gui].n)});
+const netStat={fps:0,ms:null,loss:0,sent:[],fN:0,fT:0};
+setInterval(()=>{if(!S||S.set.gui!=='compact')return;const c=NET.cl.find(x=>x.ok);const now=performance.now();netStat.sent=netStat.sent.filter(p=>now-p.t<20000);
+  if(c){netStat.sent.push({t:now,ok:false});c.pingT=now;c.raw(new Uint8Array([0xC0,0]))}
+  const old=netStat.sent.filter(p=>now-p.t>2500);netStat.loss=old.length?Math.round(old.filter(p=>!p.ok).length/old.length*100):(c?0:100);if(!NET.ok()){netStat.ms=null;netStat.loss=100}
+  $('#gpMs').textContent=netStat.ms??'—';$('#gpLoss').textContent=netStat.loss;$('#gpCoins').textContent=S.coins;$('#gpFps').textContent=netStat.fps;if(cur==='set'&&setTab==='gui'&&!guiPrev)renderGuiPv()},1000);
+function guiPong(c){const now=performance.now();if(c.pingT){netStat.ms=Math.round(now-c.pingT);c.pingT=0;const p=netStat.sent.slice().reverse().find(x=>!x.ok);if(p)p.ok=true}}
 let grainT=0;
 function animateGrain(dt){grainT+=dt;if(grainT>.06){grainT=0;const gr=document.querySelector('#fx .grain');if(gr&&gr.style.opacity>0)gr.style.backgroundPosition=`${Math.random()*160|0}px ${Math.random()*160|0}px`}}
 
@@ -2731,6 +2761,7 @@ class MQ{
       if(this.buf.length<i+len)return;const h=this.buf[0],body=this.buf.slice(i,i+len);this.buf=this.buf.slice(i+len);this.handle(h,body)}}
   handle(h,body){const t=h>>4;
     if(t===2){if(body[1]===0){this.ok=true;this.tries=0;for(const x of this.subs)this.sendSub(x);clearInterval(this.ka);this.ka=setInterval(()=>this.raw(new Uint8Array([0xC0,0])),25000);netUi();pubAllDone=false;setTimeout(()=>{try{publishPresence()}catch(e){}},500)}else{try{this.ws.close()}catch(e){}}}
+    else if(t===13){guiPong(this)}
     else if(t===3){const qos=(h>>1)&3,tl=(body[0]<<8)|body[1];const topic=mqDec.decode(body.subarray(2,2+tl));let o=2+tl;if(qos)o+=2;
       if(topic.startsWith(TP+'players/')){netProfile(topic.slice((TP+'players/').length),body.subarray(o));return}
       let m;try{m=JSON.parse(mqDec.decode(body.subarray(o)))}catch(e){return}mmRecv(m)}}
