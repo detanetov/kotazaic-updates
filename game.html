@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=10;window.KZ_VNAME='1.4';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=11;window.KZ_VNAME='1.5';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -81,6 +81,7 @@ html,body{height:100%;overflow:hidden;background:#0f0c2e;font-family:"Trebuchet 
 .arrows{display:flex;gap:10px;align-items:center;width:100%;justify-content:space-between}
 .arrows .nm{color:#fff;font-weight:900;font-size:18px;text-align:center;flex:1}
 .acc[data-pick]{cursor:pointer}.acc.pick{outline:4px solid #5ee6c1;background:#eafff8}
+.topme{background:#eafff8;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;margin-bottom:8px;font-size:14px}.topwarn{background:#ffe3ea;border:3px solid #e8355d;border-radius:14px;padding:6px 12px;margin-bottom:8px;font-size:13px}.topgood{background:#fff7d6;border:3px solid #ffc93c;border-radius:14px;padding:6px 12px;margin-bottom:8px;font-size:13px}
 .slots{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:14px}.slot span{font-size:10px!important;line-height:1.2;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:normal;overflow-wrap:normal}
 .slot{padding:6px 1px!important}.slot b{font-size:10.5px!important}
 .slot span{font-size:12px}
@@ -400,7 +401,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
     <div id="stTop" style="display:none">
       <div class="tabs" id="topTabs" style="margin-top:0"><button class="btn sm cur" data-tt="best">🏆 Рекорд</button><button class="btn sm" data-tt="coins">🪙 Монеты</button><button class="btn sm" data-tt="bp">★ Battle Pass</button><button class="btn sm" data-tt="ev">🎃 Event</button></div>
       <div id="topList"></div>
-      <p class="hint">В топе игроки этой игры на этом компьютере.</p>
+      <p class="hint">В топе все игроки Kotazaic and Stars — на ПК и на телефонах. Список обновляется сам.</p>
     </div>
     <div id="stAch" style="display:none"><div id="achList"></div></div>
     <div id="stEggs" style="display:none">
@@ -2040,7 +2041,7 @@ $('#sWipe').onclick=()=>{if(!confirm('Точно удалить весь про�
 let setTab='main',topTab='best';
 function setSetTab(t){setTab=t;for(const b of document.querySelectorAll('#setTabs [data-st]'))b.classList.toggle('cur',b.dataset.st===t);
   $('#stMain').style.display=t==='main'?'block':'none';$('#stAcc').style.display=t==='acc'?'block':'none';$('#stTop').style.display=t==='top'?'block':'none';$('#stCus').style.display=t==='cus'?'block':'none';$('#stAch').style.display=t==='ach'?'block':'none';$('#stMg').style.display=t==='mg'?'block':'none';$('#stEggs').style.display=t==='eggs'?'block':'none';if(t==='eggs')renderEggs();if(t==='ach')renderAch();if(t==='cus')renderCus();
-  if(t==='acc')renderAccounts();if(t==='top')renderTop()}
+  if(t==='acc')renderAccounts();if(t==='top'){NET.start();NET.sub(TP+'players/+');try{publishPresence()}catch(e){}renderTop()}}
 document.querySelector('#setTabs').addEventListener('click',e=>{const b=e.target.closest('[data-st]');if(b){SND.click();setSetTab(b.dataset.st)}});
 document.querySelector('#topTabs').addEventListener('click',e=>{const b=e.target.closest('[data-tt]');if(!b)return;topTab=b.dataset.tt;SND.click();for(const x of document.querySelectorAll('#topTabs [data-tt]'))x.classList.toggle('cur',x===b);renderTop()});
 function accInfo(u){if(u==='__guest'){let sv;try{sv=fixSave(JSON.parse(lsGet('kz_guest')))}catch(e){sv=newSave()}return{nick:'Гость',sv}}const db=loadDB();if(!db[u])return null;return{nick:db[u].nick,sv:fixSave(db[u].save)}}
@@ -2057,14 +2058,30 @@ $('#accList').addEventListener('click',e=>{const sw=e.target.closest('[data-sw]'
 $('#accAdd').onclick=()=>{persist();backUser=user;user=null;S=null;lsDel('kz_session');setReg(false);$('#aUser').value='';$('#aPass').value='';$('#aNick').value='';$('#aBack').style.display='inline-block';show('auth')};
 $('#aBack').onclick=()=>{const u=backUser;if(u&&login(u)){show('set');setSetTab('acc')}};
 function renderTop(){
-  const db=loadDB();const val=sv=>topTab==='best'?sv.best:topTab==='coins'?sv.coins:topTab==='bp'?Math.min(BP_LV,Math.floor(sv.bpXp/BP_XP)):Math.min(EV_LV,Math.floor(sv.evXp/EV_XP));
-  const unit={best:'очков',coins:'🪙',bp:'ур.',ev:'ур.'}[topTab];
-  const rows=Object.keys(db).map(u=>{const sv=fixSave(db[u].save);return{u,nick:db[u].nick,v:val(sv)}}).sort((a,b)=>b.v-a.v||a.u.localeCompare(b.u));
-  let h='';const myIdx=rows.findIndex(r=>r.u===user);
-  rows.slice(0,10).forEach((r,i)=>{h+=topRow(r,i,unit)});
-  if(myIdx>=10)h+='<div class="hint" style="text-align:center;margin:4px 0">…</div>'+topRow(rows[myIdx],myIdx,unit);
-  $('#topList').innerHTML=h||'<p class="hint">Пока нет игроков с аккаунтом.</p>'}
-function topRow(r,i,unit){const medal=['🥇','🥈','🥉'][i]||(i+1);return `<div class="topr ${r.u===user?'me':''}"><div class="pl">${medal}</div><div class="nm">${esc(r.nick)} <small>@${esc(r.u)}</small></div><div class="v">${unit==='ур.'?'ур. '+r.v:r.v+' '+unit}</div></div>`}
+  const val=p=>topTab==='best'?(+p.best||0):topTab==='coins'?(+p.coins||0):topTab==='bp'?(+p.bp||0):(+p.ev||0);
+  const unit={best:'очков',coins:'🪙',bp:'ур.',ev:'ур.'}[topTab],now=Date.now();
+  const rows=[],seen=new Set();
+  const add=(r)=>{if(!r.gid||seen.has(r.gid))return;seen.add(r.gid);rows.push(r)};
+  if(S&&user&&user!=='__guest')add({gid:S.gid,u:user,nick,v:val({best:S.best,coins:S.coins,bp:lvlOf(S.bpXp,BP_XP,BP_LV),ev:lvlOf(S.evXp,EV_XP,EV_LV)}),me:true,on:true,plat:devPlat()});
+  const db=loadDB();for(const u of Object.keys(db)){if(u===user)continue;const sv=fixSave(db[u].save),np=netPlayers[sv.gid];add({gid:sv.gid,u,nick:db[u].nick,v:val(np&&np.last>(sv.last||0)?np:{best:sv.best,coins:sv.coins,bp:lvlOf(sv.bpXp,BP_XP,BP_LV),ev:lvlOf(sv.evXp,EV_XP,EV_LV)}),on:false,plat:devPlat()})}
+  for(const p of Object.values(netPlayers))add({gid:p.gid,u:String(p.u||'?'),nick:String(p.nick||'?'),v:val(p),on:now-p.last<150000,plat:p.plat==='phone'?'phone':'pc'});
+  rows.sort((a,b)=>b.v-a.v||(a.me?-1:b.me?1:0)||a.u.localeCompare(b.u));
+  const my=rows.findIndex(r=>r.me);let h='';
+  if(my>=0){const me=rows[my],up=rows[my-1];
+    h+=`<div class="topme">Ты на <b>${my+1}</b> месте из <b>${rows.length}</b>${up?` · до ${my===1?'первого':'следующего'} места: <b>${up.v-me.v+1} ${unit==='ур.'?'ур.':unit}</b> (обогнать ${esc(up.nick)})`:' · 👑 ты лидер!'}</div>`;
+    // who passed whom: compare with the players that were below/above me last time (new players don't count)
+    const key='kz_topwho_'+topTab+'_'+user,wk='kz_topmsg_'+topTab+'_'+user;let prev=null,msg=null;try{prev=JSON.parse(lsGet(key)||'null');msg=JSON.parse(lsGet(wk)||'null')}catch(e){}
+    const above=rows.slice(0,my).map(r=>r.gid),below=rows.slice(my+1).map(r=>r.gid),nm=g=>{const r=rows.find(x=>x.gid===g);return r?r.nick:'?'};
+    if(prev){const pb=new Set(prev.b),pa=new Set(prev.a);const passedMe=above.filter(g=>pb.has(g)),iPassed=below.filter(g=>pa.has(g));
+      if(passedMe.length){msg={c:'topwarn',txt:`📉 Тебя ${passedMe.length>1?'обогнали':'обогнал(а)'}: ${passedMe.slice(0,3).map(nm).join(', ')}${passedMe.length>3?' и ещё '+(passedMe.length-3):''} — теперь ты на ${my+1} месте`,until:Date.now()+90000};try{lsSet(wk,JSON.stringify(msg))}catch(e){}}
+      else if(iPassed.length){msg={c:'topgood',txt:`📈 Ты обогнал(а): ${iPassed.slice(0,3).map(nm).join(', ')}${iPassed.length>3?' и ещё '+(iPassed.length-3):''} — теперь ты на ${my+1} месте!`,until:Date.now()+90000};try{lsSet(wk,JSON.stringify(msg))}catch(e){}}}
+    if(msg&&msg.until>Date.now())h+=`<div class="${msg.c}">${esc(msg.txt)}</div>`;
+    try{lsSet(key,JSON.stringify({a:above,b:below}))}catch(e){}}
+  const show=new Set();for(let i=0;i<Math.min(10,rows.length);i++)show.add(i);if(my>=0)for(let i=Math.max(0,my-2);i<=Math.min(rows.length-1,my+2);i++)show.add(i);
+  let last=-1;for(const i of [...show].sort((a,b)=>a-b)){if(last>=0&&i>last+1)h+='<div class="hint" style="text-align:center;margin:4px 0">…</div>';h+=topRow(rows[i],i,unit);last=i}
+  if(!NET.ok())h+='<p class="hint">⚠ Нет связи с онлайн-сервером — показаны игроки, которых игра уже видела.</p>';
+  $('#topList').innerHTML=h||'<p class="hint">Пока нет игроков.</p>'}
+function topRow(r,i,unit){const medal=['🥇','🥈','🥉'][i]||(i+1);return `<div class="topr ${r.me?'me':''}"><div class="pl">${medal}</div><div class="nm">${r.plat==='phone'?'📱':'💻'} ${esc(r.nick)} <small>@${esc(r.u)}${r.on&&!r.me?' · 🟢':''}</small></div><div class="v">${unit==='ур.'?'ур. '+r.v:r.v+' '+unit}</div></div>`}
 
 /* ---------------- shaders ---------------- */
 const SHADERS={
@@ -2361,12 +2378,13 @@ const NET={cl:[],started:false,
   start(){if(this.started||!('WebSocket'in window))return;this.started=true;let urls=['wss://broker.emqx.io:8084/mqtt','wss://broker.hivemq.com:8884/mqtt','wss://test.mosquitto.org:8081/mqtt'];try{const o=JSON.parse(lsGet('kz_brokers'));if(Array.isArray(o)&&o.length)urls=o}catch(e){}
     for(const u of urls)this.cl.push(new MQ(u));this.sub(TP+'mm');this.sub(TP+'u/'+MM_ID);setTimeout(netUi,6000)},
   sub(t){for(const c of this.cl)c.sub(t)},pub(t,o,r){for(const c of this.cl)c.pub(t,o,r)},ok(){return this.cl.some(c=>c.ok)}};
-const netPlayers={};let netListT=0;
+const netPlayers={};let netListT=0,netTopT=0;
 try{const c=JSON.parse(lsGet('kz_netseen')||'{}');for(const k in c)if(c[k]&&c[k].t==='prof'&&c[k].gid===k)netPlayers[k]=c[k]}catch(e){}
 let netSaveT=0;function netSaveCache(){clearTimeout(netSaveT);netSaveT=setTimeout(()=>{try{lsSet('kz_netseen',JSON.stringify(netPlayers))}catch(e){}},1500)}
 function netProfile(gid,payload){if(!payload.length){delete netPlayers[gid]}else{let m;try{m=JSON.parse(mqDec.decode(payload))}catch(e){return}if(!m||m.t!=='prof'||m.gid!==gid)return;const old=netPlayers[gid];if(old&&old.last>m.last)return;netPlayers[gid]=m}
   netSaveCache();if(payload.length&&netQ.length&&Date.now()-netPlayers[gid].last<150000)netQFlush(gid);
-  if(cur==='adm'){clearTimeout(netListT);netListT=setTimeout(()=>renderAccList(),250)}}
+  if(cur==='adm'){clearTimeout(netListT);netListT=setTimeout(()=>renderAccList(),250)}
+  if(cur==='set'&&$('#stTop').style.display!=='none'){clearTimeout(netTopT);netTopT=setTimeout(()=>renderTop(),400)}}
 function lvlOf(x,per,max){return Math.min(max,Math.floor(x/per))}
 function devPlat(){return window.KZ_MODE==='android'||window.KZAndroid||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)?'phone':'pc'}
 function profOf(u,nk,sv,last){return{t:'prof',gid:sv.gid,u,nick:nk,coins:sv.coins,best:sv.best,bp:lvlOf(sv.bpXp,BP_XP,BP_LV),ev:lvlOf(sv.evXp,EV_XP,EV_LV),pet:sv.pet&&PETS[sv.pet]?PETS[sv.pet].n:null,skin:sv.eq.skin,plat:devPlat(),dev:DEV_ID,last,v:window.KZ_VER,games:(sv.stats&&sv.stats.games)||0}}
