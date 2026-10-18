@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=40;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=41;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -116,6 +116,27 @@ html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
 .ckb .sq.l{background:#f3dcb4}.ckb .sq.d{background:#8a5a3c}.ckb .sq.can{box-shadow:inset 0 0 0 3px #5ee6c1}
 .ckp{width:76%;height:76%;border-radius:50%;display:block;margin:auto;position:relative;box-shadow:0 3px 0 rgba(0,0,0,.45),inset 0 -4px 0 rgba(0,0,0,.18)}.ckp.w{background:radial-gradient(circle at 40% 35%,#fff,#e6dccb);border:2px solid #6b5a46}.ckp.b{background:radial-gradient(circle at 40% 35%,#5a4a60,#1d1622);border:2px solid #000}
 .ckp::after{content:'';position:absolute;inset:18%;border-radius:50%;border:2px solid rgba(0,0,0,.18)}.ckp.k::before{content:'👑';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(12px,3.4vw,24px);z-index:1}
+.chwrap{display:flex;flex-direction:column;height:min(60vh,540px)}
+.chlog{flex:1;overflow-y:auto;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:160px}
+.chm{display:flex;gap:8px;align-items:flex-end;max-width:86%}.chm.me{align-self:flex-end;flex-direction:row-reverse}
+.chm img{width:36px;height:36px;border-radius:50%;border:2.5px solid var(--ink);background:#2a2050;flex:none;cursor:pointer;object-fit:cover}
+.chb{background:#f3efe6;border:2.5px solid var(--ink);border-radius:14px;padding:6px 10px;font-weight:700;word-break:break-word;color:var(--ink)}.chm.me .chb{background:#d8f7ec}
+.chb b{cursor:pointer;font-size:12px;display:block;opacity:.7}.chb small{opacity:.45;font-size:10px;margin-left:8px;white-space:nowrap}
+.chin{display:flex;gap:8px;margin-top:8px}.chin input{flex:1;min-width:0;border:3px solid var(--ink);border-radius:12px;padding:9px 12px;font:inherit;font-weight:700;background:#fff;color:var(--ink)}
+.chgrid{display:grid;grid-template-columns:230px 1fr;gap:12px}@media(max-width:720px){.chgrid{grid-template-columns:1fr}}
+.frl{max-height:min(60vh,540px);overflow-y:auto}
+.fr{display:flex;align-items:center;gap:8px;background:#fff;border:3px solid var(--ink);border-radius:12px;padding:6px 8px;margin-bottom:6px;cursor:pointer;font-weight:800;color:var(--ink)}.fr.cur{background:#fff1c9}
+.fr img{width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);background:#2a2050;flex:none}
+.dot{width:11px;height:11px;border-radius:50%;background:#c9c4d8;border:2px solid var(--ink);flex:none}.dot.on{background:#3fdc7a}
+.unr{background:#e8355d;color:#fff;border-radius:10px;padding:0 7px;font-size:12px;font-weight:900}
+.pfov{position:fixed;inset:0;z-index:72;background:rgba(10,6,30,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.pfbox{background:var(--paper);border:4px solid var(--ink);border-radius:20px;box-shadow:0 6px 0 var(--ink);padding:16px;max-width:440px;width:100%;max-height:92vh;overflow:auto;color:var(--ink)}
+.pfhead{display:flex;gap:14px;align-items:center;margin:10px 0}.pfhead canvas{width:130px;height:139px;border:3px solid var(--ink);border-radius:16px;flex:none}.pfnk{font-size:22px;font-weight:900;word-break:break-word}
+.pfst{display:grid;grid-template-columns:1fr 1fr;gap:6px}.pfst div{background:#fff;border:2.5px solid var(--ink);border-radius:10px;padding:6px 9px;font-weight:800;font-size:12px}.pfst b{display:block;font-size:16px}
+.ptpop{position:fixed;top:74px;left:50%;transform:translateX(-50%);z-index:71;background:var(--paper);border:4px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink);padding:12px 16px;max-width:340px;width:calc(100% - 32px);color:var(--ink);animation:ptin .35s}
+@keyframes ptin{from{transform:translate(-50%,-20px);opacity:0}}
+.ptl{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ptc{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:10px;text-align:center;cursor:pointer;color:var(--ink)}.ptc img{width:100%;max-width:120px;aspect-ratio:1;border-radius:12px;background:#2a2050;display:block;margin:0 auto 6px}.ptc b{display:block}.ptc small{opacity:.65;font-weight:700}
+.ptc.empty{border-style:dashed;opacity:.6;cursor:default}.ptplus{width:100%;max-width:120px;aspect-ratio:1;margin:0 auto 6px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:900;background:#f3efe6}
 .slots{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:14px}.slot span{font-size:10px!important;line-height:1.2;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:normal;overflow-wrap:normal}
 .slot{padding:6px 1px!important}.slot b{font-size:10.5px!important}
 .slot span{font-size:12px}
@@ -365,6 +386,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
     <button class="btn pink" data-go="cos">✿ Cosmetics <small>образ</small></button>
     <button class="btn kgbtn" data-go="kg">⬆ Kotograde <small>апгрейд</small></button>
     <button class="btn" data-go="trade" id="mTrade" style="background:#8fe3ff">🤝 Trades <small id="mTradeN">обмен</small></button>
+    <button class="btn" data-go="chat" id="mChat" style="background:#c8b0ff">💬 Chat <small id="mChatN">общий и ЛС</small></button>
     <button class="btn ghost" data-go="set">⚙ Settings <small id="mSetN">настройки</small></button>
     <button class="btn vio" data-go="adm" id="mAdm" style="display:none">🛠 ADM <small>админ</small></button>
     <div class="row" style="gap:8px"><div class="chip">🏆 Рекорд: <span id="mBest">0</span></div><button class="btn sm mint giftbtn" id="mGift">🎁 Подарок дня</button></div>
@@ -669,6 +691,14 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
   </div>
 </div>
 <div id="trPop" class="trpop" style="display:none"></div>
+<div class="screen" id="chat">
+  <div class="panel" style="max-width:960px">
+    <div class="row" style="justify-content:space-between"><h2>💬 Chat</h2><div class="row" style="gap:8px"><span class="chip" id="chNet"></span><button class="btn sm ghost" data-go="menu">← Меню</button></div></div>
+    <div id="chBody"></div>
+  </div>
+</div>
+<div id="pfOv" class="pfov"></div>
+<div id="ptPop" class="ptpop" style="display:none"></div>
 
 <div class="screen" id="garden">
   <div class="panel" style="max-width:1000px;padding:14px">
@@ -850,7 +880,7 @@ function persist(){if(!user)return;if(S)S.last=Date.now();clearTimeout(window._p
 function login(u){
   if(u==='__guest'){user=u;nick='Гость';try{S=fixSave(JSON.parse(lsGet('kz_guest')))}catch(e){S=newSave()}}
   else{const db=loadDB();if(!db[u])return false;user=u;nick=db[u].nick;S=fixSave(db[u].save)}
-  applyShader();applyFlip();try{mlCheckUpdates();mlBadge();mlSub();applyLook();applyGui();makeSky();if(S.set.music)musicKick()}catch(e){}if(u!=='__guest')persist();lsSet('kz_session',u);addKnown(u);backUser=null;$('#aBack').style.display='none';refreshTop();show('menu');return true}
+  applyShader();applyFlip();try{mlCheckUpdates();mlBadge();mlSub();socSub();chBadge();applyLook();applyGui();makeSky();if(S.set.music)musicKick()}catch(e){}if(u!=='__guest')persist();lsSet('kz_session',u);addKnown(u);backUser=null;$('#aBack').style.display='none';refreshTop();show('menu');return true}
 let backUser=null;
 function getKnown(){try{const k=JSON.parse(lsGet('kz_known'));return Array.isArray(k)?k:[]}catch(e){return[]}}
 function addKnown(u){const k=getKnown().filter(x=>x!==u);k.unshift(u);lsSet('kz_known',JSON.stringify(k.slice(0,20)))}
@@ -859,12 +889,13 @@ function logout(){persist();user=null;S=null;applyShader();applyFlip();lsDel('kz
 
 /* ---------------- UI helpers ---------------- */
 let cur='auth';
-const SCREENS=['auth','menu','bp','ev','cos','set','adm','kg','give','gpe','mg','noomi','garden','trade','rocket','pause','over'];
+const SCREENS=['auth','menu','bp','ev','cos','set','adm','kg','give','gpe','mg','noomi','garden','trade','chat','rocket','pause','over'];
 function show(id){
   cur=id;
   for(const s of SCREENS)$('#'+s).classList.toggle('on',s===id);
-  $('#top').classList.toggle('on',['menu','bp','ev','cos','set','adm','kg','give','gpe','mg','trade'].includes(id));
+  $('#top').classList.toggle('on',['menu','bp','ev','cos','set','adm','kg','give','gpe','mg','trade','chat'].includes(id));
   if(id==='trade')trOpen();
+  if(id==='chat'){if(SOC.tab==='g')SOC.gNew=0;SOC.jump=true;try{publishPresence()}catch(e){}setTimeout(chRender,0)}
   $('#hud').classList.toggle('on',!!G&&['pause','over','game'].includes(id));
   if(id==='menu')refreshMenu();
   if(id==='bp')renderPass('bp');
@@ -2139,6 +2170,7 @@ function drawGame(t,dt){
   const ks=kzScale();
   if(S.pet&&PETS[S.pet]&&G.petX!=null)drawPet(ctx,G.petX,py,.36,S.pet,G.t*1.3);
   const hopY=G.hop>0?-Math.sin(G.hop*Math.PI)*34:0;
+  try{ptDrawGame(py,ks,hopY,tilt,dt)}catch(e){}
   if(!(G.inv>0&&Math.floor(G.t*14)%2))drawKZ(ctx,G.px,py+hopY,ks,S.eq,G.t,tilt+(G.ev==='mirror'?Math.sin(G.t*10)*.08:0));
   drawBubble(ctx,G.px,py-140*ks,dt);
   if(G.ev==='dark'){const g=ctx.createRadialGradient(G.px,py-70,70,G.px,py-70,Math.max(260,W*.2));g.addColorStop(0,'rgba(4,2,14,0)');g.addColorStop(1,'rgba(4,2,14,.9)');ctx.fillStyle=g;ctx.fillRect(-20,-20,W+40,H+40);for(const it of G.items){if(it.k==='meteor')continue;ctx.globalAlpha=.5;ell(ctx,it.x,it.y,3,3);ctx.fillStyle='#ffe066';ctx.fill()}ctx.globalAlpha=1}
@@ -2275,6 +2307,7 @@ function drawMenuScene(t,dt){
   ctx.globalAlpha=.35;ell(ctx,x,H-34,44*s,9*s);ctx.fillStyle='#000';ctx.fill();ctx.globalAlpha=1;
   const dance=S.fun&&S.fun.disco?Math.sin(t*9)*.18:0;
   if(funFx.ghost>0){ctx.save();ctx.globalAlpha=.35+Math.sin(t*4)*.12}
+  ptDrawMenu(x,s,t);
   drawKZ(ctx,x,y-(funFx.ghost>0?20+Math.sin(t*2)*10:0),s,S.eq,t,Math.sin(t*1.2)*.05+dance+(poke.spin>0?poke.spin*12:0));
   if(funFx.ghost>0)ctx.restore();
   if(S.pet&&PETS[S.pet]){const px=x-88*s;petPoke.vy+=1800*dt;petPoke.jy+=petPoke.vy*dt;if(petPoke.jy>0){petPoke.jy=0;petPoke.vy=0}menuPet={x:px,y:H-36,s:s*.42};drawPet(ctx,px,H-36+petPoke.jy,s*.42,S.pet,t+.7);drawPetBubble(ctx,px,H-36+petPoke.jy-130*s*.42)}else menuPet=null;
@@ -2621,6 +2654,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:41,l:'1.3.9',items:['💬 Новая кнопка Chat в меню: общий чат со всеми живыми игроками (без ботов) и ЛС с друзьями','👤 Профили: нажми на игрока в топе или в чате — рекорд, скин, статистика, «Добавить в друзья»','🎉 Пати до 3 игроков: пригласи друга из ЛС (если он онлайн) — его котозаяц с ником встанет рядом с твоим в меню, а в игре будет бегать рядом']},
  {v:40,l:'1.3.9',items:['🎁 Огромный набор: 360 новых вещей — 12 тем (неон, лёд, лава, золото, космос, конфеты, лес, тень, радуга, хрусталь, море, вишня) в каждом разделе Cosmetics','💎 180 эксклюзивов — короны, нимбы, крылья, плащи, бомберы, крылатые кеды, пламя и звёздные вихри — только через Kotograde','🎲 180 игровых трофеев — выпадают за забеги, победы в мини-играх, NoomiClone, Ракету и урожай в саду']},
  {v:39,l:'1.3.9',items:['🎮 56 новых вещей за мини-игры: в каждом разделе Cosmetics по одной на каждую мини-игру (7 игр × 8 разделов)','🏆 Вещи выдаются сами за победы, урожаи, забеги и удачные выводы — прогресс виден в Cosmetics']},
  {v:38,l:'1.3.9',items:['⛀ Новая мини-игра «Шашки» — русские шашки с ботом (3 сложности) и онлайн','🏅 Достижение «Мастер шашек»']},
@@ -2935,7 +2969,7 @@ function renderTop(){
   let last=-1;for(const i of [...show].sort((a,b)=>a-b)){if(last>=0&&i>last+1)h+='<div class="hint" style="text-align:center;margin:4px 0">…</div>';h+=topRow(rows[i],i,unit);last=i}
   if(!NET.ok())h+='<p class="hint">⚠ Нет связи с онлайн-сервером — показаны игроки, которых игра уже видела.</p>';
   $('#topList').innerHTML=h||'<p class="hint">Пока нет игроков.</p>'}
-function topRow(r,i,unit){const medal=['🥇','🥈','🥉'][i]||(i+1);return `<div class="topr ${r.me?'me':''}"><div class="pl">${medal}</div><div class="nm">${r.plat==='phone'?'📱':'💻'} ${esc(r.nick)} <small>@${esc(r.u)}${r.on&&!r.me?' · 🟢':''}</small></div><div class="v">${unit==='ур.'?'ур. '+r.v:r.v+' '+unit}</div></div>`}
+function topRow(r,i,unit){const medal=['🥇','🥈','🥉'][i]||(i+1);return `<div class="topr ${r.me?'me':''}" data-prof="${esc(r.gid)}" data-pn="${esc(r.nick)}" data-pu="${esc(r.u)}" style="cursor:pointer" title="Открыть профиль"><div class="pl">${medal}</div><div class="nm">${r.plat==='phone'?'📱':'💻'} ${esc(r.nick)} <small>@${esc(r.u)}${r.on&&!r.me?' · 🟢':''}</small></div><div class="v">${unit==='ур.'?'ур. '+r.v:r.v+' '+unit}</div></div>`}
 
 /* ---------------- shaders ---------------- */
 const SHADERS={
@@ -3369,6 +3403,7 @@ class MQ{
     else if(t===3){const qos=(h>>1)&3,tl=(body[0]<<8)|body[1];const topic=mqDec.decode(body.subarray(2,2+tl));let o=2+tl;if(qos)o+=2;
       if(topic.startsWith(TP+'players/')){netProfile(topic.slice((TP+'players/').length),body.subarray(o));return}
       if(topic.startsWith(TP+'mail/')){mlNetRecv(topic,body.subarray(o));return}
+      if(/^(chat|dm|fr|pt)\//.test(topic.slice(TP.length))){try{socRecv(topic.slice(TP.length),body.subarray(o))}catch(e){}return}
       let m;try{m=JSON.parse(mqDec.decode(body.subarray(o)))}catch(e){return}mmRecv(m)}}
   raw(pk){try{if(this.ws&&this.ws.readyState===1)this.ws.send(pk)}catch(e){}}
   sendSub(topic){this.pid=(this.pid%65535)+1;this.raw(mqPkt(0x82,[this.pid>>8,this.pid&255,...mqStr(topic),0]))}
@@ -3388,7 +3423,7 @@ function netProfile(gid,payload){if(!payload.length){delete netPlayers[gid]}else
   if(cur==='set'&&$('#stTop').style.display!=='none'){clearTimeout(netTopT);netTopT=setTimeout(()=>renderTop(),400)}}
 function lvlOf(x,per,max){return Math.min(max,Math.floor(x/per))}
 function devPlat(){return window.KZ_MODE==='android'||window.KZAndroid||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)?'phone':'pc'}
-function profOf(u,nk,sv,last){return{t:'prof',gid:sv.gid,u,nick:nk,coins:sv.coins,best:sv.best,bp:lvlOf(sv.bpXp,BP_XP,BP_LV),ev:lvlOf(sv.evXp,EV_XP,EV_LV),pet:sv.pet&&PETS[sv.pet]?PETS[sv.pet].n:null,skin:sv.eq.skin,plat:devPlat(),dev:DEV_ID,last,v:window.KZ_VER,mc:sv.mailClosed?1:0,games:(sv.stats&&sv.stats.games)||0}}
+function profOf(u,nk,sv,last){return{t:'prof',gid:sv.gid,u,nick:nk,coins:sv.coins,best:sv.best,bp:lvlOf(sv.bpXp,BP_XP,BP_LV),ev:lvlOf(sv.evXp,EV_XP,EV_LV),pet:sv.pet&&PETS[sv.pet]?PETS[sv.pet].n:null,skin:sv.eq.skin,plat:devPlat(),dev:DEV_ID,last,v:window.KZ_VER,mc:sv.mailClosed?1:0,games:(sv.stats&&sv.stats.games)||0,eq:sv.eq,ach:Object.keys(sv.ach||{}).length,mw:(sv.stats&&sv.stats.mgwins)||0,bos:(sv.stats&&sv.stats.bosses)||0}}
 let pubAllDone=false;
 function publishPresence(){NET.start();if(!NET.ok())return;if(S&&S.set&&S.set.hideTop){pubAllDone=true;return}
   // all accounts of this device, once per connection (not online, just listed)
@@ -3397,6 +3432,145 @@ function publishPresence(){NET.start();if(!NET.ok())return;if(S&&S.set&&S.set.hi
   NET.pub(TP+'players/'+S.gid,profOf(user,nick,S,Date.now()),true)}
 setTimeout(()=>{try{NET.start()}catch(e){}},2000);
 setInterval(()=>{try{publishPresence()}catch(e){}},60000);
+/* ---------------- Social: global chat, friends, DMs, party ---------------- */
+const SOC={gc:[],gcIds:new Set(),seq:0,subbed:null,tab:'g',sel:null,ids:new Set(),lastSend:0,gNew:0,prof:null,profFb:null};
+const PT={pid:null,lead:null,mem:[],pos:{},hb:{},lastPos:0,inv:null,joining:null};
+function soc(){S.soc=S.soc||{};const s=S.soc;s.fr=s.fr||{};s.dm=s.dm||{};s.unr=s.unr||{};s.rin=s.rin||{};s.rout=s.rout||{};return s}
+function socOk(){return !!(S&&S.gid&&user&&user!=='__guest')}
+function socId(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}
+function socSub(){if(!socOk())return;NET.start();if(SOC.subbed===S.gid)return;if(SOC.subbed&&PT.pid)ptLeave(true);SOC.subbed=S.gid;SOC.sel=null;const g=S.gid;
+  NET.sub(TP+'chat/g/+');NET.sub(TP+'dm/'+g+'/+');NET.sub(TP+'dm/+/'+g);NET.sub(TP+'fr/'+g+'/+');NET.sub(TP+'pt/'+g);NET.sub(TP+'players/+');
+  if(!SOC.gc.length)try{for(const m of JSON.parse(lsGet('kz_gchat')||'[]'))gcAdd(m,true)}catch(e){}}
+function isOnline(g){if(S&&g===S.gid)return true;const p=netPlayers[g];return !!p&&Date.now()-p.last<150000}
+function socNick(g){if(S&&g===S.gid)return nick;const s=S&&S.soc;return(s&&s.fr[g]&&s.fr[g].nick)||(netPlayers[g]&&netPlayers[g].nick)||(PT.mem.find(x=>x.gid===g)||{}).nick||'Игрок'}
+function sanEq(e){const o={};for(const sl of SLOTS){const v=e&&typeof e[sl]==='string'?e[sl]:null;o[sl]=v&&itemDef(sl,v)?v:(sl==='skin'?'grey':'none')}return o}
+function skThumb(sk){return thumb('skin',SKINS[sk]?sk:'grey')}
+function socRecv(tp,pl){if(!socOk())return;let m=null;if(pl.length){try{m=JSON.parse(mqDec.decode(pl))}catch(e){return}}const p=tp.split('/');
+  if(p[0]==='chat'){if(m&&m.t==='gc')gcAdd(m);return}
+  if(p[0]==='dm'){if(!m||m.t!=='dm'||m.from!==p[2])return;if(p[1]===S.gid&&soc().fr[p[2]])dmMerge(p[2],m.msgs,p[2],m);else if(p[2]===S.gid)dmMerge(p[1],m.msgs,S.gid);return}
+  if(p[0]==='fr'){if(p[1]===S.gid&&m)frRecv(p[2],m);return}
+  if(p[0]==='pt'){if(p[1]!==S.gid||!m||!m.from||m.from===S.gid)return;if(m.t!=='pos'&&m.t!=='hb'){if(!m.id||SOC.ids.has(m.id))return;SOC.ids.add(m.id);if(SOC.ids.size>2000)SOC.ids.clear()}ptRecv(m)}}
+/* global chat */
+function gcAdd(m,cached){if(!m||!m.id||SOC.gcIds.has(m.id)||typeof m.x!=='string'||!m.from)return;if(Date.now()-m.ts>3*864e5)return;SOC.gcIds.add(m.id);
+  SOC.gc.push({id:m.id,from:String(m.from),nick:String(m.nick||'?').slice(0,24),u:String(m.u||'').slice(0,24),x:m.x.slice(0,200),ts:+m.ts||0,skin:String(m.skin||'grey'),seq:+m.seq||0});SOC.seq=Math.max(SOC.seq,+m.seq||0);
+  SOC.gc.sort((a,b)=>a.ts-b.ts);if(SOC.gc.length>150)SOC.gc.splice(0,SOC.gc.length-150);if(cached)return;
+  clearTimeout(SOC.gsT);SOC.gsT=setTimeout(()=>{try{lsSet('kz_gchat',JSON.stringify(SOC.gc.slice(-80)))}catch(e){}},800);
+  if(cur==='chat'&&SOC.tab==='g')chLog();else if(S&&m.from!==S.gid&&Date.now()-m.ts<60000){SOC.gNew++;chBadge()}}
+function gcSend(x){x=x.trim().slice(0,200);if(!x)return false;NET.start();if(!NET.ok()){toast('Нет связи с онлайн-сервером');return false}if(Date.now()-SOC.lastSend<1500){toast('Не так быстро 🙂');return false}SOC.lastSend=Date.now();
+  const seq=SOC.seq+1,m={t:'gc',id:socId(),from:S.gid,nick,u:user,x,ts:Date.now(),skin:S.eq.skin,seq};NET.pub(TP+'chat/g/'+(seq%60),m,true);gcAdd(m);stat('chatMsgs');return true}
+/* direct messages */
+function dmList(g){const s=soc();return s.dm[g]=s.dm[g]||[]}
+function dmMerge(other,msgs,from,meta){if(!Array.isArray(msgs))return;const L=dmList(other),s=soc();let n=0,lastX='';const open=cur==='chat'&&SOC.tab==='f'&&SOC.sel===other;
+  for(const x of msgs){if(!x||!x.id||typeof x.x!=='string'||L.some(y=>y.id===x.id))continue;L.push({id:String(x.id),f:from,x:x.x.slice(0,300),ts:+x.ts||Date.now()});n++;lastX=x.x;if(from!==S.gid&&!open)s.unr[other]=(s.unr[other]||0)+1}
+  if(!n)return;L.sort((a,b)=>a.ts-b.ts);if(L.length>200)L.splice(0,L.length-200);if(meta&&meta.nick&&s.fr[other])s.fr[other].nick=String(meta.nick).slice(0,24);persist();
+  if(cur==='chat'){if(open)chLog();else chRender()}chBadge();if(from!==S.gid&&!open&&Date.now()-L[L.length-1].ts<120000){toast('💬 '+socNick(other)+': '+lastX.slice(0,40));sfx(880,.08,'triangle',.04,200)}}
+function dmSend(g,x){x=x.trim().slice(0,300);if(!x)return false;NET.start();if(!NET.ok()){toast('Нет связи с онлайн-сервером');return false}const L=dmList(g);L.push({id:socId(),f:S.gid,x,ts:Date.now()});
+  NET.pub(TP+'dm/'+g+'/'+S.gid,{t:'dm',from:S.gid,nick,u:user,msgs:L.filter(y=>y.f===S.gid).slice(-40).map(y=>({id:y.id,x:y.x,ts:y.ts}))},true);persist();return true}
+/* friends */
+function frMake(g,m){const s=soc();s.fr[g]={nick:String((m&&m.nick)||socNick(g)).slice(0,24),u:String((m&&m.u)||'').slice(0,24),t:Date.now()};delete s.rin[g];delete s.rout[g];persist();stat('friends');chBadge();if(cur==='chat')chRender();profRender()}
+function frAdd(g){if(!socOk()||g===S.gid)return;const s=soc();if(s.fr[g]){toast('Уже в друзьях');return}if(s.rin[g]){frAccept(g);return}NET.start();if(!NET.ok()){toast('Нет связи с онлайн-сервером');return}
+  s.rout[g]=Date.now();NET.pub(TP+'fr/'+g+'/'+S.gid,{t:'freq',from:S.gid,nick,u:user,ts:Date.now()},true);persist();toast('📨 Заявка в друзья отправлена: '+socNick(g));SND.click();profRender()}
+function frAccept(g){const s=soc(),r=s.rin[g];if(!r)return;frMake(g,r);NET.pub(TP+'fr/'+g+'/'+S.gid,{t:'facc',from:S.gid,nick,u:user,ts:Date.now()},true);NET.pub(TP+'fr/'+S.gid+'/'+g,null,true);toast('🤝 '+r.nick+' теперь твой друг!');SND.win()}
+function frDecline(g){const s=soc();delete s.rin[g];NET.pub(TP+'fr/'+S.gid+'/'+g,null,true);persist();chBadge();if(cur==='chat')chRender();profRender()}
+function frRemove(g){const s=soc();const n=socNick(g);delete s.fr[g];delete s.unr[g];if(SOC.sel===g)SOC.sel=null;persist();toast('Удалён из друзей: '+n);chBadge();if(cur==='chat')chRender();profRender()}
+function frRecv(from,m){const s=soc();if(m.from!==from)return;
+  if(m.t==='freq'){if(s.fr[from]||s.rout[from]){if(!s.fr[from])frMake(from,m);NET.pub(TP+'fr/'+from+'/'+S.gid,{t:'facc',from:S.gid,nick,u:user,ts:Date.now()},true);NET.pub(TP+'fr/'+S.gid+'/'+from,null,true);return}
+    if(!s.rin[from]){s.rin[from]={nick:String(m.nick||'?').slice(0,24),u:String(m.u||'').slice(0,24),ts:+m.ts||Date.now()};persist();toast('👋 '+s.rin[from].nick+' хочет добавить тебя в друзья — загляни в 💬 Chat');chBadge();if(cur==='chat')chRender();profRender()}return}
+  if(m.t==='facc'){NET.pub(TP+'fr/'+S.gid+'/'+from,null,true);if(!s.fr[from]){frMake(from,m);toast('🤝 '+String(m.nick||'Игрок').slice(0,24)+' принял(а) заявку — теперь вы друзья!');SND.win()}}}
+/* party */
+function ptMe(){return{gid:S.gid,nick,eq:Object.assign({},S.eq)}}
+function ptSend(g,m){m.id=socId();m.from=S.gid;if(!m.pid)m.pid=PT.pid;NET.pub(TP+'pt/'+g,m)}
+function ptAll(m){for(const x of PT.mem)if(x.gid!==S.gid)ptSend(x.gid,Object.assign({},m))}
+function ptInvite(g){if(!soc().fr[g]){toast('В пати можно пригласить только друга');return}
+  if(!isOnline(g)){toast('🔴 '+socNick(g)+' сейчас не в сети — нельзя пригласить в пати, пока друг оффлайн');return}
+  if(PT.mem.some(x=>x.gid===g)){toast(socNick(g)+' уже в твоей пати');return}if(PT.pid&&PT.mem.length>=3){toast('В пати уже 3 игрока — это максимум');return}
+  NET.start();if(!NET.ok()){toast('Нет связи с онлайн-сервером');return}
+  if(!PT.pid){PT.pid=socId().slice(0,10);PT.lead=S.gid;PT.mem=[ptMe()];PT.hb={}}
+  ptSend(g,{t:'inv',nick,lead:PT.lead});toast('🎉 Приглашение в пати отправлено: '+socNick(g));SND.click();ptUi()}
+function ptReset(){PT.pid=null;PT.lead=null;PT.mem=[];PT.pos={};PT.hb={};ptUi()}
+function ptLeave(silent){if(!PT.pid)return;ptAll({t:'leave'});ptReset();if(!silent)toast('Ты вышел из пати')}
+function ptRoster(){if(PT.lead!==S.gid)return;ptAll({t:'roster',lead:PT.lead,mem:PT.mem});ptUi()}
+function ptAccept(){const i=PT.inv;PT.inv=null;ptPop();if(!i)return;if(PT.pid)ptLeave(true);PT.joining=i.pid;ptSend(i.lead,{t:'join',pid:i.pid,nick,eq:S.eq});
+  setTimeout(()=>{if(PT.joining===i.pid){PT.joining=null;toast('Не получилось войти в пати — попробуй ещё раз')}},9000)}
+function ptDecline(){const i=PT.inv;PT.inv=null;ptPop();if(i)ptSend(i.from,{t:'dec',pid:i.pid})}
+function ptRecv(m){const f=m.from,nm=String(m.nick||socNick(f)).slice(0,24);
+  if(m.t==='inv'){if(PT.pid&&PT.pid===m.pid)return;PT.inv={from:f,nick:nm,pid:String(m.pid),lead:String(m.lead||f),ts:Date.now()};ptPop();SND.win();return}
+  if(m.t==='dec'){toast('😕 '+nm+' отклонил(а) приглашение в пати');return}
+  if(m.t==='full'){if(PT.joining===m.pid){PT.joining=null;toast('В этой пати уже 3 игрока — мест нет')}return}
+  if(m.t==='join'){if(!PT.pid||PT.lead!==S.gid||m.pid!==PT.pid)return;const ex=PT.mem.find(x=>x.gid===f);if(!ex){if(PT.mem.length>=3){ptSend(f,{t:'full',pid:m.pid});return}PT.mem.push({gid:f,nick:nm,eq:sanEq(m.eq)});toast('🎉 '+nm+' присоединился к пати!');SND.win();stat('parties')}PT.hb[f]=Date.now();ptRoster();return}
+  if(m.t==='roster'){if(m.pid!==PT.pid&&m.pid!==PT.joining)return;const mem=(Array.isArray(m.mem)?m.mem:[]).slice(0,3).map(x=>({gid:String(x.gid),nick:String(x.nick||'?').slice(0,24),eq:sanEq(x.eq)}));
+    if(!mem.some(x=>x.gid===S.gid)){if(m.pid===PT.pid){ptReset();toast('Ты больше не в пати')}return}const fresh=PT.joining===m.pid;PT.joining=null;PT.pid=m.pid;PT.lead=String(m.lead);PT.mem=mem;for(const x of mem)PT.hb[x.gid]=PT.hb[x.gid]||Date.now();if(fresh){toast('🎉 Ты в пати с '+mem.filter(x=>x.gid!==S.gid).map(x=>x.nick).join(', ')+'!');SND.win();stat('parties')}ptUi();return}
+  if(m.pid!==PT.pid||!PT.mem.some(x=>x.gid===f))return;PT.hb[f]=Date.now();
+  if(m.t==='hb'){const x=PT.mem.find(y=>y.gid===f);if(m.eq)x.eq=sanEq(m.eq);if(m.nick)x.nick=nm;return}
+  if(m.t==='pos'){const o=PT.pos[f]||{};o.x=clamp(+m.x||0,0,1);o.h=+m.h||0;o.tl=clamp(+m.tl||0,-.3,.3);o.t=Date.now();PT.pos[f]=o;return}
+  if(m.t==='leave')ptDrop(f,'👋 '+nm+' вышел(а) из пати')}
+function ptDrop(g,msg){PT.mem=PT.mem.filter(x=>x.gid!==g);delete PT.pos[g];delete PT.hb[g];if(msg)toast(msg);if(PT.mem.length<=1){ptReset();if(msg)setTimeout(()=>toast('Пати распалась'),1200);return}if(g===PT.lead)PT.lead=PT.mem[0].gid;if(PT.lead===S.gid)ptRoster();ptUi()}
+setInterval(()=>{if(!PT.pid||!S)return;ptAll({t:'hb',nick,eq:S.eq});const now=Date.now();for(const x of PT.mem.slice())if(x.gid!==S.gid&&now-(PT.hb[x.gid]||now)>25000)ptDrop(x.gid,'📴 '+x.nick+' пропал(а) из сети — вышел из пати')},6000);
+setInterval(()=>{if(PT.inv&&Date.now()-PT.inv.ts>30000){PT.inv=null;ptPop()}},2000);
+function ptUi(){chBadge();if(cur==='chat')chRender();profRender()}
+function ptPop(){const el=$('#ptPop'),i=PT.inv;if(!i){el.style.display='none';return}el.innerHTML=`<b>🎉 Приглашение в пати</b><p style="margin:6px 0 10px"><b>${esc(i.nick)}</b> приглашает тебя в пати!</p><div class="row" style="gap:8px"><button class="btn sm mint" data-pta>Принять</button><button class="btn sm ghost" data-ptd>Отклонить</button></div>`;el.style.display='block'}
+/* in-game & menu: party members */
+function ptOthers(){return PT.pid&&S?PT.mem.filter(x=>x.gid!==S.gid):[]}
+function ptDrawMenu(x,s,t){const o=ptOthers();o.forEach((m,i)=>{const ox=x+(i===0?108:-162)*s,sc=s*.8,y=H-46+Math.sin(t*2.4+i*2)*-3;ctx.globalAlpha=.3;ell(ctx,ox,H-44,40*sc,8*sc);ctx.fillStyle='#000';ctx.fill();ctx.globalAlpha=1;drawKZ(ctx,ox,y,sc,m.eq,t+1.7*(i+1),Math.sin(t*1.2+i)*.05);
+  ctx.save();ctx.font='900 '+Math.round(13+5*s)+'px Trebuchet MS,sans-serif';ctx.textAlign='center';ctx.lineWidth=5;ctx.strokeStyle=INK;const ny=y-160*sc,tx=(PT.lead===m.gid?'👑 ':'')+m.nick;ctx.strokeText(tx,ox,ny);ctx.fillStyle='#fff';ctx.fillText(tx,ox,ny);ctx.restore()})}
+function ptDrawGame(py,ks,hopY,tilt,dt){if(!PT.pid)return;const now=Date.now();for(const m of ptOthers()){const p=PT.pos[m.gid];if(!p||now-p.t>2000)continue;p.sx=p.sx==null?p.x:p.sx+(p.x-p.sx)*Math.min(1,dt*10);const gx=p.sx*W;
+    ctx.globalAlpha=.25;ell(ctx,gx,py+2,36*ks/.92,7);ctx.fillStyle='#000';ctx.fill();ctx.globalAlpha=.85;drawKZ(ctx,gx,py+p.h,ks*.92,m.eq,G.t+1.3,p.tl);ctx.globalAlpha=1}
+  if(now-PT.lastPos>160&&!G.over&&!G.paused){PT.lastPos=now;ptAll({t:'pos',x:+(G.px/W).toFixed(4),h:Math.round(hopY),tl:+tilt.toFixed(3)})}}
+/* profile */
+function profData(g){if(S&&g===S.gid)return Object.assign(profOf(user,nick,S,Date.now()),{me:1});return netPlayers[g]||null}
+function openProf(g,fb){if(!g)return;SOC.prof=g;SOC.profFb=fb||null;socSub();SND.click();profRender()}
+function agoTxt(ms){const m=Math.floor(ms/60000);return m<1?'только что':m<60?m+' мин назад':m<1440?Math.floor(m/60)+' ч назад':Math.floor(m/1440)+' дн назад'}
+function profRender(){const el=$('#pfOv');if(!el)return;const g=SOC.prof;if(!g||!S){el.style.display='none';return}const p=profData(g),fb=SOC.profFb||{},s=soc(),me=g===S.gid;
+  const nk=(p&&p.nick)||fb.nick||'Игрок',u=(p&&p.u)||fb.u||'',on=isOnline(g),eq=sanEq(p&&p.eq?p.eq:{skin:(p&&p.skin)||fb.skin});
+  const st=(ic,n,v)=>`<div>${ic} ${n}<b>${v}</b></div>`,v=x=>x==null||x===''?'—':x;
+  let btn='';if(me)btn='<span class="chip">Это ты 🙂</span>';
+  else if(s.fr[g])btn=`<span class="chip">✓ В друзьях</span><button class="btn sm mint" data-dmw="${g}">💬 Написать</button><button class="btn sm" data-ptinv="${g}">🎉 В пати</button><button class="btn sm ghost" data-frrm="${g}">Удалить</button>`;
+  else if(s.rin[g])btn=`<button class="btn sm mint" data-fracc="${g}">✓ Принять заявку</button><button class="btn sm ghost" data-frdec="${g}">Отклонить</button>`;
+  else if(s.rout[g])btn='<span class="chip">📨 Заявка отправлена</span>';
+  else btn=`<button class="btn sm mint" data-fradd="${g}">➕ Добавить в друзья</button>`;
+  el.innerHTML=`<div class="pfbox"><div class="row" style="justify-content:space-between"><h3 style="margin:0">👤 Профиль</h3><button class="btn sm ghost" data-pfclose>✕</button></div>
+  <div class="pfhead"><canvas id="pfCv" width="300" height="320"></canvas><div><div class="pfnk">${esc(nk)}</div><small>${u?'@'+esc(u):''}</small><div style="margin-top:6px">${on?'<span class="chip" style="background:#c9f7d8">🟢 онлайн</span>':p?`<span class="chip">⚪ был(а) ${agoTxt(Date.now()-p.last)}</span>`:'<span class="chip">⚪ не в сети</span>'} ${p?(p.plat==='phone'?'📱':'💻'):''}</div>${PT.mem.some(x=>x.gid===g)&&!me?'<div class="chip" style="margin-top:6px">🎉 в твоей пати</div>':''}</div></div>
+  ${p?`<div class="pfst">${st('🏆','Рекорд',v(p.best))}${st('🎮','Забегов',v(p.games))}${st('🪙','Монеты',v(p.coins))}${st('⚔','Побед в мини-играх',v(p.mw))}${st('★','Battle Pass',p.bp!=null?'ур. '+p.bp:'—')}${st('🎃','Halloween',p.ev!=null?'ур. '+p.ev:'—')}${st('🏅','Достижения',v(p.ach))}${st('🐾','Питомец',v(p.pet))}${st('🐰','Скин',esc(itemName('skin',eq.skin)))}${st('👹','Боссов',v(p.bos))}</div>`:'<p class="hint">Статистика появится, когда игрок зайдёт в игру онлайн.</p>'}
+  <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">${btn}</div></div>`;el.style.display='flex';
+  const c=$('#pfCv').getContext('2d');c.fillStyle='#2a2050';c.beginPath();c.roundRect(0,0,300,320,24);c.fill();drawKZ(c,150,298,1.15,eq,1.3,0)}
+/* chat UI */
+function chBadge(){if(!S||!S.soc){try{$('#mChatN').textContent='общий и ЛС'}catch(e){}return}const s=soc();const n=Object.values(s.unr).reduce((a,b)=>a+b,0)+Object.keys(s.rin).length;try{$('#mChatN').textContent=n?'📩 '+n:SOC.gNew?'💬 '+SOC.gNew+' новых':PT.pid?'🎉 пати '+PT.mem.length+'/3':'общий и ЛС'}catch(e){}}
+function tm(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function chMsgHtml(me,g,nk,u,skin,x,ts){return `<div class="chm ${me?'me':''}"><img src="${skThumb(skin)}" data-prof="${g}" data-pn="${esc(nk)}" data-pu="${esc(u)}" data-ps="${esc(skin)}" alt=""><div class="chb"><b data-prof="${g}" data-pn="${esc(nk)}" data-pu="${esc(u)}" data-ps="${esc(skin)}">${esc(nk)}</b>${esc(x)}<small>${tm(ts)}</small></div></div>`}
+function chLog(){const el=$('#chLog');if(!el)return;const atB=el.scrollHeight-el.scrollTop-el.clientHeight<60;let h='';
+  if(SOC.tab==='g'){for(const m of SOC.gc)h+=chMsgHtml(m.from===S.gid,m.from,m.nick,m.u,m.skin,m.x,m.ts);if(!SOC.gc.length)h='<div class="hint" style="text-align:center;margin:auto">Тут пока тихо… Напиши первым! 👋 Здесь общаются только живые игроки.</div>'}
+  else if(SOC.tab==='f'&&SOC.sel){const g=SOC.sel,fr=soc().fr[g]||{},sk=(netPlayers[g]&&netPlayers[g].skin)||'grey';for(const m of dmList(g)){const me=m.f===S.gid;h+=chMsgHtml(me,me?S.gid:g,me?nick:socNick(g),me?user:fr.u||'',me?S.eq.skin:sk,m.x,m.ts)}if(!dmList(g).length)h='<div class="hint" style="text-align:center;margin:auto">Начни переписку с '+esc(socNick(g))+' ✍</div>';soc().unr[g]=0}
+  el.innerHTML=h;if(atB||SOC.jump){el.scrollTop=el.scrollHeight;SOC.jump=false}chBadge()}
+function chRender(){if(cur!=='chat'||!S)return;const body=$('#chBody');if(!socOk()){body.innerHTML='<p class="sub">Чат доступен только с аккаунтом (не гостем).</p>';return}socSub();const s=soc();
+  const keep=$('#chIn')?$('#chIn').value:'',unr=Object.values(s.unr).reduce((a,b)=>a+b,0)+Object.keys(s.rin).length;
+  $('#chNet').textContent=NET.ok()?'🟢 онлайн':'⚠ нет связи';
+  let h=`<div class="row chtabs" style="gap:8px;margin-bottom:10px"><button class="btn sm ${SOC.tab==='g'?'mint':'ghost'}" data-cht="g">🌍 Общий чат</button><button class="btn sm ${SOC.tab==='f'?'mint':'ghost'}" data-cht="f">👥 Друзья и ЛС${unr?' <span class="unr">'+unr+'</span>':''}</button><button class="btn sm ${SOC.tab==='p'?'mint':'ghost'}" data-cht="p">🎉 Пати ${PT.pid?PT.mem.length+'/3':''}</button></div>`;
+  if(SOC.tab==='g')h+=`<div class="chwrap"><div class="chlog" id="chLog"></div><div class="chin"><input id="chIn" maxlength="200" placeholder="Сообщение для всех игроков…" autocomplete="off"><button class="btn mint" id="chSend">➤</button></div><p class="hint" style="margin:6px 0 0">Нажми на ник или аватарку — откроется профиль: рекорд, скин, добавить в друзья.</p></div>`;
+  if(SOC.tab==='f'){let L='';const req=Object.entries(s.rin);if(req.length){L+='<div class="hint" style="margin:0 0 4px">Заявки в друзья</div>';for(const[g,r]of req)L+=`<div class="fr" data-prof="${g}" data-pn="${esc(r.nick)}" data-pu="${esc(r.u)}"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">👋 ${esc(r.nick)}</span><button class="btn sm mint" data-fracc="${g}">✓</button><button class="btn sm ghost" data-frdec="${g}">✕</button></div>`}
+    const frs=Object.keys(s.fr).sort((a,b)=>isOnline(b)-isOnline(a)||socNick(a).localeCompare(socNick(b)));L+='<div class="hint" style="margin:6px 0 4px">Друзья · '+frs.length+'</div>';
+    for(const g of frs){const sk=(netPlayers[g]&&netPlayers[g].skin)||'grey';L+=`<div class="fr ${SOC.sel===g?'cur':''}" data-frsel="${g}"><img src="${skThumb(sk)}" alt=""><span class="dot ${isOnline(g)?'on':''}"></span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(socNick(g))}</span>${s.unr[g]?'<span class="unr">'+s.unr[g]+'</span>':''}</div>`}
+    if(!frs.length)L+='<p class="hint">Пока нет друзей. Открой профиль игрока в общем чате или в топе (Settings → Топ) и нажми «Добавить в друзья».</p>';
+    let R='';if(SOC.sel&&s.fr[SOC.sel]){const g=SOC.sel,on=isOnline(g);R=`<div class="row" style="justify-content:space-between;gap:6px;flex-wrap:wrap;margin-bottom:6px"><b style="cursor:pointer" data-prof="${g}">${on?'🟢':'⚪'} ${esc(socNick(g))}</b><div class="row" style="gap:6px"><button class="btn sm ghost" data-prof="${g}">👤 Профиль</button><button class="btn sm ${on?'':'ghost'}" data-ptinv="${g}">🎉 Пригласить в пати</button></div></div><div class="chwrap" style="height:min(52vh,460px)"><div class="chlog" id="chLog"></div><div class="chin"><input id="chIn" maxlength="300" placeholder="Сообщение для ${esc(socNick(g))}…" autocomplete="off"><button class="btn mint" id="chSend">➤</button></div></div>`}
+    else R='<div class="chlog" style="align-items:center;justify-content:center;min-height:240px"><div class="hint">← Выбери друга, чтобы написать в ЛС</div></div>';
+    h+=`<div class="chgrid"><div class="frl">${L}</div><div>${R}</div></div>`}
+  if(SOC.tab==='p'){if(!PT.pid)h+='<p class="sub">Ты пока не в пати. Открой ЛС с другом, который в сети, и нажми <b>«🎉 Пригласить в пати»</b>. В пати можно до 3 игроков: их котозайцы встанут рядом с твоим в меню, а в игре будут бегать рядом с тобой.</p>';
+    else{h+='<div class="ptl">';for(const m of PT.mem){const me=m.gid===S.gid;h+=`<div class="ptc" data-prof="${m.gid}"><img src="${skThumb(m.eq.skin)}" alt=""><b>${PT.lead===m.gid?'👑 ':''}${esc(me?nick:m.nick)}</b><small>${me?'это ты':isOnline(m.gid)?'🟢 в сети':'⚪'}</small></div>`}for(let i=PT.mem.length;i<3;i++)h+='<div class="ptc empty"><div class="ptplus">+</div><small>свободно</small></div>';
+      h+=`</div><div class="row" style="gap:8px;margin-top:10px"><button class="btn sm pink" data-ptleave>🚪 Выйти из пати</button><span class="hint">Пригласить ещё — из ЛС с другом</span></div>`}}
+  body.innerHTML=h;const inp=$('#chIn');if(inp){inp.value=keep;}chLog()}
+function chSendNow(){const i=$('#chIn');if(!i)return;const ok=SOC.tab==='g'?gcSend(i.value):SOC.sel?dmSend(SOC.sel,i.value):false;if(ok){i.value='';SOC.jump=true;chLog();SND.click()}i.focus()}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='chIn'){e.preventDefault();chSendNow()}});
+document.addEventListener('click',e=>{if(!S)return;const t=e.target;
+  if(t.id==='pfOv'||t.closest('[data-pfclose]')){SOC.prof=null;profRender();return}
+  const b=t.closest('[data-cht],[data-frsel],[data-fradd],[data-fracc],[data-frdec],[data-frrm],[data-dmw],[data-ptinv],[data-ptleave],[data-pta],[data-ptd],#chSend,[data-prof]');if(!b)return;const d=b.dataset;
+  if(b.id==='chSend'){chSendNow();return}
+  if(d.cht){SOC.tab=d.cht;if(d.cht==='g')SOC.gNew=0;SOC.jump=true;SND.click();chRender();return}
+  if(d.frsel){SOC.sel=d.frsel;soc().unr[d.frsel]=0;SOC.jump=true;SND.click();chRender();setTimeout(()=>{const i=$('#chIn');if(i&&matchMedia('(pointer:fine)').matches)i.focus()},30);return}
+  if(d.fradd){frAdd(d.fradd);return}if(d.fracc){frAccept(d.fracc);return}if(d.frdec){frDecline(d.frdec);return}if(d.frrm){if(confirm('Удалить '+socNick(d.frrm)+' из друзей?'))frRemove(d.frrm);return}
+  if(d.dmw){SOC.prof=null;profRender();SOC.tab='f';SOC.sel=d.dmw;SOC.jump=true;show('chat');return}
+  if(d.ptinv){ptInvite(d.ptinv);return}if(b.hasAttribute('data-ptleave')){ptLeave();return}if(b.hasAttribute('data-pta')){ptAccept();return}if(b.hasAttribute('data-ptd')){ptDecline();return}
+  if(d.prof){openProf(d.prof,{nick:d.pn,u:d.pu,skin:d.ps});return}});
+setInterval(()=>{if(socOk()){socSub();chBadge();if(cur==='chat'){$('#chNet').textContent=NET.ok()?'🟢 онлайн':'⚠ нет связи'}}},5000);
+
 const mmSeen=new Set(),seekers={};
 function mmPost(m){m.from=MM_ID;m.mid=Math.random().toString(36).slice(2)+Date.now().toString(36);try{mmCh&&mmCh.postMessage(m)}catch(e){}
   NET.pub(m.to?TP+'u/'+m.to:m.room?TP+'r/'+m.room:TP+'mm',m)}
