@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=64;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=65;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3062,6 +3062,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:65,l:'1.4.0',items:['🐾 Прокачка питомцев дубликатами до 5 уровня (+20% к бонусу за уровень)','✉ Почта: прочитать всё, забрать все подарки, удалить прочитанные, поиск','🏆 Поиск игрока в топе','📈 История забегов и график, сравнение со средним результатом и лучший за сегодня','⏸ В паузе — статистика забега и задания Battle Pass','📜 Последние уведомления в центре наград','❓ Справочник по всем разделам и быстрые клавиши в меню']},
  {v:64,l:'1.4.0',items:['🌻 Сад 2.0: 29 новых растений (теперь 41) и уровни сада до 30','📋 Заказы от жителей леса за монеты, опыт и подарки','🐔 Ферма: курочки, пчёлы, коровы, овечки и свинки дают продукты даже без игры','🍳 Кухня: 23 блюда из урожая и продуктов фермы','📈 Рынок с ценами дня, ☀ погода в саду, 🦣 гигантский и 🌈 радужный урожай','🎨 Декор с бонусами, 📖 альбом растений, 🔧 8 улучшений сада, 🔁 автопосев','🎮 Задания мини-игр на каждый день, статистика на карточках, 🐟 рыба дня ×2','🏅 12 новых достижений сада']},
  {v:63,l:'1.4.0',items:['🎡 Колесо удачи: бесплатное вращение каждый день и ещё 5 за монеты','📅 Календарь входа: серия 7 дней с растущими наградами, на 7-й день трофей','🔔 Центр наград: всё, что можно забрать, в одном окне','🌈 Событие недели: каждую неделю новый бонус (монеты, трофеи, удача, рыбалка, опыт, конфеты)','🏅 25 новых достижений']},
  {v:62,l:'1.4.0',items:['🎉 Новая версия 1.4.0! В неё вошли режимы игры, Мастерская, молнии, сундуки боссов, рыбалка и большие улучшения Settings, пассов, Cosmetics, Kotograde, Trades, Chat и ADM']},
@@ -5689,6 +5690,60 @@ const _fpr2=fPrice;fPrice=function(f){const v=_fpr2(f),fd=fishDay();return fd&&f
 const _sst2=setSetTab;setSetTab=function(t){_sst2.apply(this,arguments);if(t==='mg')try{mqRender()}catch(e){console.error(e)}};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-mqc]');if(!b||!S||b.disabled)return;const m=mqGet(),q=m.q[+b.dataset.mqc];if(!q||q.c||q.p<q.g)return;q.c=1;S.coins+=150;SND.win();toast('📋 Задание выполнено: +150 🪙');if(m.q.every(x=>x.c)&&!m.all){m.all=1;try{mgDrop(1,'все задания мини-игр')}catch(er){}confetti(100)}persist();refreshTop();mqRender()});
 setInterval(()=>{try{if(cur==='garden'&&S&&(gTab==='ord'||gTab==='farm')&&!document.activeElement.matches('input'))gRender()}catch(e){}},5000);
+
+/* ================= pack 4: pets levels, mail tools, top search, run history, pause info, notifications, help, hotkeys ================= */
+/* --- notifications log --- */
+const xToastLog=[];{const _t=toast;toast=function(t){try{if(t&&xToastLog[0]?.t!==String(t)){xToastLog.unshift({t:String(t),ts:Date.now()});if(xToastLog.length>40)xToastLog.pop()}}catch(e){}return _t.apply(this,arguments)}}
+{const _h=xHubOpen;xHubOpen=function(){_h.apply(this,arguments);const b=document.querySelector('#xOv .pfbox');if(!b)return;b.insertAdjacentHTML('beforeend',`<div class="xbox"><h4>📜 Последние уведомления</h4><div style="max-height:180px;overflow:auto">${xToastLog.slice(0,25).map(x=>`<div style="font-size:13px;font-weight:700;padding:2px 0;border-bottom:1px solid #eee"><span class="hint" style="margin:0">${tm(x.ts)}</span> ${esc(x.t)}</div>`).join('')||'<p class="hint">Пока пусто</p>'}</div></div>`)}}
+
+/* --- pets: levels from duplicates --- */
+const PET_MAXLV=5;
+function petLv(id){return(XS().petLv||{})[id]||0}
+{const _pb=petBonus;petBonus=function(){const b=_pb();return S&&S.pet?b*(1+.2*petLv(S.pet)):b}}
+{const _re=renderEggs;renderEggs=function(){_re.apply(this,arguments);try{if(eggTab==='shop')return;for(const c of document.querySelectorAll('#eggBody .eggc')){const b=c.querySelector('[data-pet],[data-petoff]');if(!b)continue;const id=b.dataset.pet||S.pet;if(!id||!PETS[id])continue;const lv=petLv(id),n=S.pets[id]||0,rr=PRAR[PETS[id].r];
+      const sm=c.querySelector('small');if(sm)sm.textContent='+'+Math.round(rr.b*(1+.2*lv)*100)+'% монет за игру';c.insertAdjacentHTML('beforeend',`<div style="font-weight:900;font-size:12px">${'⭐'.repeat(lv)}${'☆'.repeat(PET_MAXLV-lv)} ур. ${lv}</div>${lv<PET_MAXLV?`<button class="btn sm" data-petup="${id}" ${n>1?'':'disabled'} title="Нужен дубликат питомца">⬆ Прокачать</button>`:'<small>🏆 максимум</small>'}`)}
+    const sec=document.querySelector('#eggBody .eggsec+.eggrid');if(sec&&!$('#petUpHint'))sec.insertAdjacentHTML('beforebegin','<p class="hint" id="petUpHint">⬆ Лишние копии питомца можно потратить на прокачку: каждый уровень +20% к его бонусу монет (до 5 уровня).</p>')}catch(e){console.error(e)}}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-petup]');if(!b||!S||b.disabled)return;const id=b.dataset.petup,x=XS();x.petLv=x.petLv||{};const lv=x.petLv[id]||0;if(lv>=PET_MAXLV||(S.pets[id]||0)<2)return;S.pets[id]--;x.petLv[id]=lv+1;stat('petUps');persist();SND.win();confetti(50);toast('⬆ '+PETS[id].n+' — уровень '+(lv+1)+'!');renderEggs()});
+
+/* --- mail tools --- */
+{const _ml=mlRender;mlRender=function(){_ml.apply(this,arguments);try{const L=$('#mlList');if(!L||!S.mail||!S.mail.length)return;const unr=S.mail.filter(m=>!m.read).length,gifts=S.mail.filter(m=>m.gift&&!m.claimed).length,rd=S.mail.filter(m=>m.read&&!(m.gift&&!m.claimed)).length;
+  L.insertAdjacentHTML('afterbegin',`<div class="xrow" style="margin-bottom:8px"><button class="btn sm ghost" data-mlx="read" ${unr?'':'disabled'}>✓ Прочитать всё (${unr})</button><button class="btn sm mint" data-mlx="gifts" ${gifts?'':'disabled'}>🎁 Забрать все подарки (${gifts})</button><button class="btn sm ghost" data-mlx="clean" ${rd?'':'disabled'}>🗑 Удалить прочитанные (${rd})</button><input class="inp" id="mlQ" placeholder="🔎 Поиск писем" style="flex:1;min-width:120px;padding:6px 10px;font-size:13px" value="${esc(mlQv)}"></div>`);mlFilt()}catch(e){console.error(e)}}}
+let mlQv='';function mlFilt(){for(const r of document.querySelectorAll('#mlList .mlrow'))r.style.display=!mlQv||r.textContent.toLowerCase().includes(mlQv)?'':'none'}
+document.addEventListener('input',e=>{if(e.target.id==='mlQ'){mlQv=e.target.value.trim().toLowerCase();mlFilt()}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-mlx]');if(!b||!S||b.disabled)return;const k=b.dataset.mlx;
+  if(k==='read'){for(const m of S.mail)m.read=true;persist();mlBadge();mlRender();toast('✓ Все письма прочитаны')}
+  if(k==='gifts'){const bs=[...document.querySelectorAll('#mlList [data-mlclaim]')];bs.forEach((x,i)=>setTimeout(()=>{const y=document.querySelector(`#mlList [data-mlclaim="${x.dataset.mlclaim}"]`);if(y)y.click()},i*120));}
+  if(k==='clean'){if(!confirm('Удалить все прочитанные письма? Письма с незабранными подарками останутся.'))return;S.mail=S.mail.filter(m=>!m.read||(m.gift&&!m.claimed));persist();mlRender();toast('🗑 Прочитанные письма удалены')}});
+
+/* --- top: search --- */
+let topQv='';{const _rt=renderTop;renderTop=function(){_rt.apply(this,arguments);try{const L=$('#topList');if(!L)return;if(!$('#topQ'))L.insertAdjacentHTML('beforebegin',`<input class="inp setq" id="topQ" placeholder="🔎 Найти игрока по нику" value="${esc(topQv)}">`);topFilt()}catch(e){}}}
+function topFilt(){let n=0;for(const r of document.querySelectorAll('#topList .topr')){const ok=!topQv||r.textContent.toLowerCase().includes(topQv);r.style.display=ok?'':'none';if(ok)n++}let m=$('#topQn');if(topQv&&!n){if(!m){m=document.createElement('p');m.id='topQn';m.className='hint';$('#topList').before(m)}m.textContent='Игрок «'+topQv+'» не найден';m.style.display=''}else if(m)m.style.display='none'}
+document.addEventListener('input',e=>{if(e.target.id==='topQ'){topQv=e.target.value.trim().toLowerCase();topFilt()}});
+
+/* --- run history & game over comparison --- */
+{const _cr=commitRun;commitRun=function(){const g=G,r=_cr.apply(this,arguments);try{if(r&&g){const x=XS();x.runs=x.runs||[];x.runs.unshift({t:Date.now(),m:g.mode||'normal',s:g.score||0,c:g.coins||0,w:g.wave||1,b:g.bossKills||0,cb:g.maxCombo||0,d:Math.round(g.t||0)});if(x.runs.length>30)x.runs.length=30;if(dqDay()!==x.dayBestD){x.dayBestD=dqDay();x.dayBest=0}x.dayBest=Math.max(x.dayBest||0,g.score||0)}}catch(e){}return r}}
+{const _go=gameOver;gameOver=function(){_go.apply(this,arguments);try{const x=XS(),R=(x.runs||[]).filter(r=>r.m===(G.mode||'normal')),last=R.slice(1,11);if(!last.length)return;const avg=Math.round(last.reduce((a,r)=>a+r.s,0)/last.length),d=G.score-avg;
+  $('#oStats').insertAdjacentHTML('beforeend',`<div style="grid-column:1/-1;background:${d>=0?'#e3fbef':'#fff0f0'}">📈 ${d>=0?'Лучше':'Хуже'} твоего среднего (${avg}) на <b style="display:inline">${Math.abs(d)}</b> · 🌞 лучший за сегодня: ${x.dayBest||0}</div>`)}catch(e){}}}
+const MODE_RU={normal:'▶ Обычный',time:'⏱ На время',hard:'💀 Хардкор',daily:'🌟 Испытание',hw:'🎃 Halloween'};
+{const _rs=renderStatsTab;renderStatsTab=function(){_rs.apply(this,arguments);try{const R=(XS().runs||[]).slice(0,15);if(!R.length)return;const mx=Math.max(...R.map(r=>r.s),1);
+  $('#stStats').insertAdjacentHTML('beforeend',`<h4 style="margin-top:12px">📈 Последние забеги</h4><div style="display:flex;align-items:flex-end;gap:4px;height:120px;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:8px">${R.slice().reverse().map(r=>`<div title="${MODE_RU[r.m]||r.m}: ${r.s} очков" style="flex:1;background:${r.m==='hard'?'#ff7e9a':r.m==='time'?'#8fc4ff':r.m==='hw'?'#ff9a3d':'#5ee6c1'};height:${Math.max(4,r.s/mx*100)}%;border-radius:6px 6px 2px 2px;border:2px solid var(--ink)"></div>`).join('')}</div>
+  <div class="xst" style="margin-top:6px">${R.slice(0,9).map(r=>`<div><span>${MODE_RU[r.m]||r.m}<br><small class="hint" style="margin:0">${new Date(r.t).toLocaleDateString('ru-RU')} ${tm(r.t)}</small></span><b style="text-align:right">${r.s}<br><small>🪙${r.c} · волна ${r.w}</small></b></div>`).join('')}</div>`)}catch(e){console.error(e)}}}
+
+/* --- pause: run info --- */
+{const _pg=pauseGame;pauseGame=function(){_pg.apply(this,arguments);try{if(!G)return;const p=document.querySelector('#pause .panel');let el=$('#pInfo');if(!el){el=document.createElement('div');el.id='pInfo';p.querySelector('h2').after(el)}const q=pqGet();
+  el.innerHTML=`<div class="stats" style="margin:8px 0">${[['Очки',G.score],['Монеты','+'+G.coins+' 🪙'],['Волна',G.wave||1],['🔥 Комбо',G.maxCombo||0],['❤ Жизни',G.lives!=null?G.lives:'—'],['⏱ Время',fmtTime(G.t||0).replace(' мин',' мин')]].map(([a,b])=>`<div>${a}<b>${b}</b></div>`).join('')}</div>
+  <div class="xbox" style="text-align:left"><b>📋 Задания Battle Pass сегодня</b>${q.bp.map(z=>`<div style="font-size:13px;font-weight:700">${z.c||z.p>=z.g?'✅':'⬜'} ${pqText('bp',z)} — ${z.p}/${z.g}</div>`).join('')}</div>`}catch(e){console.error(e)}}}
+
+/* --- help / guide --- */
+const HELP=[['▶ Play','Лови звёзды и уворачивайся от метеоритов. Режимы: Обычный, На время, Хардкор, Испытание дня. Бонусы, комбо, боссы и сундуки.'],['🔧 Мастерская','Постоянные улучшения за монеты: жизни, щиты, радиус ловли, бонусы.'],['★ Battle Pass / 🎃 Halloween','Опыт за забеги, награды за уровни, задания дня, бонусные сундуки после финала. В Halloween — Тыквенная лавка за конфеты.'],['✿ Cosmetics','Скины, лица, головные уборы, кепки, аксессуары, кофты, обувь, следы, ауры и вещи в руки (Gear). Поиск, избранное, случайный образ.'],['⬆ Kotograde','Поставь вещи (и монеты) и попробуй прокачать их в более дорогую. Чем дороже цель, тем меньше шанс.'],['🤝 Trades','Обмен вещами, питомцами и монетами с живыми игроками онлайн. Шкала честности и чат обмена.'],['💬 Chat','Общий чат, друзья и личные сообщения, пати до 3 игроков и «Играть вместе». Команды: /roll, /coin, /me.'],['🎮 Мини-игры','Settings → Мини-игры: крестики-нолики, дурак, шашки, шахматы, Ракета, Рыбалка, Сад котозайца, NoomiClone. Задания мини-игр каждый день.'],['🌻 Сад','Сажай, поливай, продавай. Заказы жителей леса, ферма, кухня, декор, альбом, погода и рынок.'],['🥚 Eggs','Покупай яйца, вылупляй питомцев, бери их с собой ради бонуса к монетам. Дубликаты прокачивают питомца.'],['🎡 Колесо, 📅 серия, 🔔 награды','Ежедневные бонусы в меню. Событие недели меняет бонусы каждую неделю.'],['⚙ Settings','Звук, управление, оптимизация, кастомизация, GUI, достижения, статистика, сохранения и резервные копии, почта.']];
+function helpOpen(){xOv(xHead('❓ Справочник')+`<div class="xhub">${HELP.map(([a,b])=>`<div class="xq" style="display:block"><b>${a}</b><div style="font-weight:600;font-size:13px;margin-top:2px">${b}</div></div>`).join('')}</div><div class="xbox"><b>⌨ Быстрые клавиши в меню:</b> Enter — Play · B — Battle Pass · E — Halloween · C — Cosmetics · K — Kotograde · T — Trades · H — Chat · G — Сад · S — Settings · W — Колесо · ? — эта справка</div>`)}
+{const _xm=xMenuRender;xMenuRender=function(){_xm.apply(this,arguments);const r=$('#xMenu2');if(r&&!r.querySelector('[data-xhelp]'))r.insertAdjacentHTML('beforeend','<button class="btn sm ghost" data-xhelp title="Справочник (?)">❓ Помощь</button>')}}
+document.addEventListener('click',e=>{if(e.target.closest('[data-xhelp]')){SND.click();helpOpen()}});
+addEventListener('keydown',e=>{if(cur!=='menu'||!S||e.ctrlKey||e.metaKey||e.altKey)return;const a=document.activeElement;if(a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT'))return;if($('#xOv')&&$('#xOv').style.display==='flex'){if(e.key==='Escape')xOvClose();return}
+  const map={Enter:'play',KeyB:'bp',KeyE:'ev',KeyC:'cos',KeyK:'kg',KeyT:'trade',KeyH:'chat',KeyS:'set'};if(e.key==='?'){helpOpen();e.preventDefault();return}if(e.code==='KeyW'){xWhOpen();return}if(e.code==='KeyG'&&!e.repeat){try{openGarden()}catch(er){}return}
+  const go=map[e.code];if(go&&!e.repeat){const b=document.querySelector(`#menu [data-go="${go}"]`);if(b){e.preventDefault();b.click()}}});
+ACH.push({id:'p_up',n:'Заботливый хозяин',d:'Прокачать питомца 3 раза',k:'petUps',goal:3,r:250,i:'🐾'});
+Object.assign(STAT_RU,{petUps:['🐾','Прокачек питомцев']});
 
 resize();
 const sess=lsGet('kz_session');
