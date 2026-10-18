@@ -1,9 +1,9 @@
 {
- "version": 35,
- "label": "1.3.9",
- "name": "Версия 1.3.9: папка для фонов на ПК",
+ "version": 36,
+ "label": "1.4.0",
+ "name": "Версия 1.4.0: мини-игра Ракета",
  "file": "game.html",
- "sha256": "fc2585d0262c33954fbd6e69f1903eaace7f2ae5d3a01bbf6ad8cc86ef907b90",
+ "sha256": "6188ead94755f6b18df92506f01b48ef711b1b9313ee1ef44558a38064613a28",
  "date": "2026-10-18",
  "exe": {
   "version": 4,
