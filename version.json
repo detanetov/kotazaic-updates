@@ -6,13 +6,13 @@
  "sha256": "45b1d78e55ce02e64751eae79774823059e6186b41d4acb23e42ff5b88fd9ad8",
  "date": "2026-10-18",
  "exe": {
-  "version": 5,
+  "version": 6,
   "file": "KotazaicAndStars.exe",
-  "sha256": "315a02bed2462107fb240390ae75f1a4986d95bf94c37e1fee2618cab23116fa"
+  "sha256": "d80c084e0fd60188d5d50a7e6651d8ee907a67c53b0c454d94d969048026f25a"
  },
  "launcher": {
-  "version": 4,
+  "version": 5,
   "file": "KotazaicLauncher.exe",
-  "sha256": "a061f70f1ace78ca9461219810b076ad7f817f23fe315b5841cbcb06fafe7213"
+  "sha256": "8120c42b07bedd3e5014846b52271b52becfeb160e57a0e5868f0d9c407dd8df"
  }
 }
