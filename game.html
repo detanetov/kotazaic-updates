@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=53;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=54;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3005,6 +3005,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:54,l:'1.3.9',items:['🎣 Рыбалка: в каждом улучшении теперь намного больше уровней (до 15), плюс 2 новых — 🧤 Хватка и 🍀 Удача','🧵 Натяжение лески как в оригинале: пойманная рыба дёргается и тянет вниз; если шкала красная — отпусти, иначе леска лопнет','🐟 Пойманная рыба летит прямо в лодку']},
  {v:53,l:'1.3.9',items:['🎣 Рыбалка стала ближе к Cat Goes Fishing: рыба плывёт к приманке, хищники глотают пойманную мелочь прямо на крючке','🪣 Улов складывается в ведро; 🔪 рыбу можно чистить ножом мышкой — почищенная стоит в 2–3 раза дороже','⬆ 7 новых улучшений: катушка, приманка, ведро, нож, фонарь, сонар, лодка (лодка → моторка → катер → яхта)','🎣 7 видов удочки — от палки с верёвкой до космической, меняются с улучшением и выбираются отдельно']},
  {v:52,l:'1.3.9',items:['🎣 Новая мини-игра «Рыбалка» (как Cat Goes Fishing): котозаяц в лодке закидывает удочку, на глубине — редкие рыбы','🐟 23 вида рыб от карасика до Кракена, медузы и день/ночь','⬆ Улучшения снастей: удочка до 480 м, леска до 250 кг, до 4 крючков, грузило и наживка','📖 Журнал улова и 3 новых достижения']},
  {v:51,l:'1.3.9',items:['⚡ Ещё больше оптимизации: ауры только в меню или выкл., отключение шейдеров, погоды, питомца и друзей в игре','💤 Экономия: 20 FPS фона, пока открыты окна меню, и 15 FPS, когда игра не в фокусе','🧠 Лёгкие превью в Cosmetics и кнопка очистки кэша картинок; показ нагрузки рядом с FPS']},
@@ -3865,22 +3866,28 @@ const FSP=[
  {id:'star',n:'Звёздная рыба',d:[340,480],w:3,v:150,c:'#ffe066',c2:'#ffffff',sz:34,sp:30,r:.35,sh:'star',glow:'#ffe066'},
  {id:'kraken',n:'Кракен',d:[420,480],w:240,v:600,c:'#7a2a8a',c2:'#ff8af6',sz:170,sp:14,r:.25,sh:'kraken'}];
 const FSPM=Object.fromEntries(FSP.map(x=>[x.id,x]));
-const FUP={rod:{n:'🎣 Удочка — глубина',v:[30,60,100,160,240,340,480],p:[0,150,400,900,1800,3500,6000],u:' м'},
-  line:{n:'🧵 Леска — выдерживает',v:[3,6,12,25,50,100,250],p:[0,120,350,800,1600,3200,6500],u:' кг'},
-  hook:{n:'🪝 Крючки — рыб за заброс',v:[1,2,3,4],p:[0,300,1200,4000],u:''},
-  sink:{n:'⚓ Грузило — скорость погружения',v:[90,130,180,240,320],p:[0,150,500,1400,3000],u:''},
-  bait:{n:'🪱 Наживка — шанс редких рыб',v:[1,1.4,1.9,2.6],p:[0,400,1500,4500],u:'×'},
-  reel:{n:'🌀 Катушка — скорость сматывания',v:[180,240,300,380,480],p:[0,200,600,1500,3200],u:''},
-  lure:{n:'✨ Приманка — рыба плывёт к крючку',v:[0,60,100,150,210],p:[0,250,700,1800,4000],u:' px'},
-  bucket:{n:'🪣 Ведро — сколько рыбы влезает',v:[5,10,16,25,40],p:[0,150,450,1200,3000],u:' шт'},
-  knife:{n:'🔪 Нож — чистка быстрее и дороже',v:[2,2.3,2.7,3.2],p:[0,300,1200,3500],u:'× цена'},
-  lamp:{n:'🔦 Фонарь — видно ночью и в глубине',v:[0,1,2],p:[0,500,2000],u:''},
-  sonar:{n:'📡 Сонар — подсвечивает редких рыб',v:[0,1,2],p:[0,800,3000],u:''},
-  boat:{n:'🚤 Лодка — надбавка рыбного рынка',v:[0,10,20,35],p:[0,600,2500,8000],u:'%'}};
-const FROD=['Палка с верёвкой','Бамбуковая','Ивовая с катушкой','Карбоновая','Золотая','Хрустальная','Космическая'];
-const FBOAT=['Деревянная лодка','Моторная лодка','Катер','Яхта'];
+const FUP_OLD={rod:[30,60,100,160,240,340,480],line:[3,6,12,25,50,100,250],hook:[1,2,3,4],sink:[90,130,180,240,320],bait:[1,1.4,1.9,2.6],reel:[180,240,300,380,480],lure:[0,60,100,150,210],bucket:[5,10,16,25,40],knife:[2,2.3,2.7,3.2],lamp:[0,1,2],sonar:[0,1,2],boat:[0,10,20,35]};
+function fGen(n,v0,v1,pw,p1,pN,round){const v=[],p=[];for(let i=0;i<n;i++){const k=i/(n-1);let x=v0+(v1-v0)*Math.pow(k,pw);v.push(round?Math.round(x/round)*round:+x.toFixed(2));p.push(i===0?0:Math.round(p1*Math.pow(pN/p1,(i-1)/Math.max(1,n-2))/10)*10)}return{v,p}}
+const FUP={rod:Object.assign({n:'🎣 Удочка — глубина',u:' м'},fGen(15,30,480,1.35,120,9000,5)),
+  line:Object.assign({n:'🧵 Леска — выдерживает',u:' кг'},fGen(15,3,400,2.1,100,9500,1)),
+  hook:Object.assign({n:'🪝 Крючки — рыб за заброс',u:''},fGen(8,1,8,1,250,8000,1)),
+  sink:Object.assign({n:'⚓ Грузило — скорость погружения',u:''},fGen(12,90,420,1,120,4500,5)),
+  bait:Object.assign({n:'🪱 Наживка — шанс редких рыб',u:'×'},fGen(10,1,3.5,1,300,7000,0)),
+  reel:Object.assign({n:'🌀 Катушка — скорость сматывания',u:''},fGen(12,180,620,1,150,5000,5)),
+  lure:Object.assign({n:'✨ Приманка — рыба плывёт к крючку',u:' px'},fGen(12,0,300,1,200,6000,5)),
+  bucket:Object.assign({n:'🪣 Ведро — сколько рыбы влезает',u:' шт'},fGen(12,5,80,1.2,120,5000,1)),
+  knife:Object.assign({n:'🔪 Нож — чистка быстрее и дороже',u:'× цена'},fGen(10,2,4,1,250,6500,0)),
+  lamp:Object.assign({n:'🔦 Фонарь — видно ночью и в глубине',u:''},fGen(6,0,5,1,400,5000,1)),
+  sonar:Object.assign({n:'📡 Сонар — подсвечивает редких рыб',u:''},fGen(4,0,3,1,700,6000,1)),
+  boat:Object.assign({n:'🚤 Лодка — надбавка рыбного рынка',u:'%'},fGen(10,0,80,1.1,500,12000,5)),
+  tough:Object.assign({n:'🧤 Хватка — рыба меньше дёргает леску',u:'%'},fGen(10,0,60,1,200,5000,5)),
+  luck:Object.assign({n:'🍀 Удача — шанс поймать сразу двух',u:'%'},fGen(8,0,25,1,400,7000,1))};
+const FROD=['Палка с верёвкой','Бамбуковая','Ивовая с катушкой','Карбоновая','Золотая','Хрустальная','Космическая'],FROD_LV=[0,2,4,6,9,12,14];
+function fRodTier(lv){let t=0;FROD_LV.forEach((x,i)=>{if(lv>=x)t=i});return t}
+const FBOAT=['Деревянная лодка','Моторная лодка','Катер','Яхта'];function fBoatTier(lv){return Math.min(3,Math.floor(lv*4/FUP.boat.v.length))}
 const FPX=8,FWS=150,FW=960,FH=540;let FG=null,fishTab='up';
-function fData(){S.fishg=S.fishg||{};const d=S.fishg;d.up=Object.assign({rod:0,line:0,hook:0,sink:0,bait:0,reel:0,lure:0,bucket:0,knife:0,lamp:0,sonar:0,boat:0},d.up||{});d.j=d.j||{};d.total=d.total||0;d.bucket=d.bucket||[];if(d.rodSkin==null||d.rodSkin>d.up.rod)d.rodSkin=d.up.rod;return d}
+function fData(){S.fishg=S.fishg||{};const d=S.fishg;d.up=Object.assign({rod:0,line:0,hook:0,sink:0,bait:0,reel:0,lure:0,bucket:0,knife:0,lamp:0,sonar:0,boat:0,tough:0,luck:0},d.up||{});if(!d.v2){d.v2=1;for(const k in FUP_OLD){const ov=FUP_OLD[k][d.up[k]]??FUP_OLD[k][0];let nl=0;FUP[k].v.forEach((v,i)=>{if(v<=ov+1e-9)nl=i});d.up[k]=nl}d.rodSkin=null}
+  for(const k in FUP)d.up[k]=clamp(d.up[k]|0,0,FUP[k].v.length-1);d.j=d.j||{};d.total=d.total||0;d.bucket=d.bucket||[];if(d.rodSkin==null||FROD_LV[d.rodSkin]>d.up.rod)d.rodSkin=fRodTier(d.up.rod);return d}
 function fUp(k){return FUP[k].v[fData().up[k]]}
 function fSpawn(sp0){const bait=fUp('bait'),wt=s=>s.r<1?s.r*bait:s.r;let sp=sp0,dep;
   if(!sp){dep=Math.pow(Math.random(),1.8)*480;const cand=FSP.filter(s=>dep>=s.d[0]&&dep<=s.d[1]);const tot=cand.reduce((a,s)=>a+wt(s),0);let r=Math.random()*tot;for(const s of cand){r-=wt(s);if(r<=0){sp=s;break}}sp=sp||cand[0]||FSP[0]}
@@ -3890,7 +3897,7 @@ function openFishing(){if(!FG){FG={cv:$('#fcv'),fish:[],ph:'idle',lure:{x:250,y:
 function fMsg(t,col){FG.msg={t,col:col||'#fff',life:3}}
 function fTip(){return{x:262,y:FWS-98}}
 function fPrice(f){const sp=FSPM[f.id],d=fData();return Math.max(1,Math.round(sp.v*(.7+.6*f.w/sp.w)*(1+fUp('boat')/100)*(f.clean?fUp('knife'):1)))}
-function fFinish(){const L=FG.hooked;FG.hooked=[];if(!L.length){FG.ph='idle';return}const d=fData();let rare=false,sold=0;const names=[];
+function fFinish(){const L=FG.hooked;FG.hooked=[];FG.tens=0;if(!L.length){FG.ph='idle';return}FG.fly=(FG.fly||[]).concat(L.map((f,i)=>({sp:f.sp,x:fTip().x,y:fTip().y,vx:-rnd(60,120),vy:-rnd(260,360)-i*30,t:0})));const d=fData();let rare=false,sold=0;const names=[];
   for(const f of L){const j=d.j[f.sp.id]=d.j[f.sp.id]||{n:0,best:0};j.n++;if(f.w>j.best)j.best=+f.w.toFixed(1);names.push(f.sp.n+' '+f.w.toFixed(1)+' кг');if(f.sp.r<1||f.sp.v>=60)rare=true;if(f.sp.id==='kraken')stat('fishKraken');
     const it={id:f.sp.id,w:+f.w.toFixed(2),clean:false};if(d.bucket.length<fUp('bucket'))d.bucket.push(it);else{const v=fPrice(it);S.coins+=v;sold+=v}}
   d.total+=L.length;stat('fishCaught',L.length);S.stats.fishSpecies=Object.keys(d.j).length;checkAch();refreshTop();persist();
@@ -3903,7 +3910,9 @@ function fishStep(dt){if(!FG)return;const c=FG.c,t=(FG.t+=dt),maxY=FWS+fUp('rod'
   // logic
   if(FG.ph==='charge'){FG.pow+=FG.powD*dt*1.1;if(FG.pow>1){FG.pow=1;FG.powD=-1}if(FG.pow<0){FG.pow=0;FG.powD=1}}
   if(FG.ph==='fly'){L.vy+=700*dt;L.x+=L.vx*dt;L.y+=L.vy*dt;if(L.x>FW-30){L.x=FW-30;L.vx=0}if(L.y>=FWS){L.y=FWS;FG.ph='sink';sfx(300,.12,'sine',.05,-150);for(let i=0;i<10;i++)FG.bub.push({x:L.x+rnd(-10,10),y:FWS,vy:rnd(-60,-20),life:0,r:rnd(2,5)})}}
-  if(FG.ph==='sink'){const w=FG.hooked.reduce((a,f)=>a+f.w,0);if(FG.hold){L.y-=Math.max(70,fUp('reel')-Math.min(150,w*1.2))*dt;if(L.y<=FWS){L.y=FWS;FG.ph='ret'}}else L.y=Math.min(maxY,L.y+fUp('sink')*dt);
+  if(FG.ph==='sink'){const w=FG.hooked.reduce((a,f)=>a+f.w,0),rr=w/fUp('line'),tg=1-fUp('tough')/100;
+    if(FG.hooked.length){const pull=Math.sin(t*6.3)*Math.sin(t*2.1);L.x+=pull*rr*90*tg*dt;if(!FG.hold)L.y+=rr*40*tg*dt;FG.tens=clamp(rr*(FG.hold?1.18:.75)*(0.92+.12*Math.abs(pull))*(tg*.5+.5),0,1.4);if(FG.tens>1){FG.over=(FG.over||0)+dt;if(FG.over>1.3){const n=FG.hooked.length;FG.hooked=[];FG.over=0;FG.tens=0;fMsg('💥 Леска лопнула от натяжения! Отпускай, когда шкала красная ('+n+' рыб сорвалось)','#ff8a8a');SND.hit();FG.ph='ret'}}else FG.over=Math.max(0,(FG.over||0)-dt*2)}else{FG.tens=0;FG.over=0}
+    if(FG.ph==='sink'&&FG.hold){L.y-=Math.max(60,fUp('reel')*(1-Math.min(.75,rr*.7))-Math.min(150,w*.6))*dt;if(L.y<=FWS){L.y=FWS;FG.ph='ret'}}else L.y=Math.min(maxY,L.y+fUp('sink')*dt);
     const kx=(keys.ArrowRight||keys.KeyD?1:0)-(keys.ArrowLeft||keys.KeyA?1:0);if(kx)FG.tx=null;const tx=FG.tx!=null?FG.tx:L.x+kx*400;L.x+=clamp(tx-L.x,-260*dt,260*dt);L.x=clamp(L.x,20,FW-20);
     if(Math.random()<dt*6)FG.bub.push({x:L.x,y:L.y,vy:rnd(-50,-25),life:0,r:rnd(1.5,3)})}
   if(FG.ph==='ret'){const tp=fTip();L.x+=(tp.x-L.x)*Math.min(1,dt*6);L.y+=(tp.y-L.y)*Math.min(1,dt*6);if(Math.hypot(tp.x-L.x,tp.y-L.y)<6)fFinish()}
@@ -3918,7 +3927,7 @@ function fishStep(dt){if(!FG)return;const c=FG.c,t=(FG.t+=dt),maxY=FWS+fUp('rod'
         FG.hooked=FG.hooked.filter(h=>h!==prey);f.dead=true;FG.hooked.push({sp:f.sp,w,f});sfx(500,.2,'sawtooth',.05,-200);fMsg('🦈 '+f.sp.n+' проглотил(а) '+prey.sp.n.toLowerCase()+' и попался(ась)!','#ffcf33');continue}}
       if(FG.hooked.length<fUp('hook')&&!FG.hooked.some(h=>h.f===f)){const w=f.sp.w*rnd(.7,1.4),tot=FG.hooked.reduce((a,h)=>a+h.w,0)+w;
         if(tot>fUp('line')){FG.hooked=[];fMsg('💥 Леска порвалась — '+f.sp.n+' слишком тяжёлая ('+w.toFixed(1)+' кг)! Улучши леску','#ff8a8a');SND.hit();FG.ph='ret';f.dir*=-1;f.x+=f.dir*80;continue}
-        f.dead=true;FG.hooked.push({sp:f.sp,w,f});sfx(880,.08,'triangle',.05,300);fMsg('🎣 Клюёт: '+f.sp.n+'!',f.sp.glow||'#fff')}}}}
+        f.dead=true;FG.hooked.push({sp:f.sp,w,f});sfx(880,.08,'triangle',.05,300);fMsg('🎣 Клюёт: '+f.sp.n+'!',f.sp.glow||'#fff');if(Math.random()*100<fUp('luck')&&FG.hooked.length<fUp('hook')){const w2=f.sp.w*rnd(.7,1.4);if(FG.hooked.reduce((a,h)=>a+h.w,0)+w2<=fUp('line')){FG.hooked.push({sp:f.sp,w:w2,f:{}});fMsg('🍀 Удача! Сразу две: '+f.sp.n,'#8fe6a8')}}}}}}
   FG.fish=FG.fish.filter(f=>!f.dead||FG.hooked.some(h=>h.f===f));while(FG.fish.filter(f=>!f.dead).length<130)FG.fish.push(fSpawn());
   for(const b of FG.bub){b.y+=b.vy*dt;b.life+=dt}FG.bub=FG.bub.filter(b=>b.life<2&&b.y>FWS);
   const ty=clamp((FG.ph==='sink'?L.y:FWS)-FH*.42,0,maxY-FH+60);FG.camY+=(ty-FG.camY)*Math.min(1,dt*4);const cy=FG.camY;
@@ -3935,7 +3944,7 @@ function fishStep(dt){if(!FG)return;const c=FG.c,t=(FG.t+=dt),maxY=FWS+fUp('rod'
   for(const f of FG.fish){if(f.dead)continue;const y=f.y+Math.sin(f.ph*2)*6-cy;if(y<-120||y>FH+120)continue;const dark=clamp((f.y-FWS)/(FPX*300),0,.75);c.save();if(f.sp.ghost){c.globalAlpha=night?.85:.25}drawFishSp(c,f.x,y,f.sp,f.dir,t+f.ph);c.restore();if(dark>0&&!f.sp.glow){c.save();c.globalAlpha=dark*.6;c.globalCompositeOperation='source-atop';c.restore()}}
   for(const b of FG.bub){ell(c,b.x,b.y-cy,b.r,b.r);c.strokeStyle='rgba(255,255,255,.6)';c.lineWidth=1.2;c.stroke()}
   // boat & kotozayac
-  const bY=FWS-cy;if(bY>-120){const bob=Math.sin(t*1.6)*3;c.save();c.translate(0,bob);fBoat(c,bY,t,fData().up.boat,0);drawKZ(c,205,bY-14,.42,S.eq,t,0);fBoat(c,bY,t,fData().up.boat,1);fRod(c,fData().rodSkin,t,220,bY-34,262,bY-98);c.restore();
+  const bY=FWS-cy;if(bY>-120){const bob=Math.sin(t*1.6)*3;c.save();c.translate(0,bob);fBoat(c,bY,t,fBoatTier(fData().up.boat),0);drawKZ(c,205,bY-14,.42,S.eq,t,0);fBoat(c,bY,t,fBoatTier(fData().up.boat),1);fRod(c,fData().rodSkin,t,220,bY-34,262,bY-98);c.restore();
     c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=2;c.beginPath();for(let x=0;x<=FW;x+=12)c.lineTo(x,bY+Math.sin(x*.05+t*2)*2.5);c.stroke()}
   // line & lure
   const tp=fTip(),ly2=L.y-cy;c.strokeStyle=['rgba(255,255,255,.8)','rgba(255,255,255,.8)','rgba(255,255,255,.85)','#ff6b6b','#ffe066','#9fe8ff','#e0b0ff'][fData().rodSkin]||'#fff';c.lineWidth=fData().rodSkin>=3?1.8:1.3;c.beginPath();c.moveTo(tp.x,tp.y-cy+Math.sin(t*1.6)*3);c.quadraticCurveTo((tp.x+L.x)/2,Math.max(tp.y-cy,ly2)-20,L.x,ly2);c.stroke();
@@ -3943,6 +3952,8 @@ function fishStep(dt){if(!FG)return;const c=FG.c,t=(FG.t+=dt),maxY=FWS+fUp('rod'
   FG.hooked.forEach((h,i)=>{c.save();c.translate(L.x,ly2+18+i*14);c.rotate(Math.PI/2+Math.sin(t*8+i)*.3);drawFishSp(c,0,0,h.sp,1,t);c.restore()});
   {const lamp=fUp('lamp'),dk=(night?.4:0)+clamp((L.y-FWS)/FPX/480,0,1)*.45*(FG.ph==='sink'?1:0);const a=Math.max(0,dk-lamp*.18);if(a>.02){const g=c.createRadialGradient(L.x,ly2,30+lamp*40,L.x,ly2,140+lamp*120);g.addColorStop(0,'rgba(5,5,30,0)');g.addColorStop(1,'rgba(5,5,30,'+a+')');c.fillStyle=g;c.fillRect(0,0,FW,FH)}}
   if(fUp('sonar')){for(const f of FG.fish){if(f.dead||!(f.sp.r<1||f.sp.v>=60))continue;const y=f.y-cy;if(y>0&&y<FH){c.save();c.strokeStyle='rgba(120,255,180,'+(.5+.4*Math.sin(t*5))+')';c.lineWidth=2;ell(c,f.x,y,f.sp.sz*.6+8,f.sp.sz*.35+8);c.stroke();c.restore()}else if(fUp('sonar')>1&&Math.abs(f.y-L.y)<FPX*60){const up=y<0;c.fillStyle='rgba(120,255,180,.85)';c.font='900 12px Trebuchet MS,sans-serif';c.textAlign='center';c.fillText((up?'▲ ':'▼ ')+f.sp.n+' '+Math.round((f.y-FWS)/FPX)+' м',clamp(f.x,60,FW-60),up?44:FH-34)}}}
+  if(FG.fly&&FG.fly.length){for(const q of FG.fly){q.t+=dt;q.vy+=900*dt;q.x+=q.vx*dt;q.y+=q.vy*dt;c.save();c.translate(q.x,q.y-cy);c.rotate(q.t*9);drawFishSp(c,0,0,Object.assign({},q.sp,{sz:Math.min(60,q.sp.sz)}),1,t);c.restore()}FG.fly=FG.fly.filter(q=>q.y<FWS-10||q.vy<0);if(!FG.fly.length)sfx(260,.1,'sine',.05,-80)}
+  if(FG.hooked.length&&FG.ph==='sink'){const T=FG.tens||0;c.fillStyle='#fff';c.strokeStyle=INK;c.lineWidth=3;c.beginPath();c.roundRect(FW-230,40,200,16,8);c.fill();c.stroke();c.fillStyle=T>1?'#e8355d':T>.8?'#ff8a3d':'#5ee6c1';c.beginPath();c.roundRect(FW-227,43,194*Math.min(1,T),10,5);c.fill();c.font='900 12px Trebuchet MS,sans-serif';c.textAlign='right';c.lineWidth=3;c.strokeStyle=INK;c.strokeText('Натяжение лески',FW-236,53);c.fillStyle=T>1?'#ff8a8a':'#fff';c.fillText('Натяжение лески',FW-236,53)}
   // HUD
   const w=FG.hooked.reduce((a,f)=>a+f.w,0);c.textAlign='left';c.font='900 15px Trebuchet MS,sans-serif';const hud=[`📏 ${Math.max(0,Math.round((L.y-FWS)/FPX))} / ${fUp('rod')} м`,`🪝 ${FG.hooked.length}/${fUp('hook')}`,`⚖ ${w.toFixed(1)}/${fUp('line')} кг`,night?'🌙 ночь':'☀ день'];
   hud.forEach((s,i)=>{c.lineWidth=4;c.strokeStyle=INK;c.strokeText(s,12+i*150,24);c.fillStyle='#fff';c.fillText(s,12+i*150,24)});
@@ -4011,10 +4022,10 @@ function fRender(){if(!FG||!S)return;const d=fData(),el=$('#fPanel');for(const b
   if(fishTab==='b'){const tot=d.bucket.reduce((a,f)=>a+fPrice(f),0);h=`<div class="row" style="gap:8px;margin:10px 0;flex-wrap:wrap"><span class="chip">🪣 ${d.bucket.length}/${fUp('bucket')} рыб</span><button class="btn sm mint" data-fsellall ${d.bucket.length?'':'disabled'}>💰 Продать всё за ${tot} 🪙</button><span class="hint">Почищенная рыба стоит ×${fUp('knife')} · лодка даёт +${fUp('boat')}%</span></div><div class="fjr">`;
     d.bucket.forEach((f,i)=>{const sp=FSPM[f.id];h+=`<div class="fjc"><canvas width="120" height="70" data-fjc="${f.id}"></canvas><b>${f.clean?'✨ ':''}${sp.n}</b><small>${f.w} кг · ${fPrice(f)} 🪙</small><div class="row" style="gap:4px;justify-content:center;margin-top:4px">${f.clean?'':`<button class="btn sm" data-fclean="${i}">🔪 Чистить</button>`}<button class="btn sm ghost" data-fsell="${i}">💰</button></div></div>`});
     if(!d.bucket.length)h+='<p class="hint">Ведро пустое — поймай рыбу! Улов складывается сюда, а почистить и продать можно в любой момент.</p>';h+='</div>'}
-  else if(fishTab==='rod'){h='<p class="sub" style="margin-top:8px">Каждое улучшение удочки открывает новый вид. Выбери, какой показывать:</p><div class="fjr">';FROD.forEach((n,i)=>{const ok=i<=d.up.rod;h+=`<div class="fjc ${ok?'':'lock'}"><canvas width="120" height="70" data-frodc="${i}"></canvas><b>${n}</b><small>${ok?(d.rodSkin===i?'✓ выбрана':'открыта'):'уровень удочки '+(i+1)}</small>${ok&&d.rodSkin!==i?`<button class="btn sm mint" data-frod="${i}" style="margin-top:4px">Выбрать</button>`:''}</div>`});h+='</div>'}
-  else if(fishTab==='up'){h='<div class="fup">';for(const k in FUP){const U=FUP[k],lv=d.up[k],max=lv>=U.v.length-1,nx=U.p[lv+1];h+=`<div class="fupc"><b>${U.n}</b>${k==='rod'?`<small>Вид: ${FROD[lv]}${max?'':' → '+FROD[lv+1]}</small>`:k==='boat'?`<small>${FBOAT[lv]}${max?'':' → '+FBOAT[lv+1]}</small>`:''}<div class="fbar">${U.v.map((_,i)=>`<i class="${i<=lv?'on':''}"></i>`).join('')}</div><small>Сейчас: ${U.v[lv]}${U.u}${max?'':' → '+U.v[lv+1]+U.u}</small><button class="btn sm ${max?'ghost':'mint'}" data-fup="${k}" ${max||S.coins<nx?'disabled':''}>${max?'Максимум':'Улучшить 🪙 '+nx}</button></div>`}h+='</div>'}
+  else if(fishTab==='rod'){h='<p class="sub" style="margin-top:8px">Каждое улучшение удочки открывает новый вид. Выбери, какой показывать:</p><div class="fjr">';FROD.forEach((n,i)=>{const ok=d.up.rod>=FROD_LV[i];h+=`<div class="fjc ${ok?'':'lock'}"><canvas width="120" height="70" data-frodc="${i}"></canvas><b>${n}</b><small>${ok?(d.rodSkin===i?'✓ выбрана':'открыта'):'нужен уровень удочки '+(FROD_LV[i]+1)}</small>${ok&&d.rodSkin!==i?`<button class="btn sm mint" data-frod="${i}" style="margin-top:4px">Выбрать</button>`:''}</div>`});h+='</div>'}
+  else if(fishTab==='up'){h='<div class="fup">';for(const k in FUP){const U=FUP[k],lv=d.up[k],max=lv>=U.v.length-1,nx=U.p[lv+1];h+=`<div class="fupc"><b>${U.n}</b>${k==='rod'?`<small>Вид: ${FROD[fRodTier(lv)]}${!max&&fRodTier(lv+1)>fRodTier(lv)?' → '+FROD[fRodTier(lv+1)]:''}</small>`:k==='boat'?`<small>${FBOAT[fBoatTier(lv)]}${!max&&fBoatTier(lv+1)>fBoatTier(lv)?' → '+FBOAT[fBoatTier(lv+1)]:''}</small>`:''}<small style="opacity:.6">Уровень ${lv+1} из ${U.v.length}</small><div class="fbar">${U.v.map((_,i)=>`<i class="${i<=lv?'on':''}"></i>`).join('')}</div><small>Сейчас: ${U.v[lv]}${U.u}${max?'':' → '+U.v[lv+1]+U.u}</small><button class="btn sm ${max?'ghost':'mint'}" data-fup="${k}" ${max||S.coins<nx?'disabled':''}>${max?'Максимум':'Улучшить 🪙 '+nx}</button></div>`}h+='</div>'}
   else{const got=Object.keys(d.j).length;h=`<p class="sub">Открыто ${got} из ${FSP.filter(s=>!s.danger).length} видов · всего поймано ${d.total}</p><div class="fjr">`;for(const s of FSP){if(s.danger)continue;const j=d.j[s.id];h+=`<div class="fjc ${j?'':'lock'}"><canvas width="120" height="70" data-fjc="${s.id}"></canvas><b>${j?s.n:'???'}</b><small>${j?'×'+j.n+' · рекорд '+j.best+' кг':'глубина '+s.d[0]+'–'+s.d[1]+' м'}</small></div>`}h+='</div>'}
-  el.innerHTML=h;for(const cv of el.querySelectorAll('[data-frodc]')){const c=cv.getContext('2d'),i=+cv.dataset.frodc;c.fillStyle='#8fd0ff';c.fillRect(0,0,120,70);fRod(c,i,1.2,18,62,104,10);if(i>d.up.rod){c.fillStyle='rgba(30,20,50,.55)';c.fillRect(0,0,120,70);c.font='22px sans-serif';c.textAlign='center';c.fillText('🔒',60,44)}}
+  el.innerHTML=h;for(const cv of el.querySelectorAll('[data-frodc]')){const c=cv.getContext('2d'),i=+cv.dataset.frodc;c.fillStyle='#8fd0ff';c.fillRect(0,0,120,70);fRod(c,i,1.2,18,62,104,10);if(d.up.rod<FROD_LV[i]){c.fillStyle='rgba(30,20,50,.55)';c.fillRect(0,0,120,70);c.font='22px sans-serif';c.textAlign='center';c.fillText('🔒',60,44)}}
   for(const cv of el.querySelectorAll('[data-fjc]')){const s=FSPM[cv.dataset.fjc],c=cv.getContext('2d'),sc=Math.min(1,90/s.sz);c.save();c.translate(60,36);c.scale(sc,sc);if(!d.j[s.id]){c.filter='brightness(0)';c.globalAlpha=.5}drawFishSp(c,0,0,s,1,1);c.restore()}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-fishing],[data-fup],[data-ft],[data-fclean],[data-fsell],[data-fsellall],[data-frod]');if(!b||!S)return;
   if(b.dataset.fclean!=null){fCleanStart(+b.dataset.fclean);SND.click();return}
@@ -4023,7 +4034,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-fishing],[
   if(b.dataset.frod!=null){fData().rodSkin=+b.dataset.frod;persist();SND.click();toast('🎣 Удочка: '+FROD[fData().rodSkin]);fRender();return}
   if(b.dataset.fishing){openFishing();return}
   if(b.dataset.ft){fishTab=b.dataset.ft;SND.click();fRender();return}
-  if(b.dataset.fup){const k=b.dataset.fup,d=fData(),lv=d.up[k],nx=FUP[k].p[lv+1];if(nx==null||S.coins<nx)return;S.coins-=nx;d.up[k]++;if(k==='rod')d.rodSkin=d.up.rod;persist();refreshTop();SND.buy();toast('⬆ '+FUP[k].n+': '+FUP[k].v[d.up[k]]+FUP[k].u);fRender()}});
+  if(b.dataset.fup){const k=b.dataset.fup,d=fData(),lv=d.up[k],nx=FUP[k].p[lv+1];if(nx==null||S.coins<nx)return;S.coins-=nx;d.up[k]++;if(k==='rod')d.rodSkin=fRodTier(d.up.rod);persist();refreshTop();SND.buy();toast('⬆ '+FUP[k].n+': '+FUP[k].v[d.up[k]]+FUP[k].u);fRender()}});
 {const cvv=()=>$('#fcv');const pt=e=>{const r=cvv().getBoundingClientRect();return(e.clientX-r.left)*FW/r.width};
   document.addEventListener('pointerdown',e=>{if(cur==='fishing'&&e.target.id==='fcv'){e.preventDefault();if(FG){FG.tx=pt(e);if(FG.clean){FG.clean.mx=pt(e);FG.clean.my=ptY(e)}}fInput(true)}});
   document.addEventListener('pointerup',()=>{if(cur==='fishing')fInput(false)});
