@@ -1,9 +1,9 @@
 {
- "version": 69,
+ "version": 70,
  "label": "1.4.0",
- "name": "1.4.0: 50 костюмов из вещей Cosmetics",
+ "name": "1.4.0: +100 костюмов и 500 вещей",
  "file": "game.html",
- "sha256": "b241e440b0cbafa2ca4237a12b64abc03d2d2586f6199f31fc7ce3f2376d854c",
+ "sha256": "f9c77ae72ea60b1b9db84a4889a35d0b89fdc526be2865d18fc0db6487389109",
  "date": "2026-10-18",
  "exe": {
   "version": 4,
