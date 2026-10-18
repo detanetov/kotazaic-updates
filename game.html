@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=50;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=51;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -472,6 +472,15 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
     <div class="opt tg"><label>🌌 Эффекты неба (туманности, сияние, облака)</label><input type="checkbox" id="sSkyFx"></div>
     <div class="opt tg"><label>⭐ Падающие звёзды в меню</label><input type="checkbox" id="sMenuFx"></div>
     <div class="opt"><label>✨ Количество частиц <b id="vPmax"></b></label><input type="range" min="50" max="800" step="50" id="sPmax"></div>
+    <div class="opt tg"><label>🔮 Ауры</label><select class="inp" id="sAuraFx"><option value="full">Везде</option><option value="simple">Только в меню (в игре выкл.)</option><option value="off">Выключены</option></select></div>
+    <div class="opt tg"><label>🎨 Шейдеры и фильтры картинки</label><input type="checkbox" id="sShOff"></div>
+    <div class="opt tg"><label>🌧 Погода (дождь, снег…)</label><input type="checkbox" id="sWeatherFx"></div>
+    <div class="opt tg"><label>🐾 Питомец в игре</label><input type="checkbox" id="sPetGame"></div>
+    <div class="opt tg"><label>👥 Котозайцы друзей в совместной игре</label><input type="checkbox" id="sGhosts"></div>
+    <div class="opt tg"><label>💤 Экономить, пока открыты окна меню (фон 20 FPS)</label><input type="checkbox" id="sBgThr"></div>
+    <div class="opt tg"><label>🔋 Когда игра не в фокусе — 15 FPS</label><input type="checkbox" id="sUnfocus"></div>
+    <div class="opt tg"><label>🖼 Лёгкие превью в Cosmetics (меньше памяти)</label><input type="checkbox" id="sLowThumb"></div>
+    <div class="opt tg"><label id="vMem">🧠 Кэш картинок: —</label><button class="btn sm ghost" id="sMemClr">🧹 Очистить</button></div>
     <div class="opt tg"><label id="vPerfNow">📊 Сейчас: —</label><button class="btn sm mint" id="sPerfTest">🔍 Автоподбор</button></div>
     </div>
     <div class="opt tg"><label>📈 Показывать FPS</label><input type="checkbox" id="sFps"></div>
@@ -1083,7 +1092,8 @@ function drawKZ(c,x,y,s,eq,t,tilt=0){
   else if(sk.pulse){sk=Object.assign({},sk,{base:hexMix(sk.pulse[0],sk.pulse[1],.5+.5*Math.sin(t*2))})}
   c.save();c.translate(x,y);c.scale(s,s);c.rotate(tilt);c.lineJoin='round';c.lineCap='round';
   if(sk.glow){const g=c.createRadialGradient(0,-70,10,0,-70,120);g.addColorStop(0,sk.glow+'88');g.addColorStop(1,sk.glow+'00');c.fillStyle=g;c.fillRect(-130,-200,260,220)}
-  drawAura(c,eq.aura,t,'back');drawAura2(c,eq.aura,t,'back');
+  const auOk=(()=>{const a=optEff().aura;return a==='full'||(a==='simple'&&!(G&&c===ctx))})();
+  if(auOk){drawAura(c,eq.aura,t,'back');drawAura2(c,eq.aura,t,'back')}
   if(eq.acc==='cape'||eq.acc==='vamp')drawCape(c,eq.acc,t);
   drawAccBack(c,eq.acc,t);drawAccBack2(c,eq.acc,t);
   ell(c,-37,-30,15,15);fs(c,sk.belly);
@@ -1128,7 +1138,7 @@ function drawKZ(c,x,y,s,eq,t,tilt=0){
   drawCap(c,eq.caps,t);drawCap2(c,eq.caps,t);
   if(eq.gear&&eq.gear!=='none')drawGear(c,eq.gear,t,sw);
   drawAccFront(c,eq.acc,t);drawAccFront2(c,eq.acc,t);
-  drawAura(c,eq.aura,t,'front');drawAura2(c,eq.aura,t,'front');
+  if(auOk){drawAura(c,eq.aura,t,'front');drawAura2(c,eq.aura,t,'front')}
   c.restore();
 }
 
@@ -2217,7 +2227,7 @@ function drawSky(t,hw){
       if(!hw){ctx.fillStyle='rgba(120,100,80,.22)';ell(ctx,mx-mr*.3,my-mr*.2,mr*.18,mr*.18);ctx.fill();ell(ctx,mx+mr*.25,my+mr*.3,mr*.12,mr*.12);ctx.fill()}}}
   if(th.clouds){for(const c of cloudSeed){const x=((c.x+t*c.v)%1.3-.15)*W,y=H*c.y,sc=c.s*Math.min(1.2,W/1000);ctx.globalAlpha=.45;ctx.fillStyle='#fff';for(const[dx,dy,r]of[[0,0,40],[38,-14,34],[72,2,30],[-36,6,28],[30,14,36]]){ell(ctx,x+dx*sc,y+dy*sc,r*sc,r*sc*.8);ctx.fill()}}ctx.globalAlpha=1}
   if(th.bats){for(let i=0;i<4;i++){const bx=(t*40*(1+i*.3)+i*300)%(W+200)-100,by=H*.12+i*45+Math.sin(t*2+i)*14;drawBat(ctx,bx,by,10+i*2,t*14+i,'#0b0414')}}
-  if(S&&!hw){if(S.set.shoot)drawShooting(t);if(S.set.weather&&S.set.weather!=='none')drawWeather(S.set.weather,t);if(S.set.land&&S.set.land!=='hills')drawLand(S.set.land,t,th)}
+  if(S&&!hw){if(S.set.shoot)drawShooting(t);if(S.set.weather&&S.set.weather!=='none'&&optEff().weather)drawWeather(S.set.weather,t);if(S.set.land&&S.set.land!=='hills')drawLand(S.set.land,t,th)}
   // hills
   ctx.fillStyle=th.hill;ctx.beginPath();ctx.moveTo(0,H);ctx.lineTo(0,H-46);
   for(let x=0;x<=W;x+=40)ctx.lineTo(x,H-40-Math.sin(x*.006)*16-Math.sin(x*.017)*6);ctx.lineTo(W,H);ctx.closePath();ctx.fill();
@@ -2491,7 +2501,7 @@ function drawGame(t,dt){
   const py=groundY(),tilt=clamp(G.pvx/4000,-.2,.2);
   ctx.globalAlpha=.35;ell(ctx,G.px,py+2,40*kzScale()/.92,8);ctx.fillStyle='#000';ctx.fill();ctx.globalAlpha=1;
   const ks=kzScale();
-  if(S.pet&&PETS[S.pet]&&G.petX!=null)drawPet(ctx,G.petX,py,.36,S.pet,G.t*1.3);
+  if(S.pet&&PETS[S.pet]&&G.petX!=null&&optEff().petGame)drawPet(ctx,G.petX,py,.36,S.pet,G.t*1.3);
   const hopY=G.hop>0?-Math.sin(G.hop*Math.PI)*34:0;
   try{ptDrawGame(py,ks,hopY,tilt,dt)}catch(e){}
   if(!(G.inv>0&&Math.floor(G.t*14)%2))drawKZ(ctx,G.px,py+hopY,ks,S.eq,G.t,tilt+(G.ev==='mirror'?Math.sin(G.t*10)*.08:0));
@@ -2567,14 +2577,14 @@ function renderCos(){
     let act;if(on)act='<b>✓ Надето</b>';else if(own)act=`<button class="btn sm mint" data-eq="${cosTab}:${id}">Надеть</button>`;
     else if(def.src)act=`<small>${srcText(def.src,def)}</small>`;else act=`<button class="btn sm" data-buy="${cosTab}:${id}" ${S.coins<def.price?'disabled':''}>Купить 🪙 ${def.price}</button>`;
     const rr=rarity(def),trying=cosTab==='skin'?SKIN_ORDER[cosSkin]===id&&!on:tryOn[cosTab]===id&&!on;
-    g+=`<div class="it ${on?'on':''} ${trying?'try':''}" ${cosTab==='skin'?`data-sk="${id}"`:`data-try="${cosTab}:${id}"`}><div class="ihead"><div class="itx"><b>${def.n}</b><span class="rar" style="background:${rr.c}">${rr.n}</span>${own&&!on?'<small>есть</small>':''}${(S.inv[cosTab+':'+id]||0)>1?`<span class="cntb">x${S.inv[cosTab+':'+id]}</span>`:''}${own&&def.price?`<button class="btn sm ghost" style="font-size:11px;padding:3px 8px" data-buy="${cosTab}:${id}" ${S.coins<def.price?'disabled':''}>＋ ещё 🪙${def.price}</button>`:''}</div><img class="thumb" alt="" src="${thumb(cosTab,id)}"></div>${act}${def.perk?`<small class="perk">⚡ ${def.perk}</small>`:''}</div>`}
+    g+=`<div class="it ${on?'on':''} ${trying?'try':''}" ${cosTab==='skin'?`data-sk="${id}"`:`data-try="${cosTab}:${id}"`}><div class="ihead"><div class="itx"><b>${def.n}</b><span class="rar" style="background:${rr.c}">${rr.n}</span>${own&&!on?'<small>есть</small>':''}${(S.inv[cosTab+':'+id]||0)>1?`<span class="cntb">x${S.inv[cosTab+':'+id]}</span>`:''}${own&&def.price?`<button class="btn sm ghost" style="font-size:11px;padding:3px 8px" data-buy="${cosTab}:${id}" ${S.coins<def.price?'disabled':''}>＋ ещё 🪙${def.price}</button>`:''}</div><img class="thumb" alt="" ${thAttr(cosTab,id)}></div>${act}${def.perk?`<small class="perk">⚡ ${def.perk}</small>`:''}</div>`}
   $('#items').innerHTML=g||'<p class="hint">В этом разделе нет вещей с таким фильтром</p>';
   renderSkinBar();refreshTop();
 }
 const thumbCache={};
 function thumb(slot,id){
   const skin=slot==='skin'?id:S.eq.skin,key=slot+':'+id+':'+skin;if(thumbCache[key])return thumbCache[key];
-  const c=document.createElement('canvas');c.width=c.height=144;const x=c.getContext('2d');
+  const TS=optEff().lowThumb?84:144,c=document.createElement('canvas');c.width=c.height=TS;const x=c.getContext('2d');if(TS!==144)x.scale(TS/144,TS/144);
   const eq={top:'none',skin,head:'none',caps:'none',shoes:'none',acc:'none',trail:'none',aura:'none',gear:'none',face:'none'};if(slot!=='skin')eq[slot]=id;
   const t=1.3;
   if(slot==='trail'&&id!=='none'){const old=parts,pe=S.set.parts;S.set.parts=true;parts=[];let guard=0;while(parts.length<26&&guard++<400)emitTrail(id,rnd(8,70),rnd(70,128),t+guard*.07);
@@ -2983,6 +2993,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:51,l:'1.3.9',items:['⚡ Ещё больше оптимизации: ауры только в меню или выкл., отключение шейдеров, погоды, питомца и друзей в игре','💤 Экономия: 20 FPS фона, пока открыты окна меню, и 15 FPS, когда игра не в фокусе','🧠 Лёгкие превью в Cosmetics и кнопка очистки кэша картинок; показ нагрузки рядом с FPS']},
  {v:50,l:'1.3.9',items:['😊 Новый раздел Cosmetics → Лица: 180 лиц — глаза, рты и украшения','🛒 40 лиц в магазине, 🎲 50 выпадают в забегах, 🎮 30 за мини-игры, 💎 60 эксклюзивных со свечением и анимацией в Kotograde (галактические, огненные, лазерные, глючные, глаза бездны…)','🆓 9 базовых выражений лица — бесплатно для всех']},
  {v:49,l:'1.3.9',items:['🎨 Кастомизация: «Мои образы» — сохрани 3 наряда и переключай одним нажатием, плюс случайный образ','🐰 Котозаяц: 9 выражений лица, румянец и его цвет, усы, цвет обводки, размер и место в меню, табличка с ником, покачивание, тень, питомец','🎮 Игра: тени на земле — куда упадёт предмет, красная подсветка метеоритов','🖼 Интерфейс: прозрачность окон, форма углов, отключение анимаций и звука кнопок']},
  {v:48,l:'1.3.9',items:['🛍 Мега-пак Cosmetics: 400 новых вещей во всех разделах, включая Gear','🛒 180 обычных вещей в магазине — 10 новых тем (мятная, персиковая, клубничная, небесная, шоколадная…)','🎮 100 вещей за мини-игры — выпадают за победы в шашках, шахматах, дураке, крестиках-ноликах, NoomiClone, Ракете и в саду','💎 120 уникальных вещей только в Kotograde — галактические, фениксовые, бриллиантовые, рубиновые и другие со свечением','🔎 Фильтр в Cosmetics: магазин / мои / эксклюзивы / мини-игры / трофеи']},
@@ -3139,7 +3150,7 @@ addEventListener('keydown',e=>{
 
 let last=performance.now(),T=0,fpsN=0,fpsAcc=0,fpsLast=0;
 function loop(now){
-  {const cap=optEff().fpsCap;if(cap&&now-last<1000/cap-2){requestAnimationFrame(loop);return}}
+  {const oe=optEff();let cap=oe.fpsCap;if(oe.unfocus&&!document.hasFocus())cap=cap?Math.min(cap,15):15;if(oe.bgThr&&!G&&cur!=='menu'&&!['cos','kg','noomi','garden','rocket','mg'].includes(cur))cap=cap?Math.min(cap,20):20;if(cap&&now-last<1000/cap-2){requestAnimationFrame(loop);return}}
   const dt=Math.min(.05,(now-last)/1000);last=now;T+=dt;animateGrain(dt);netStat.fN++;netStat.fT+=dt;if(netStat.fT>=.5){netStat.fps=Math.round(netStat.fN/netStat.fT);netStat.cpu=clamp(Math.round(netStat.work/(netStat.fT*1000)*100),1,100);netStat.work=0;netStat.fN=0;netStat.fT=0}const _w0=performance.now();
   if(S&&S.set.fps){fpsN++;fpsAcc+=now-(fpsLast||now);fpsLast=now;if(fpsAcc>500){$('#fps').textContent=Math.round(fpsN*1000/fpsAcc)+' FPS';fpsN=0;fpsAcc=0}}
   if(G){if(!G.paused&&!G.over){const sp=isAdm()&&S.adm.speed?+S.adm.speed:1;if(sp===1)update(dt);else{const n=Math.ceil(sp);for(let i=0;i<n&&G&&!G.over;i++)update(dt*sp/n)}}if(G)drawGame(T,dt)}else drawMenuScene(T,dt);
@@ -3284,26 +3295,30 @@ if(location.protocol.startsWith('http'))setInterval(()=>{fetch('/ping',{cache:'n
 /* ---------------- settings ---------------- */
 
 /* ---------------- Optimization ---------------- */
-const PERF={quality:{n:'💎 Качество',res:100,fpsCap:0,glow:true,skyFx:true,menuFx:true,pmax:800},balance:{n:'⚖ Баланс',res:85,fpsCap:0,glow:true,skyFx:true,menuFx:true,pmax:400},perf:{n:'🚀 Производительность',res:70,fpsCap:0,glow:false,skyFx:false,menuFx:true,pmax:200},ultra:{n:'🥔 Максимальная скорость',res:50,fpsCap:30,glow:false,skyFx:false,menuFx:false,pmax:80}};
+const PERF={quality:{n:'💎 Качество',res:100,fpsCap:0,glow:true,skyFx:true,menuFx:true,pmax:800,aura:'full',bgThr:false,unfocus:true,shOff:false,ghosts:true,petGame:true,lowThumb:false,weather:true},balance:{n:'⚖ Баланс',res:85,fpsCap:0,glow:true,skyFx:true,menuFx:true,pmax:400,aura:'full',bgThr:true,unfocus:true,shOff:false,ghosts:true,petGame:true,lowThumb:false,weather:true},perf:{n:'🚀 Производительность',res:70,fpsCap:0,glow:false,skyFx:false,menuFx:true,pmax:200,aura:'simple',bgThr:true,unfocus:true,shOff:true,ghosts:true,petGame:true,lowThumb:true,weather:false},ultra:{n:'🥔 Максимальная скорость',res:50,fpsCap:30,glow:false,skyFx:false,menuFx:false,pmax:80,aura:'off',bgThr:true,unfocus:true,shOff:true,ghosts:false,petGame:false,lowThumb:true,weather:false}};
 const PERF_L=['quality','balance','perf','ultra'];let autoL=0,autoLow=0,autoHigh=0,autoLastDown=0;
 try{autoL=clamp(+(localStorage.getItem('kz_autoL')||0),0,3)}catch(e){}
-const OPT_DEF={res:100,fpsCap:0,glow:true,skyFx:true,menuFx:true,pmax:800};
+const OPT_DEF={res:100,fpsCap:0,glow:true,skyFx:true,menuFx:true,pmax:800,aura:'full',bgThr:false,unfocus:true,shOff:false,ghosts:true,petGame:true,lowThumb:false,weather:true};
 function optEff(){const t=typeof S!=='undefined'&&S&&S.set;if(!t||typeof PERF_L==='undefined')return OPT_DEF;const m=t.perf||'auto';if(m==='auto')return PERF[PERF_L[autoL]];if(PERF[m])return PERF[m];
-  return{res:t.res??100,fpsCap:t.fpsCap||0,glow:t.glow!==false,skyFx:t.skyFx!==false,menuFx:t.menuFx!==false,pmax:t.pmax||500}}
+  return{res:t.res??100,fpsCap:t.fpsCap||0,glow:t.glow!==false,skyFx:t.skyFx!==false,menuFx:t.menuFx!==false,pmax:t.pmax||500,aura:t.auraFx||'full',bgThr:!!t.bgThr,unfocus:t.unfocus!==false,shOff:!!t.shOff,ghosts:t.ghosts!==false,petGame:t.petGame!==false,lowThumb:!!t.lowThumb,weather:t.weatherFx!==false}}
 {const d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'shadowBlur');if(d&&d.set)Object.defineProperty(CanvasRenderingContext2D.prototype,'shadowBlur',{get(){return d.get.call(this)},set(v){d.set.call(this,optEff().glow?v:0)},configurable:true})}
-let optResKey='';function optApply(){const e=optEff(),k=e.res;if(k!==optResKey){optResKey=k;try{resize()}catch(er){}}}
-function optRender(){if(!S)return;const t=S.set,e=optEff();$('#sPerf').value=t.perf||'auto';$('#sRes').value=e.res;$('#vRes').textContent=e.res+'%';$('#sFpsCap').value=String(e.fpsCap||0);$('#sGlow').checked=e.glow;$('#sSkyFx').checked=e.skyFx;$('#sMenuFx').checked=e.menuFx;$('#sPmax').value=e.pmax;$('#vPmax').textContent=e.pmax;
+let optResKey='';let optThKey=null,optShKey=null;function optApply(){const e=optEff(),k=e.res;if(k!==optResKey){optResKey=k;try{resize()}catch(er){}}if(e.lowThumb!==optThKey){if(optThKey!==null){for(const q in thumbCache)delete thumbCache[q]}optThKey=e.lowThumb}if(e.shOff!==optShKey){optShKey=e.shOff;try{applyShader()}catch(er){}}}
+function optRender(){if(!S)return;const t=S.set,e=optEff();$('#sPerf').value=t.perf||'auto';$('#sRes').value=e.res;$('#vRes').textContent=e.res+'%';$('#sFpsCap').value=String(e.fpsCap||0);$('#sGlow').checked=e.glow;$('#sSkyFx').checked=e.skyFx;$('#sMenuFx').checked=e.menuFx;$('#sPmax').value=e.pmax;$('#vPmax').textContent=e.pmax;$('#sAuraFx').value=e.aura;$('#sBgThr').checked=e.bgThr;$('#sUnfocus').checked=e.unfocus;$('#sShOff').checked=!e.shOff;$('#sGhosts').checked=e.ghosts;$('#sPetGame').checked=e.petGame;$('#sLowThumb').checked=e.lowThumb;$('#sWeatherFx').checked=e.weather;optMem();
   $('#vPerfNow').textContent='📊 Сейчас: '+(netStat.fps||'—')+' FPS'+((t.perf||'auto')==='auto'?' · авто: '+PERF[PERF_L[autoL]].n:'')}
-function optCustom(k,v){const e=optEff();Object.assign(S.set,{res:e.res,fpsCap:e.fpsCap,glow:e.glow,skyFx:e.skyFx,menuFx:e.menuFx,pmax:e.pmax});S.set[k]=v;S.set.perf='custom';persist();optApply();optRender()}
+function optCustom(k,v){const e=optEff();Object.assign(S.set,{res:e.res,fpsCap:e.fpsCap,glow:e.glow,skyFx:e.skyFx,menuFx:e.menuFx,pmax:e.pmax,auraFx:e.aura,bgThr:e.bgThr,unfocus:e.unfocus,shOff:e.shOff,ghosts:e.ghosts,petGame:e.petGame,lowThumb:e.lowThumb,weatherFx:e.weather});S.set[k]=v;S.set.perf='custom';persist();optApply();optRender()}
 $('#sPerf').onchange=e=>{S.set.perf=e.target.value;if(S.set.perf==='auto'){autoLow=autoHigh=0}persist();optApply();optRender();SND.click();toast('⚡ Режим графики: '+e.target.selectedOptions[0].textContent.split(' — ')[0])};
 $('#sRes').oninput=e=>{$('#vRes').textContent=e.target.value+'%'};$('#sRes').onchange=e=>optCustom('res',+e.target.value);
 $('#sFpsCap').onchange=e=>optCustom('fpsCap',+e.target.value);$('#sGlow').onchange=e=>optCustom('glow',e.target.checked);$('#sSkyFx').onchange=e=>optCustom('skyFx',e.target.checked);$('#sMenuFx').onchange=e=>optCustom('menuFx',e.target.checked);
 $('#sPmax').oninput=e=>{$('#vPmax').textContent=e.target.value};$('#sPmax').onchange=e=>optCustom('pmax',+e.target.value);
+$('#sAuraFx').onchange=e=>optCustom('auraFx',e.target.value);$('#sBgThr').onchange=e=>optCustom('bgThr',e.target.checked);$('#sUnfocus').onchange=e=>optCustom('unfocus',e.target.checked);$('#sShOff').onchange=e=>optCustom('shOff',!e.target.checked);
+$('#sGhosts').onchange=e=>optCustom('ghosts',e.target.checked);$('#sPetGame').onchange=e=>optCustom('petGame',e.target.checked);$('#sLowThumb').onchange=e=>optCustom('lowThumb',e.target.checked);$('#sWeatherFx').onchange=e=>optCustom('weatherFx',e.target.checked);
+function optMem(){let n=0,b=0;for(const k in thumbCache){n++;b+=(thumbCache[k]||'').length}for(const k in petCache){n++;b+=(petCache[k]||'').length}const el=$('#vMem');if(el)el.textContent=`🧠 Кэш картинок: ${n} шт · ~${(b/1048576).toFixed(1)} МБ`}
+$('#sMemClr').onclick=()=>{for(const k in thumbCache)delete thumbCache[k];for(const k in petCache)delete petCache[k];parts=[];menuItems=[];try{SOC.gc.splice(0,Math.max(0,SOC.gc.length-60))}catch(e){}optMem();toast('🧹 Кэш очищен — память освобождена');SND.click()};
 $('#sPerfTest').onclick=()=>{if(!S)return;const b=$('#sPerfTest');b.disabled=true;b.textContent='⏳ Меряю…';S.set.perf='quality';optApply();let n=0,t0=performance.now();
   const step=()=>{n++;if(performance.now()-t0<2500){requestAnimationFrame(step);return}const fps=n/((performance.now()-t0)/1000);const pick=fps>=55?'quality':fps>=45?'balance':fps>=32?'perf':'ultra';
     S.set.perf=pick;persist();optApply();optRender();b.disabled=false;b.textContent='🔍 Автоподбор';toast(`🔍 ${Math.round(fps)} FPS — выбран режим ${PERF[pick].n}`);SND.win()};requestAnimationFrame(step)};
-setInterval(()=>{if(!S||document.hidden)return;if(cur==='set'&&$('#stMain').style.display!=='none')$('#vPerfNow').textContent='📊 Сейчас: '+(netStat.fps||'—')+' FPS'+((S.set.perf||'auto')==='auto'?' · авто: '+PERF[PERF_L[autoL]].n:'');
-  if((S.set.perf||'auto')!=='auto')return;const f=netStat.fps||60,cap=optEff().fpsCap||60;
+setInterval(()=>{if(!S||document.hidden)return;if(cur==='set'&&$('#stMain').style.display!=='none')$('#vPerfNow').textContent='📊 Сейчас: '+(netStat.fps||'—')+' FPS · нагрузка '+(netStat.cpu||0)+'%'+((S.set.perf||'auto')==='auto'?' · авто: '+PERF[PERF_L[autoL]].n:'');
+  if((S.set.perf||'auto')!=='auto')return;if(!document.hasFocus()||(!G&&cur!=='menu')){autoLow=0;return}const f=netStat.fps||60,cap=optEff().fpsCap||60;
   if(f<Math.min(44,cap-8)){autoLow++;autoHigh=0}else if(f>=Math.min(57,cap-2)){autoHigh++;autoLow=0}else{autoLow=0;autoHigh=0}
   if(autoLow>=4&&autoL<3){autoL++;autoLow=0;autoLastDown=Date.now();try{localStorage.setItem('kz_autoL',autoL)}catch(e){}optApply();toast('⚡ Авто-оптимизация: '+PERF[PERF_L[autoL]].n)}
   else if(autoHigh>=30&&autoL>0&&Date.now()-autoLastDown>90000){autoL--;autoHigh=0;try{localStorage.setItem('kz_autoL',autoL)}catch(e){}optApply()}},1000);
@@ -3390,7 +3405,7 @@ function applyShader(){
   const parts=[];
   if(f.contrast)parts.push(`contrast(${L(f.contrast)})`);if(f.saturate)parts.push(`saturate(${L(f.saturate)})`);if(f.brightness)parts.push(`brightness(${L(f.brightness)})`);
   if(f.sepia)parts.push(`sepia(${f.sepia*k})`);if(f.gray)parts.push(`grayscale(${f.gray*k})`);if(f.hue)parts.push(`hue-rotate(${f.hue*k}deg)`);
-  cv.style.filter=parts.join(' ');
+  cv.style.filter=optEff().shOff?'':parts.join(' ');
   const fx=$('#fx');
   fx.querySelector('.vig').style.opacity=(sh.vig||0)*k;
   fx.querySelector('.scan').style.opacity=(sh.scan||0)*k;
@@ -3547,11 +3562,19 @@ $('#sSh').oninput=e=>{S.set.shStr=+e.target.value;$('#vSh').textContent=S.set.sh
 /* ---------------- kotograde ---------------- */
 let kgSel={},kgTarget=null,kgSpin=null,kgResult=null,kgCoins=0,kgSortDesc=false;
 const SLOT_RU={top:'Кофта',skin:'Скин',head:'Голова',caps:'Кепка',acc:'Аксессуар',shoes:'Обувь',trail:'След',aura:'Аура',gear:'Gear',face:'Лицо'};
-function kInfo(k){const[sl,id]=k.split(':');const d=itemDef(sl,id);return{sl,id,n:d.n,v:itemVal(sl,id),rc:rarity(d).c,img:thumb(sl,id)}}
+
+/* ---- lazy thumbnails: generated only when the card scrolls into view ---- */
+const TH_BLANK='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+let thObs=null;function thLazy(sl,id){const skin=sl==='skin'?id:(S&&S.eq.skin),key=sl+':'+id+':'+skin;return thumbCache[key]||TH_BLANK}
+function thAttr(sl,id){const src=thLazy(sl,id);return src===TH_BLANK?`src="${TH_BLANK}" data-th="${sl}:${id}"`:`src="${src}"`}
+function thScan(root){if(!('IntersectionObserver'in window)){for(const im of(root||document).querySelectorAll('img[data-th]')){const[sl,...r]=im.dataset.th.split(':');im.src=thumb(sl,r.join(':'));im.removeAttribute('data-th')}return}
+  if(!thObs)thObs=new IntersectionObserver(es=>{let n=0;for(const e of es){if(!e.isIntersecting)continue;const im=e.target;if(!im.dataset.th){thObs.unobserve(im);continue}const[sl,...r]=im.dataset.th.split(':');try{im.src=thumb(sl,r.join(':'))}catch(er){}im.removeAttribute('data-th');thObs.unobserve(im);n++}},{rootMargin:'200px'});
+  for(const im of(root||document).querySelectorAll('img[data-th]'))thObs.observe(im)}
+function kInfo(k){const[sl,id]=k.split(':');const d=itemDef(sl,id);return{sl,id,n:d.n,v:itemVal(sl,id),rc:rarity(d).c,get img(){return thumb(sl,id)}}}
 function kgInVal(){let v=0;for(const k in kgSel)v+=itemVal(...k.split(':'))*kgSel[k];return v+(kgCoins||0)}
 function kgSelCount(){let n=0;for(const k in kgSel)n+=kgSel[k];return n}
 function kgChance(){if(!kgTarget||!kgSelCount())return 0;const tv=itemVal(...kgTarget.split(':'));return clamp(kgInVal()/tv*.9,.01,.75)}
-function kgCard(k,extra,attr,badge='',vpre=''){const i=kInfo(k);return `<div class="kgc ${extra||''}" style="--rc:${i.rc}" ${attr}><img src="${i.img}" alt="">${(S.inv[k]||0)>1?`<span class="cnt">x${S.inv[k]}</span>`:''}${badge}<div class="v">${vpre}🪙 ${i.v}</div><div class="n">${i.n}</div><small>${SLOT_RU[i.sl]}</small></div>`}
+function kgCard(k,extra,attr,badge='',vpre=''){const i=kInfo(k);return `<div class="kgc ${extra||''}" style="--rc:${i.rc}" ${attr}><img ${thAttr(i.sl,i.id)} alt="" loading="lazy">${(S.inv[k]||0)>1?`<span class="cnt">x${S.inv[k]}</span>`:''}${badge}<div class="v">${vpre}🪙 ${i.v}</div><div class="n">${i.n}</div><small>${SLOT_RU[i.sl]}</small></div>`}
 function renderKG(){
   // inventory
   const inv=Object.keys(S.inv).filter(k=>S.inv[k]>0).sort((a,b)=>itemVal(...b.split(':'))-itemVal(...a.split(':')));
@@ -3949,7 +3972,7 @@ function ptPop(){const el=$('#ptPop'),i=PT.inv,a=PT.ask;
 function ptOthers(){return PT.pid&&S?PT.mem.filter(x=>x.gid!==S.gid):[]}
 function ptDrawMenu(x,s,t){const o=ptOthers();o.forEach((m,i)=>{const ox=x+(i===0?108:-162)*s,sc=s*.8,y=H-46+Math.sin(t*2.4+i*2)*-3;ctx.globalAlpha=.3;ell(ctx,ox,H-44,40*sc,8*sc);ctx.fillStyle='#000';ctx.fill();ctx.globalAlpha=1;drawKZ(ctx,ox,y,sc,m.eq,t+1.7*(i+1),Math.sin(t*1.2+i)*.05);
   ctx.save();ctx.font='900 '+Math.round(13+5*s)+'px Trebuchet MS,sans-serif';ctx.textAlign='center';ctx.lineWidth=5;ctx.strokeStyle=INK;const ny=y-160*sc,tx=(PT.lead===m.gid?'👑 ':'')+m.nick+(PT.ready[m.gid]?' ✅':'');ctx.strokeText(tx,ox,ny);ctx.fillStyle='#fff';ctx.fillText(tx,ox,ny);ctx.restore()})}
-function ptDrawGame(py,ks,hopY,tilt,dt){if(!PT.pid)return;const now=Date.now();for(const m of ptOthers()){const p=PT.pos[m.gid];if(!p||now-p.t>2000)continue;p.sx=p.sx==null?p.x:p.sx+(p.x-p.sx)*Math.min(1,dt*10);const gx=p.sx*W;
+function ptDrawGame(py,ks,hopY,tilt,dt){if(!PT.pid)return;const now=Date.now();if(optEff().ghosts)for(const m of ptOthers()){const p=PT.pos[m.gid];if(!p||now-p.t>2000)continue;p.sx=p.sx==null?p.x:p.sx+(p.x-p.sx)*Math.min(1,dt*10);const gx=p.sx*W;
     ctx.globalAlpha=.25;ell(ctx,gx,py+2,36*ks/.92,7);ctx.fillStyle='#000';ctx.fill();ctx.globalAlpha=.85;drawKZ(ctx,gx,py+p.h,ks*.92,m.eq,G.t+1.3,p.tl);ctx.globalAlpha=1}
   if(now-PT.lastPos>160&&!G.over&&!G.paused){PT.lastPos=now;ptAll({t:'pos',x:+(G.px/W).toFixed(4),h:Math.round(hopY),tl:+tilt.toFixed(3)})}}
 /* profile */
