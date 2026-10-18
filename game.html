@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=75;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=76;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3065,6 +3065,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:76,l:'1.4.0',items:['😀 Эмоции: 30 эмоций с анимацией котозайца и звуком','🎡 Колесо эмоций: 8 эмоций на страницу, стрелки ◀ ▶ для следующих страниц, выбор мышкой или цифрами 1–8','⚙ Вкладка «Эмоции» в Settings: клавиша колеса (по умолчанию Q), порядок и набор эмоций, звук','💬 В забеге эмоция появляется над котозайцем, друзья в пати тоже её видят','📱 Кнопка 😀 в углу экрана для телефона']},
  {v:75,l:'1.4.0',items:['⚖ Баланс монет в мини-играх: награды выровнены (≈30–60 🪙 за минуту хорошей игры) и мягкий дневной лимит — после 1500 🪙 награда ×0.5, после 3000 ×0.2','🏡 Сад 3.0: новые участки — Теплица (растения растут на 30% быстрее, 6 экзотических растений) и Фруктовый сад','🌳 8 фруктовых деревьев: сажаешь один раз — плоды много раз','🏭 6 зданий: мельница, сыроварня, соковыжималка, пекарня, ткацкий станок, кондитерская — 7 новых продуктов и 10 новых блюд','🐛 Вредители (убирай гусениц, божьи коровки защищают), 🌷 времена года с бонусами','📜 Летопись садовода — 45 страниц с наградами, 🎁 награда за каждый уровень сада, ♻ компостер','🔧 3 новых улучшения, 🎨 6 новых украшений, 🏅 5 достижений']},
  {v:74,l:'1.4.0',items:['🎨 30 новых скинов: самоцветы (рубин, сапфир, аметист, топаз), переливающиеся (закатный, полярное сияние, туманность, сахарная вата), неоновые, металлические и другие','🐰 24 новых питомца, из них 12 в костюмах (пиратик, поварёнок, ниндзёнок, королёк…)','🥚 Новые яйца: Костюмное и Самоцветное','🕹 3 новые мини-игры: 🏓 Пинг-понг против бота, 🎯 Тир, 🐭 Мышебой','🏅 6 новых достижений']},
  {v:73,l:'1.4.0',items:['📜 Главное меню теперь можно листать вниз колёсиком мыши или пальцем — все кнопки помещаются на любом экране']},
@@ -6403,6 +6404,95 @@ document.addEventListener('click',e=>{if(cur!=='garden'||!S)return;const b=e.tar
   if(gLevel()>g.lvRew){for(let l=g.lvRew+1;l<=gLevel();l++){const c2=l*40;S.coins+=c2;const ids=Object.keys(PLANTS).filter(k=>PLANTS[k].lv<=l&&!PLANTS[k].tree&&!PLANTS[k].gh&&!PLANTS[k].gold).sort((a,b)=>PLANTS[b].lv-PLANTS[a].lv);if(ids[0])g.seeds[ids[0]]=(g.seeds[ids[0]]||0)+3;gTip('🎁 Награда за '+l+' уровень сада: +'+c2+' 🪙'+(ids[0]?' и 3 '+PLANTS[ids[0]].e:''),'#ffe066')}g.lvRew=gLevel();persist();gRender()}}catch(e){if(!window._g3err){window._g3err=1;console.error('g3step',e)}}}}
 ACH.push({id:'g3_field',n:'Землевладелец',d:'Открыть Теплицу и Фруктовый сад',k:'gFields',goal:2,r:1500,i:'🏡'},{id:'g3_tree',n:'Садовод-плодовод',d:'Собрать 50 урожаев с деревьев',k:'gTreeH',goal:50,r:800,i:'🌳'},{id:'g3_bld',n:'Фабрикант',d:'Сделать 100 продуктов в зданиях',k:'gBuild',goal:100,r:1200,i:'🏭'},{id:'g3_bug',n:'Гроза гусениц',d:'Убрать 50 вредителей',k:'gBugs',goal:50,r:300,i:'🐛'},{id:'g3_chr',n:'Летописец',d:'Заполнить 30 страниц летописи',k:'gChron',goal:30,r:2000,i:'📜'});
 Object.assign(STAT_RU,{gTreeH:['🌳','Урожаев с деревьев'],gBuild:['🏭','Продуктов из зданий'],gBugs:['🐛','Убрано вредителей'],gChron:['📜','Страниц летописи']});
+
+/* ================= Emotes: 30 emotes, wheel with pages, key bind ================= */
+const EMO={
+ wave:['👋','Привет!','jump','boing'],laugh:['😂','Ха-ха-ха!','jelly','laugh'],love:['😍','Люблю!','hearts','love'],cry:['😭','Плачу…','shiver','cry'],angry:['😡','Грр!','shake','angry'],
+ cool:['😎','Я крутой','none','whistle'],think:['🤔','Хм-м…','tilt','hmm'],wow:['😮','Ва-ау!','jump','wow'],party:['🥳','Ура!','confetti','tada'],sleep:['😴','Хр-р…','sleep','snore'],
+ dance:['💃','Танцуем!','spin','dance'],thumbs:['👍','Класс!','jump','boing'],clap:['👏','Браво!','none','clap'],gg:['🤝','GG, хорошая игра!','jump','tada'],sorry:['🙏','Извини…','tilt','oops'],
+ scared:['😱','Ой-ой-ой!','shiver','scared'],lol:['🤣','Лол!','jelly','laugh'],shh:['🤫','Тс-с…','none','shh'],kiss:['😘','Чмок!','hearts','kiss'],facepalm:['🤦','Ну как так…','tilt','oops'],
+ fire:['🔥','Огонь!','none','fire'],star:['⭐','Я звезда!','spin','tada'],carrot:['🥕','Морковку мне!','jump','boing'],ghost:['👻','Бу-у-у!','ghost','ghost'],rocket:['🚀','Полетели!','fly','rocket'],
+ crown:['👑','Я король!','none','fanfare'],muscle:['💪','Сила!','jump','angry'],sneeze:['🤧','Апчхи!','jump','sneeze'],hi5:['🙌','Дай пять!','jump','clap'],bye:['🖐','Пока-пока!','tilt','boing']};
+const EMO_SND={boing:()=>SND.boing(),laugh:()=>{for(let i=0;i<4;i++)setTimeout(()=>sfx(700-i*40,.08,'triangle',.04,200),i*110)},love:()=>SND.heart(),cry:()=>sfx(500,.6,'sine',.04,-300),angry:()=>sfx(150,.3,'sawtooth',.05,-40),whistle:()=>sfx(1400,.4,'sine',.04,600),hmm:()=>sfx(260,.5,'sine',.03,30),wow:()=>sfx(400,.4,'sine',.04,500),
+ tada:()=>playTune([392,523,659,784],110),snore:()=>sfx(110,.6,'sawtooth',.04,40),dance:()=>playTune([523,659,523,784],120),clap:()=>{for(let i=0;i<5;i++)setTimeout(()=>sfx(1800+Math.random()*400,.03,'square',.05),i*110)},oops:()=>sfx(300,.25,'triangle',.05,-200),scared:()=>sfx(900,.4,'sawtooth',.03,-700),
+ shh:()=>sfx(3000,.3,'sine',.01,-500),kiss:()=>sfx(1200,.08,'sine',.05,-600),fire:()=>sfx(200,.4,'sawtooth',.03,300),ghost:()=>sfx(300,.6,'sine',.04,-150),rocket:()=>sfx(300,.8,'sine',.04,900),fanfare:()=>playTune([523,659,784,1046],140),sneeze:()=>{sfx(900,.12,'triangle',.04,400);setTimeout(()=>sfx(160,.3,'sawtooth',.06,-60),250)}};
+const EMO_KEYS=Object.keys(EMO);
+function emoCfg(){const x=XS();x.emo=Object.assign({key:'KeyQ',list:EMO_KEYS.slice(),snd:true,party:true},x.emo||{});x.emo.list=x.emo.list.filter(k=>EMO[k]);if(!x.emo.list.length)x.emo.list=EMO_KEYS.slice();return x.emo}
+let emoLast=0,emoShow=null;const emoOthers={};
+function emoPlay(k,remote,who){const E=EMO[k];if(!E||!S)return;if(!remote){if(Date.now()-emoLast<1200)return;emoLast=Date.now();stat('emotes');const ec=emoCfg();if(ec.party&&PT.pid)try{ptAll({t:'emo',k})}catch(e){}}
+  if(remote){emoOthers[who]={k,t:2.4};if(!G)toast(E[0]+' '+socNick(who)+': '+E[1]);return}
+  emoShow={k,t:2.4};if(emoCfg().snd&&EMO_SND[E[3]])EMO_SND[E[3]]();
+  if(!G&&cur==='menu'){say(E[0]+' '+E[1],2.2);const a=E[2];if(a==='jump')poke.vy=-560;if(a==='spin')poke.spin=2.5;if(a==='jelly')funFx2.jelly=2.5;if(a==='shiver'||a==='shake')funFx2.shiver=2;if(a==='tilt')funFx2.dizzy=1.6;if(a==='fly')funFx2.fly=3;if(a==='ghost')funFx.ghost=2.5;if(a==='hearts')emojiRain(['💖','💕'],14,2);if(a==='confetti')confetti(60);if(a==='sleep'){kzSleep=true;lastInput=performance.now()-30000}}}
+{const _pr=ptRecv;ptRecv=function(m){if(m&&m.t==='emo'){if(m.from!==S.gid&&EMO[m.k])emoPlay(m.k,true,m.from);return}return _pr.apply(this,arguments)}}
+/* draw emotes in game above players */
+{const _hud=drawCoreHud;drawCoreHud=function(){_hud.apply(this,arguments);try{const dt=1/60;const drawB=(x,y,e,t)=>{const a=Math.min(1,t*2),s=1+Math.max(0,(t-2.1))*1.5;ctx.save();ctx.globalAlpha=a;ctx.translate(x,y-(2.4-t)*10);ctx.scale(s,s);ell(ctx,0,0,30,28);ctx.fillStyle='#fff';ctx.fill();ctx.lineWidth=3;ctx.strokeStyle=INK;ctx.stroke();ctx.beginPath();ctx.moveTo(-6,24);ctx.lineTo(0,38);ctx.lineTo(8,24);ctx.closePath();ctx.fillStyle='#fff';ctx.fill();ctx.font='34px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(e,0,2);ctx.restore()};
+  if(emoShow){emoShow.t-=dt;if(emoShow.t<=0)emoShow=null;else{const py=groundY(),ks=kzScale();drawB(G.px,py-175*ks,EMO[emoShow.k][0],emoShow.t)}}
+  for(const g in emoOthers){const o=emoOthers[g];o.t-=dt;if(o.t<=0){delete emoOthers[g];continue}const p=PT.pos&&PT.pos[g];if(p){const ks=kzScale();drawB((p.sx??p.x)*W,groundY()-170*ks,EMO[o.k][0],o.t)}}}catch(e){}}}
+/* wheel */
+let emoWheel=null;
+function emoWheelOpen(){if(emoWheel||!S)return;const d=document.createElement('div');d.id='emoWheel';document.body.appendChild(d);emoWheel={el:d,page:0,hov:-1,t:performance.now()};emoWheelRender()}
+function emoWheelClose(play){if(!emoWheel)return;const w=emoWheel;emoWheel=null;if(play&&w.hov>=0){const k=emoCfg().list[w.page*8+w.hov];if(k)emoPlay(k)}w.el.remove()}
+function emoPages(){return Math.max(1,Math.ceil(emoCfg().list.length/8))}
+function emoWheelRender(){const w=emoWheel;if(!w)return;const L=emoCfg().list,P=emoPages();w.page=(w.page+P)%P;let h='<div class="ew"><div class="ewc"></div>';
+  for(let i=0;i<8;i++){const k=L[w.page*8+i],a=-Math.PI/2+i*Math.PI/4,x=Math.cos(a)*118,y=Math.sin(a)*118;h+=`<div class="ews ${w.hov===i?'hov':''} ${k?'':'empty'}" data-ews="${i}" style="transform:translate(${x}px,${y}px)">${k?`<span class="e">${EMO[k][0]}</span><small>${i+1}</small>`:''}</div>`}
+  const hk=w.hov>=0&&L[w.page*8+w.hov];h+=`<div class="ewmid">${hk?`<b>${EMO[hk][0]}</b><span>${EMO[hk][1]}</span>`:'<span>Выбери эмоцию</span>'}</div>`;
+  if(P>1)h+=`<button class="ewa l" data-ewp="-1">◀</button><button class="ewa r" data-ewp="1">▶</button><div class="ewpg">${Array.from({length:P},(_,i)=>`<i class="${i===w.page?'on':''}"></i>`).join('')}<span>${w.page+1}/${P}</span></div>`;
+  w.el.innerHTML=h+'</div><div class="ewhint">Мышка или 1–8 — выбрать · ◀ ▶ / колёсико — страницы · отпусти клавишу или кликни</div>'}
+(function(){const st=document.createElement('style');st.textContent=`
+#emoWheel{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,6,30,.35);user-select:none}
+#emoWheel .ew{position:relative;width:340px;height:340px;max-width:92vw;max-height:92vw}
+#emoWheel .ewc{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(255,248,236,.96) 0 34%,rgba(42,32,80,.92) 35% 100%);border:4px solid var(--ink);box-shadow:0 6px 0 var(--ink)}
+#emoWheel .ews{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:#fff8ec;border:3px solid var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .1s}
+#emoWheel .ews .e{font-size:34px;line-height:1}#emoWheel .ews small{position:absolute;right:-2px;bottom:-4px;background:#2a2050;color:#fff;border-radius:8px;font-size:10px;padding:0 4px;font-weight:900}
+#emoWheel .ews.hov{background:#ffe066;transform-origin:center}#emoWheel .ews.empty{opacity:.25;cursor:default}
+#emoWheel .ewmid{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;font-weight:900;color:var(--ink);width:110px}
+#emoWheel .ewmid b{display:block;font-size:40px}#emoWheel .ewmid span{font-size:13px}
+#emoWheel .ewa{position:absolute;top:50%;margin-top:-22px;width:44px;height:44px;border-radius:50%;border:3px solid var(--ink);background:#ffe066;font-size:18px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+#emoWheel .ewa.l{left:-58px}#emoWheel .ewa.r{right:-58px}
+#emoWheel .ewpg{position:absolute;left:50%;bottom:-36px;transform:translateX(-50%);display:flex;gap:6px;align-items:center;color:#fff;font-weight:900;font-size:13px}
+#emoWheel .ewpg i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.4);display:inline-block}#emoWheel .ewpg i.on{background:#ffe066}
+#emoWheel .ewhint{margin-top:48px;color:#fff;font-weight:800;font-size:12px;text-shadow:0 2px 0 #000;text-align:center;padding:0 12px}
+#emoBtn{position:fixed;right:14px;bottom:14px;z-index:30;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:#fff8ec;font-size:26px;cursor:pointer;box-shadow:0 3px 0 var(--ink);display:none}
+.emogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px}
+.emogrid .emc{background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:6px;text-align:center;font-weight:800;font-size:12px;cursor:pointer;position:relative}
+.emogrid .emc b{display:block;font-size:30px}.emogrid .emc.off{opacity:.4}.emogrid .emc .n{position:absolute;left:4px;top:2px;font-size:10px;background:#2a2050;color:#fff;border-radius:6px;padding:0 4px}`;document.head.appendChild(st);
+  const b=document.createElement('button');b.id='emoBtn';b.title='Эмоции';b.textContent='😀';document.body.appendChild(b);b.onclick=e=>{e.stopPropagation();if(emoWheel)emoWheelClose(false);else{emoWheelOpen();emoWheel.click=true}}})();
+setInterval(()=>{const b=$('#emoBtn');if(b)b.style.display=S&&(cur==='menu'||cur==='game')?'block':'none'},500);
+function emoHover(e){const w=emoWheel;if(!w)return;const r=w.el.querySelector('.ew').getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy);let h=-1;if(d>50&&d<r.width*.62){const a=(Math.atan2(dy,dx)+Math.PI/2+Math.PI*2+Math.PI/8)%(Math.PI*2);h=Math.floor(a/(Math.PI/4))%8}if(h!==w.hov){w.hov=h;emoWheelRender()}}
+addEventListener('mousemove',e=>{if(emoWheel)emoHover(e)});
+addEventListener('wheel',e=>{if(!emoWheel)return;e.preventDefault();emoWheel.page+=e.deltaY>0?1:-1;emoWheel.hov=-1;emoWheelRender()},{passive:false});
+document.addEventListener('pointerdown',e=>{if(!emoWheel)return;const p=e.target.closest('[data-ewp]');if(p){e.preventDefault();e.stopPropagation();emoWheel.page+=+p.dataset.ewp;emoWheel.hov=-1;emoWheelRender();return}const s=e.target.closest('[data-ews]');if(s){e.preventDefault();e.stopPropagation();emoWheel.hov=+s.dataset.ews;emoWheelClose(true);return}if(!e.target.closest('#emoWheel .ew')&&e.target.id!=='emoBtn'){e.stopPropagation();emoWheelClose(false)}},true);
+function emoTyping(){const a=document.activeElement;return a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT')}
+addEventListener('keydown',e=>{if(!S)return;const ec=emoCfg();if(emoCapture){e.preventDefault();e.stopPropagation();if(e.code!=='Escape'){ec.key=e.code;persist();toast('😀 Колесо эмоций: клавиша '+keyName(e.code))}emoCapture=false;emoSetRender();return}
+  if(emoWheel){if(e.code==='Escape'){emoWheelClose(false);e.preventDefault();return}if(e.code==='ArrowLeft'||e.code==='ArrowRight'){e.preventDefault();e.stopPropagation();emoWheel.page+=e.code==='ArrowRight'?1:-1;emoWheel.hov=-1;emoWheelRender();return}const n=+(e.key||'');if(n>=1&&n<=8){e.preventDefault();e.stopPropagation();emoWheel.hov=n-1;emoWheelClose(true);return}}
+  if(e.code===ec.key&&!e.repeat&&!emoTyping()&&(cur==='menu'||cur==='game')){e.preventDefault();e.stopPropagation();if(emoWheel)emoWheelClose(true);else emoWheelOpen()}},true);
+addEventListener('keyup',e=>{if(!S||!emoWheel)return;if(e.code===emoCfg().key){if(performance.now()-emoWheel.t>280)emoWheelClose(true)}},true);
+let emoCapture=false;
+function keyName(c){return!c?'—':c.startsWith('Key')?c.slice(3):c.startsWith('Digit')?c.slice(5):({Space:'Пробел',Tab:'Tab',Backquote:'Ё / `',ShiftLeft:'Shift',ControlLeft:'Ctrl',AltLeft:'Alt',Enter:'Enter'}[c]||c)}
+/* settings tab */
+function emoSetInit(){const tabs=$('#setTabs');if(!tabs||$('#stEmo'))return;tabs.insertAdjacentHTML('beforeend','<button class="btn sm" data-st="emo">😀 Эмоции</button>');tabs.parentElement.insertAdjacentHTML('beforeend','<div id="stEmo" style="display:none"></div>')}
+function emoSetRender(){const el=$('#stEmo');if(!el||!S)return;const ec=emoCfg(),L=ec.list,P=Math.ceil(L.length/8);
+  let h=`<p class="sub">Колесо эмоций: зажми клавишу, наведи мышку на эмоцию и отпусти. Или нажми клавишу один раз и кликни. Ещё есть кнопка 😀 в углу экрана — удобно на телефоне. В колесе 8 эмоций на страницу, остальные — на следующих страницах (стрелки ◀ ▶).</p>
+  <div class="opt"><label>⌨ Клавиша колеса эмоций</label><div class="row" style="gap:6px"><span class="chip" style="min-width:70px;justify-content:center">${emoCapture?'нажми клавишу…':keyName(ec.key)}</span><button class="btn sm" data-emokey>✏ Изменить</button><button class="btn sm ghost" data-emokeydef>Q по умолчанию</button></div></div>
+  <div class="opt tg"><label>🔊 Звук эмоций</label><input type="checkbox" data-emoset="snd" ${ec.snd?'checked':''}></div>
+  <div class="opt tg"><label>🎉 Показывать эмоции друзьям в пати</label><input type="checkbox" data-emoset="party" ${ec.party?'checked':''}></div>
+  <div class="row" style="justify-content:space-between;margin-top:10px"><h4 style="margin:0">🎡 Моё колесо: ${L.length} эмоций · ${P} ${P===1?'страница':P<5?'страницы':'страниц'}</h4><div class="row" style="gap:6px"><button class="btn sm ghost" data-emoall>Все 30</button><button class="btn sm ghost" data-emonone>Очистить</button><button class="btn sm mint" data-emotest>▶ Открыть колесо</button></div></div>
+  <p class="hint" style="margin:4px 0">Нажми на эмоцию, чтобы убрать её из колеса или добавить в конец. Номер — место в колесе (страница·слот). Стрелки ◀ ▶ меняют порядок.</p><div class="emogrid">`;
+  L.forEach((k,i)=>{h+=`<div class="emc" data-emot="${k}"><span class="n">${Math.floor(i/8)+1}·${i%8+1}</span><b>${EMO[k][0]}</b>${EMO[k][1]}<div class="row" style="gap:2px;justify-content:center;margin-top:3px"><button class="btn sm ghost" style="padding:0 6px;font-size:11px" data-emomv="${i}:-1">◀</button><button class="btn sm ghost" style="padding:0 6px;font-size:11px" data-emomv="${i}:1">▶</button></div></div>`});
+  h+='</div>';const off=EMO_KEYS.filter(k=>!L.includes(k));if(off.length){h+=`<h4 style="margin:10px 0 4px">Не в колесе (${off.length})</h4><div class="emogrid">${off.map(k=>`<div class="emc off" data-emot="${k}"><b>${EMO[k][0]}</b>${EMO[k][1]}</div>`).join('')}</div>`}
+  el.innerHTML=h}
+{const _sst=setSetTab;setSetTab=function(t){_sst.apply(this,arguments);emoSetInit();const el=$('#stEmo');if(el){el.style.display=t==='emo'?'block':'none';if(t==='emo')emoSetRender()}}}
+emoSetInit();
+document.addEventListener('click',e=>{if(!S||cur!=='set')return;const b=e.target.closest('[data-emokey],[data-emokeydef],[data-emoall],[data-emonone],[data-emotest],[data-emomv],[data-emot]');if(!b)return;const ec=emoCfg();
+  if(b.hasAttribute('data-emokey')){emoCapture=true;emoSetRender();return}if(b.hasAttribute('data-emokeydef')){ec.key='KeyQ';persist();emoSetRender();return}
+  if(b.hasAttribute('data-emoall')){ec.list=EMO_KEYS.slice();persist();emoSetRender();return}if(b.hasAttribute('data-emonone')){ec.list=[];persist();emoSetRender();return}
+  if(b.hasAttribute('data-emotest')){if(!ec.list.length){toast('Колесо пустое — добавь эмоции');return}emoWheelOpen();emoWheel.click=true;return}
+  if(b.dataset.emomv){e.stopPropagation();const[i,d]=b.dataset.emomv.split(':').map(Number),j=i+d;if(j<0||j>=ec.list.length)return;[ec.list[i],ec.list[j]]=[ec.list[j],ec.list[i]];persist();emoSetRender();return}
+  if(b.dataset.emot){const k=b.dataset.emot,i=ec.list.indexOf(k);if(i>=0)ec.list.splice(i,1);else ec.list.push(k);persist();SND.click();emoSetRender()}});
+document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.emoset;if(!k||!S)return;emoCfg()[k]=e.target.checked;persist()});
+ACH.push({id:'e_emo10',n:'Эмоциональный',d:'Показать 10 эмоций',k:'emotes',goal:10,r:100,i:'😀'},{id:'e_emo100',n:'Душа компании',d:'Показать 100 эмоций',k:'emotes',goal:100,r:500,i:'🥳'});
+Object.assign(STAT_RU,{emotes:['😀','Эмоций показано']});
+HELP.push(['😀 Эмоции','Колесо эмоций: клавиша Q (меняется в Settings → Эмоции) или кнопка 😀 в углу. 30 эмоций, по 8 на страницу, стрелки ◀ ▶. В пати друзья видят твои эмоции.']);
 
 resize();
 const sess=lsGet('kz_session');

@@ -1,9 +1,9 @@
 {
- "version": 75,
+ "version": 76,
  "label": "1.4.0",
- "name": "1.4.0: баланс мини-игр и Сад 3.0",
+ "name": "1.4.0: эмоции и колесо эмоций",
  "file": "game.html",
- "sha256": "bbae4b34274212455bb9e46b2b43ae8d4d0684fbf40542d0213ff6329430a5b5",
+ "sha256": "944158721f0f31e9d49b2a6bcf5dc82452aaed78b48f6162a495dcb0958e9f1e",
  "date": "2026-10-18",
  "exe": {
   "version": 4,
