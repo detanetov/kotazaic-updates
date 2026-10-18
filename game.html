@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=77;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=78;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3065,6 +3065,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:78,l:'1.4.0',items:['💃 В колесе танцев вместо смайликов теперь твой котозаяц: наведи курсор — он покажет танец','⌨ Колесо танцев открывается на V (можно поменять в Settings → Эмоции)','🧹 Убрана кнопка танцев в углу экрана']},
  {v:77,l:'1.4.0',items:['💃 Эмоции стали танцами: 30 танцев котозайца с музыкой — шаффл, твист, лунная походка, робот, флосс, дэб, казачок, брейк-данс, сальто, канкан, тектоник, летка-енька и другие','🎡 Колесо танцев по 8 на страницу, стрелки ◀ ▶, клавиша Q (меняется в Settings → Эмоции)','🕺 Танцуй в меню и прямо в забеге, друзья в пати видят твой танец','🏅 Достижение «Король танцпола»']},
  {v:76,l:'1.4.0',items:['😀 Эмоции: 30 эмоций с анимацией котозайца и звуком','🎡 Колесо эмоций: 8 эмоций на страницу, стрелки ◀ ▶ для следующих страниц, выбор мышкой или цифрами 1–8','⚙ Вкладка «Эмоции» в Settings: клавиша колеса (по умолчанию Q), порядок и набор эмоций, звук','💬 В забеге эмоция появляется над котозайцем, друзья в пати тоже её видят','📱 Кнопка 😀 в углу экрана для телефона']},
  {v:75,l:'1.4.0',items:['⚖ Баланс монет в мини-играх: награды выровнены (≈30–60 🪙 за минуту хорошей игры) и мягкий дневной лимит — после 1500 🪙 награда ×0.5, после 3000 ×0.2','🏡 Сад 3.0: новые участки — Теплица (растения растут на 30% быстрее, 6 экзотических растений) и Фруктовый сад','🌳 8 фруктовых деревьев: сажаешь один раз — плоды много раз','🏭 6 зданий: мельница, сыроварня, соковыжималка, пекарня, ткацкий станок, кондитерская — 7 новых продуктов и 10 новых блюд','🐛 Вредители (убирай гусениц, божьи коровки защищают), 🌷 времена года с бонусами','📜 Летопись садовода — 45 страниц с наградами, 🎁 награда за каждый уровень сада, ♻ компостер','🔧 3 новых улучшения, 🎨 6 новых украшений, 🏅 5 достижений']},
@@ -6565,6 +6566,46 @@ document.getElementById('emoBtn').textContent='💃';
 ACH.push({id:'d_all',n:'Король танцпола',d:'Станцевать 100 раз',k:'dances',goal:100,r:600,i:'🕺'});
 Object.assign(STAT_RU,{dances:['💃','Танцев станцовано']});
 for(const h of HELP)if(h[0]==='😀 Эмоции'){h[0]='💃 Эмоции-танцы';h[1]='Колесо танцев: клавиша Q (меняется в Settings → Эмоции) или кнопка 💃 в углу. 30 танцев с музыкой, по 8 на страницу, стрелки ◀ ▶. Друзья в пати видят твой танец.'}
+
+/* ---- dance wheel v2: kotozayac previews, hover = dance, bind V, no corner button ---- */
+{const b=document.getElementById('emoBtn');if(b)b.remove()}
+{const _ec=emoCfg;emoCfg=function(){const c=_ec();if(!c.v2){c.v2=1;if(c.key==='KeyQ')c.key='KeyV'}return c}}
+function danceFrame(cv,k,T,big){const c=cv.getContext('2d'),W2=cv.width,H2=cv.height;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,W2,H2);if(!S)return;const s=big?W2/175:W2/168,x=W2/2,y=H2-4*(W2/100);
+  if(k&&T>0){const m=DMOV[DANCES[k][2]](T)||{},py=-80*s;c.save();c.translate(x+(m.dx||0)*s,y+(m.dy||0)*s+py);c.rotate(m.rot||0);c.scale(m.sx??1,m.sy??1);c.translate(-x,-y-py);drawKZ(c,x,y,s,S.eq,1.3+T*1.8,0);c.restore()}else drawKZ(c,x,y,s,S.eq,1.3,0)}
+let danceAnim=null;
+function danceAnimLoop(){if(!emoWheel&&!document.querySelector('#stEmo canvas.dhov')){danceAnim=null;return}const T=(performance.now()/1000)%DANCE_DUR+.05;
+  if(emoWheel){const L=emoCfg().list;emoWheel.el.querySelectorAll('canvas[data-dslot]').forEach(cv=>{const i=+cv.dataset.dslot,k=L[emoWheel.page*8+i];if(i===emoWheel.hov)danceFrame(cv,k,T);else if(cv.dataset.st!=='1'){danceFrame(cv,k,0);cv.dataset.st='1'}if(i===emoWheel.hov)cv.dataset.st='0'});
+    const mid=emoWheel.el.querySelector('canvas.dmid');if(mid){const k=emoWheel.hov>=0?L[emoWheel.page*8+emoWheel.hov]:null;danceFrame(mid,k,k?T:0,1)}}
+  document.querySelectorAll('#stEmo canvas.dhov').forEach(cv=>danceFrame(cv,cv.dataset.dk,T));danceAnim=requestAnimationFrame(danceAnimLoop)}
+function danceAnimStart(){if(!danceAnim)danceAnim=requestAnimationFrame(danceAnimLoop)}
+emoWheelRender=function(){const w=emoWheel;if(!w)return;const L=emoCfg().list,P=emoPages();w.page=(w.page+P)%P;const R=150;let h='<div class="ew"><div class="ewc"></div>';
+  for(let i=0;i<8;i++){const k=L[w.page*8+i],a=-Math.PI/2+i*Math.PI/4,x=Math.cos(a)*R,y=Math.sin(a)*R;h+=`<div class="ews ${w.hov===i?'hov':''} ${k?'':'empty'}" data-ews="${i}" style="transform:translate(${x}px,${y}px)">${k?`<canvas data-dslot="${i}" width="160" height="160"></canvas><small>${i+1}</small>`:''}</div>`}
+  const hk=w.hov>=0&&L[w.page*8+w.hov];h+=`<div class="ewmid"><canvas class="dmid" width="220" height="220"></canvas><span>${hk?EMO[hk][1]:'Наведи на танец 💃'}</span></div>`;
+  if(P>1)h+=`<button class="ewa l" data-ewp="-1">◀</button><button class="ewa r" data-ewp="1">▶</button><div class="ewpg">${Array.from({length:P},(_,i)=>`<i class="${i===w.page?'on':''}"></i>`).join('')}<span>${w.page+1}/${P}</span></div>`;
+  w.el.innerHTML=h+`</div><div class="ewhint">Наведи курсор — котозаяц покажет танец · клик или отпусти ${keyName(emoCfg().key)} — танцевать · 1–8 · ◀ ▶ / колёсико — страницы</div>`;
+  w.el.querySelectorAll('canvas[data-dslot]').forEach(cv=>{danceFrame(cv,L[w.page*8+(+cv.dataset.dslot)],0);cv.dataset.st='1'});danceAnimStart()};
+{const _wo=emoWheelOpen;emoWheelOpen=function(){_wo.apply(this,arguments);if(emoWheel)emoWheelRender()}}
+/* hover: update only highlight + label without rebuilding canvases */
+emoHover=function(e){const w=emoWheel;if(!w)return;const box=w.el.querySelector('.ew');if(!box)return;const r=box.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy);let h=-1;if(d>r.width*.2&&d<r.width*.62){const a=(Math.atan2(dy,dx)+Math.PI/2+Math.PI*2+Math.PI/8)%(Math.PI*2);h=Math.floor(a/(Math.PI/4))%8}
+  if(h!==w.hov){w.hov=h;const L=emoCfg().list;w.el.querySelectorAll('.ews').forEach((s,i)=>s.classList.toggle('hov',i===h));const k=h>=0&&L[w.page*8+h],sp=w.el.querySelector('.ewmid span');if(sp)sp.textContent=k?EMO[k][1]:'Наведи на танец 💃';w.el.querySelectorAll('canvas[data-dslot]').forEach(cv=>cv.dataset.st='0')}};
+(function(){const st=document.createElement('style');st.textContent=`
+#emoWheel .ew{width:420px;height:420px}
+#emoWheel .ews{width:88px;height:88px;margin:-44px 0 0 -44px;overflow:visible;background:#3a2f6e}
+#emoWheel .ews canvas{width:84px;height:84px;border-radius:50%;pointer-events:none}
+#emoWheel .ews.hov{background:#ffe066;box-shadow:0 0 0 4px #fff6b0,0 0 22px #ffe066}
+#emoWheel .ewmid{width:150px}#emoWheel .ewmid canvas{width:120px;height:120px;display:block;margin:0 auto -4px;pointer-events:none}
+#emoWheel .ewmid span{font-size:14px;font-weight:900}
+#emoWheel .ewc{background:radial-gradient(circle,rgba(255,248,236,.97) 0 30%,rgba(42,32,80,.93) 31% 100%)}
+#emoWheel .ewa.l{left:-62px}#emoWheel .ewa.r{right:-62px}
+.emogrid .emc canvas{width:64px;height:64px;display:block;margin:0 auto;pointer-events:none}`;document.head.appendChild(st)})();
+/* settings cards: kotozayac instead of emoji, hover to preview */
+{const _sr=emoSetRender;emoSetRender=function(){_sr.apply(this,arguments);const el=$('#stEmo');if(!el)return;
+  el.querySelectorAll('.emc').forEach(c=>{const k=c.dataset.emot,b=c.querySelector('b');if(!k||!b)return;const cv=document.createElement('canvas');cv.width=cv.height=128;cv.dataset.dk=k;b.replaceWith(cv);danceFrame(cv,k,0);
+    c.onmouseenter=()=>{cv.classList.add('dhov');danceAnimStart()};c.onmouseleave=()=>{cv.classList.remove('dhov');danceFrame(cv,k,0)}});
+  const p=el.querySelector('p.sub');if(p)p.innerHTML='💃 Танцы-эмоции: котозаяц танцует под свою мелодию 6 секунд — в меню и прямо в забеге, а друзья в пати видят твой танец. Нажми клавишу (по умолчанию <b>V</b>), наведи курсор на котозайца в колесе — он покажет танец — и кликни или отпусти клавишу. В колесе 8 танцев на страницу, остальные — на следующих страницах (стрелки ◀ ▶). Здесь тоже наведи курсор на карточку, чтобы посмотреть танец.';
+  const d=el.querySelector('[data-emokeydef]');if(d)d.textContent='V по умолчанию';const hint=[...el.querySelectorAll('p.hint')].find(x=>x.textContent.includes('Двойной клик'));if(hint)hint.remove()}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-emokeydef]');if(!b||!S)return;e.stopImmediatePropagation();emoCfg().key='KeyV';persist();emoSetRender();toast('💃 Колесо танцев: клавиша V')},true);
+for(const h of HELP)if(h[0]==='💃 Эмоции-танцы')h[1]='Колесо танцев: клавиша V (меняется в Settings → Эмоции). Наведи курсор на котозайца в колесе — он покажет танец. 30 танцев с музыкой, по 8 на страницу, стрелки ◀ ▶. Друзья в пати видят твой танец.';
 
 resize();
 const sess=lsGet('kz_session');
