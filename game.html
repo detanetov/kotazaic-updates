@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=43;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=44;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -473,7 +473,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
       <div class="row" style="margin-top:6px"><button class="btn sm mint" id="accAdd">＋ Добавить аккаунт</button></div>
     </div>
     <div id="stTop" style="display:none">
-      <div class="tabs" id="topTabs" style="margin-top:0"><button class="btn sm cur" data-tt="best">🏆 Рекорд</button><button class="btn sm" data-tt="coins">🪙 Монеты</button><button class="btn sm" data-tt="bp">★ Battle Pass</button><button class="btn sm" data-tt="ev">🎃 Event</button></div>
+      <div class="tabs" id="topTabs" style="margin-top:0"><button class="btn sm cur" data-tt="best">🏆 Рекорд</button><button class="btn sm" data-tt="coins">🪙 Монеты</button><button class="btn sm" data-tt="bp">★ Battle Pass</button><button class="btn sm" data-tt="ev">🎃 Event</button><button class="btn sm" data-tt="coop">🤝 Совместные</button></div>
       <div id="topList"></div>
       <p class="hint">В топе все игроки Kotazaic and Stars — на ПК и на телефонах. Список обновляется сам.</p>
     </div>
@@ -2187,7 +2187,7 @@ function commitRun(){
   if(!G||G.committed)return null;G.committed=true;stat('games');
   const bpx=Math.floor(G.score/8),evx=G.mode==='hw'?G.evXp+Math.floor(G.score/20):0;
   const oldBp=Math.min(BP_LV,Math.floor(S.bpXp/BP_XP)),oldEv=Math.min(EV_LV,Math.floor(S.evXp/EV_XP));
-  const pe=Math.round(G.coins*petBonus());S.coins+=G.coins+pe;S.bpXp+=bpx;S.evXp+=evx;const rec=!S.set.zen&&G.score>S.best;if(rec)S.best=G.score;persist();
+  const pe=Math.round(G.coins*petBonus());S.coins+=G.coins+pe;S.bpXp+=bpx;S.evXp+=evx;const rec=!S.set.zen&&G.score>S.best;if(rec)S.best=G.score;if(G.coop){stat('coopPts',G.score);if(G.score>(S.coopBest||0)){S.coopBest=G.score;S.coopTeam=PT.mem.filter(x=>x.gid!==S.gid).map(x=>x.nick).slice(0,2);if(G.score>0)setTimeout(()=>toast('🤝 Новый рекорд совместных игр: '+G.score+'!'),1500)}try{publishPresence()}catch(e){}}persist();
   return{pe,bpx,evx,rec,bpUp:Math.min(BP_LV,Math.floor(S.bpXp/BP_XP))-oldBp,evUp:Math.min(EV_LV,Math.floor(S.evXp/EV_XP))-oldEv};
 }
 function gameOver(){
@@ -2657,6 +2657,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:44,l:'1.3.9',items:['🤝 В топе игроков новая вкладка «Совместные» — лучший счёт в совместных играх и с кем он набран','👤 В профиле видно совместный рекорд и количество совместных игр']},
  {v:43,l:'1.3.9',items:['🎮 Совместная игра: у всех в пати теперь один и тот же мир — те же звёзды, метеориты, боссы и события','🤝 Общий счёт, жизни, монеты и рекорд на всех','🚪 Если один выходит — игра заканчивается у всех; пауза тоже общая']},
  {v:42,l:'1.3.9',items:['🎮 Кнопка «Играть вместе» в ЛС, в профиле друга и во вкладке Пати: когда нажмут все — игра запускается у всех одновременно с отсчётом 3…2…1']},
  {v:41,l:'1.3.9',items:['💬 Новая кнопка Chat в меню: общий чат со всеми живыми игроками (без ботов) и ЛС с друзьями','👤 Профили: нажми на игрока в топе или в чате — рекорд, скин, статистика, «Добавить в друзья»','🎉 Пати до 3 игроков: пригласи друга из ЛС (если он онлайн) — его котозаяц с ником встанет рядом с твоим в меню, а в игре будет бегать рядом']},
@@ -2985,13 +2986,14 @@ $('#accList').addEventListener('click',e=>{const sw=e.target.closest('[data-sw]'
 $('#accAdd').onclick=()=>{persist();backUser=user;user=null;S=null;lsDel('kz_session');setReg(false);$('#aUser').value='';$('#aPass').value='';$('#aNick').value='';$('#aBack').style.display='inline-block';show('auth')};
 $('#aBack').onclick=()=>{const u=backUser;if(u&&login(u)){show('set');setSetTab('acc')}};
 function renderTop(){
-  const val=p=>topTab==='best'?(+p.best||0):topTab==='coins'?(+p.coins||0):topTab==='bp'?(+p.bp||0):(+p.ev||0);
-  const unit={best:'очков',coins:'🪙',bp:'ур.',ev:'ур.'}[topTab],now=Date.now();
+  const val=p=>topTab==='best'?(+p.best||0):topTab==='coins'?(+p.coins||0):topTab==='bp'?(+p.bp||0):topTab==='coop'?(+p.cb||0):(+p.ev||0);
+  const unit={best:'очков',coins:'🪙',bp:'ур.',ev:'ур.',coop:'очков'}[topTab],now=Date.now();
   const rows=[],seen=new Set();
   const add=(r)=>{if(!r.gid||seen.has(r.gid))return;seen.add(r.gid);rows.push(r)};
-  if(S&&user&&user!=='__guest')add({gid:S.gid,u:user,nick,v:val({best:S.best,coins:S.coins,bp:lvlOf(S.bpXp,BP_XP,BP_LV),ev:lvlOf(S.evXp,EV_XP,EV_LV)}),me:true,on:true,plat:devPlat()});
-  const db=loadDB();for(const u of Object.keys(db)){if(u===user)continue;const sv=fixSave(db[u].save),np=netPlayers[sv.gid];add({gid:sv.gid,u,nick:db[u].nick,v:val(np&&np.last>(sv.last||0)?np:{best:sv.best,coins:sv.coins,bp:lvlOf(sv.bpXp,BP_XP,BP_LV),ev:lvlOf(sv.evXp,EV_XP,EV_LV)}),on:false,plat:devPlat()})}
-  for(const p of Object.values(netPlayers))add({gid:p.gid,u:String(p.u||'?'),nick:String(p.nick||'?'),v:val(p),on:now-p.last<150000,plat:p.plat==='phone'?'phone':'pc'});
+  if(S&&user&&user!=='__guest')add({gid:S.gid,u:user,nick,v:val({best:S.best,coins:S.coins,bp:lvlOf(S.bpXp,BP_XP,BP_LV),ev:lvlOf(S.evXp,EV_XP,EV_LV),cb:S.coopBest}),ct:S.coopTeam,me:true,on:true,plat:devPlat()});
+  const db=loadDB();for(const u of Object.keys(db)){if(u===user)continue;const sv=fixSave(db[u].save),np=netPlayers[sv.gid];add({gid:sv.gid,u,nick:db[u].nick,v:val(np&&np.last>(sv.last||0)?np:{best:sv.best,coins:sv.coins,bp:lvlOf(sv.bpXp,BP_XP,BP_LV),ev:lvlOf(sv.evXp,EV_XP,EV_LV),cb:sv.coopBest}),ct:(np&&np.ct)||sv.coopTeam,on:false,plat:devPlat()})}
+  for(const p of Object.values(netPlayers))add({gid:p.gid,u:String(p.u||'?'),nick:String(p.nick||'?'),v:val(p),ct:p.ct,on:now-p.last<150000,plat:p.plat==='phone'?'phone':'pc'});
+  if(topTab==='coop'){for(let i=rows.length-1;i>=0;i--)if(!rows[i].v&&!rows[i].me)rows.splice(i,1)}
   rows.sort((a,b)=>b.v-a.v||(a.me?-1:b.me?1:0)||a.u.localeCompare(b.u));
   const my=rows.findIndex(r=>r.me);let h='';
   if(my>=0){const me=rows[my],up=rows[my-1];
@@ -3008,7 +3010,7 @@ function renderTop(){
   let last=-1;for(const i of [...show].sort((a,b)=>a-b)){if(last>=0&&i>last+1)h+='<div class="hint" style="text-align:center;margin:4px 0">…</div>';h+=topRow(rows[i],i,unit);last=i}
   if(!NET.ok())h+='<p class="hint">⚠ Нет связи с онлайн-сервером — показаны игроки, которых игра уже видела.</p>';
   $('#topList').innerHTML=h||'<p class="hint">Пока нет игроков.</p>'}
-function topRow(r,i,unit){const medal=['🥇','🥈','🥉'][i]||(i+1);return `<div class="topr ${r.me?'me':''}" data-prof="${esc(r.gid)}" data-pn="${esc(r.nick)}" data-pu="${esc(r.u)}" style="cursor:pointer" title="Открыть профиль"><div class="pl">${medal}</div><div class="nm">${r.plat==='phone'?'📱':'💻'} ${esc(r.nick)} <small>@${esc(r.u)}${r.on&&!r.me?' · 🟢':''}</small></div><div class="v">${unit==='ур.'?'ур. '+r.v:r.v+' '+unit}</div></div>`}
+function topRow(r,i,unit){const medal=['🥇','🥈','🥉'][i]||(i+1);return `<div class="topr ${r.me?'me':''}" data-prof="${esc(r.gid)}" data-pn="${esc(r.nick)}" data-pu="${esc(r.u)}" style="cursor:pointer" title="Открыть профиль"><div class="pl">${medal}</div><div class="nm">${r.plat==='phone'?'📱':'💻'} ${esc(r.nick)} <small>@${esc(r.u)}${r.on&&!r.me?' · 🟢':''}${topTab==='coop'&&r.v&&Array.isArray(r.ct)&&r.ct.length?' · 🤝 '+esc(r.ct.slice(0,3).map(String).join(', ')):''}</small></div><div class="v">${unit==='ур.'?'ур. '+r.v:r.v+' '+unit}</div></div>`}
 
 /* ---------------- shaders ---------------- */
 const SHADERS={
@@ -3462,7 +3464,7 @@ function netProfile(gid,payload){if(!payload.length){delete netPlayers[gid]}else
   if(cur==='set'&&$('#stTop').style.display!=='none'){clearTimeout(netTopT);netTopT=setTimeout(()=>renderTop(),400)}}
 function lvlOf(x,per,max){return Math.min(max,Math.floor(x/per))}
 function devPlat(){return window.KZ_MODE==='android'||window.KZAndroid||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)?'phone':'pc'}
-function profOf(u,nk,sv,last){return{t:'prof',gid:sv.gid,u,nick:nk,coins:sv.coins,best:sv.best,bp:lvlOf(sv.bpXp,BP_XP,BP_LV),ev:lvlOf(sv.evXp,EV_XP,EV_LV),pet:sv.pet&&PETS[sv.pet]?PETS[sv.pet].n:null,skin:sv.eq.skin,plat:devPlat(),dev:DEV_ID,last,v:window.KZ_VER,mc:sv.mailClosed?1:0,games:(sv.stats&&sv.stats.games)||0,eq:sv.eq,ach:Object.keys(sv.ach||{}).length,mw:(sv.stats&&sv.stats.mgwins)||0,bos:(sv.stats&&sv.stats.bosses)||0}}
+function profOf(u,nk,sv,last){return{t:'prof',gid:sv.gid,u,nick:nk,coins:sv.coins,best:sv.best,bp:lvlOf(sv.bpXp,BP_XP,BP_LV),ev:lvlOf(sv.evXp,EV_XP,EV_LV),pet:sv.pet&&PETS[sv.pet]?PETS[sv.pet].n:null,skin:sv.eq.skin,plat:devPlat(),dev:DEV_ID,last,v:window.KZ_VER,mc:sv.mailClosed?1:0,games:(sv.stats&&sv.stats.games)||0,eq:sv.eq,ach:Object.keys(sv.ach||{}).length,mw:(sv.stats&&sv.stats.mgwins)||0,bos:(sv.stats&&sv.stats.bosses)||0,cb:sv.coopBest||0,ct:Array.isArray(sv.coopTeam)?sv.coopTeam.slice(0,3):undefined,cg:(sv.stats&&sv.stats.coopGames)||0}}
 let pubAllDone=false;
 function publishPresence(){NET.start();if(!NET.ok())return;if(S&&S.set&&S.set.hideTop){pubAllDone=true;return}
   // all accounts of this device, once per connection (not online, just listed)
@@ -3584,7 +3586,7 @@ function profRender(){const el=$('#pfOv');if(!el)return;const g=SOC.prof;if(!g||
   else btn=`<button class="btn sm mint" data-fradd="${g}">➕ Добавить в друзья</button>`;
   el.innerHTML=`<div class="pfbox"><div class="row" style="justify-content:space-between"><h3 style="margin:0">👤 Профиль</h3><button class="btn sm ghost" data-pfclose>✕</button></div>
   <div class="pfhead"><canvas id="pfCv" width="300" height="320"></canvas><div><div class="pfnk">${esc(nk)}</div><small>${u?'@'+esc(u):''}</small><div style="margin-top:6px">${on?'<span class="chip" style="background:#c9f7d8">🟢 онлайн</span>':p?`<span class="chip">⚪ был(а) ${agoTxt(Date.now()-p.last)}</span>`:'<span class="chip">⚪ не в сети</span>'} ${p?(p.plat==='phone'?'📱':'💻'):''}</div>${PT.mem.some(x=>x.gid===g)&&!me?'<div class="chip" style="margin-top:6px">🎉 в твоей пати</div>':''}</div></div>
-  ${p?`<div class="pfst">${st('🏆','Рекорд',v(p.best))}${st('🎮','Забегов',v(p.games))}${st('🪙','Монеты',v(p.coins))}${st('⚔','Побед в мини-играх',v(p.mw))}${st('★','Battle Pass',p.bp!=null?'ур. '+p.bp:'—')}${st('🎃','Halloween',p.ev!=null?'ур. '+p.ev:'—')}${st('🏅','Достижения',v(p.ach))}${st('🐾','Питомец',v(p.pet))}${st('🐰','Скин',esc(itemName('skin',eq.skin)))}${st('👹','Боссов',v(p.bos))}</div>`:'<p class="hint">Статистика появится, когда игрок зайдёт в игру онлайн.</p>'}
+  ${p?`<div class="pfst">${st('🏆','Рекорд',v(p.best))}${st('🎮','Забегов',v(p.games))}${st('🪙','Монеты',v(p.coins))}${st('⚔','Побед в мини-играх',v(p.mw))}${st('★','Battle Pass',p.bp!=null?'ур. '+p.bp:'—')}${st('🎃','Halloween',p.ev!=null?'ур. '+p.ev:'—')}${st('🏅','Достижения',v(p.ach))}${st('🐾','Питомец',v(p.pet))}${st('🐰','Скин',esc(itemName('skin',eq.skin)))}${st('👹','Боссов',v(p.bos))}${st('🤝','Совместный рекорд',v(p.cb))}${st('🎮','Совместных игр',v(p.cg))}</div>`:'<p class="hint">Статистика появится, когда игрок зайдёт в игру онлайн.</p>'}
   <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">${btn}</div></div>`;el.style.display='flex';
   const c=$('#pfCv').getContext('2d');c.fillStyle='#2a2050';c.beginPath();c.roundRect(0,0,300,320,24);c.fill();drawKZ(c,150,298,1.15,eq,1.3,0)}
 /* chat UI */

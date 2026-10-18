@@ -1,9 +1,9 @@
 {
- "version": 43,
+ "version": 44,
  "label": "1.3.9",
- "name": "1.3.9: общий мир в совместной игре",
+ "name": "1.3.9: топ совместных игр",
  "file": "game.html",
- "sha256": "cda3ecee527e6cc65a53589348c157d42e13693c10a6adf2fb57c45ec315b893",
+ "sha256": "397b835f12f93d4232239858244bb7fb308a812fb6a02da69e1c04e4ddeb6ed7",
  "date": "2026-10-18",
  "exe": {
   "version": 4,
