@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=52;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=53;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -513,7 +513,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
         <div class="mgcard"><div class="mgic">❌⭕</div><div class="mgtx"><b>Крестики-нолики</b><small>Собери 3 в ряд</small></div><button class="btn sm mint" data-mgopen="ttt">Открыть</button></div>
         <div class="mgcard"><div class="mgic">🃏</div><div class="mgtx"><b>Дурак</b><small>Обычный и переводной, 36 карт</small></div><button class="btn sm mint" data-mgopen="durak">Открыть</button></div>
         <div class="mgcard"><div class="mgic">🚀</div><div class="mgtx"><b>Ракета</b><small>Ставь монеты, ракета взлетает и множитель растёт — успей забрать до того, как она улетит!</small></div><button class="btn sm mint" data-rocket="1">Открыть</button></div>
-        <div class="mgcard"><div class="mgic">🎣</div><div class="mgtx"><b>Рыбалка</b><small>Котозаяц в лодке закидывает удочку: чем глубже — тем реже рыба. Улучшай снасти, собирай журнал из 23 видов, остерегайся медуз</small></div><button class="btn sm mint" data-fishing="1">Открыть</button></div>
+        <div class="mgcard"><div class="mgic">🎣</div><div class="mgtx"><b>Рыбалка</b><small>Котозаяц в лодке закидывает удочку: рыба плывёт к приманке, хищники глотают мелочь прямо на крючке. Чисти улов ножом, улучшай 12 снастей и меняй вид удочки</small></div><button class="btn sm mint" data-fishing="1">Открыть</button></div>
         <div class="mgcard"><div class="mgic">🌻</div><div class="mgtx"><b>Сад котозайца</b><small>Покупай семена, сажай, поливай, собирай урожай и продавай. Растения растут даже когда игра закрыта</small></div><button class="btn sm mint" data-garden="1">Открыть</button></div>
         <div class="mgcard"><div class="mgic">🤸</div><div class="mgtx"><b>NoomiClone</b><small>Котозаяц-гимнаст: раскачайся на перекладине, отпусти, сделай сальто и поймай следующую</small></div><button class="btn sm mint" data-noomi="1">Открыть</button></div>
         <div class="mgcard"><div class="mgic">⛀</div><div class="mgtx"><b>Шашки</b><small>Русские шашки: обязательное взятие, дамки, бить можно назад</small></div><button class="btn sm mint" data-mgopen="ck">Открыть</button></div>
@@ -756,7 +756,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
   <div class="panel" style="max-width:1000px;padding:14px">
     <div class="row" style="justify-content:space-between"><h2>🎣 Рыбалка</h2><div class="row" style="gap:8px"><span class="chip" id="fCount"></span><span class="chip" id="fCoins"></span><button class="btn sm ghost" id="fBack">← Мини-игры</button></div></div>
     <canvas id="fcv" style="width:100%;height:auto;display:block;border:4px solid var(--ink);border-radius:16px;background:#1f6fae;touch-action:none;margin-top:8px;cursor:crosshair"></canvas>
-    <div class="tabs" id="fTabs" style="margin-top:10px"><button class="btn sm cur" data-ft="up">⬆ Снасти</button><button class="btn sm" data-ft="j">📖 Журнал рыб</button></div>
+    <div class="tabs" id="fTabs" style="margin-top:10px"><button class="btn sm cur" data-ft="up">⬆ Снасти</button><button class="btn sm" data-ft="b">🪣 Ведро <span id="fBk"></span></button><button class="btn sm" data-ft="rod">🎣 Вид удочки</button><button class="btn sm" data-ft="j">📖 Журнал рыб</button></div>
     <div id="fPanel"></div>
   </div>
 </div>
@@ -3005,6 +3005,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:53,l:'1.3.9',items:['🎣 Рыбалка стала ближе к Cat Goes Fishing: рыба плывёт к приманке, хищники глотают пойманную мелочь прямо на крючке','🪣 Улов складывается в ведро; 🔪 рыбу можно чистить ножом мышкой — почищенная стоит в 2–3 раза дороже','⬆ 7 новых улучшений: катушка, приманка, ведро, нож, фонарь, сонар, лодка (лодка → моторка → катер → яхта)','🎣 7 видов удочки — от палки с верёвкой до космической, меняются с улучшением и выбираются отдельно']},
  {v:52,l:'1.3.9',items:['🎣 Новая мини-игра «Рыбалка» (как Cat Goes Fishing): котозаяц в лодке закидывает удочку, на глубине — редкие рыбы','🐟 23 вида рыб от карасика до Кракена, медузы и день/ночь','⬆ Улучшения снастей: удочка до 480 м, леска до 250 кг, до 4 крючков, грузило и наживка','📖 Журнал улова и 3 новых достижения']},
  {v:51,l:'1.3.9',items:['⚡ Ещё больше оптимизации: ауры только в меню или выкл., отключение шейдеров, погоды, питомца и друзей в игре','💤 Экономия: 20 FPS фона, пока открыты окна меню, и 15 FPS, когда игра не в фокусе','🧠 Лёгкие превью в Cosmetics и кнопка очистки кэша картинок; показ нагрузки рядом с FPS']},
  {v:50,l:'1.3.9',items:['😊 Новый раздел Cosmetics → Лица: 180 лиц — глаза, рты и украшения','🛒 40 лиц в магазине, 🎲 50 выпадают в забегах, 🎮 30 за мини-игры, 💎 60 эксклюзивных со свечением и анимацией в Kotograde (галактические, огненные, лазерные, глючные, глаза бездны…)','🆓 9 базовых выражений лица — бесплатно для всех']},
@@ -3868,9 +3869,18 @@ const FUP={rod:{n:'🎣 Удочка — глубина',v:[30,60,100,160,240,34
   line:{n:'🧵 Леска — выдерживает',v:[3,6,12,25,50,100,250],p:[0,120,350,800,1600,3200,6500],u:' кг'},
   hook:{n:'🪝 Крючки — рыб за заброс',v:[1,2,3,4],p:[0,300,1200,4000],u:''},
   sink:{n:'⚓ Грузило — скорость погружения',v:[90,130,180,240,320],p:[0,150,500,1400,3000],u:''},
-  bait:{n:'🪱 Наживка — шанс редких рыб',v:[1,1.4,1.9,2.6],p:[0,400,1500,4500],u:'×'}};
+  bait:{n:'🪱 Наживка — шанс редких рыб',v:[1,1.4,1.9,2.6],p:[0,400,1500,4500],u:'×'},
+  reel:{n:'🌀 Катушка — скорость сматывания',v:[180,240,300,380,480],p:[0,200,600,1500,3200],u:''},
+  lure:{n:'✨ Приманка — рыба плывёт к крючку',v:[0,60,100,150,210],p:[0,250,700,1800,4000],u:' px'},
+  bucket:{n:'🪣 Ведро — сколько рыбы влезает',v:[5,10,16,25,40],p:[0,150,450,1200,3000],u:' шт'},
+  knife:{n:'🔪 Нож — чистка быстрее и дороже',v:[2,2.3,2.7,3.2],p:[0,300,1200,3500],u:'× цена'},
+  lamp:{n:'🔦 Фонарь — видно ночью и в глубине',v:[0,1,2],p:[0,500,2000],u:''},
+  sonar:{n:'📡 Сонар — подсвечивает редких рыб',v:[0,1,2],p:[0,800,3000],u:''},
+  boat:{n:'🚤 Лодка — надбавка рыбного рынка',v:[0,10,20,35],p:[0,600,2500,8000],u:'%'}};
+const FROD=['Палка с верёвкой','Бамбуковая','Ивовая с катушкой','Карбоновая','Золотая','Хрустальная','Космическая'];
+const FBOAT=['Деревянная лодка','Моторная лодка','Катер','Яхта'];
 const FPX=8,FWS=150,FW=960,FH=540;let FG=null,fishTab='up';
-function fData(){S.fishg=S.fishg||{};const d=S.fishg;d.up=Object.assign({rod:0,line:0,hook:0,sink:0,bait:0},d.up||{});d.j=d.j||{};d.total=d.total||0;return d}
+function fData(){S.fishg=S.fishg||{};const d=S.fishg;d.up=Object.assign({rod:0,line:0,hook:0,sink:0,bait:0,reel:0,lure:0,bucket:0,knife:0,lamp:0,sonar:0,boat:0},d.up||{});d.j=d.j||{};d.total=d.total||0;d.bucket=d.bucket||[];if(d.rodSkin==null||d.rodSkin>d.up.rod)d.rodSkin=d.up.rod;return d}
 function fUp(k){return FUP[k].v[fData().up[k]]}
 function fSpawn(sp0){const bait=fUp('bait'),wt=s=>s.r<1?s.r*bait:s.r;let sp=sp0,dep;
   if(!sp){dep=Math.pow(Math.random(),1.8)*480;const cand=FSP.filter(s=>dep>=s.d[0]&&dep<=s.d[1]);const tot=cand.reduce((a,s)=>a+wt(s),0);let r=Math.random()*tot;for(const s of cand){r-=wt(s);if(r<=0){sp=s;break}}sp=sp||cand[0]||FSP[0]}
@@ -3879,31 +3889,40 @@ function openFishing(){if(!FG){FG={cv:$('#fcv'),fish:[],ph:'idle',lure:{x:250,y:
   fData();show('fishing');fRender();persist()}
 function fMsg(t,col){FG.msg={t,col:col||'#fff',life:3}}
 function fTip(){return{x:262,y:FWS-98}}
-function fFinish(){const L=FG.hooked;FG.hooked=[];if(!L.length){FG.ph='idle';return}const d=fData();let sum=0,rare=false;const names=[];
-  for(const f of L){const v=Math.max(1,Math.round(f.sp.v*(.7+.6*f.w/f.sp.w)));sum+=v;const j=d.j[f.sp.id]=d.j[f.sp.id]||{n:0,best:0};j.n++;if(f.w>j.best)j.best=+f.w.toFixed(1);names.push(f.sp.n+' '+f.w.toFixed(1)+' кг');if(f.sp.r<1||f.sp.v>=60)rare=true;if(f.sp.id==='kraken')stat('fishKraken')}
-  d.total+=L.length;S.coins+=sum;stat('fishCaught',L.length);S.stats.fishSpecies=Object.keys(d.j).length;checkAch();refreshTop();persist();
-  fMsg('🐟 '+names.join(', ')+' → +'+sum+' 🪙','#ffe066');SND.win();if(L.length>1)confetti(30);
+function fPrice(f){const sp=FSPM[f.id],d=fData();return Math.max(1,Math.round(sp.v*(.7+.6*f.w/sp.w)*(1+fUp('boat')/100)*(f.clean?fUp('knife'):1)))}
+function fFinish(){const L=FG.hooked;FG.hooked=[];if(!L.length){FG.ph='idle';return}const d=fData();let rare=false,sold=0;const names=[];
+  for(const f of L){const j=d.j[f.sp.id]=d.j[f.sp.id]||{n:0,best:0};j.n++;if(f.w>j.best)j.best=+f.w.toFixed(1);names.push(f.sp.n+' '+f.w.toFixed(1)+' кг');if(f.sp.r<1||f.sp.v>=60)rare=true;if(f.sp.id==='kraken')stat('fishKraken');
+    const it={id:f.sp.id,w:+f.w.toFixed(2),clean:false};if(d.bucket.length<fUp('bucket'))d.bucket.push(it);else{const v=fPrice(it);S.coins+=v;sold+=v}}
+  d.total+=L.length;stat('fishCaught',L.length);S.stats.fishSpecies=Object.keys(d.j).length;checkAch();refreshTop();persist();
+  fMsg('🪣 В ведро: '+names.join(', ')+(sold?' · ведро полное, продано за +'+sold+' 🪙':''),'#ffe066');SND.win();if(L.length>1)confetti(30);if(fishTab==='b')fRender();
   setTimeout(()=>mgDrop(rare?.35:.05*L.length,'Рыбалка'),900);FG.ph='idle';fRender()}
-function fInput(down){if(cur!=='fishing'||!FG)return;FG.hold=down;
+function fInput(down){if(cur!=='fishing'||!FG)return;FG.hold=down;if(FG.clean)return;
   if(FG.ph==='idle'&&down){FG.ph='charge';FG.pow=0;FG.powD=1}
   else if(FG.ph==='charge'&&!down){const p=FG.pow,tp=fTip();FG.lure={x:tp.x,y:tp.y,vx:220+p*560,vy:-240-p*120};FG.ph='fly';SND.click()}}
 function fishStep(dt){if(!FG)return;const c=FG.c,t=(FG.t+=dt),maxY=FWS+fUp('rod')*FPX,L=FG.lure;FG.day=(FG.day+dt)%120;const night=Math.sin(FG.day/120*Math.PI*2)<-.25;
   // logic
   if(FG.ph==='charge'){FG.pow+=FG.powD*dt*1.1;if(FG.pow>1){FG.pow=1;FG.powD=-1}if(FG.pow<0){FG.pow=0;FG.powD=1}}
   if(FG.ph==='fly'){L.vy+=700*dt;L.x+=L.vx*dt;L.y+=L.vy*dt;if(L.x>FW-30){L.x=FW-30;L.vx=0}if(L.y>=FWS){L.y=FWS;FG.ph='sink';sfx(300,.12,'sine',.05,-150);for(let i=0;i<10;i++)FG.bub.push({x:L.x+rnd(-10,10),y:FWS,vy:rnd(-60,-20),life:0,r:rnd(2,5)})}}
-  if(FG.ph==='sink'){const w=FG.hooked.reduce((a,f)=>a+f.w,0);if(FG.hold){L.y-=(260-Math.min(150,w*1.2))*dt;if(L.y<=FWS){L.y=FWS;FG.ph='ret'}}else L.y=Math.min(maxY,L.y+fUp('sink')*dt);
+  if(FG.ph==='sink'){const w=FG.hooked.reduce((a,f)=>a+f.w,0);if(FG.hold){L.y-=Math.max(70,fUp('reel')-Math.min(150,w*1.2))*dt;if(L.y<=FWS){L.y=FWS;FG.ph='ret'}}else L.y=Math.min(maxY,L.y+fUp('sink')*dt);
     const kx=(keys.ArrowRight||keys.KeyD?1:0)-(keys.ArrowLeft||keys.KeyA?1:0);if(kx)FG.tx=null;const tx=FG.tx!=null?FG.tx:L.x+kx*400;L.x+=clamp(tx-L.x,-260*dt,260*dt);L.x=clamp(L.x,20,FW-20);
     if(Math.random()<dt*6)FG.bub.push({x:L.x,y:L.y,vy:rnd(-50,-25),life:0,r:rnd(1.5,3)})}
   if(FG.ph==='ret'){const tp=fTip();L.x+=(tp.x-L.x)*Math.min(1,dt*6);L.y+=(tp.y-L.y)*Math.min(1,dt*6);if(Math.hypot(tp.x-L.x,tp.y-L.y)<6)fFinish()}
-  for(const f of FG.fish){f.x+=f.dir*f.spd*dt;if(f.x>FW+f.sp.sz+40)f.x=-f.sp.sz-40;if(f.x<-f.sp.sz-40)f.x=FW+f.sp.sz+40;f.ph+=dt;
+  const AR=fUp('lure');
+  for(const f of FG.fish){if(FG.clean)break;let sp=f.spd;if(AR&&FG.ph==='sink'&&!f.dead&&!f.sp.danger&&FG.hooked.length<fUp('hook')){const dx=L.x-f.x,dy=L.y-f.y;if(dx*dx+dy*dy<AR*AR){f.dir=dx>0?1:-1;f.y+=clamp(dy,-40*dt,40*dt);sp*=.8;f.lured=1}else f.lured=0}
+    f.x+=f.dir*sp*dt;if(f.x>FW+f.sp.sz+40)f.x=-f.sp.sz-40;if(f.x<-f.sp.sz-40)f.x=FW+f.sp.sz+40;f.ph+=dt;
     if(FG.ph==='sink'&&!f.dead){const fy=f.y+Math.sin(f.ph*2)*6,d=Math.hypot(f.x-L.x,fy-L.y);if(d<f.sp.sz*.45+10){
       if(f.sp.danger==='jelly'){if(FG.hooked.length){FG.hooked=[];fMsg('⚡ Медуза ужалила — рыба уплыла!','#ff9be0');SND.hit()}continue}
+      const PRED=['shuka','som','losos','sword','shark','angler','whale','kraken','ugor','octo'];
+      if(FG.hooked.length&&PRED.includes(f.sp.id)&&!FG.hooked.some(h=>h.f===f)){const prey=FG.hooked.reduce((a,h)=>!a||h.w<a.w?h:a,null);const w=f.sp.w*rnd(.7,1.4);if(prey&&w>prey.w*3){const tot=FG.hooked.reduce((a,h)=>a+h.w,0)-prey.w+w;
+        if(tot>fUp('line')){FG.hooked=FG.hooked.filter(h=>h!==prey);fMsg('😱 '+f.sp.n+' сорвал(а) '+prey.sp.n.toLowerCase()+' — леска не удержала бы хищника','#ff8a8a');SND.hit();continue}
+        FG.hooked=FG.hooked.filter(h=>h!==prey);f.dead=true;FG.hooked.push({sp:f.sp,w,f});sfx(500,.2,'sawtooth',.05,-200);fMsg('🦈 '+f.sp.n+' проглотил(а) '+prey.sp.n.toLowerCase()+' и попался(ась)!','#ffcf33');continue}}
       if(FG.hooked.length<fUp('hook')&&!FG.hooked.some(h=>h.f===f)){const w=f.sp.w*rnd(.7,1.4),tot=FG.hooked.reduce((a,h)=>a+h.w,0)+w;
         if(tot>fUp('line')){FG.hooked=[];fMsg('💥 Леска порвалась — '+f.sp.n+' слишком тяжёлая ('+w.toFixed(1)+' кг)! Улучши леску','#ff8a8a');SND.hit();FG.ph='ret';f.dir*=-1;f.x+=f.dir*80;continue}
         f.dead=true;FG.hooked.push({sp:f.sp,w,f});sfx(880,.08,'triangle',.05,300);fMsg('🎣 Клюёт: '+f.sp.n+'!',f.sp.glow||'#fff')}}}}
   FG.fish=FG.fish.filter(f=>!f.dead||FG.hooked.some(h=>h.f===f));while(FG.fish.filter(f=>!f.dead).length<130)FG.fish.push(fSpawn());
   for(const b of FG.bub){b.y+=b.vy*dt;b.life+=dt}FG.bub=FG.bub.filter(b=>b.life<2&&b.y>FWS);
   const ty=clamp((FG.ph==='sink'?L.y:FWS)-FH*.42,0,maxY-FH+60);FG.camY+=(ty-FG.camY)*Math.min(1,dt*4);const cy=FG.camY;
+  if(FG.clean){fCleanDraw(c,t,dt);return}
   // draw
   const sk=c.createLinearGradient(0,-cy,0,FWS-cy);sk.addColorStop(0,night?'#0e0a2a':'#7cc4ff');sk.addColorStop(1,night?'#3a2a6a':'#d8f0ff');c.fillStyle=sk;c.fillRect(0,0,FW,Math.max(0,FWS-cy));
   if(FWS-cy>0){if(night){c.fillStyle='#fff';for(let i=0;i<30;i++){c.globalAlpha=.4+.5*Math.abs(Math.sin(t+i));c.fillRect((i*137)%FW,(i*53)%(FWS-20)-cy,2,2)}c.globalAlpha=1;ell(c,820,50-cy,22,22);c.fillStyle='#fff3c4';c.fill()}else{ell(c,820,55-cy,30,30);c.fillStyle='#ffe066';c.fill()}
@@ -3916,13 +3935,14 @@ function fishStep(dt){if(!FG)return;const c=FG.c,t=(FG.t+=dt),maxY=FWS+fUp('rod'
   for(const f of FG.fish){if(f.dead)continue;const y=f.y+Math.sin(f.ph*2)*6-cy;if(y<-120||y>FH+120)continue;const dark=clamp((f.y-FWS)/(FPX*300),0,.75);c.save();if(f.sp.ghost){c.globalAlpha=night?.85:.25}drawFishSp(c,f.x,y,f.sp,f.dir,t+f.ph);c.restore();if(dark>0&&!f.sp.glow){c.save();c.globalAlpha=dark*.6;c.globalCompositeOperation='source-atop';c.restore()}}
   for(const b of FG.bub){ell(c,b.x,b.y-cy,b.r,b.r);c.strokeStyle='rgba(255,255,255,.6)';c.lineWidth=1.2;c.stroke()}
   // boat & kotozayac
-  const bY=FWS-cy;if(bY>-120){const bob=Math.sin(t*1.6)*3;c.save();c.translate(0,bob);drawKZ(c,205,bY-14,.42,S.eq,t,0);c.beginPath();c.moveTo(120,bY-22);c.lineTo(300,bY-22);c.lineTo(276,bY+12);c.lineTo(144,bY+12);c.closePath();fs(c,'#a0703c',3);c.fillStyle='#7a4a2c';c.fillRect(126,bY-22,168,6);c.lineWidth=4;c.strokeStyle='#5a3a22';c.beginPath();c.moveTo(220,bY-34);c.lineTo(262,bY-98);c.stroke();c.restore();
+  const bY=FWS-cy;if(bY>-120){const bob=Math.sin(t*1.6)*3;c.save();c.translate(0,bob);fBoat(c,bY,t,fData().up.boat,0);drawKZ(c,205,bY-14,.42,S.eq,t,0);fBoat(c,bY,t,fData().up.boat,1);fRod(c,fData().rodSkin,t,220,bY-34,262,bY-98);c.restore();
     c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=2;c.beginPath();for(let x=0;x<=FW;x+=12)c.lineTo(x,bY+Math.sin(x*.05+t*2)*2.5);c.stroke()}
   // line & lure
-  const tp=fTip(),ly2=L.y-cy;c.strokeStyle='rgba(255,255,255,.8)';c.lineWidth=1.3;c.beginPath();c.moveTo(tp.x,tp.y-cy+Math.sin(t*1.6)*3);c.quadraticCurveTo((tp.x+L.x)/2,Math.max(tp.y-cy,ly2)-20,L.x,ly2);c.stroke();
+  const tp=fTip(),ly2=L.y-cy;c.strokeStyle=['rgba(255,255,255,.8)','rgba(255,255,255,.8)','rgba(255,255,255,.85)','#ff6b6b','#ffe066','#9fe8ff','#e0b0ff'][fData().rodSkin]||'#fff';c.lineWidth=fData().rodSkin>=3?1.8:1.3;c.beginPath();c.moveTo(tp.x,tp.y-cy+Math.sin(t*1.6)*3);c.quadraticCurveTo((tp.x+L.x)/2,Math.max(tp.y-cy,ly2)-20,L.x,ly2);c.stroke();
   if(FG.ph!=='idle'&&FG.ph!=='charge'){ell(c,L.x,ly2,5,5);fs(c,'#e8355d',2);c.fillStyle='#fff';c.fillRect(L.x-5,ly2-1,10,2);c.strokeStyle='#c9d3e6';c.lineWidth=2;c.beginPath();c.moveTo(L.x,ly2+5);c.lineTo(L.x,ly2+12);c.arc(L.x-4,ly2+12,4,0,Math.PI);c.stroke()}
   FG.hooked.forEach((h,i)=>{c.save();c.translate(L.x,ly2+18+i*14);c.rotate(Math.PI/2+Math.sin(t*8+i)*.3);drawFishSp(c,0,0,h.sp,1,t);c.restore()});
-  if(night){c.fillStyle='rgba(5,5,30,.35)';c.fillRect(0,0,FW,FH)}
+  {const lamp=fUp('lamp'),dk=(night?.4:0)+clamp((L.y-FWS)/FPX/480,0,1)*.45*(FG.ph==='sink'?1:0);const a=Math.max(0,dk-lamp*.18);if(a>.02){const g=c.createRadialGradient(L.x,ly2,30+lamp*40,L.x,ly2,140+lamp*120);g.addColorStop(0,'rgba(5,5,30,0)');g.addColorStop(1,'rgba(5,5,30,'+a+')');c.fillStyle=g;c.fillRect(0,0,FW,FH)}}
+  if(fUp('sonar')){for(const f of FG.fish){if(f.dead||!(f.sp.r<1||f.sp.v>=60))continue;const y=f.y-cy;if(y>0&&y<FH){c.save();c.strokeStyle='rgba(120,255,180,'+(.5+.4*Math.sin(t*5))+')';c.lineWidth=2;ell(c,f.x,y,f.sp.sz*.6+8,f.sp.sz*.35+8);c.stroke();c.restore()}else if(fUp('sonar')>1&&Math.abs(f.y-L.y)<FPX*60){const up=y<0;c.fillStyle='rgba(120,255,180,.85)';c.font='900 12px Trebuchet MS,sans-serif';c.textAlign='center';c.fillText((up?'▲ ':'▼ ')+f.sp.n+' '+Math.round((f.y-FWS)/FPX)+' м',clamp(f.x,60,FW-60),up?44:FH-34)}}}
   // HUD
   const w=FG.hooked.reduce((a,f)=>a+f.w,0);c.textAlign='left';c.font='900 15px Trebuchet MS,sans-serif';const hud=[`📏 ${Math.max(0,Math.round((L.y-FWS)/FPX))} / ${fUp('rod')} м`,`🪝 ${FG.hooked.length}/${fUp('hook')}`,`⚖ ${w.toFixed(1)}/${fUp('line')} кг`,night?'🌙 ночь':'☀ день'];
   hud.forEach((s,i)=>{c.lineWidth=4;c.strokeStyle=INK;c.strokeText(s,12+i*150,24);c.fillStyle='#fff';c.fillText(s,12+i*150,24)});
@@ -3931,6 +3951,41 @@ function fishStep(dt){if(!FG)return;const c=FG.c,t=(FG.t+=dt),maxY=FWS+fUp('rod'
   if(FG.ph==='charge'){c.fillStyle='#fff';c.strokeStyle=INK;c.lineWidth=3;c.beginPath();c.roundRect(150,FWS-cy-150,140,18,9);c.fill();c.stroke();c.fillStyle=FG.pow>.85?'#e8355d':'#5ee6c1';c.beginPath();c.roundRect(153,FWS-cy-147,134*FG.pow,12,6);c.fill()}
   if(FG.msg){FG.msg.life-=dt;c.globalAlpha=clamp(FG.msg.life,0,1);c.textAlign='center';c.font='900 18px Trebuchet MS,sans-serif';c.lineWidth=5;c.strokeStyle=INK;c.strokeText(FG.msg.t,FW/2,64);c.fillStyle=FG.msg.col;c.fillText(FG.msg.t,FW/2,64);c.globalAlpha=1;if(FG.msg.life<=0)FG.msg=null}
   try{$('#fCoins').textContent='🪙 '+S.coins;$('#fCount').textContent='🐟 '+fData().total}catch(e){}}
+function fBoat(c,bY,t,lv,front){
+  if(lv===0){if(!front)return;c.beginPath();c.moveTo(120,bY-22);c.lineTo(300,bY-22);c.lineTo(276,bY+12);c.lineTo(144,bY+12);c.closePath();fs(c,'#a0703c',3);c.fillStyle='#7a4a2c';c.fillRect(126,bY-22,168,6);return}
+  if(lv===1){if(!front){c.beginPath();c.roundRect(96,bY-10,22,26,4);fs(c,'#3a3a44',2.5);c.fillStyle='#e8355d';c.fillRect(98,bY-6,18,5);return}c.beginPath();c.moveTo(114,bY-24);c.lineTo(306,bY-24);c.lineTo(282,bY+12);c.lineTo(132,bY+12);c.closePath();fs(c,'#e8eef4',3);c.fillStyle='#3d8bff';c.fillRect(118,bY-12,184,6);c.fillStyle='#e8355d';c.fillRect(120,bY-24,184,5);return}
+  if(lv===2){if(!front){c.beginPath();c.roundRect(240,bY-62,52,40,8);fs(c,'#e8eef4',3);c.fillStyle='#8fd0ff';c.fillRect(248,bY-54,36,16);return}c.beginPath();c.moveTo(100,bY-26);c.lineTo(330,bY-26);c.quadraticCurveTo(342,bY-22,318,bY+14);c.lineTo(122,bY+14);c.closePath();fs(c,'#ffffff',3);c.fillStyle='#24203a';c.fillRect(106,bY-6,220,6);c.fillStyle='#ffcf33';c.fillRect(106,bY-26,224,4);return}
+  if(!front){c.beginPath();c.moveTo(300,bY-24);c.lineTo(300,bY-150);c.lineWidth=4;c.strokeStyle='#8a5a3c';c.stroke();const w=Math.sin(t*2)*4;c.beginPath();c.moveTo(300,bY-146);c.quadraticCurveTo(352+w,bY-96,300,bY-36);c.closePath();fs(c,'#fff8e6',2.5);c.beginPath();c.roundRect(236,bY-58,56,34,8);fs(c,'#f3e3c3',3);c.fillStyle='#5eb6ff';c.fillRect(244,bY-50,16,12);c.fillRect(266,bY-50,16,12);return}
+  c.beginPath();c.moveTo(86,bY-26);c.lineTo(350,bY-26);c.quadraticCurveTo(366,bY-20,330,bY+16);c.lineTo(110,bY+16);c.closePath();fs(c,'#1f3a6a',3);c.fillStyle='#ffcf33';c.fillRect(92,bY-26,256,5);c.fillStyle='#fff';c.font='900 11px Trebuchet MS,sans-serif';c.textAlign='left';c.fillText('KOTOZAYAC',150,bY+4)}
+function fRod(c,sk,t,x0,y0,x1,y1){c.save();c.lineCap='round';const seg=(w,col)=>{c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.lineWidth=w;c.strokeStyle=col;c.stroke()};
+  if(sk===0){seg(5,'#3a2414');seg(3.5,'#8a5a3c')}
+  if(sk===1){seg(6,'#3a2414');seg(4.5,'#d8c060');c.strokeStyle='#8a7a2a';c.lineWidth=2;for(let i=1;i<5;i++){const k=i/5,x=x0+(x1-x0)*k,y=y0+(y1-y0)*k;c.beginPath();c.moveTo(x-3,y-1);c.lineTo(x+3,y+1);c.stroke()}}
+  if(sk===2){seg(6,'#2a1a0e');seg(4,'#6b3e1e')}
+  if(sk===3){seg(6,'#000');seg(4,'#24242a');c.strokeStyle='#e8355d';c.lineWidth=4;c.beginPath();c.moveTo(x0+(x1-x0)*.35,y0+(y1-y0)*.35);c.lineTo(x0+(x1-x0)*.45,y0+(y1-y0)*.45);c.stroke()}
+  if(sk===4){glowOn(c,'#ffe066',10);seg(6,'#8a5a1a');seg(4,'#ffcf33');c.shadowBlur=0}
+  if(sk===5){glowOn(c,'#9fe8ff',14);seg(6,'rgba(30,60,90,.6)');seg(4,'rgba(180,240,255,.85)');c.shadowBlur=0;if(Math.sin(t*3)>.4){starPath(c,x0+(x1-x0)*.7,y0+(y1-y0)*.7,3,t*3);c.fillStyle='#fff';c.fill()}}
+  if(sk===6){glowOn(c,'#c86bff',16);seg(6,'#1b1440');const g=c.createLinearGradient(x0,y0,x1,y1);g.addColorStop(0,'#5a2aa8');g.addColorStop(1,'#ff8af6');seg(4,g);c.shadowBlur=0;for(let i=0;i<3;i++){const k=((t*.4+i/3)%1),x=x0+(x1-x0)*k,y=y0+(y1-y0)*k;starPath(c,x+Math.sin(t*3+i)*6,y,2.5,t*4);c.fillStyle='#fff';c.fill()}}
+  if(sk>=2){const rx=x0+(x1-x0)*.18,ry=y0+(y1-y0)*.18;ell(c,rx+5,ry+3,6,6);fs(c,sk===4?'#ffcf33':sk===5?'#bfefff':sk===6?'#b46bff':'#c9d3e6',2);c.beginPath();c.moveTo(rx+5,ry+3);c.lineTo(rx+5+Math.cos(t*(FG&&FG.hold?14:2))*5,ry+3+Math.sin(t*(FG&&FG.hold?14:2))*5);c.lineWidth=1.5;c.strokeStyle=INK;c.stroke()}
+  ell(c,x1,y1,2.5,2.5);c.fillStyle='#c9d3e6';c.fill();c.restore()}
+/* cleaning */
+function fCleanStart(i){const d=fData(),f=d.bucket[i];if(!f||f.clean)return;const sp=FSPM[f.id];const sc=[];const L=Math.min(560,Math.max(300,sp.sz*5)),H=L*({long:.16,shark:.2,ray:.4,jelly:.4,squid:.2}[sp.sh]||.3);
+  for(let k=0;k<160;k++){const a=Math.random()*Math.PI*2,r=Math.sqrt(Math.random());const x=FW/2+Math.cos(a)*r*L*.42,y=FH/2+10+Math.sin(a)*r*H*.82;sc.push({x,y,on:1,rot:Math.random()*6})}
+  FG.clean={i,f,sp,sc,L,H,done:0,mx:null,my:null,fly:[]};FG.hold=false;show('fishing');window.scrollTo({top:0,behavior:'smooth'})}
+function fCleanDraw(c,t,dt){const C=FG.clean,sp=C.sp;c.fillStyle='#5a3a22';c.fillRect(0,0,FW,FH);c.fillStyle='#7a5232';for(let y=0;y<FH;y+=36){c.fillRect(0,y,FW,3)}
+  c.beginPath();c.roundRect(FW/2-C.L*.62,FH/2-C.H*1.5,C.L*1.24,C.H*3.1,26);fs(c,'#e8c89a',4);c.fillStyle='rgba(120,80,40,.15)';for(let i=0;i<8;i++)c.fillRect(FW/2-C.L*.6,FH/2-C.H*1.4+i*C.H*.4,C.L*1.2,2);
+  drawFishSp(c,FW/2,FH/2+10,Object.assign({},sp,{sz:C.L}),1,t);
+  const rad=18*fUp('knife')/2;let left=0;
+  if(C.mx!=null&&FG.hold){for(const q of C.sc){if(q.on&&Math.hypot(q.x-C.mx,q.y-C.my)<rad){q.on=0;C.fly.push({x:q.x,y:q.y,vx:rnd(-120,120),vy:rnd(-220,-80),life:0,rot:q.rot});if(Math.random()<.3)sfx(1400+Math.random()*600,.03,'square',.012)}}}
+  for(const q of C.sc){if(!q.on)continue;left++;c.save();c.translate(q.x,q.y);c.rotate(q.rot);ell(c,0,0,7,5);c.fillStyle='rgba(220,235,245,.9)';c.fill();c.lineWidth=1;c.strokeStyle='rgba(90,110,130,.6)';c.stroke();c.restore()}
+  for(const p of C.fly){p.life+=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=600*dt;p.rot+=dt*8;c.save();c.translate(p.x,p.y);c.rotate(p.rot);c.globalAlpha=Math.max(0,1-p.life);ell(c,0,0,6,4);c.fillStyle='#e8f4ff';c.fill();c.restore()}C.fly=C.fly.filter(p=>p.life<1);
+  const prog=1-left/C.sc.length;
+  if(C.mx!=null){c.save();c.translate(C.mx,C.my);c.rotate(-.6+(FG.hold?Math.sin(t*30)*.2:0));c.beginPath();c.roundRect(-4,4,8,34,3);fs(c,'#3a2414',2);c.beginPath();c.moveTo(-5,6);c.lineTo(5,6);c.lineTo(4,-36);c.quadraticCurveTo(0,-44,-5,-30);c.closePath();fs(c,'#e8eef4',2);c.restore()}
+  c.fillStyle='#fff';c.strokeStyle=INK;c.lineWidth=3;c.beginPath();c.roundRect(FW/2-200,24,400,22,11);c.fill();c.stroke();c.fillStyle='#5ee6c1';c.beginPath();c.roundRect(FW/2-197,27,394*prog,16,8);c.fill();
+  c.textAlign='center';c.font='900 18px Trebuchet MS,sans-serif';c.lineWidth=5;c.strokeStyle=INK;const tt='🔪 Чистка: '+sp.n+' — зажми и води ножом по чешуе ('+Math.round(prog*100)+'%)';c.strokeText(tt,FW/2,74);c.fillStyle='#fff';c.fillText(tt,FW/2,74);
+  c.font='800 13px Trebuchet MS,sans-serif';c.strokeText('Esc — отменить',FW/2,FH-16);c.fillText('Esc — отменить',FW/2,FH-16);
+  if(prog>=.9&&!C.done){C.done=1;const d=fData();const f=d.bucket.find(x=>x===C.f);if(f){f.clean=true}stat('fishCleaned');persist();SND.win();confetti(20);fMsg('✨ '+sp.n+' почищена — цена ×'+fUp('knife'),'#5ee6c1');setTimeout(()=>{FG.clean=null;fRender()},700)}}
+function fSell(i){const d=fData();const f=d.bucket[i];if(!f)return 0;const v=fPrice(f);d.bucket.splice(i,1);S.coins+=v;stat('fishCoins',v);return v}
+
 function drawFishSp(c,x,y,sp,dir,t){c.save();c.translate(x,y);c.scale(dir,1);const L=sp.sz,sh=sp.sh||'fish';if(sp.glow){glowOn(c,sp.glow,14)}c.lineJoin='round';
   if(sh==='jelly'){const p=Math.sin(t*3)*3;c.scale(dir,1);c.globalAlpha=.85;c.beginPath();c.arc(0,0,L*.45,Math.PI,0);c.quadraticCurveTo(0,6+p,-L*.45,0);c.fillStyle=sp.c;c.fill();c.lineWidth=2;c.strokeStyle='#fff';c.stroke();c.strokeStyle=sp.c2;c.lineWidth=2;for(let i=-2;i<=2;i++){c.beginPath();c.moveTo(i*5,3);c.quadraticCurveTo(i*5+Math.sin(t*4+i)*5,14,i*5,24+p);c.stroke()}c.restore();return}
   if(sh==='star'){c.rotate(t*.6);starPath(c,0,0,L*.5,0);fs(c,sp.c,2.5);ell(c,-3,-3,2.5,2.5);c.fillStyle=INK;c.fill();ell(c,4,-3,2.5,2.5);c.fill();c.restore();return}
@@ -3952,19 +4007,32 @@ function drawFishSp(c,x,y,sp,dir,t){c.save();c.translate(x,y);c.scale(dir,1);con
   if(sh==='whale'){c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=2;for(let i=0;i<5;i++){c.beginPath();c.moveTo(L*.05+i*8,H*.4);c.lineTo(L*.05+i*8,H*.9);c.stroke()}}
   c.restore()}
 function fRender(){if(!FG||!S)return;const d=fData(),el=$('#fPanel');for(const b of document.querySelectorAll('#fTabs [data-ft]'))b.classList.toggle('cur',b.dataset.ft===fishTab);let h='';
-  if(fishTab==='up'){h='<div class="fup">';for(const k in FUP){const U=FUP[k],lv=d.up[k],max=lv>=U.v.length-1,nx=U.p[lv+1];h+=`<div class="fupc"><b>${U.n}</b><div class="fbar">${U.v.map((_,i)=>`<i class="${i<=lv?'on':''}"></i>`).join('')}</div><small>Сейчас: ${U.v[lv]}${U.u}${max?'':' → '+U.v[lv+1]+U.u}</small><button class="btn sm ${max?'ghost':'mint'}" data-fup="${k}" ${max||S.coins<nx?'disabled':''}>${max?'Максимум':'Улучшить 🪙 '+nx}</button></div>`}h+='</div>'}
+  try{$('#fBk').textContent=d.bucket.length+'/'+fUp('bucket')}catch(e){}
+  if(fishTab==='b'){const tot=d.bucket.reduce((a,f)=>a+fPrice(f),0);h=`<div class="row" style="gap:8px;margin:10px 0;flex-wrap:wrap"><span class="chip">🪣 ${d.bucket.length}/${fUp('bucket')} рыб</span><button class="btn sm mint" data-fsellall ${d.bucket.length?'':'disabled'}>💰 Продать всё за ${tot} 🪙</button><span class="hint">Почищенная рыба стоит ×${fUp('knife')} · лодка даёт +${fUp('boat')}%</span></div><div class="fjr">`;
+    d.bucket.forEach((f,i)=>{const sp=FSPM[f.id];h+=`<div class="fjc"><canvas width="120" height="70" data-fjc="${f.id}"></canvas><b>${f.clean?'✨ ':''}${sp.n}</b><small>${f.w} кг · ${fPrice(f)} 🪙</small><div class="row" style="gap:4px;justify-content:center;margin-top:4px">${f.clean?'':`<button class="btn sm" data-fclean="${i}">🔪 Чистить</button>`}<button class="btn sm ghost" data-fsell="${i}">💰</button></div></div>`});
+    if(!d.bucket.length)h+='<p class="hint">Ведро пустое — поймай рыбу! Улов складывается сюда, а почистить и продать можно в любой момент.</p>';h+='</div>'}
+  else if(fishTab==='rod'){h='<p class="sub" style="margin-top:8px">Каждое улучшение удочки открывает новый вид. Выбери, какой показывать:</p><div class="fjr">';FROD.forEach((n,i)=>{const ok=i<=d.up.rod;h+=`<div class="fjc ${ok?'':'lock'}"><canvas width="120" height="70" data-frodc="${i}"></canvas><b>${n}</b><small>${ok?(d.rodSkin===i?'✓ выбрана':'открыта'):'уровень удочки '+(i+1)}</small>${ok&&d.rodSkin!==i?`<button class="btn sm mint" data-frod="${i}" style="margin-top:4px">Выбрать</button>`:''}</div>`});h+='</div>'}
+  else if(fishTab==='up'){h='<div class="fup">';for(const k in FUP){const U=FUP[k],lv=d.up[k],max=lv>=U.v.length-1,nx=U.p[lv+1];h+=`<div class="fupc"><b>${U.n}</b>${k==='rod'?`<small>Вид: ${FROD[lv]}${max?'':' → '+FROD[lv+1]}</small>`:k==='boat'?`<small>${FBOAT[lv]}${max?'':' → '+FBOAT[lv+1]}</small>`:''}<div class="fbar">${U.v.map((_,i)=>`<i class="${i<=lv?'on':''}"></i>`).join('')}</div><small>Сейчас: ${U.v[lv]}${U.u}${max?'':' → '+U.v[lv+1]+U.u}</small><button class="btn sm ${max?'ghost':'mint'}" data-fup="${k}" ${max||S.coins<nx?'disabled':''}>${max?'Максимум':'Улучшить 🪙 '+nx}</button></div>`}h+='</div>'}
   else{const got=Object.keys(d.j).length;h=`<p class="sub">Открыто ${got} из ${FSP.filter(s=>!s.danger).length} видов · всего поймано ${d.total}</p><div class="fjr">`;for(const s of FSP){if(s.danger)continue;const j=d.j[s.id];h+=`<div class="fjc ${j?'':'lock'}"><canvas width="120" height="70" data-fjc="${s.id}"></canvas><b>${j?s.n:'???'}</b><small>${j?'×'+j.n+' · рекорд '+j.best+' кг':'глубина '+s.d[0]+'–'+s.d[1]+' м'}</small></div>`}h+='</div>'}
-  el.innerHTML=h;for(const cv of el.querySelectorAll('[data-fjc]')){const s=FSPM[cv.dataset.fjc],c=cv.getContext('2d'),sc=Math.min(1,90/s.sz);c.save();c.translate(60,36);c.scale(sc,sc);if(!d.j[s.id]){c.filter='brightness(0)';c.globalAlpha=.5}drawFishSp(c,0,0,s,1,1);c.restore()}}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-fishing],[data-fup],[data-ft]');if(!b||!S)return;
+  el.innerHTML=h;for(const cv of el.querySelectorAll('[data-frodc]')){const c=cv.getContext('2d'),i=+cv.dataset.frodc;c.fillStyle='#8fd0ff';c.fillRect(0,0,120,70);fRod(c,i,1.2,18,62,104,10);if(i>d.up.rod){c.fillStyle='rgba(30,20,50,.55)';c.fillRect(0,0,120,70);c.font='22px sans-serif';c.textAlign='center';c.fillText('🔒',60,44)}}
+  for(const cv of el.querySelectorAll('[data-fjc]')){const s=FSPM[cv.dataset.fjc],c=cv.getContext('2d'),sc=Math.min(1,90/s.sz);c.save();c.translate(60,36);c.scale(sc,sc);if(!d.j[s.id]){c.filter='brightness(0)';c.globalAlpha=.5}drawFishSp(c,0,0,s,1,1);c.restore()}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-fishing],[data-fup],[data-ft],[data-fclean],[data-fsell],[data-fsellall],[data-frod]');if(!b||!S)return;
+  if(b.dataset.fclean!=null){fCleanStart(+b.dataset.fclean);SND.click();return}
+  if(b.dataset.fsell!=null){const v=fSell(+b.dataset.fsell);persist();refreshTop();SND.buy();toast('💰 Продано за '+v+' 🪙');fRender();return}
+  if(b.hasAttribute('data-fsellall')){const d=fData();let v=0,n=d.bucket.length;while(d.bucket.length)v+=fSell(0);persist();refreshTop();SND.buy();toast('💰 Продано '+n+' рыб за '+v+' 🪙');fRender();return}
+  if(b.dataset.frod!=null){fData().rodSkin=+b.dataset.frod;persist();SND.click();toast('🎣 Удочка: '+FROD[fData().rodSkin]);fRender();return}
   if(b.dataset.fishing){openFishing();return}
   if(b.dataset.ft){fishTab=b.dataset.ft;SND.click();fRender();return}
-  if(b.dataset.fup){const k=b.dataset.fup,d=fData(),lv=d.up[k],nx=FUP[k].p[lv+1];if(nx==null||S.coins<nx)return;S.coins-=nx;d.up[k]++;persist();refreshTop();SND.buy();toast('⬆ '+FUP[k].n+': '+FUP[k].v[d.up[k]]+FUP[k].u);fRender()}});
+  if(b.dataset.fup){const k=b.dataset.fup,d=fData(),lv=d.up[k],nx=FUP[k].p[lv+1];if(nx==null||S.coins<nx)return;S.coins-=nx;d.up[k]++;if(k==='rod')d.rodSkin=d.up.rod;persist();refreshTop();SND.buy();toast('⬆ '+FUP[k].n+': '+FUP[k].v[d.up[k]]+FUP[k].u);fRender()}});
 {const cvv=()=>$('#fcv');const pt=e=>{const r=cvv().getBoundingClientRect();return(e.clientX-r.left)*FW/r.width};
-  document.addEventListener('pointerdown',e=>{if(cur==='fishing'&&e.target.id==='fcv'){e.preventDefault();if(FG)FG.tx=pt(e);fInput(true)}});
+  document.addEventListener('pointerdown',e=>{if(cur==='fishing'&&e.target.id==='fcv'){e.preventDefault();if(FG){FG.tx=pt(e);if(FG.clean){FG.clean.mx=pt(e);FG.clean.my=ptY(e)}}fInput(true)}});
   document.addEventListener('pointerup',()=>{if(cur==='fishing')fInput(false)});
-  document.addEventListener('pointermove',e=>{if(cur==='fishing'&&FG&&e.target.id==='fcv'&&FG.ph==='sink')FG.tx=pt(e)});
+  const ptY=e=>{const r=cvv().getBoundingClientRect();return(e.clientY-r.top)*FH/r.height};
+  document.addEventListener('pointermove',e=>{if(cur!=='fishing'||!FG||e.target.id!=='fcv')return;if(FG.clean){FG.clean.mx=pt(e);FG.clean.my=ptY(e)}else if(FG.ph==='sink')FG.tx=pt(e)});
+  document.addEventListener('keydown',e=>{if(cur==='fishing'&&FG&&FG.clean&&e.key==='Escape'){FG.clean=null;fRender()}});
   document.addEventListener('keydown',e=>{if(cur==='fishing'&&e.code==='Space'&&!e.repeat){e.preventDefault();fInput(true)}});
   document.addEventListener('keyup',e=>{if(cur==='fishing'&&e.code==='Space')fInput(false)})}
+ACH.push({id:'fish4',n:'Чистюля',d:'Рыбалка: почистить 25 рыб',k:'fishCleaned',goal:25,r:200,i:'🔪'});
 ACH.push({id:'fish1',n:'Рыбак',d:'Рыбалка: поймать 50 рыб',k:'fishCaught',goal:50,r:150,i:'🎣'},{id:'fish2',n:'Ихтиолог',d:'Рыбалка: открыть 15 видов рыб',k:'fishSpecies',goal:15,r:300,i:'📖'},{id:'fish3',n:'Укротитель Кракена',d:'Рыбалка: поймать Кракена',k:'fishKraken',goal:1,r:600,i:'🦑'});
 
 ACH.push({id:'ck',n:'Мастер шашек',d:'Обыграть сложного бота в шашки',k:'ckHard',goal:1,r:150,i:'⛀'});
