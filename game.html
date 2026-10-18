@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=37;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=38;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -113,6 +113,9 @@ html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
 .mlrow .mb{display:none;border-top:2px dashed #d8c8a8;margin-top:8px;padding-top:8px;white-space:pre-wrap;cursor:default}.mlrow.open .mb{display:block}.mlrow .mb ul{margin:4px 0 0 18px;padding:0}
 .bgtile{position:relative;height:84px;border:3px solid var(--ink);border-radius:14px;overflow:hidden;cursor:pointer;background:#2a2050 center/cover no-repeat;box-shadow:0 3px 0 var(--ink)}.bgtile.cur{outline:4px solid var(--mint);outline-offset:1px}.bgtile b{position:absolute;left:6px;bottom:5px;right:6px;background:rgba(255,244,224,.92);border-radius:8px;padding:1px 6px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bgtile.add{display:flex;align-items:center;justify-content:center;flex-direction:column;background:repeating-linear-gradient(45deg,#fff4e0 0 10px,#ffe6bd 10px 20px);font-size:30px}.bgtile.add span{font-size:12px;font-weight:900}.bgtile .del{position:absolute;top:4px;right:4px;background:#e8355d;color:#fff;border:2px solid var(--ink);border-radius:8px;font-size:11px;padding:0 5px;cursor:pointer}
+.ckb .sq.l{background:#f3dcb4}.ckb .sq.d{background:#8a5a3c}.ckb .sq.can{box-shadow:inset 0 0 0 3px #5ee6c1}
+.ckp{width:76%;height:76%;border-radius:50%;display:block;margin:auto;position:relative;box-shadow:0 3px 0 rgba(0,0,0,.45),inset 0 -4px 0 rgba(0,0,0,.18)}.ckp.w{background:radial-gradient(circle at 40% 35%,#fff,#e6dccb);border:2px solid #6b5a46}.ckp.b{background:radial-gradient(circle at 40% 35%,#5a4a60,#1d1622);border:2px solid #000}
+.ckp::after{content:'';position:absolute;inset:18%;border-radius:50%;border:2px solid rgba(0,0,0,.18)}.ckp.k::before{content:'👑';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(12px,3.4vw,24px);z-index:1}
 .slots{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:14px}.slot span{font-size:10px!important;line-height:1.2;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:normal;overflow-wrap:normal}
 .slot{padding:6px 1px!important}.slot b{font-size:10.5px!important}
 .slot span{font-size:12px}
@@ -464,6 +467,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
         <div class="mgcard"><div class="mgic">🚀</div><div class="mgtx"><b>Ракета</b><small>Ставь монеты, ракета взлетает и множитель растёт — успей забрать до того, как она улетит!</small></div><button class="btn sm mint" data-rocket="1">Открыть</button></div>
         <div class="mgcard"><div class="mgic">🌻</div><div class="mgtx"><b>Сад котозайца</b><small>Покупай семена, сажай, поливай, собирай урожай и продавай. Растения растут даже когда игра закрыта</small></div><button class="btn sm mint" data-garden="1">Открыть</button></div>
         <div class="mgcard"><div class="mgic">🤸</div><div class="mgtx"><b>NoomiClone</b><small>Котозаяц-гимнаст: раскачайся на перекладине, отпусти, сделай сальто и поймай следующую</small></div><button class="btn sm mint" data-noomi="1">Открыть</button></div>
+        <div class="mgcard"><div class="mgic">⛀</div><div class="mgtx"><b>Шашки</b><small>Русские шашки: обязательное взятие, дамки, бить можно назад</small></div><button class="btn sm mint" data-mgopen="ck">Открыть</button></div>
         <div class="mgcard"><div class="mgic">♟️</div><div class="mgtx"><b>Шахматы</b><small>Классические шахматы, рокировка, взятие на проходе</small></div><button class="btn sm mint" data-mgopen="chess">Открыть</button></div>
       </div>
     </div>
@@ -2392,6 +2396,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:38,l:'1.3.9',items:['⛀ Новая мини-игра «Шашки» — русские шашки с ботом (3 сложности) и онлайн','🏅 Достижение «Мастер шашек»']},
  {v:37,l:'1.4.0',items:['🚀 Ракета теперь одиночная игра — без ботов']},
  {v:36,l:'1.4.0',items:['🚀 Новая мини-игра «Ракета»: ставь монеты, ракета взлетает, успей забрать выигрыш до взрыва','🏅 Достижения «Пилот» и «Космонавт»']},
  {v:35,l:'1.3.9',items:['📂 На ПК у фонов своя папка: Изображения → Kotazaic and Stars → Фоны','🔄 Картинки, скопированные в эту папку, сами появляются в игре']},
@@ -3062,8 +3067,50 @@ const CH={
   rand(st,q){const ms=CH.legal(st,q);if(!ms.length)return null;const m=ms[Math.floor(Math.random()*ms.length)];return{t:'mv',f:m.f,to:m.to}}
 };
 
-const MG_ENG={ttt:TT,durak:DK,chess:CH};
-const MG_INFO={chess:{n:'Шахматы',i:'♟️',rules:'Обычные шахматы: рокировка, взятие на проходе, пешка превращается в ферзя. Нажми на фигуру — точками покажутся её ходы.'},ttt:{n:'Крестики-нолики',i:'❌⭕',rules:'Ставь ❌ по очереди с соперником. Кто первым соберёт 3 в ряд — победил.'},durak:{n:'Дурак',i:'🃏',rules:'36 карт, по 6 на руках. Атакуй, отбивайся старшей картой той же масти или козырем. Кто первым избавится от карт — победил.'}};
+/* ---- Russian checkers ---- */
+const CK={
+  D:[[-1,-1],[-1,1],[1,-1],[1,1]],
+  init(white){const b=Array(64).fill(null);for(let r=0;r<8;r++)for(let f=0;f<8;f++){if((r+f)%2===0)continue;if(r<3)b[r*8+f]='b';if(r>4)b[r*8+f]='w'}return{g:'ck',b,turn:'w',white,winner:null,reason:'',last:null,moves:0,quiet:0}},
+  color(st,q){return q===st.white?'w':'b'},
+  actor(st){if(st.winner!==null)return -1;return st.turn==='w'?st.white:1-st.white},
+  own(p,c){return p&&p.toLowerCase()===c},
+  caps(b,sq,c,king,taken,path,out){const r=sq>>3,f=sq&7,en=c==='w'?'b':'w';let any=false;
+    for(const[dr,df]of CK.D){
+      if(!king){const mr=r+dr,mf=f+df,lr=r+2*dr,lf=f+2*df;if(lr<0||lr>7||lf<0||lf>7)continue;const mid=mr*8+mf,land=lr*8+lf;
+        if(b[mid]&&b[mid].toLowerCase()===en&&!taken.includes(mid)&&!b[land]){any=true;const kk=(c==='w'&&lr===0)||(c==='b'&&lr===7);CK.caps(b,land,c,kk,taken.concat(mid),path.concat(land),out)}}
+      else{let rr=r+dr,ff=f+df;while(rr>=0&&rr<8&&ff>=0&&ff<8&&!b[rr*8+ff]){rr+=dr;ff+=df}if(rr<0||rr>7||ff<0||ff>7)continue;const mid=rr*8+ff;if(!(b[mid].toLowerCase()===en)||taken.includes(mid))continue;
+        let lr=rr+dr,lf=ff+df;const lands=[];while(lr>=0&&lr<8&&lf>=0&&lf<8&&!b[lr*8+lf]){lands.push(lr*8+lf);lr+=dr;lf+=df}
+        if(!lands.length)continue;any=true;const nt=taken.concat(mid);const cont=lands.filter(L=>{const tmp=[];CK.caps(b,L,c,true,nt,[],tmp);return tmp.length>0});
+        for(const L of (cont.length?cont:lands))CK.caps(b,L,c,true,nt,path.concat(L),out)}}
+    if(!any&&taken.length)out.push({path,caps:taken,king})},
+  legalFor(st,c){const b=st.b,cap=[],quiet=[];
+    for(let i=0;i<64;i++){if(!CK.own(b[i],c))continue;const king=b[i]===b[i].toUpperCase();const bb=b.slice();bb[i]=null;const out=[];CK.caps(bb,i,c,king,[],[],out);for(const o of out)cap.push({t:'mv',f:i,to:o.path[o.path.length-1],path:o.path,caps:o.caps,kg:o.king});
+      if(!cap.length){const r=i>>3,f=i&7;for(const[dr,df]of CK.D){if(!king&&dr!==(c==='w'?-1:1))continue;let rr=r+dr,ff=f+df;while(rr>=0&&rr<8&&ff>=0&&ff<8&&!b[rr*8+ff]){quiet.push({t:'mv',f:i,to:rr*8+ff,path:[rr*8+ff],caps:[]});if(!king)break;rr+=dr;ff+=df}}}}
+    return cap.length?cap:quiet},
+  legal(st,q){if(CK.actor(st)!==q)return[];return CK.legalFor(st,CK.color(st,q))},
+  apply(st,m){const b=st.b.slice(),c=st.turn,p=b[m.f];b[m.f]=null;for(const x of m.caps)b[x]=null;const tr=m.to>>3;let np=p;if(p===c&&((c==='w'&&tr===0)||(c==='b'&&tr===7)||m.kg))np=c.toUpperCase();b[m.to]=np;
+    return{g:'ck',b,turn:c==='w'?'b':'w',white:st.white,winner:null,reason:'',last:[m.f,...m.path],moves:st.moves+1,quiet:(m.caps.length||p===p.toLowerCase())?0:st.quiet+1}},
+  reduce(st,a,q){if(!a)return null;const L=CK.legal(st,q);const m=L.find(x=>x.f===a.f&&x.to===a.to&&(!a.path||x.path.join()===a.path.join()))||L.find(x=>x.f===a.f&&x.to===a.to);if(!m)return null;
+    const ns=CK.apply(st,m),nl=CK.legalFor(ns,ns.turn);if(!nl.length){ns.winner=q;ns.reason=ns.b.some(x=>CK.own(x,ns.turn))?'Соперник заперт!':'Все шашки соперника взяты!'}else if(ns.quiet>=30){ns.winner='draw';ns.reason='15 ходов дамками без взятий'}return ns},
+  evalB(b,c){let s=0;for(let i=0;i<64;i++){const p=b[i];if(!p)continue;const w=p.toLowerCase()==='w',K=p===p.toUpperCase(),r=i>>3,f=i&7;let v=K?320:100;if(!K)v+=(w?7-r:r)*6+((f>1&&f<6)?4:0)+((w?r===7:r===0)?8:0);s+=w?v:-v}return c==='w'?s:-s},
+  search(st,c,d,al,be){const ms=CK.legalFor(st,c);if(!ms.length)return -100000;if(d<=0)return CK.evalB(st.b,c);ms.sort((x,y)=>y.caps.length-x.caps.length);const o=c==='w'?'b':'w';
+    for(const m of ms){const v=-CK.search(CK.apply(st,m),o,d-1-(m.caps.length&&d===1?-1:0),-be,-al);if(v>al)al=v;if(al>=be)break}return al},
+  smart(st,q){const c=CK.color(st,q),ms=CK.legalFor(st,c);if(!ms.length)return null;const o=c==='w'?'b':'w';let best=-Infinity,bm=ms[0];const depth=ms.length>8?4:5;
+    for(const m of ms){const v=-CK.search(CK.apply(st,m),o,depth-1,-Infinity,Infinity)+Math.random()*3;if(v>best){best=v;bm=m}}return{t:'mv',f:bm.f,to:bm.to,path:bm.path}},
+  rand(st,q){const ms=CK.legal(st,q);if(!ms.length)return null;const m=ms[Math.floor(Math.random()*ms.length)];return{t:'mv',f:m.f,to:m.to,path:m.path}}
+};
+function renderCK(){const st=mg.st,me=mg.me,myC=CK.color(st,me),my=CK.actor(st)===me,L=my?CK.legal(st,me):[];const flip=myC==='b';
+  if(mg.sel!=null&&!L.some(m=>m.f===mg.sel))mg.sel=null;const tg=mg.sel!=null?L.filter(m=>m.f===mg.sel):[];const must=L.length&&L[0].caps.length;
+  const cnt={w:0,b:0,W:0,B:0};for(const p of st.b)if(p)cnt[p]++;const mine=myC==='w'?cnt.w+cnt.W:cnt.b+cnt.B,theirs=myC==='w'?cnt.b+cnt.B:cnt.w+cnt.W;
+  let h=`<div class="dkinfo"><span class="chip">${mgOppName()}</span><span class="chip">Ты: ${myC==='w'?'⚪ белые':'⚫ чёрные'}</span><span class="chip">Шашки: ${mine} : ${theirs}</span></div>`;
+  h+=`<div class="mgstat">${st.winner!==null?'':my?(must?'Твой ход — бить обязательно! ⚔':'Твой ход'):(mg.vs==='bot'?'Бот думает…':'Ход соперника…')}</div><div class="chs ckb">`;
+  const movable=new Set(L.map(m=>m.f));
+  for(let vr=0;vr<8;vr++)for(let vf=0;vf<8;vf++){const r=flip?7-vr:vr,f=flip?7-vf:vf,sq=r*8+f,p=st.b[sq];const cls=['sq',(r+f)%2?'d':'l'];
+    if(st.last&&st.last.includes(sq))cls.push('last');if(sq===mg.sel)cls.push('sel');const m=tg.find(x=>x.to===sq);if(m)cls.push(m.caps.length?'cap':'dot');if(movable.has(sq)&&mg.sel==null&&my)cls.push('can');
+    h+=`<div class="${cls.join(' ')}" data-ck="${sq}">${p?`<span class="ckp ${p.toLowerCase()==='w'?'w':'b'} ${p===p.toUpperCase()?'k':''}"></span>`:''}${vr===7?`<span class="cr f">${'abcdefgh'[f]}</span>`:''}${vf===0?`<span class="cr r">${8-r}</span>`:''}</div>`}
+  $('#mgBoard').innerHTML=h+'</div>'+mgResultHtml()}
+const MG_ENG={ttt:TT,durak:DK,chess:CH,ck:CK};
+const MG_INFO={ck:{n:'Шашки',i:'⛀',rules:'Русские шашки. Ходят по тёмным клеткам по диагонали вперёд, бьют и вперёд, и назад. Бить обязательно, взятие можно продолжать несколько раз подряд. Дошёл до последнего ряда — шашка становится дамкой 👑 и ходит на любое число клеток. Нажми на шашку — точками покажутся её ходы.'},chess:{n:'Шахматы',i:'♟️',rules:'Обычные шахматы: рокировка, взятие на проходе, пешка превращается в ферзя. Нажми на фигуру — точками покажутся её ходы.'},ttt:{n:'Крестики-нолики',i:'❌⭕',rules:'Ставь ❌ по очереди с соперником. Кто первым соберёт 3 в ряд — победил.'},durak:{n:'Дурак',i:'🃏',rules:'36 карт, по 6 на руках. Атакуй, отбивайся старшей картой той же масти или козырем. Кто первым избавится от карт — победил.'}};
 const DIFF={easy:{n:'Легко',p:.25,r:5},mid:{n:'Средне',p:.5,r:10},hard:{n:'Сложно',p:.8,r:20}};
 const DK_MODE={classic:'Дурак — обычная игра',transfer:'Дурак — переводной'};
 ACH.push({id:'codes2',n:'Мастер приколов',d:'Найти 20 разных секретных кодов',k:'codes',goal:20,r:300,i:'🤡'},{id:'carrots',n:'Морковный король',d:'Поймать 50 морковок в морковный дождь',k:'carrots',goal:50,r:120,i:'🥕'});
@@ -3071,8 +3118,9 @@ ACH.push({id:'rocket1',n:'Пилот',d:'Ракета: забрать выигр
 ACH.push({id:'trade1',n:'Торговец',d:'Совершить первый обмен с другим игроком',k:'trades',goal:1,r:100,i:'🤝'},{id:'trade2',n:'Барыга',d:'Совершить 10 обменов',k:'trades',goal:10,r:300,i:'💼'});
 ACH.push({id:'garden1',n:'Садовод',d:'Собрать 50 растений в саду',k:'gHarvest',goal:50,r:150,i:'🌻'},{id:'garden2',n:'Фермер',d:'Достичь 5 уровня сада',k:'gLevel',goal:5,r:300,i:'🚜'},{id:'garden3',n:'Золотые руки',d:'Вырастить золотое растение',k:'gGold',goal:1,r:120,i:'✨'});
 ACH.push({id:'noomi',n:'Гимнаст',d:'NoomiClone: сделать сальто и поймать перекладину',k:'noomiFlipGrab',goal:1,r:100,i:'🤸'},{id:'noomi2',n:'Олимпиец',d:'NoomiClone: набрать 3000 очков за попытку',k:'noomiBest',goal:3000,r:250,i:'🥇'});
+ACH.push({id:'ck',n:'Мастер шашек',d:'Обыграть сложного бота в шашки',k:'ckHard',goal:1,r:150,i:'⛀'});
 ACH.push({id:'chess',n:'Гроссмейстер',d:'Обыграть сложного бота в шахматы',k:'chessHard',goal:1,r:150,i:'♟️'},{id:'durak',n:'Не дурак',d:'Выиграть в дурака 3 раза',k:'durakWins',goal:3,r:80,i:'🃏'},{id:'ttt',n:'Крестоносец',d:'Обыграть сложного бота в крестики-нолики',k:'tttHard',goal:1,r:60,i:'❌'});
-let chessWhite=0,mgGame='ttt',mg=null,mgStep=null,mgPend={},mgBotTok=0,srch=null,tttFirst=0;
+let ckWhite=0,chessWhite=0,mgGame='ttt',mg=null,mgStep=null,mgPend={},mgBotTok=0,srch=null,tttFirst=0;
 const MM_ID=Math.random().toString(36).slice(2,10)+Date.now().toString(36);
 let mmCh=null;try{mmCh=new BroadcastChannel('kz_mm')}catch(e){}
 const TP='kotazaic-and-stars/v1/',mqEnc=new TextEncoder(),mqDec=new TextDecoder();
@@ -3140,7 +3188,7 @@ function renderMG(){
   $('#mgStep').innerHTML=st;
   if(!mg){$('#mgBoard').innerHTML=srch?'':`<p class="sub">${inf.rules}</p><p class="hint">«Начать игру» ищет живого соперника через интернет: им станет любой, кто тоже нажал «Начать игру» в этой игре — на другом компьютере или во втором окне.</p>`;return}
   if(!mg.st){$('#mgBoard').innerHTML='<div class="mgstat">Подключаемся к сопернику…</div>';return}
-  if(mgGame==='ttt')renderTTT();else if(mgGame==='chess')renderChess();else renderDurak();
+  if(mgGame==='ttt')renderTTT();else if(mgGame==='chess')renderChess();else if(mgGame==='ck')renderCK();else renderDurak();
 }
 function mgOppName(){return mg.vs==='bot'?'🤖 Бот · '+DIFF[mg.diff].n:'👤 '+esc(mg.opp||'Соперник')}
 function mgResultHtml(){const w=mg.st.winner;if(w===null)return'';const t=(mg.st.reason?mg.st.reason+' ':'')+(w==='draw'?'🤝 Ничья!':w===mg.me?'🎉 Ты победил!':(mgGame==='durak'?'😅 Ты остался дураком':'😿 Ты проиграл'));
@@ -3180,17 +3228,17 @@ function renderDurak(){const st=mg.st,me=mg.me,op=1-me,act=DK.actor(st),L=DK.leg
   x+=`</div><div class="dkhand">${h.map(c=>{const ok=L.some(a=>a.c&&sameC(a.c,c));return cardHtml(c,ok?'ok':'no',`data-dc="${c.r}${c.s}"`)}).join('')}</div></div>`;
   $('#mgBoard').innerHTML=x+mgResultHtml()}
 function mgStartBot(diff){const eng=MG_ENG[mgGame];mgStep=null;stopSearch();
-  const st=mgGame==='ttt'?TT.init(tttFirst):mgGame==='chess'?CH.init(chessWhite):DK.init(mgPend.mode||'classic');if(mgGame==='ttt')tttFirst=1-tttFirst;if(mgGame==='chess')chessWhite=1-chessWhite;
+  const st=mgGame==='ttt'?TT.init(tttFirst):mgGame==='chess'?CH.init(chessWhite):mgGame==='ck'?CK.init(ckWhite):DK.init(mgPend.mode||'classic');if(mgGame==='ttt')tttFirst=1-tttFirst;if(mgGame==='chess')chessWhite=1-chessWhite;if(mgGame==='ck')ckWhite=1-ckWhite;
   mg={game:mgGame,vs:'bot',diff,mode:mgPend.mode,me:0,st,done:false};SND.click();mgAfter()}
 function mgAfter(){const eng=MG_ENG[mg.game];renderMG();
   if(mg.vs==='online'&&mg.host)mmPost({t:'state',room:mg.room,st:mg.st});
   if(mg.st.winner!==null){mgFinish();return}
-  if(mg.vs==='bot'&&eng.actor(mg.st)===1){const tok=++mgBotTok;setTimeout(()=>{if(tok!==mgBotTok||!mg||mg.vs!=='bot')return;const st=mg.st;let a=Math.random()<DIFF[mg.diff].p?eng.smart(st,1):eng.rand(st,1);let ns=eng.reduce(st,a,1);if(!ns)ns=eng.reduce(st,eng.rand(st,1),1);if(ns){mg.st=ns;if(mg.game!=='ttt')sfx(700,.04,'triangle',.02);mgAfter()}},mg.game==='ttt'?rnd(450,800):mg.game==='chess'?rnd(350,700):rnd(650,1150))}}
+  if(mg.vs==='bot'&&eng.actor(mg.st)===1){const tok=++mgBotTok;setTimeout(()=>{if(tok!==mgBotTok||!mg||mg.vs!=='bot')return;const st=mg.st;let a=Math.random()<DIFF[mg.diff].p?eng.smart(st,1):eng.rand(st,1);let ns=eng.reduce(st,a,1);if(!ns)ns=eng.reduce(st,eng.rand(st,1),1);if(ns){mg.st=ns;if(mg.game!=='ttt')sfx(700,.04,'triangle',.02);mgAfter()}},mg.game==='ttt'?rnd(450,800):mg.game==='chess'||mg.game==='ck'?rnd(350,700):rnd(650,1150))}}
 function mgDo(a){if(!mg||!mg.st)return;const eng=MG_ENG[mg.game];
-  if(mg.vs==='online'&&!mg.host){if(!eng.legal(mg.st,mg.me).some(x=>mg.game==='chess'?(x.f===a.f&&x.to===a.to):(sameA(x,a)||(x.t===a.t&&x.i===a.i&&a.t==='mv'))))return;mmPost({t:'act',room:mg.room,a});sfx(800,.04,'triangle',.02);return}
+  if(mg.vs==='online'&&!mg.host){if(!eng.legal(mg.st,mg.me).some(x=>mg.game==='chess'||mg.game==='ck'?(x.f===a.f&&x.to===a.to):(sameA(x,a)||(x.t===a.t&&x.i===a.i&&a.t==='mv'))))return;mmPost({t:'act',room:mg.room,a});sfx(800,.04,'triangle',.02);return}
   const ns=eng.reduce(mg.st,a,mg.me);if(!ns)return;mg.st=ns;mg.atkSel=null;if(a.t==='tr')mg.trSel=false;sfx(800,.04,'triangle',.02);mgAfter()}
 function mgFinish(){if(mg.done)return;mg.done=true;const w=mg.st.winner;
-  if(w===mg.me){const c=mg.vs==='bot'?DIFF[mg.diff].r:15;S.coins+=c;stat('mgwins');if(mg.game==='durak')stat('durakWins');if(mg.game==='ttt'&&mg.diff==='hard')stat('tttHard');if(mg.game==='chess'&&mg.diff==='hard')stat('chessHard');toast(`🎉 Победа! +${c} 🪙`);SND.win();confetti(80)}
+  if(w===mg.me){const c=mg.vs==='bot'?DIFF[mg.diff].r:15;S.coins+=c;stat('mgwins');if(mg.game==='durak')stat('durakWins');if(mg.game==='ttt'&&mg.diff==='hard')stat('tttHard');if(mg.game==='chess'&&mg.diff==='hard')stat('chessHard');if(mg.game==='ck'&&mg.diff==='hard')stat('ckHard');toast(`🎉 Победа! +${c} 🪙`);SND.win();confetti(80)}
   else if(w==='draw'){S.coins+=2;toast('🤝 Ничья · +2 🪙')}
   else{toast('Поражение… в следующий раз повезёт!');sfx(196,.5,'triangle',.05,-80)}
   persist();refreshTop()}
@@ -3206,7 +3254,7 @@ setInterval(()=>{
   if(mg&&mg.vs==='online'){mmPost({t:'ping',room:mg.room});if(mg.st&&mg.st.winner===null&&Date.now()-mg.lastPing>12000){mg.st.winner=mg.me;mg.left=true;toast('Соперник вышел — победа засчитана!');renderMG();mgFinish()}}
 },1000);
 function startOnline(host,room,opp){stopSearch();NET.sub(TP+'r/'+room);mg={game:mgGame,vs:'online',me:host?0:1,host,room,opp,st:null,lastPing:Date.now(),done:false};
-  if(host){mg.st=mgGame==='ttt'?TT.init(Math.random()<.5?0:1):mgGame==='chess'?CH.init(Math.random()<.5?0:1):DK.init('classic');toast('Соперник найден: '+opp);SND.win();mgAfter()}else{toast('Соперник найден: '+opp);SND.win();renderMG()}}
+  if(host){mg.st=mgGame==='ttt'?TT.init(Math.random()<.5?0:1):mgGame==='chess'?CH.init(Math.random()<.5?0:1):mgGame==='ck'?CK.init(Math.random()<.5?0:1):DK.init('classic');toast('Соперник найден: '+opp);SND.win();mgAfter()}else{toast('Соперник найден: '+opp);SND.win();renderMG()}}
 function mmRecv(m){if(m&&m.trade){trRecv(m);return}if(m&&m.adm){admRecv(m);return}if(m&&m.admr){admRepRecv(m);return}if(!m||typeof m!=='object'||m.from===MM_ID)return;if(m.mid){if(mmSeen.has(m.mid))return;mmSeen.add(m.mid);if(mmSeen.size>3000)mmSeen.clear()}
   if(m.t==='seek'&&m.id)seekers[m.id]={game:m.game,t:Date.now()};
   if(m.t==='seek'&&srch&&!srch.pend&&m.game===srch.game&&m.id!==MM_ID&&MM_ID<m.id){const room=MM_ID+'_'+m.id;srch.pend={room,opp:m.nick,t:Date.now()};mmPost({t:'match',to:m.id,from:MM_ID,game:m.game,nick,room})}
@@ -3232,6 +3280,9 @@ $('#mgBoard').addEventListener('click',e=>{
   if(lb){mg=null;renderMG();return}
   if(!mg||!mg.st)return;
   const tt=e.target.closest('[data-tt]');if(tt){mgDo({t:'mv',i:+tt.dataset.tt});return}
+  const ckq=e.target.closest('[data-ck]');if(ckq&&mg.game==='ck'){const i=+ckq.dataset.ck,st=mg.st;if(CK.actor(st)!==mg.me)return;const L=CK.legal(st,mg.me);
+    if(mg.sel!=null){const m=L.find(x=>x.f===mg.sel&&x.to===i);if(m){mg.sel=null;mgDo({t:'mv',f:m.f,to:m.to,path:m.path});return}}
+    mg.sel=L.some(m=>m.f===i)?(mg.sel===i?null:i):null;if(mg.sel==null&&st.b[i]&&L.length&&L[0].caps.length&&CK.own(st.b[i],CK.color(st,mg.me)))toast('Есть обязательное взятие другой шашкой!');renderMG();return}
   const sq=e.target.closest('[data-sq]');if(sq&&mg.game==='chess'){const i=+sq.dataset.sq,st=mg.st;if(CH.actor(st)!==mg.me)return;const L=CH.legal(st,mg.me);
     if(mg.sel!=null&&L.some(m=>m.f===mg.sel&&m.to===i)){const a={t:'mv',f:mg.sel,to:i};mg.sel=null;mgDo(a);return}
     mg.sel=L.some(m=>m.f===i)?(mg.sel===i?null:i):null;renderMG();return}
