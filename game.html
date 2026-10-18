@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=41;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=42;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -136,6 +136,7 @@ html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
 .ptpop{position:fixed;top:74px;left:50%;transform:translateX(-50%);z-index:71;background:var(--paper);border:4px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink);padding:12px 16px;max-width:340px;width:calc(100% - 32px);color:var(--ink);animation:ptin .35s}
 @keyframes ptin{from{transform:translate(-50%,-20px);opacity:0}}
 .ptl{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ptc{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:10px;text-align:center;cursor:pointer;color:var(--ink)}.ptc img{width:100%;max-width:120px;aspect-ratio:1;border-radius:12px;background:#2a2050;display:block;margin:0 auto 6px}.ptc b{display:block}.ptc small{opacity:.65;font-weight:700}
+.rdy{margin-top:6px;font-weight:900;font-size:12px;background:#f3efe6;border:2px solid var(--ink);border-radius:10px;padding:2px 8px;display:table;margin:6px auto 0}.rdy.on{background:#c9f7d8}
 .ptc.empty{border-style:dashed;opacity:.6;cursor:default}.ptplus{width:100%;max-width:120px;aspect-ratio:1;margin:0 auto 6px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:900;background:#f3efe6}
 .slots{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:14px}.slot span{font-size:10px!important;line-height:1.2;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:normal;overflow-wrap:normal}
 .slot{padding:6px 1px!important}.slot b{font-size:10.5px!important}
@@ -2654,6 +2655,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:42,l:'1.3.9',items:['🎮 Кнопка «Играть вместе» в ЛС, в профиле друга и во вкладке Пати: когда нажмут все — игра запускается у всех одновременно с отсчётом 3…2…1']},
  {v:41,l:'1.3.9',items:['💬 Новая кнопка Chat в меню: общий чат со всеми живыми игроками (без ботов) и ЛС с друзьями','👤 Профили: нажми на игрока в топе или в чате — рекорд, скин, статистика, «Добавить в друзья»','🎉 Пати до 3 игроков: пригласи друга из ЛС (если он онлайн) — его котозаяц с ником встанет рядом с твоим в меню, а в игре будет бегать рядом']},
  {v:40,l:'1.3.9',items:['🎁 Огромный набор: 360 новых вещей — 12 тем (неон, лёд, лава, золото, космос, конфеты, лес, тень, радуга, хрусталь, море, вишня) в каждом разделе Cosmetics','💎 180 эксклюзивов — короны, нимбы, крылья, плащи, бомберы, крылатые кеды, пламя и звёздные вихри — только через Kotograde','🎲 180 игровых трофеев — выпадают за забеги, победы в мини-играх, NoomiClone, Ракету и урожай в саду']},
  {v:39,l:'1.3.9',items:['🎮 56 новых вещей за мини-игры: в каждом разделе Cosmetics по одной на каждую мини-игру (7 игр × 8 разделов)','🏆 Вещи выдаются сами за победы, урожаи, забеги и удачные выводы — прогресс виден в Cosmetics']},
@@ -3434,7 +3436,7 @@ setTimeout(()=>{try{NET.start()}catch(e){}},2000);
 setInterval(()=>{try{publishPresence()}catch(e){}},60000);
 /* ---------------- Social: global chat, friends, DMs, party ---------------- */
 const SOC={gc:[],gcIds:new Set(),seq:0,subbed:null,tab:'g',sel:null,ids:new Set(),lastSend:0,gNew:0,prof:null,profFb:null};
-const PT={pid:null,lead:null,mem:[],pos:{},hb:{},lastPos:0,inv:null,joining:null};
+const PT={pid:null,lead:null,mem:[],pos:{},hb:{},lastPos:0,inv:null,joining:null,ready:{},ask:null,goT:0};
 function soc(){S.soc=S.soc||{};const s=S.soc;s.fr=s.fr||{};s.dm=s.dm||{};s.unr=s.unr||{};s.rin=s.rin||{};s.rout=s.rout||{};return s}
 function socOk(){return !!(S&&S.gid&&user&&user!=='__guest')}
 function socId(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}
@@ -3481,38 +3483,50 @@ function frRecv(from,m){const s=soc();if(m.from!==from)return;
 function ptMe(){return{gid:S.gid,nick,eq:Object.assign({},S.eq)}}
 function ptSend(g,m){m.id=socId();m.from=S.gid;if(!m.pid)m.pid=PT.pid;NET.pub(TP+'pt/'+g,m)}
 function ptAll(m){for(const x of PT.mem)if(x.gid!==S.gid)ptSend(x.gid,Object.assign({},m))}
-function ptInvite(g){if(!soc().fr[g]){toast('В пати можно пригласить только друга');return}
+function ptInvite(g,play){if(!soc().fr[g]){toast('В пати можно пригласить только друга');return}
   if(!isOnline(g)){toast('🔴 '+socNick(g)+' сейчас не в сети — нельзя пригласить в пати, пока друг оффлайн');return}
   if(PT.mem.some(x=>x.gid===g)){toast(socNick(g)+' уже в твоей пати');return}if(PT.pid&&PT.mem.length>=3){toast('В пати уже 3 игрока — это максимум');return}
   NET.start();if(!NET.ok()){toast('Нет связи с онлайн-сервером');return}
   if(!PT.pid){PT.pid=socId().slice(0,10);PT.lead=S.gid;PT.mem=[ptMe()];PT.hb={}}
-  ptSend(g,{t:'inv',nick,lead:PT.lead});toast('🎉 Приглашение в пати отправлено: '+socNick(g));SND.click();ptUi()}
-function ptReset(){PT.pid=null;PT.lead=null;PT.mem=[];PT.pos={};PT.hb={};ptUi()}
+  if(play)PT.ready[S.gid]=true;ptSend(g,{t:'inv',nick,lead:PT.lead,play:play?1:0});toast(play?'🎮 '+socNick(g)+' получил(а) приглашение играть вместе — ждём, пока нажмёт':'🎉 Приглашение в пати отправлено: '+socNick(g));SND.click();ptUi()}
+function ptReset(){PT.pid=null;PT.lead=null;PT.mem=[];PT.pos={};PT.hb={};PT.ready={};PT.ask=null;ptPop();ptUi()}
 function ptLeave(silent){if(!PT.pid)return;ptAll({t:'leave'});ptReset();if(!silent)toast('Ты вышел из пати')}
-function ptRoster(){if(PT.lead!==S.gid)return;ptAll({t:'roster',lead:PT.lead,mem:PT.mem});ptUi()}
-function ptAccept(){const i=PT.inv;PT.inv=null;ptPop();if(!i)return;if(PT.pid)ptLeave(true);PT.joining=i.pid;ptSend(i.lead,{t:'join',pid:i.pid,nick,eq:S.eq});
+function ptRoster(){if(PT.lead!==S.gid)return;ptAll({t:'roster',lead:PT.lead,mem:PT.mem,rdy:PT.ready});ptUi();ptCheck()}
+function ptAccept(play){const i=PT.inv;PT.inv=null;ptPop();if(!i)return;if(PT.pid)ptLeave(true);PT.joining=i.pid;play=play||!!i.play;PT.ready={};if(play)PT.ready[S.gid]=true;ptSend(i.lead,{t:'join',pid:i.pid,nick,eq:S.eq,rdy:play?1:0});
   setTimeout(()=>{if(PT.joining===i.pid){PT.joining=null;toast('Не получилось войти в пати — попробуй ещё раз')}},9000)}
 function ptDecline(){const i=PT.inv;PT.inv=null;ptPop();if(i)ptSend(i.from,{t:'dec',pid:i.pid})}
 function ptRecv(m){const f=m.from,nm=String(m.nick||socNick(f)).slice(0,24);
-  if(m.t==='inv'){if(PT.pid&&PT.pid===m.pid)return;PT.inv={from:f,nick:nm,pid:String(m.pid),lead:String(m.lead||f),ts:Date.now()};ptPop();SND.win();return}
+  if(m.t==='inv'){if(PT.pid&&PT.pid===m.pid)return;PT.inv={from:f,nick:nm,pid:String(m.pid),lead:String(m.lead||f),ts:Date.now(),play:!!m.play};ptPop();SND.win();return}
   if(m.t==='dec'){toast('😕 '+nm+' отклонил(а) приглашение в пати');return}
   if(m.t==='full'){if(PT.joining===m.pid){PT.joining=null;toast('В этой пати уже 3 игрока — мест нет')}return}
-  if(m.t==='join'){if(!PT.pid||PT.lead!==S.gid||m.pid!==PT.pid)return;const ex=PT.mem.find(x=>x.gid===f);if(!ex){if(PT.mem.length>=3){ptSend(f,{t:'full',pid:m.pid});return}PT.mem.push({gid:f,nick:nm,eq:sanEq(m.eq)});toast('🎉 '+nm+' присоединился к пати!');SND.win();stat('parties')}PT.hb[f]=Date.now();ptRoster();return}
+  if(m.t==='join'){if(!PT.pid||PT.lead!==S.gid||m.pid!==PT.pid)return;const ex=PT.mem.find(x=>x.gid===f);if(!ex){if(PT.mem.length>=3){ptSend(f,{t:'full',pid:m.pid});return}PT.mem.push({gid:f,nick:nm,eq:sanEq(m.eq)});toast('🎉 '+nm+' присоединился к пати!');SND.win();stat('parties')}PT.hb[f]=Date.now();if(m.rdy)PT.ready[f]=true;ptRoster();return}
   if(m.t==='roster'){if(m.pid!==PT.pid&&m.pid!==PT.joining)return;const mem=(Array.isArray(m.mem)?m.mem:[]).slice(0,3).map(x=>({gid:String(x.gid),nick:String(x.nick||'?').slice(0,24),eq:sanEq(x.eq)}));
-    if(!mem.some(x=>x.gid===S.gid)){if(m.pid===PT.pid){ptReset();toast('Ты больше не в пати')}return}const fresh=PT.joining===m.pid;PT.joining=null;PT.pid=m.pid;PT.lead=String(m.lead);PT.mem=mem;for(const x of mem)PT.hb[x.gid]=PT.hb[x.gid]||Date.now();if(fresh){toast('🎉 Ты в пати с '+mem.filter(x=>x.gid!==S.gid).map(x=>x.nick).join(', ')+'!');SND.win();stat('parties')}ptUi();return}
+    if(!mem.some(x=>x.gid===S.gid)){if(m.pid===PT.pid){ptReset();toast('Ты больше не в пати')}return}const fresh=PT.joining===m.pid;PT.joining=null;PT.pid=m.pid;PT.lead=String(m.lead);PT.mem=mem;if(m.rdy&&typeof m.rdy==='object'){const mine=!!PT.ready[S.gid];PT.ready={};for(const x of mem)if(m.rdy[x.gid])PT.ready[x.gid]=true;if(mine)PT.ready[S.gid]=true}for(const x of mem)PT.hb[x.gid]=PT.hb[x.gid]||Date.now();if(fresh){toast('🎉 Ты в пати с '+mem.filter(x=>x.gid!==S.gid).map(x=>x.nick).join(', ')+'!');SND.win();stat('parties')}ptUi();return}
   if(m.pid!==PT.pid||!PT.mem.some(x=>x.gid===f))return;PT.hb[f]=Date.now();
   if(m.t==='hb'){const x=PT.mem.find(y=>y.gid===f);if(m.eq)x.eq=sanEq(m.eq);if(m.nick)x.nick=nm;return}
   if(m.t==='pos'){const o=PT.pos[f]||{};o.x=clamp(+m.x||0,0,1);o.h=+m.h||0;o.tl=clamp(+m.tl||0,-.3,.3);o.t=Date.now();PT.pos[f]=o;return}
+  if(m.t==='rdy'){PT.ready[f]=!!m.v;if(m.v&&!PT.ready[S.gid]){PT.ask={from:f,nick:nm,ts:Date.now()};ptPop();sfx(660,.12,'triangle',.05,300)}else if(!m.v&&PT.ask&&PT.ask.from===f){PT.ask=null;ptPop()}ptUi();ptCheck();return}
+  if(m.t==='go'){ptGo(clamp(+m.d||3000,500,6000));return}
   if(m.t==='leave')ptDrop(f,'👋 '+nm+' вышел(а) из пати')}
-function ptDrop(g,msg){PT.mem=PT.mem.filter(x=>x.gid!==g);delete PT.pos[g];delete PT.hb[g];if(msg)toast(msg);if(PT.mem.length<=1){ptReset();if(msg)setTimeout(()=>toast('Пати распалась'),1200);return}if(g===PT.lead)PT.lead=PT.mem[0].gid;if(PT.lead===S.gid)ptRoster();ptUi()}
+function ptPlay(g){if(!socOk())return;if(g&&!PT.mem.some(x=>x.gid===g)){ptInvite(g,true);return}
+  if(!PT.pid||PT.mem.length<2){toast('Сначала позови друга: в ЛС нажми «🎮 Играть вместе» — он должен быть онлайн');return}
+  const v=!PT.ready[S.gid];PT.ready[S.gid]=v;if(v){PT.ask=null;ptPop()}ptAll({t:'rdy',v});SND.click();toast(v?'✅ Ты готов! Ждём остальных…':'Готовность отменена');ptUi();ptCheck()}
+function ptCheck(){if(!PT.pid||PT.lead!==S.gid||PT.mem.length<2||Date.now()-PT.goT<3500)return;if(PT.mem.every(x=>PT.ready[x.gid])){PT.goT=Date.now();ptAll({t:'go',d:3200});ptGo(3200)}}
+function ptGo(d){if(Date.now()-PT.goT<2000&&PT.goT&&PT.lead!==S.gid)return;PT.goT=Date.now();PT.ready={};PT.ask=null;PT.inv=null;ptPop();SOC.prof=null;profRender();ptUi();SND.win();
+  const n=Math.round(d/1000);for(let i=0;i<n;i++)setTimeout(()=>banner('🎮 Играем вместе через '+(n-i)+'…','#5ee6c1'),i*1000);
+  setTimeout(()=>{if(!PT.pid)return;G=null;startGame('normal');stat('coopGames')},d)}
+function ptDrop(g,msg){PT.mem=PT.mem.filter(x=>x.gid!==g);delete PT.pos[g];delete PT.hb[g];delete PT.ready[g];if(PT.ask&&PT.ask.from===g){PT.ask=null;ptPop()}if(msg)toast(msg);if(PT.mem.length<=1){ptReset();if(msg)setTimeout(()=>toast('Пати распалась'),1200);return}if(g===PT.lead)PT.lead=PT.mem[0].gid;if(PT.lead===S.gid)ptRoster();ptUi()}
 setInterval(()=>{if(!PT.pid||!S)return;ptAll({t:'hb',nick,eq:S.eq});const now=Date.now();for(const x of PT.mem.slice())if(x.gid!==S.gid&&now-(PT.hb[x.gid]||now)>25000)ptDrop(x.gid,'📴 '+x.nick+' пропал(а) из сети — вышел из пати')},6000);
-setInterval(()=>{if(PT.inv&&Date.now()-PT.inv.ts>30000){PT.inv=null;ptPop()}},2000);
+setInterval(()=>{if(PT.inv&&Date.now()-PT.inv.ts>30000){PT.inv=null;ptPop()}if(PT.ask&&Date.now()-PT.ask.ts>60000){PT.ask=null;ptPop()}},2000);
 function ptUi(){chBadge();if(cur==='chat')chRender();profRender()}
-function ptPop(){const el=$('#ptPop'),i=PT.inv;if(!i){el.style.display='none';return}el.innerHTML=`<b>🎉 Приглашение в пати</b><p style="margin:6px 0 10px"><b>${esc(i.nick)}</b> приглашает тебя в пати!</p><div class="row" style="gap:8px"><button class="btn sm mint" data-pta>Принять</button><button class="btn sm ghost" data-ptd>Отклонить</button></div>`;el.style.display='block'}
+function ptPop(){const el=$('#ptPop'),i=PT.inv,a=PT.ask;
+  if(i){el.innerHTML=i.play?`<b>🎮 Играть вместе?</b><p style="margin:6px 0 10px"><b>${esc(i.nick)}</b> зовёт тебя играть вместе! Нажми — и игра запустится у вас обоих.</p><div class="row" style="gap:8px"><button class="btn sm mint" data-pta>🎮 Играть вместе</button><button class="btn sm ghost" data-ptd>Отклонить</button></div>`:`<b>🎉 Приглашение в пати</b><p style="margin:6px 0 10px"><b>${esc(i.nick)}</b> приглашает тебя в пати!</p><div class="row" style="gap:8px"><button class="btn sm mint" data-pta>Принять</button><button class="btn sm ghost" data-ptd>Отклонить</button></div>`;el.style.display='block';return}
+  if(a&&PT.pid&&!PT.ready[S.gid]){el.innerHTML=`<b>🎮 ${esc(a.nick)} готов(а) играть!</b><p style="margin:6px 0 10px">Нажми «Играть вместе» — когда готовы все в пати, игра запустится сразу у всех.</p><div class="row" style="gap:8px"><button class="btn sm mint" data-ptplay>🎮 Играть вместе</button><button class="btn sm ghost" data-ptask>Позже</button></div>`;el.style.display='block';return}
+  el.style.display='none'}
 /* in-game & menu: party members */
 function ptOthers(){return PT.pid&&S?PT.mem.filter(x=>x.gid!==S.gid):[]}
 function ptDrawMenu(x,s,t){const o=ptOthers();o.forEach((m,i)=>{const ox=x+(i===0?108:-162)*s,sc=s*.8,y=H-46+Math.sin(t*2.4+i*2)*-3;ctx.globalAlpha=.3;ell(ctx,ox,H-44,40*sc,8*sc);ctx.fillStyle='#000';ctx.fill();ctx.globalAlpha=1;drawKZ(ctx,ox,y,sc,m.eq,t+1.7*(i+1),Math.sin(t*1.2+i)*.05);
-  ctx.save();ctx.font='900 '+Math.round(13+5*s)+'px Trebuchet MS,sans-serif';ctx.textAlign='center';ctx.lineWidth=5;ctx.strokeStyle=INK;const ny=y-160*sc,tx=(PT.lead===m.gid?'👑 ':'')+m.nick;ctx.strokeText(tx,ox,ny);ctx.fillStyle='#fff';ctx.fillText(tx,ox,ny);ctx.restore()})}
+  ctx.save();ctx.font='900 '+Math.round(13+5*s)+'px Trebuchet MS,sans-serif';ctx.textAlign='center';ctx.lineWidth=5;ctx.strokeStyle=INK;const ny=y-160*sc,tx=(PT.lead===m.gid?'👑 ':'')+m.nick+(PT.ready[m.gid]?' ✅':'');ctx.strokeText(tx,ox,ny);ctx.fillStyle='#fff';ctx.fillText(tx,ox,ny);ctx.restore()})}
 function ptDrawGame(py,ks,hopY,tilt,dt){if(!PT.pid)return;const now=Date.now();for(const m of ptOthers()){const p=PT.pos[m.gid];if(!p||now-p.t>2000)continue;p.sx=p.sx==null?p.x:p.sx+(p.x-p.sx)*Math.min(1,dt*10);const gx=p.sx*W;
     ctx.globalAlpha=.25;ell(ctx,gx,py+2,36*ks/.92,7);ctx.fillStyle='#000';ctx.fill();ctx.globalAlpha=.85;drawKZ(ctx,gx,py+p.h,ks*.92,m.eq,G.t+1.3,p.tl);ctx.globalAlpha=1}
   if(now-PT.lastPos>160&&!G.over&&!G.paused){PT.lastPos=now;ptAll({t:'pos',x:+(G.px/W).toFixed(4),h:Math.round(hopY),tl:+tilt.toFixed(3)})}}
@@ -3524,7 +3538,7 @@ function profRender(){const el=$('#pfOv');if(!el)return;const g=SOC.prof;if(!g||
   const nk=(p&&p.nick)||fb.nick||'Игрок',u=(p&&p.u)||fb.u||'',on=isOnline(g),eq=sanEq(p&&p.eq?p.eq:{skin:(p&&p.skin)||fb.skin});
   const st=(ic,n,v)=>`<div>${ic} ${n}<b>${v}</b></div>`,v=x=>x==null||x===''?'—':x;
   let btn='';if(me)btn='<span class="chip">Это ты 🙂</span>';
-  else if(s.fr[g])btn=`<span class="chip">✓ В друзьях</span><button class="btn sm mint" data-dmw="${g}">💬 Написать</button><button class="btn sm" data-ptinv="${g}">🎉 В пати</button><button class="btn sm ghost" data-frrm="${g}">Удалить</button>`;
+  else if(s.fr[g])btn=`<span class="chip">✓ В друзьях</span><button class="btn sm mint" data-dmw="${g}">💬 Написать</button><button class="btn sm" data-ptinv="${g}">🎉 В пати</button><button class="btn sm mint" data-ptplay="${g}">🎮 Играть вместе</button><button class="btn sm ghost" data-frrm="${g}">Удалить</button>`;
   else if(s.rin[g])btn=`<button class="btn sm mint" data-fracc="${g}">✓ Принять заявку</button><button class="btn sm ghost" data-frdec="${g}">Отклонить</button>`;
   else if(s.rout[g])btn='<span class="chip">📨 Заявка отправлена</span>';
   else btn=`<button class="btn sm mint" data-fradd="${g}">➕ Добавить в друзья</button>`;
@@ -3550,24 +3564,24 @@ function chRender(){if(cur!=='chat'||!S)return;const body=$('#chBody');if(!socOk
     const frs=Object.keys(s.fr).sort((a,b)=>isOnline(b)-isOnline(a)||socNick(a).localeCompare(socNick(b)));L+='<div class="hint" style="margin:6px 0 4px">Друзья · '+frs.length+'</div>';
     for(const g of frs){const sk=(netPlayers[g]&&netPlayers[g].skin)||'grey';L+=`<div class="fr ${SOC.sel===g?'cur':''}" data-frsel="${g}"><img src="${skThumb(sk)}" alt=""><span class="dot ${isOnline(g)?'on':''}"></span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(socNick(g))}</span>${s.unr[g]?'<span class="unr">'+s.unr[g]+'</span>':''}</div>`}
     if(!frs.length)L+='<p class="hint">Пока нет друзей. Открой профиль игрока в общем чате или в топе (Settings → Топ) и нажми «Добавить в друзья».</p>';
-    let R='';if(SOC.sel&&s.fr[SOC.sel]){const g=SOC.sel,on=isOnline(g);R=`<div class="row" style="justify-content:space-between;gap:6px;flex-wrap:wrap;margin-bottom:6px"><b style="cursor:pointer" data-prof="${g}">${on?'🟢':'⚪'} ${esc(socNick(g))}</b><div class="row" style="gap:6px"><button class="btn sm ghost" data-prof="${g}">👤 Профиль</button><button class="btn sm ${on?'':'ghost'}" data-ptinv="${g}">🎉 Пригласить в пати</button></div></div><div class="chwrap" style="height:min(52vh,460px)"><div class="chlog" id="chLog"></div><div class="chin"><input id="chIn" maxlength="300" placeholder="Сообщение для ${esc(socNick(g))}…" autocomplete="off"><button class="btn mint" id="chSend">➤</button></div></div>`}
+    let R='';if(SOC.sel&&s.fr[SOC.sel]){const g=SOC.sel,on=isOnline(g);R=`<div class="row" style="justify-content:space-between;gap:6px;flex-wrap:wrap;margin-bottom:6px"><b style="cursor:pointer" data-prof="${g}">${on?'🟢':'⚪'} ${esc(socNick(g))}</b><div class="row" style="gap:6px"><button class="btn sm ghost" data-prof="${g}">👤 Профиль</button><button class="btn sm ${on?'':'ghost'}" data-ptinv="${g}">🎉 Пригласить в пати</button><button class="btn sm ${on?'mint':'ghost'}" data-ptplay="${g}">${PT.mem.some(x=>x.gid===g)&&PT.ready[S.gid]?'✅ Ждём друга…':'🎮 Играть вместе'}</button></div></div><div class="chwrap" style="height:min(52vh,460px)"><div class="chlog" id="chLog"></div><div class="chin"><input id="chIn" maxlength="300" placeholder="Сообщение для ${esc(socNick(g))}…" autocomplete="off"><button class="btn mint" id="chSend">➤</button></div></div>`}
     else R='<div class="chlog" style="align-items:center;justify-content:center;min-height:240px"><div class="hint">← Выбери друга, чтобы написать в ЛС</div></div>';
     h+=`<div class="chgrid"><div class="frl">${L}</div><div>${R}</div></div>`}
   if(SOC.tab==='p'){if(!PT.pid)h+='<p class="sub">Ты пока не в пати. Открой ЛС с другом, который в сети, и нажми <b>«🎉 Пригласить в пати»</b>. В пати можно до 3 игроков: их котозайцы встанут рядом с твоим в меню, а в игре будут бегать рядом с тобой.</p>';
-    else{h+='<div class="ptl">';for(const m of PT.mem){const me=m.gid===S.gid;h+=`<div class="ptc" data-prof="${m.gid}"><img src="${skThumb(m.eq.skin)}" alt=""><b>${PT.lead===m.gid?'👑 ':''}${esc(me?nick:m.nick)}</b><small>${me?'это ты':isOnline(m.gid)?'🟢 в сети':'⚪'}</small></div>`}for(let i=PT.mem.length;i<3;i++)h+='<div class="ptc empty"><div class="ptplus">+</div><small>свободно</small></div>';
-      h+=`</div><div class="row" style="gap:8px;margin-top:10px"><button class="btn sm pink" data-ptleave>🚪 Выйти из пати</button><span class="hint">Пригласить ещё — из ЛС с другом</span></div>`}}
+    else{h+='<div class="ptl">';for(const m of PT.mem){const me=m.gid===S.gid;h+=`<div class="ptc" data-prof="${m.gid}"><img src="${skThumb(m.eq.skin)}" alt=""><b>${PT.lead===m.gid?'👑 ':''}${esc(me?nick:m.nick)}</b><small>${me?'это ты':isOnline(m.gid)?'🟢 в сети':'⚪'}</small><div class="rdy ${PT.ready[m.gid]?'on':''}">${PT.ready[m.gid]?'✅ готов':'⏳ не готов'}</div></div>`}for(let i=PT.mem.length;i<3;i++)h+='<div class="ptc empty"><div class="ptplus">+</div><small>свободно</small></div>';
+      h+=`</div><div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn ${PT.ready[S.gid]?'ghost':'mint'}" data-ptplay>${PT.ready[S.gid]?'✖ Отменить готовность':'🎮 Играть вместе'}</button><span class="hint">${PT.mem.filter(x=>PT.ready[x.gid]).length}/${PT.mem.length} готовы — когда нажмут все, игра запустится у всех сразу</span></div><div class="row" style="gap:8px;margin-top:10px"><button class="btn sm pink" data-ptleave>🚪 Выйти из пати</button><span class="hint">Пригласить ещё — из ЛС с другом</span></div>`}}
   body.innerHTML=h;const inp=$('#chIn');if(inp){inp.value=keep;}chLog()}
 function chSendNow(){const i=$('#chIn');if(!i)return;const ok=SOC.tab==='g'?gcSend(i.value):SOC.sel?dmSend(SOC.sel,i.value):false;if(ok){i.value='';SOC.jump=true;chLog();SND.click()}i.focus()}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='chIn'){e.preventDefault();chSendNow()}});
 document.addEventListener('click',e=>{if(!S)return;const t=e.target;
   if(t.id==='pfOv'||t.closest('[data-pfclose]')){SOC.prof=null;profRender();return}
-  const b=t.closest('[data-cht],[data-frsel],[data-fradd],[data-fracc],[data-frdec],[data-frrm],[data-dmw],[data-ptinv],[data-ptleave],[data-pta],[data-ptd],#chSend,[data-prof]');if(!b)return;const d=b.dataset;
+  const b=t.closest('[data-cht],[data-frsel],[data-fradd],[data-fracc],[data-frdec],[data-frrm],[data-dmw],[data-ptinv],[data-ptleave],[data-pta],[data-ptd],[data-ptplay],[data-ptask],#chSend,[data-prof]');if(!b)return;const d=b.dataset;
   if(b.id==='chSend'){chSendNow();return}
   if(d.cht){SOC.tab=d.cht;if(d.cht==='g')SOC.gNew=0;SOC.jump=true;SND.click();chRender();return}
   if(d.frsel){SOC.sel=d.frsel;soc().unr[d.frsel]=0;SOC.jump=true;SND.click();chRender();setTimeout(()=>{const i=$('#chIn');if(i&&matchMedia('(pointer:fine)').matches)i.focus()},30);return}
   if(d.fradd){frAdd(d.fradd);return}if(d.fracc){frAccept(d.fracc);return}if(d.frdec){frDecline(d.frdec);return}if(d.frrm){if(confirm('Удалить '+socNick(d.frrm)+' из друзей?'))frRemove(d.frrm);return}
   if(d.dmw){SOC.prof=null;profRender();SOC.tab='f';SOC.sel=d.dmw;SOC.jump=true;show('chat');return}
-  if(d.ptinv){ptInvite(d.ptinv);return}if(b.hasAttribute('data-ptleave')){ptLeave();return}if(b.hasAttribute('data-pta')){ptAccept();return}if(b.hasAttribute('data-ptd')){ptDecline();return}
+  if(d.ptinv){ptInvite(d.ptinv);return}if(b.hasAttribute('data-ptleave')){ptLeave();return}if(b.hasAttribute('data-pta')){ptAccept();return}if(b.hasAttribute('data-ptd')){ptDecline();return}if(b.hasAttribute('data-ptplay')){ptPlay(d.ptplay||null);return}if(b.hasAttribute('data-ptask')){PT.ask=null;ptPop();return}
   if(d.prof){openProf(d.prof,{nick:d.pn,u:d.pu,skin:d.ps});return}});
 setInterval(()=>{if(socOk()){socSub();chBadge();if(cur==='chat'){$('#chNet').textContent=NET.ok()?'🟢 онлайн':'⚠ нет связи'}}},5000);
 
