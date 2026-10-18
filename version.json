@@ -1,10 +1,10 @@
 {
- "version": 27,
- "label": "1.3.6",
- "name": "Версия 1.3.6: GUI 3 с надписью gs",
+ "version": 28,
+ "label": "1.3.7",
+ "name": "Версия 1.3.7: Trades — обмен вещами, питомцами и монетами",
  "file": "game.html",
- "sha256": "526a8ec03f33bbda8a3d22fdef26b51142f198aecf7b1db06a91888fbed8c838",
- "date": "2026-10-17",
+ "sha256": "0d5b4ae428352d9b7dcd83c10c635c49984ef6a60c826fa22b73a62451669e5b",
+ "date": "2026-10-18",
  "exe": {
   "version": 3,
   "file": "KotazaicAndStars.exe",

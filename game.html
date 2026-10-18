@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=27;window.KZ_VNAME='1.3.6';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=28;window.KZ_VNAME='1.3.7';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -102,6 +102,12 @@ html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
 .arrows .nm{color:#fff;font-weight:900;font-size:18px;text-align:center;flex:1}
 .acc[data-pick]{cursor:pointer}.acc.pick{outline:4px solid #5ee6c1;background:#eafff8}
 .topme{background:#eafff8;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;margin-bottom:8px;font-size:14px}.topwarn{background:#ffe3ea;border:3px solid #e8355d;border-radius:14px;padding:6px 12px;margin-bottom:8px;font-size:13px}.topgood{background:#fff7d6;border:3px solid #ffc93c;border-radius:14px;padding:6px 12px;margin-bottom:8px;font-size:13px}
+.trcols{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:700px){.trcols{grid-template-columns:1fr}}
+.trside{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:10px;min-height:220px}.trside.ready{background:#eafff8;border-color:#2fbf98}
+.trgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:6px;margin-top:6px}
+.trit{position:relative;background:#fff8ec;border:2px solid var(--ink);border-radius:12px;padding:4px;text-align:center;font-size:11px;font-weight:700;cursor:pointer}.trit img{width:64px;height:64px;display:block;margin:0 auto}.trit .cnt{position:absolute;top:2px;right:4px;background:var(--ink);color:#fff;border-radius:8px;padding:0 5px;font-size:11px}
+.trit.dis{opacity:.4;cursor:default}.trpl{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;margin-top:6px}
+.trpop{position:fixed;right:16px;bottom:16px;z-index:65;background:var(--paper);border:4px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink);padding:12px 14px;max-width:320px}
 .slots{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:14px}.slot span{font-size:10px!important;line-height:1.2;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:normal;overflow-wrap:normal}
 .slot{padding:6px 1px!important}.slot b{font-size:10.5px!important}
 .slot span{font-size:12px}
@@ -350,6 +356,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
     <button class="btn org" data-go="ev">🎃 Halloween <small id="mEv">ивент</small></button>
     <button class="btn pink" data-go="cos">✿ Cosmetics <small>образ</small></button>
     <button class="btn kgbtn" data-go="kg">⬆ Kotograde <small>апгрейд</small></button>
+    <button class="btn" data-go="trade" id="mTrade" style="background:#8fe3ff">🤝 Trades <small id="mTradeN">обмен</small></button>
     <button class="btn ghost" data-go="set">⚙ Settings <small>настройки</small></button>
     <button class="btn vio" data-go="adm" id="mAdm" style="display:none">🛠 ADM <small>админ</small></button>
     <div class="row" style="gap:8px"><div class="chip">🏆 Рекорд: <span id="mBest">0</span></div><button class="btn sm mint giftbtn" id="mGift">🎁 Подарок дня</button></div>
@@ -610,6 +617,14 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
   </div>
 </div>
 
+<div class="screen" id="trade">
+  <div class="panel" style="max-width:1000px">
+    <div class="row" style="justify-content:space-between"><h2>🤝 Trades</h2><div class="row" style="gap:8px"><span class="chip" id="trNet"></span><button class="btn sm ghost" data-go="menu">← Меню</button></div></div>
+    <div id="trBody"></div>
+  </div>
+</div>
+<div id="trPop" class="trpop" style="display:none"></div>
+
 <div class="screen" id="garden">
   <div class="panel" style="max-width:1000px;padding:14px">
     <div class="row" style="justify-content:space-between"><h2>🌻 Сад котозайца</h2><div class="row" style="gap:8px"><span class="chip" id="gLvl"></span><span class="chip" id="gCoins"></span><button class="btn sm ghost" id="gBack">← Мини-игры</button></div></div>
@@ -799,11 +814,12 @@ function logout(){persist();user=null;S=null;applyShader();applyFlip();lsDel('kz
 
 /* ---------------- UI helpers ---------------- */
 let cur='auth';
-const SCREENS=['auth','menu','bp','ev','cos','set','adm','kg','give','gpe','mg','noomi','garden','pause','over'];
+const SCREENS=['auth','menu','bp','ev','cos','set','adm','kg','give','gpe','mg','noomi','garden','trade','pause','over'];
 function show(id){
   cur=id;
   for(const s of SCREENS)$('#'+s).classList.toggle('on',s===id);
-  $('#top').classList.toggle('on',['menu','bp','ev','cos','set','adm','kg','give','gpe','mg'].includes(id));
+  $('#top').classList.toggle('on',['menu','bp','ev','cos','set','adm','kg','give','gpe','mg','trade'].includes(id));
+  if(id==='trade')trOpen();
   $('#hud').classList.toggle('on',!!G&&['pause','over','game'].includes(id));
   if(id==='menu')refreshMenu();
   if(id==='bp')renderPass('bp');
@@ -2252,6 +2268,86 @@ function gardenStep(dt){if(!GV)return;const c=GV.c,W2=960,H2=470,g=gData(),now=D
   c.globalAlpha=1;gFx=gFx.filter(f=>f.life>0);if(gFx.filter(f=>!f.p).length>1)gFx.splice(gFx.findIndex(f=>!f.p),1);
   // refresh tool counts sometimes
   if(Math.random()<dt)$('#gCoins').textContent='🪙 '+S.coins}
+/* ---------------- Trades between players ---------------- */
+const TR={st:null,reqIn:{},reqOut:null,seen:new Set(),pick:'items',hist:[],subbed:null};
+function trSub(){if(!S||!S.gid)return;NET.start();if(TR.subbed!==S.gid){TR.subbed=S.gid;NET.sub(TP+'tr/'+S.gid);NET.sub(TP+'players/+')}}
+function trSend(toGid,m){m.trade=1;m.from=S.gid;m.fu=user;m.fn=nick;m.mid=Math.random().toString(36).slice(2)+Date.now().toString(36);NET.pub(TP+'tr/'+toGid,m)}
+function trOnline(){const now=Date.now();return Object.values(netPlayers).filter(p=>p.gid!==S.gid&&now-p.last<150000&&p.u!==user).sort((a,b)=>String(a.u).localeCompare(String(b.u)))}
+function trPetVal(id){const p=PETS[id];return p?({common:150,rare:400,epic:900,legendary:2000,mythic:4500}[p.r]||200):0}
+function trEmpty(){return{items:{},pets:{},coins:0}}
+function trVal(o){let v=+o.coins||0;for(const k in o.items){const[sl,id]=k.split(':');v+=itemVal(sl,id)*o.items[k]}for(const id in o.pets)v+=trPetVal(id)*o.pets[id];return v}
+function trHash(a,b){return JSON.stringify([a,b])}
+function trCanGive(o){if((+o.coins||0)>S.coins)return false;for(const k in o.items)if((S.inv[k]||0)<o.items[k])return false;for(const id in o.pets)if((S.pets[id]||0)<o.pets[id])return false;return true}
+function trStart(p,tid,iAmHost){TR.st={tid,peer:p.gid,pu:p.u,pn:p.nick,my:trEmpty(),their:trEmpty(),myReady:false,theirReady:false,myConf:false,theirConf:false,host:iAmHost,last:Date.now(),done:false};TR.reqOut=null;delete TR.reqIn[p.gid];trHidePop();show('trade');trRender();SND.win()}
+function trCancel(why,silent){const st=TR.st;if(!st)return;if(!silent)trSend(st.peer,{t:'tcancel',tid:st.tid});TR.st=null;toast(why||'Обмен отменён');trRender()}
+function trChanged(){const st=TR.st;st.myReady=false;st.myConf=false;st.theirConf=false;trSend(st.peer,{t:'toffer',tid:st.tid,offer:st.my});trRender()}
+function trApply(){const st=TR.st;if(!st||st.done)return;if(!trCanGive(st.my)){trCancel('⚠ У тебя уже нет части вещей — обмен отменён');return}st.done=true;
+  S.coins+=(+st.their.coins||0)-(+st.my.coins||0);
+  for(const k in st.my.items){const[sl,id]=k.split(':');removeItem(sl,id,st.my.items[k])}
+  for(const id in st.my.pets){S.pets[id]-=st.my.pets[id];if(S.pets[id]<=0){delete S.pets[id];if(S.pet===id)S.pet=null}}
+  for(const k in st.their.items){const[sl,id]=k.split(':');if(itemDef(sl,id))addItem(sl,id,st.their.items[k])}
+  for(const id in st.their.pets)if(PETS[id])S.pets[id]=(S.pets[id]||0)+st.their.pets[id];
+  syncInv();stat('trades');persist();refreshTop();try{publishPresence()}catch(e){}
+  TR.hist.unshift({t:Date.now(),with:st.pu,gave:trVal(st.my),got:trVal(st.their)});TR.hist.length=Math.min(TR.hist.length,10);lsSet('kz_trhist_'+user,JSON.stringify(TR.hist));
+  confetti(120);SND.win();toast('🤝 Обмен с '+st.pn+' завершён!');TR.st=null;trRender()}
+function trRecv(m){if(!S||!m||!m.trade||m.from===S.gid)return;if(TR.seen.has(m.mid))return;TR.seen.add(m.mid);if(TR.seen.size>2000)TR.seen.clear();
+  const st=TR.st,p={gid:m.from,u:m.fu,nick:m.fn};
+  if(m.t==='treq'){if(st){trSend(m.from,{t:'tbusy'});return}TR.reqIn[m.from]={p,tid:m.tid,t:Date.now()};trShowPop();sfx(880,.12,'triangle',.05,400);if(cur==='trade')trRender();return}
+  if(m.t==='tbusy'){if(TR.reqOut&&TR.reqOut.gid===m.from){TR.reqOut=null;toast(m.fn+' сейчас занят другим обменом');trRender()}return}
+  if(m.t==='tdec'){if(TR.reqOut&&TR.reqOut.gid===m.from){TR.reqOut=null;toast('😕 '+m.fn+' отказался от обмена');trRender()}return}
+  if(m.t==='tacc'){if(TR.reqOut&&TR.reqOut.gid===m.from&&TR.reqOut.tid===m.tid)trStart(p,m.tid,true);return}
+  if(!st||st.tid!==m.tid||st.peer!==m.from)return;st.last=Date.now();
+  if(m.t==='toffer'){st.their=m.offer||trEmpty();st.theirReady=false;st.myReady=false;st.myConf=st.theirConf=false;trRender()}
+  if(m.t==='tready'){st.theirReady=!!m.on;if(!m.on){st.myConf=st.theirConf=false}trRender()}
+  if(m.t==='tconf'){if(m.h!==trHash(st.their,st.my)){trSend(st.peer,{t:'toffer',tid:st.tid,offer:st.my});return}st.theirConf=true;if(st.myConf)trApply();else trRender()}
+  if(m.t==='tcancel'){TR.st=null;toast('❌ '+st.pn+' отменил обмен');trRender()}
+  if(m.t==='tping'){}}
+setInterval(()=>{const st=TR.st;if(st){trSend(st.peer,{t:'tping',tid:st.tid});if(Date.now()-st.last>45000)trCancel('⌛ Связь с '+st.pn+' пропала — обмен отменён',true)}
+  for(const g in TR.reqIn)if(Date.now()-TR.reqIn[g].t>60000){delete TR.reqIn[g];trShowPop()}
+  if(TR.reqOut&&Date.now()-TR.reqOut.t>60000){TR.reqOut=null;toast('⌛ Игрок не ответил на обмен');if(cur==='trade')trRender()}
+  if(S&&user&&user!=='__guest')trSub();try{const n=Object.keys(TR.reqIn).length;$('#mTradeN').textContent=n?'📩 '+n+' запрос':'обмен'}catch(e){}},8000);
+function trShowPop(){const ids=Object.keys(TR.reqIn);const el=$('#trPop');if(!ids.length||TR.st){el.style.display='none';return}const r=TR.reqIn[ids[0]];
+  el.innerHTML=`<b>🤝 ${esc(r.p.nick)} @${esc(r.p.u)}</b><br><small>хочет обменяться с тобой</small><div class="row" style="gap:6px;margin-top:8px"><button class="btn sm mint" data-tracc="${esc(r.p.gid)}">Принять</button><button class="btn sm ghost" data-trdec="${esc(r.p.gid)}">Отказать</button></div>`;el.style.display='block'}
+function trHidePop(){$('#trPop').style.display='none'}
+function trOpen(){if(user==='__guest'){$('#trBody').innerHTML='<p class="sub">Обмен доступен только с аккаунтом (не гостем).</p>';return}trSub();try{TR.hist=JSON.parse(lsGet('kz_trhist_'+user)||'[]')}catch(e){TR.hist=[]}trRender();try{publishPresence()}catch(e){}}
+function trItemCard(sl,id,n,attr,dis){const d=itemDef(sl,id);if(!d)return'';return `<div class="trit ${dis?'dis':''}" ${attr}><img src="${thumb(sl,id)}" alt=""><span>${esc(d.n)}</span>${n>1?`<span class="cnt">x${n}</span>`:''}</div>`}
+function trPetCard(id,n,attr,dis){const p=PETS[id];if(!p)return'';return `<div class="trit ${dis?'dis':''}" ${attr} style="border-color:${PRAR[p.r].c}"><img src="${petThumb(id)}" alt=""><span>🐰 ${esc(p.n)}</span>${n>1?`<span class="cnt">x${n}</span>`:''}</div>`}
+function trOfferHtml(o,mine){let h='<div class="trgrid">';for(const k in o.items){const[sl,id]=k.split(':');h+=trItemCard(sl,id,o.items[k],mine?`data-trrm="i:${k}"`:'')}for(const id in o.pets)h+=trPetCard(id,o.pets[id],mine?`data-trrm="p:${id}"`:'');h+='</div>';
+  if(!Object.keys(o.items).length&&!Object.keys(o.pets).length)h=`<p class="hint">${mine?'Ничего не добавлено — выбери вещи ниже':'Пока ничего'}</p>`;return h}
+function trRender(){if(cur!=='trade'||!S)return;$('#trNet').textContent=NET.ok()?'🌐 онлайн':'⚠ нет связи';const st=TR.st;let h='';
+  if(!st){
+    const inc=Object.values(TR.reqIn);if(inc.length){h+='<h3>📩 Запросы на обмен</h3>';for(const r of inc)h+=`<div class="trpl"><b>${esc(r.p.nick)} <small>@${esc(r.p.u)}</small></b><div class="row" style="gap:6px"><button class="btn sm mint" data-tracc="${esc(r.p.gid)}">Принять</button><button class="btn sm ghost" data-trdec="${esc(r.p.gid)}">Отказать</button></div></div>`}
+    if(TR.reqOut)h+=`<div class="trpl"><b>⏳ Ждём ответа от ${esc(TR.reqOut.nick)}…</b><button class="btn sm ghost" id="trUndo">Отменить</button></div>`;
+    const on=trOnline();h+=`<h3 style="margin-top:12px">🟢 Игроки онлайн (${on.length})</h3><p class="sub">Выбери игрока и предложи обмен — вещи, питомцы и монеты.</p>`;
+    if(!on.length)h+='<p class="hint">Сейчас никого нет в сети. Обмен работает с игроками, у которых открыта игра (на ПК или телефоне).</p>';
+    for(const p of on)h+=`<div class="trpl"><span>${p.plat==='phone'?'📱':'💻'} <b>${esc(p.nick||'?')}</b> <small>@${esc(p.u||'?')} · 🪙 ${+p.coins||0}</small></span><button class="btn sm" data-trreq="${esc(p.gid)}" ${TR.reqOut?'disabled':''}>🤝 Обменяться</button></div>`;
+    if(TR.hist.length){h+='<h3 style="margin-top:12px">📜 Мои обмены</h3>';for(const x of TR.hist){const d=new Date(x.t);h+=`<div class="hint">${d.toLocaleDateString('ru-RU')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} — с ${esc(x.with)}: отдал ≈${x.gave} 🪙, получил ≈${x.got} 🪙</div>`}}
+    $('#trBody').innerHTML=h;return}
+  const mv=trVal(st.my),tv=trVal(st.their),both=st.myReady&&st.theirReady;
+  h+=`<p class="sub">Обмен с <b>${esc(st.pn)}</b> @${esc(st.pu)}. Когда оба нажмут «Готов», появится «Подтвердить». Любое изменение сбрасывает готовность.</p><div class="trcols">
+   <div class="trside ${st.myReady?'ready':''}"><div class="row" style="justify-content:space-between"><b>📤 Ты отдаёшь</b><span class="chip" style="font-size:12px">≈ ${mv} 🪙</span></div>${trOfferHtml(st.my,true)}
+     <div class="row" style="margin-top:8px;gap:6px"><span>🪙 Монеты:</span><input class="inp" id="trCoins" type="number" min="0" max="${S.coins}" value="${st.my.coins||0}" style="width:120px" ${st.myConf?'disabled':''}><small>есть ${S.coins}</small></div>${st.myReady?'<b>✅ Ты готов</b>':''}</div>
+   <div class="trside ${st.theirReady?'ready':''}"><div class="row" style="justify-content:space-between"><b>📥 Ты получаешь от ${esc(st.pn)}</b><span class="chip" style="font-size:12px">≈ ${tv} 🪙</span></div>${trOfferHtml(st.their,false)}
+     <p style="margin-top:8px">🪙 Монеты: <b>${st.their.coins||0}</b></p>${st.theirReady?'<b>✅ '+esc(st.pn)+' готов</b>':'<small>⏳ '+esc(st.pn)+' ещё выбирает…</small>'}</div></div>
+  <div class="row" style="justify-content:center;gap:8px;margin:10px 0">${both?`<button class="btn mint" id="trConf" ${st.myConf?'disabled':''}>${st.myConf?'⏳ Ждём подтверждения…':'✅ Подтвердить обмен'}</button>`:`<button class="btn ${st.myReady?'ghost':'mint'}" id="trReady">${st.myReady?'↩ Не готов':'👍 Готов'}</button>`}<button class="btn pink" id="trCancel">❌ Отменить</button></div>
+  ${tv&&mv&&tv<mv*.5?'<p class="hint" style="text-align:center;color:#c0284a">⚠ Ты отдаёшь намного больше, чем получаешь — проверь, что всё честно!</p>':''}
+  <div class="tabs" style="margin-top:4px"><button class="btn sm ${TR.pick==='items'?'cur':''}" data-trpick="items">✿ Мои вещи</button><button class="btn sm ${TR.pick==='pets'?'cur':''}" data-trpick="pets">🐰 Мои питомцы</button></div><div class="trgrid" id="trInv">`;
+  if(TR.pick==='items'){const keys=Object.keys(S.inv).filter(k=>S.inv[k]>0).sort((a,b)=>itemVal(...b.split(':'))-itemVal(...a.split(':')));for(const k of keys){const[sl,id]=k.split(':'),left=S.inv[k]-(st.my.items[k]||0);h+=trItemCard(sl,id,left,`data-tradd="i:${k}"`,left<=0||st.myConf)}if(!keys.length)h+='<p class="hint">Нет вещей для обмена (бесплатные вещи обменять нельзя).</p>'}
+  else{const ids=Object.keys(S.pets).filter(id=>S.pets[id]>0);for(const id of ids){const left=S.pets[id]-(st.my.pets[id]||0);h+=trPetCard(id,left,`data-tradd="p:${id}"`,left<=0||st.myConf)}if(!ids.length)h+='<p class="hint">У тебя пока нет питомцев.</p>'}
+  h+='</div>';$('#trBody').innerHTML=h;
+  const ci=$('#trCoins');if(ci)ci.onchange=()=>{const v=clamp(Math.floor(+ci.value||0),0,S.coins);ci.value=v;if(v!==(st.my.coins||0)){st.my.coins=v;trChanged()}}}
+document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[data-trreq],[data-tracc],[data-trdec],[data-tradd],[data-trrm],[data-trpick],#trReady,#trConf,#trCancel,#trUndo');if(!g)return;const st=TR.st;
+  if(g.dataset.trreq){const p=netPlayers[g.dataset.trreq];if(!p||TR.reqOut)return;const tid='t'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);TR.reqOut={gid:p.gid,u:p.u,nick:p.nick,tid,t:Date.now()};trSend(p.gid,{t:'treq',tid});toast('📨 Запрос отправлен '+p.nick);trRender();return}
+  if(g.dataset.tracc){const r=TR.reqIn[g.dataset.tracc];if(!r)return;if(TR.st){toast('Сначала закончи текущий обмен');return}trSend(r.p.gid,{t:'tacc',tid:r.tid});trStart(r.p,r.tid,false);return}
+  if(g.dataset.trdec){const r=TR.reqIn[g.dataset.trdec];if(r)trSend(r.p.gid,{t:'tdec',tid:r.tid});delete TR.reqIn[g.dataset.trdec];trShowPop();trRender();return}
+  if(g.id==='trUndo'){TR.reqOut=null;trRender();return}
+  if(!st)return;
+  if(g.dataset.trpick){TR.pick=g.dataset.trpick;trRender();return}
+  if(g.dataset.tradd&&!g.classList.contains('dis')){const[k,key]=[g.dataset.tradd[0],g.dataset.tradd.slice(2)];if(k==='i'){if((st.my.items[key]||0)>=(S.inv[key]||0))return;st.my.items[key]=(st.my.items[key]||0)+1}else{if((st.my.pets[key]||0)>=(S.pets[key]||0))return;st.my.pets[key]=(st.my.pets[key]||0)+1}SND.click();trChanged();return}
+  if(g.dataset.trrm&&!st.myConf){const[k,key]=[g.dataset.trrm[0],g.dataset.trrm.slice(2)],box=k==='i'?st.my.items:st.my.pets;box[key]--;if(box[key]<=0)delete box[key];SND.click();trChanged();return}
+  if(g.id==='trReady'){st.myReady=!st.myReady;if(!st.myReady)st.myConf=st.theirConf=false;trSend(st.peer,{t:'tready',tid:st.tid,on:st.myReady});trRender();return}
+  if(g.id==='trConf'){if(!trCanGive(st.my)){toast('⚠ Не хватает вещей или монет');return}st.myConf=true;trSend(st.peer,{t:'tconf',tid:st.tid,h:trHash(st.my,st.their)});if(st.theirConf)trApply();else trRender();return}
+  if(g.id==='trCancel'){trCancel();return}});
 let codeBuf='',admBoostUntil=+(lsGet('kz_boost')||0);
 const funFx={snow:0,love:0,boom:0,ghost:0,notes:0,cloud:0};
 function playTune(notes,ms){notes.forEach((f,i)=>setTimeout(()=>sfx(f,ms/1000*.9,'triangle',.05),i*ms))}
@@ -2760,6 +2856,7 @@ const MG_INFO={chess:{n:'Шахматы',i:'♟️',rules:'Обычные шах
 const DIFF={easy:{n:'Легко',p:.25,r:5},mid:{n:'Средне',p:.5,r:10},hard:{n:'Сложно',p:.8,r:20}};
 const DK_MODE={classic:'Дурак — обычная игра',transfer:'Дурак — переводной'};
 ACH.push({id:'codes2',n:'Мастер приколов',d:'Найти 20 разных секретных кодов',k:'codes',goal:20,r:300,i:'🤡'},{id:'carrots',n:'Морковный король',d:'Поймать 50 морковок в морковный дождь',k:'carrots',goal:50,r:120,i:'🥕'});
+ACH.push({id:'trade1',n:'Торговец',d:'Совершить первый обмен с другим игроком',k:'trades',goal:1,r:100,i:'🤝'},{id:'trade2',n:'Барыга',d:'Совершить 10 обменов',k:'trades',goal:10,r:300,i:'💼'});
 ACH.push({id:'garden1',n:'Садовод',d:'Собрать 50 растений в саду',k:'gHarvest',goal:50,r:150,i:'🌻'},{id:'garden2',n:'Фермер',d:'Достичь 5 уровня сада',k:'gLevel',goal:5,r:300,i:'🚜'},{id:'garden3',n:'Золотые руки',d:'Вырастить золотое растение',k:'gGold',goal:1,r:120,i:'✨'});
 ACH.push({id:'noomi',n:'Гимнаст',d:'NoomiClone: сделать сальто и поймать перекладину',k:'noomiFlipGrab',goal:1,r:100,i:'🤸'},{id:'noomi2',n:'Олимпиец',d:'NoomiClone: набрать 3000 очков за попытку',k:'noomiBest',goal:3000,r:250,i:'🥇'});
 ACH.push({id:'chess',n:'Гроссмейстер',d:'Обыграть сложного бота в шахматы',k:'chessHard',goal:1,r:150,i:'♟️'},{id:'durak',n:'Не дурак',d:'Выиграть в дурака 3 раза',k:'durakWins',goal:3,r:80,i:'🃏'},{id:'ttt',n:'Крестоносец',d:'Обыграть сложного бота в крестики-нолики',k:'tttHard',goal:1,r:60,i:'❌'});
@@ -2897,7 +2994,7 @@ setInterval(()=>{
 },1000);
 function startOnline(host,room,opp){stopSearch();NET.sub(TP+'r/'+room);mg={game:mgGame,vs:'online',me:host?0:1,host,room,opp,st:null,lastPing:Date.now(),done:false};
   if(host){mg.st=mgGame==='ttt'?TT.init(Math.random()<.5?0:1):mgGame==='chess'?CH.init(Math.random()<.5?0:1):DK.init('classic');toast('Соперник найден: '+opp);SND.win();mgAfter()}else{toast('Соперник найден: '+opp);SND.win();renderMG()}}
-function mmRecv(m){if(m&&m.adm){admRecv(m);return}if(m&&m.admr){admRepRecv(m);return}if(!m||typeof m!=='object'||m.from===MM_ID)return;if(m.mid){if(mmSeen.has(m.mid))return;mmSeen.add(m.mid);if(mmSeen.size>3000)mmSeen.clear()}
+function mmRecv(m){if(m&&m.trade){trRecv(m);return}if(m&&m.adm){admRecv(m);return}if(m&&m.admr){admRepRecv(m);return}if(!m||typeof m!=='object'||m.from===MM_ID)return;if(m.mid){if(mmSeen.has(m.mid))return;mmSeen.add(m.mid);if(mmSeen.size>3000)mmSeen.clear()}
   if(m.t==='seek'&&m.id)seekers[m.id]={game:m.game,t:Date.now()};
   if(m.t==='seek'&&srch&&!srch.pend&&m.game===srch.game&&m.id!==MM_ID&&MM_ID<m.id){const room=MM_ID+'_'+m.id;srch.pend={room,opp:m.nick,t:Date.now()};mmPost({t:'match',to:m.id,from:MM_ID,game:m.game,nick,room})}
   else if(m.t==='match'&&m.to===MM_ID&&srch&&m.game===srch.game){mmPost({t:'ack',room:m.room,to:m.from});startOnline(false,m.room,m.nick)}
