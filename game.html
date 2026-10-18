@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=49;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=50;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -139,7 +139,7 @@ html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
 .rdy{margin-top:6px;font-weight:900;font-size:12px;background:#f3efe6;border:2px solid var(--ink);border-radius:10px;padding:2px 8px;display:table;margin:6px auto 0}.rdy.on{background:#c9f7d8}
 .ptc.empty{border-style:dashed;opacity:.6;cursor:default}.ptplus{width:100%;max-width:120px;aspect-ratio:1;margin:0 auto 6px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:900;background:#f3efe6}
 .optbox{background:rgba(94,230,193,.12);border:3px dashed var(--ink);border-radius:16px;padding:6px 10px 2px;margin:8px 0}
-.slots{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;margin-bottom:14px}.slot span{font-size:10px!important;line-height:1.2;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:normal;overflow-wrap:normal}
+.slots{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin-bottom:14px}.slot span{font-size:10px!important;line-height:1.2;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:normal;overflow-wrap:normal}
 .slot{padding:6px 1px!important}.slot b{font-size:10.5px!important}
 .slot span{font-size:12px}
 @media (max-width:560px){.slots{grid-template-columns:repeat(5,1fr)}}
@@ -524,7 +524,8 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
       <div class="outfits" id="outGrid"></div>
       <div class="row" style="margin:6px 0 4px"><button class="btn sm" id="outRnd">🎲 Случайный образ из моих вещей</button></div>
       <h3 class="sec">🐰 Котозаяц</h3>
-      <div class="opt tg"><label>😊 Выражение лица</label><select class="inp" id="cFace"><option value="normal">🙂 Обычное</option><option value="happy">😊 Довольное</option><option value="wink">😉 Подмигивает</option><option value="love">😍 Влюблённое</option><option value="star">🤩 Звёздные глаза</option><option value="wow">😮 Удивлённое</option><option value="sleepy">😪 Сонное</option><option value="angry">😠 Сердитое</option><option value="cool">😎 Крутое (очки)</option></select></div>
+      <div class="opt tg"><label>😊 Лица теперь в Cosmetics → Лица (180+ штук)</label><button class="btn sm mint" id="cFaceGo">Открыть</button></div>
+      <div style="display:none"><select class="inp" id="cFace"><option value="normal">🙂 Обычное</option><option value="happy">😊 Довольное</option><option value="wink">😉 Подмигивает</option><option value="love">😍 Влюблённое</option><option value="star">🤩 Звёздные глаза</option><option value="wow">😮 Удивлённое</option><option value="sleepy">😪 Сонное</option><option value="angry">😠 Сердитое</option><option value="cool">😎 Крутое (очки)</option></select></div>
       <div class="opt tg"><label>🌸 Румянец</label><input type="checkbox" id="cBlush"></div>
       <div class="opt tg"><label>🎨 Цвет румянца</label><input type="color" id="cBlushCol"></div>
       <div class="opt tg"><label>〰 Усы</label><input type="checkbox" id="cWhisk"></div>
@@ -875,9 +876,9 @@ Object.assign(ITEMS.shoes,{flipflops:{n:'Шлёпанцы',price:60},kedy:{n:'К
 Object.assign(ITEMS.trail,{leaves:{n:'Листопад',price:130},confetti:{n:'Конфетти',price:150},lightning:{n:'Молнии',price:240}});
 Object.assign(ITEMS.aura,{music:{n:'Музыкальная',price:200},sakura:{n:'Сакура',price:300},dark:{n:'Тьма',price:340}});
 ITEMS.top={none:{n:'Без кофты',price:0},hoodie:{n:'Серая толстовка',price:90},stripes:{n:'Полосатый свитер',price:110},carrot:{n:'Свитшот с морковкой',price:130},heart:{n:'Свитер с сердечком',price:150},knit:{n:'Вязаный свитер с косами',price:180},xmas:{n:'Новогодний свитер',price:220},rainbow:{n:'Радужный свитер',price:260},splash:{n:'Синий свитшот с брызгами',src:'kg'},black:{n:'Чёрный свитшот с нашивкой',src:'kg'},galaxy:{n:'Космический свитер',price:420},neon:{n:'Неоновый свитер',price:480},gold:{n:'Золотой свитер',price:550}};
-const SLOTS=['skin','head','caps','acc','top','shoes','trail','aura','gear'];
-const SLOT_NAMES={top:'Кофты',skin:'Скин',head:'Голова',caps:'Кепки',acc:'Аксессуар',shoes:'Обувь',trail:'След',aura:'Аура',gear:'Gear'};
-const SLOT_ICON={top:'🧥',skin:'🐰',head:'👑',caps:'🧢',acc:'🎀',shoes:'👟',trail:'✨',aura:'🔮',gear:'🗡'};
+const SLOTS=['skin','face','head','caps','acc','top','shoes','trail','aura','gear'];
+const SLOT_NAMES={top:'Кофты',skin:'Скин',head:'Голова',caps:'Кепки',acc:'Аксессуар',shoes:'Обувь',trail:'След',aura:'Аура',gear:'Gear',face:'Лица'};
+const SLOT_ICON={face:'😊',top:'🧥',skin:'🐰',head:'👑',caps:'🧢',acc:'🎀',shoes:'👟',trail:'✨',aura:'🔮',gear:'🗡'};
 function rarity(def){if(def.src==='mg'){const G=MGG[def.mg];return{n:G.i+' '+G.n,c:G.c}}if(def.src==='secret')return{n:'Секрет 🤫',c:'#ff9cf0'};if(def.src==='kg')return def.ex?{n:'💎 Эксклюзив',c:'#c86bff'}:{n:'Kotograde',c:'#ff5e8a'};if(def.src==='drop')return{n:'🎲 Игровой трофей',c:'#7cc46a'};if(def.src==='mgd')return{n:'🎮 Мини-игры',c:'#5eb6ff'};if(def.src==='brand'){const B=BRANDS[def.brand];return{n:'💎 '+B.n,c:B.tag}}if(def.src)return{n:def.src==='bp'?'Battle Pass':'Halloween',c:def.src==='bp'?'#5ee6c1':'#ff8a3d'};const p=def.price;if(!p)return{n:'Бесплатно',c:'#d8d2c4'};if(p<100)return{n:'Обычный',c:'#cfd6e6'};if(p<200)return{n:'Редкий',c:'#8fc4ff'};if(p<400)return{n:'Эпический',c:'#c39bff'};return{n:'Легендарный',c:'#ffc93c'}}
 function itemName(t,id){return t==='skin'?SKINS[id].n:ITEMS[t][id].n}
 
@@ -889,11 +890,11 @@ function bpReward(l){return BP_SPECIAL[l]||{t:'coins',v:20+l*5}}
 function evReward(l){return EV_SPECIAL[l]||{t:'coins',v:l%5===0?60+l*2:15+l*3}}
 
 /* ---------------- save / accounts ---------------- */
-function newSave(){return{coins:0,best:0,bpXp:0,bpClaimed:[],evXp:0,evClaimed:[],own:{top:['none'],skin:['grey','smoke','milk'],head:['none'],caps:['none'],shoes:['none'],acc:['none'],trail:['none'],aura:['none'],gear:['none']},eq:{top:'none',skin:'grey',head:'none',caps:'none',shoes:'none',acc:'none',trail:'none',aura:'none',gear:'none'},set:defSet(),adm:{god:false,mag:false},fun:{disco:false,big:false,tiny:false,flip:false,grav:false},stats:{},ach:{},daily:''}}
+function newSave(){return{coins:0,best:0,bpXp:0,bpClaimed:[],evXp:0,evClaimed:[],own:{top:['none'],skin:['grey','smoke','milk'],head:['none'],caps:['none'],shoes:['none'],acc:['none'],trail:['none'],aura:['none'],gear:['none'],face:['none']},eq:{top:'none',skin:'grey',head:'none',caps:'none',shoes:'none',acc:'none',trail:'none',aura:'none',gear:'none',face:'none'},set:defSet(),adm:{god:false,mag:false},fun:{disco:false,big:false,tiny:false,flip:false,grav:false},stats:{},ach:{},daily:''}}
 const EXCL_VAL={'top:splash':10000,'top:black':10000,'acc:crystal':4000,'acc:phoenix':3000,'shoes:valenki':2000,'acc:moustache':300,'head:pizza':300,'trail:bananas':300,'caps:legend':5000,'skin:golden':900,'skin:pumpkin':800,'head:helmet':600,'head:halo':500,'head:witch':420,'head:pkcrown':700,'acc:cape':450,'acc:vamp':480,'acc:pkbag':400,'trail:dust':420,'trail:candies':380,'trail:bats':450,'aura:galaxy':650,'aura:pkflame':550,'aura:ghosts':600};
 function itemDef(slot,id){return slot==='skin'?SKINS[id]:ITEMS[slot][id]}
 function itemVal(slot,id){const d=itemDef(slot,id);if(!d)return 0;return d.price||EXCL_VAL[slot+':'+id]||(d.src?400:0)}
-function allPaid(){const out=[];for(const id of SKIN_ORDER)if(itemVal('skin',id)>0)out.push('skin:'+id);for(const sl of ['head','caps','acc','top','shoes','trail','aura','gear'])for(const id of Object.keys(ITEMS[sl]))if(itemVal(sl,id)>0)out.push(sl+':'+id);return out}
+function allPaid(){const out=[];for(const id of SKIN_ORDER)if(itemVal('skin',id)>0)out.push('skin:'+id);for(const sl of ['head','caps','acc','top','shoes','trail','aura','gear','face'])for(const id of Object.keys(ITEMS[sl]))if(itemVal(sl,id)>0)out.push(sl+':'+id);return out}
 function syncInv(sv){sv=sv||S;if(!sv)return;sv.inv=sv.inv||{};for(const sl of SLOTS)for(const id of sv.own[sl]||[]){const k=sl+':'+id;if(itemVal(sl,id)>0&&!(sv.inv[k]>0))sv.inv[k]=1}
   for(const k of Object.keys(sv.inv)){const[sl,id]=k.split(':');if(!(sv.inv[k]>0)||!itemDef(sl,id)||itemVal(sl,id)<=0){delete sv.inv[k];continue}if(!sv.own[sl].includes(id))sv.own[sl].push(id)}}
 function addItemTo(sv,sl,id,n=1){const k=sl+':'+id;if(!sv.own[sl].includes(id))sv.own[sl].push(id);if(itemVal(sl,id)>0)sv.inv[k]=(sv.inv[k]||0)+n}
@@ -904,6 +905,7 @@ function defCustom(){return{top:'#1b0f3a',mid:'#3a2a7a',bot:'#d26a9a',hill:'#241
 const isAdm=()=>user==='deta';
 function fixSave(s){const d=newSave();s=Object.assign(d,s||{});if(!s.gid)s.gid='g'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);s.own=Object.assign(newSave().own,s.own||{});s.eq=Object.assign(newSave().eq,s.eq||{});s.set=Object.assign(defSet(),s.set||{});s.set.custom=Object.assign(defCustom(),s.set.custom||{});s.adm=Object.assign({god:false,mag:false},s.adm||{});s.fun=Object.assign({disco:false,big:false,tiny:false,flip:false,grav:false},s.fun||{});s.stats=s.stats||{};s.ach=s.ach||{};s.inv=s.inv||{};s.eggs=s.eggs||{};s.pets=s.pets||{};if(s.pet===undefined)s.pet=null;
   if(s.own.head.includes('cap')){s.own.head=s.own.head.filter(x=>x!=='cap');if(!s.own.caps.includes('blue'))s.own.caps.push('blue');if(s.inv['head:cap']){s.inv['caps:blue']=(s.inv['caps:blue']||0)+s.inv['head:cap'];delete s.inv['head:cap']}if(s.eq.head==='cap'){s.eq.head='none';s.eq.caps='blue'}}
+  if(typeof FACES!=='undefined'){s.own.face=s.own.face||['none'];for(const id in FACES)if(FACES[id].price===0&&!s.own.face.includes(id))s.own.face.push(id);if(s.set&&s.set.face&&s.set.face!=='normal'){const mp={happy:'fb_happy',wink:'fb_wink',love:'fb_heart',star:'fb_star',wow:'fb_wow',sleepy:'fb_sleepy',angry:'fb_angry',cool:'fb_cool'}[s.set.face];if(mp&&(!s.eq.face||s.eq.face==='none'))s.eq.face=mp;delete s.set.face}}
   syncInv(s);return s}
 const DB_KEY='kz_accounts_v1';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
@@ -983,7 +985,87 @@ function drawCape(c,kind,t){
   c.beginPath();c.moveTo(-26,-66);c.quadraticCurveTo(-52,-30,-50+w,4);c.lineTo(50-w,4);c.quadraticCurveTo(52,-30,26,-66);c.closePath();
   fs(c,kind==='vamp'?'#2b1640':'#e0344f');
   if(kind==='vamp'){c.beginPath();c.moveTo(-20,-62);c.quadraticCurveTo(-40,-34,-36,-6);c.lineTo(36,-6);c.quadraticCurveTo(40,-34,20,-62);c.closePath();fs(c,'#b0123c',0)}
+}/* ---------------- FACES slot ---------------- */
+const FE={dot:'Обычные глазки',happy:'Довольные глазки',wink:'Подмигивание',wow:'Удивлённые глаза',sleepy:'Сонные глазки',angry:'Сердитый взгляд',cat:'Кошачьи глаза',sparkle:'Сияющие глазки',cross:'Глазки-крестики',dizzy:'Глаза-спиральки',heart:'Глаза-сердечки',star:'Звёздные глаза',money:'Денежные глаза',cry:'Слёзки',cool:'Крутые очки',visor:'Робо-визор',diamond:'Алмазные глаза',suit:'Карточные глаза',checker:'Глаза-шашки',dice:'Глаза-кубики',xo:'Крестик и нолик',galaxy:'Галактические глаза',flame:'Огненные глаза',laser:'Лазерные глаза',rainbow:'Радужные глаза',glitch:'Глючные глаза',void:'Глаза бездны',electric:'Электрические глаза'};
+const FM={def:'',smile:'улыбка',tongue:'язычок',o:'ротик «о»',grin:'зубастая улыбка',smirk:'ухмылка',fang:'клыки',wave:'волнистый рот',kiss:'поцелуйчик',frown:'грустный рот'};
+const FX={none:'',freckles:'веснушки',sweat:'капелька',sticker:'наклейка-звезда',hsticker:'наклейка-сердце',bandage:'пластырь',paint:'боевая раскраска',glitter:'блёстки'};
+const FCOL=['#3d8bff','#3fae6a','#e8355d','#b46bff','#ff8a3d','#5ee6c1','#ffcf33','#ff5ea0','#5eb6ff','#c8283c','#7fd8ff','#a8e68a'];
+const FACES={none:{n:'Обычное лицо',price:0}};
+(()=>{const add=(id,d)=>{d.n=d.n||(FE[d.e]+(FM[d.m]?' · '+FM[d.m]:'')+(FX[d.x]?' · '+FX[d.x]:''));FACES[id]=d};
+  // free basics (replace old customization expressions)
+  for(const e of['happy','wink','heart','star','wow','sleepy','angry','cool'])add('fb_'+e,{e,ec:e==='heart'?'#ff3d6e':e==='star'?'#ffd84a':'#14111c',m:'def',x:'none',price:0});
+  // shop 40
+  const se=['happy','wink','wow','sleepy','angry','cat','sparkle','cross','dizzy','cry'],sm=['smile','tongue','o','smirk'];let n=0;
+  se.forEach((e,i)=>sm.forEach((m,j)=>{add('fs'+(++n),{e,m,x:'none',ec:FCOL[(i*4+j)%FCOL.length],price:120+i*20+j*15})}));
+  // game drops 50
+  const de=['heart','star','money','cool','visor','diamond','cat','sparkle','cry','dizzy'],dm=['grin','fang','wave','kiss','frown'],dx=['freckles','sweat','sticker','hsticker','bandage'];n=0;
+  de.forEach((e,i)=>dm.forEach((m,k)=>{add('fd'+(++n),{e,m,x:dx[(k+i)%5],ec:FCOL[(i*5+k)%FCOL.length],src:'drop'});EXCL_VAL['face:fd'+n]=300+i*20}));
+  // mini-game 30
+  const me=['suit','checker','dice','xo','star','cool'],mm=['smile','grin','smirk','tongue','o'],mx=['paint','sticker','none','hsticker','freckles'];n=0;
+  me.forEach((e,i)=>mm.forEach((m,k)=>{add('fm'+(++n),{e,m,x:mx[(k+i)%5],ec:FCOL[(i*3+k*2)%FCOL.length],src:'mgd'});EXCL_VAL['face:fm'+n]=420+i*25}));
+  // exclusive 60
+  const xe=['galaxy','flame','laser','rainbow','glitch','void','electric','diamond','heart','star'],xm=['def','smile','fang','smirk','grin','o'],xx=['glitter','paint','none','glitter','sticker','glitter'];n=0;
+  xe.forEach((e,i)=>xm.forEach((m,k)=>{add('fx'+(++n),{e,m,x:xx[k],ec:FCOL[(i*7+k*5)%FCOL.length],glow:1,src:'kg',ex:1});EXCL_VAL['face:fx'+n]=3800+i*300+k*150}))})();
+ITEMS.face=FACES;
+function faceEyes(c,d,t,blink){const e=d.e,col=d.ec||'#14111c',Y=-97;c.lineCap='round';c.lineJoin='round';
+  const both=fn=>{for(const g of[-1,1])fn(g*13,g)};
+  const dotE=(x)=>{ell(c,x,Y,6.5,8);fs(c,INK,0);c.fillStyle='#fff';ell(c,x+2,Y-3,2.4,2.8);c.fill()};
+  const closed=(x)=>{c.beginPath();c.moveTo(x-6,Y+1);c.quadraticCurveTo(x,Y+5,x+6,Y+1);c.lineWidth=3.5;c.strokeStyle=INK;c.stroke()};
+  const blinkable=['dot','wow','cat','sparkle','cry','angry','electric','void','rainbow','galaxy','money','diamond'];
+  if(blink&&blinkable.includes(e)){both(closed);return}
+  if(d.glow)glowOn(c,col,12);
+  switch(e){
+    case 'dot':both(dotE);break;
+    case 'happy':both(x=>{c.beginPath();c.arc(x,Y+3,6.5,Math.PI*1.1,Math.PI*1.9);c.lineWidth=4;c.strokeStyle=INK;c.stroke()});break;
+    case 'wink':dotE(-13);c.beginPath();c.arc(13,Y+2,6,Math.PI*1.1,Math.PI*1.9);c.lineWidth=4;c.strokeStyle=INK;c.stroke();break;
+    case 'wow':both(x=>{ell(c,x,Y,8,9);fs(c,'#fff',3);ell(c,x,Y+1,4,4.5);fs(c,INK,0)});break;
+    case 'sleepy':both(x=>{ell(c,x,Y+2,6.5,4);fs(c,INK,0);c.beginPath();c.moveTo(x-8,Y-1);c.lineTo(x+8,Y-1);c.lineWidth=3.5;c.strokeStyle=INK;c.stroke()});break;
+    case 'angry':both((x,g)=>{ell(c,x,Y+1,6,7);fs(c,INK,0);c.fillStyle='#fff';ell(c,x+2,Y-1,2,2.4);c.fill();c.beginPath();c.moveTo(x-g*8,Y-7);c.lineTo(x+g*8,Y-15);c.lineWidth=4;c.strokeStyle=INK;c.stroke()});break;
+    case 'cat':both(x=>{ell(c,x,Y,7,8.5);fs(c,col,2.5);ell(c,x,Y,1.8,6.5);c.fillStyle=INK;c.fill();c.fillStyle='#fff';ell(c,x+2.5,Y-3.5,1.6,1.8);c.fill()});break;
+    case 'sparkle':both(x=>{ell(c,x,Y,8,9.5);fs(c,INK,0);ell(c,x,Y+2,6,7);c.fillStyle=col;c.fill();ell(c,x,Y+3,3,3.5);c.fillStyle=INK;c.fill();c.fillStyle='#fff';ell(c,x+2.5,Y-4,3,3.5);c.fill();ell(c,x-3,Y+4,1.4,1.4);c.fill()});break;
+    case 'cross':both(x=>{c.beginPath();c.moveTo(x-6,Y-6);c.lineTo(x+6,Y+6);c.moveTo(x+6,Y-6);c.lineTo(x-6,Y+6);c.lineWidth=3.5;c.strokeStyle=INK;c.stroke()});break;
+    case 'dizzy':both((x,g)=>{c.beginPath();for(let a=0;a<12.5;a+=.3){const r=a*.6;c.lineTo(x+Math.cos(a+t*4*g)*r,Y+Math.sin(a+t*4*g)*r)}c.lineWidth=2.4;c.strokeStyle=INK;c.stroke()});break;
+    case 'heart':{const b=1+Math.sin(t*6)*.1;both(x=>{c.save();c.translate(x,Y);c.scale(b,b);c.beginPath();c.moveTo(0,6);c.bezierCurveTo(-11,-2,-6,-11,0,-5);c.bezierCurveTo(6,-11,11,-2,0,6);c.fillStyle=col;c.fill();c.lineWidth=2;c.strokeStyle=INK;c.stroke();c.restore()});break}
+    case 'star':both(x=>{starPath(c,x,Y,8.5,t*.6);fs(c,col,2)});break;
+    case 'money':both((x,g)=>{ell(c,x,Y,7.5,7.5);fs(c,'#ffcf33',2.5);c.fillStyle='#8a5a1a';c.font='900 11px Trebuchet MS,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('$',x,Y+.5)});break;
+    case 'cry':both(x=>{dotE(x);const k=(t*1.5)%1;c.fillStyle='rgba(120,200,255,.85)';c.beginPath();c.roundRect(x-2.5,Y+7,5,14,2.5);c.fill();ell(c,x,Y+9+k*18,2.6,3.4);c.fill()});break;
+    case 'cool':c.beginPath();c.roundRect(-26,Y-7,22,13,5);c.roundRect(4,Y-7,22,13,5);c.fillStyle=col==='#14111c'?'#14111c':col;c.fill();c.lineWidth=3;c.strokeStyle=INK;c.stroke();c.beginPath();c.moveTo(-4,Y-2);c.lineTo(4,Y-2);c.stroke();c.strokeStyle='rgba(255,255,255,.65)';c.lineWidth=2;c.beginPath();c.moveTo(-22,Y-4);c.lineTo(-17,Y+1);c.moveTo(8,Y-4);c.lineTo(13,Y+1);c.stroke();break;
+    case 'visor':{c.beginPath();c.roundRect(-27,Y-7,54,14,7);fs(c,'#14111c',3);c.save();glowOn(c,col,10);const sx=Math.sin(t*3)*18;c.fillStyle=col;c.beginPath();c.roundRect(sx-8,Y-2,16,4,2);c.fill();c.restore();break}
+    case 'diamond':both(x=>gemShape(c,x,Y,8,col));break;
+    case 'suit':both((x,g)=>{c.font='900 19px "Segoe UI Symbol","DejaVu Sans",sans-serif';c.textAlign='center';c.textBaseline='middle';const ch=g<0?'♥':'♠';c.lineWidth=3;c.strokeStyle='#fff';c.strokeText(ch,x,Y+1);c.fillStyle=g<0?'#e8355d':'#1d1d22';c.fillText(ch,x,Y+1)});break;
+    case 'checker':both((x,g)=>mgDisc(c,x,Y,8,g<0,false));break;
+    case 'dice':both((x,g)=>{c.beginPath();c.roundRect(x-7.5,Y-7.5,15,15,3.5);fs(c,'#fff',2.5);c.fillStyle=INK;const pts=g<0?[[-3.5,-3.5],[0,0],[3.5,3.5]]:[[-3.5,-3.5],[3.5,-3.5],[0,0],[-3.5,3.5],[3.5,3.5]];for(const[a,b]of pts){ell(c,x+a,Y+b,1.5,1.5);c.fill()}});break;
+    case 'xo':both((x,g)=>mgXO(c,x,Y,5,g>0));break;
+    case 'galaxy':both(x=>{const gr=c.createRadialGradient(x,Y,1,x,Y,9);gr.addColorStop(0,'#fff');gr.addColorStop(.3,col);gr.addColorStop(1,'#14092e');ell(c,x,Y,8,9.5);c.fillStyle=gr;c.fill();c.lineWidth=2;c.strokeStyle=INK;c.stroke();for(let i=0;i<3;i++){const a=t*2+i*2.1;ell(c,x+Math.cos(a)*5,Y+Math.sin(a)*5.5,1,1);c.fillStyle='#fff';c.fill()}});break;
+    case 'flame':both((x,g)=>{const f=Math.sin(t*14+g)*2;c.beginPath();c.moveTo(x-6,Y+6);c.quadraticCurveTo(x-9,Y-4,x-2,Y-12-f);c.quadraticCurveTo(x,Y-5,x+3,Y-10+f);c.quadraticCurveTo(x+9,Y-2,x+6,Y+6);c.closePath();const gr=c.createLinearGradient(0,Y-12,0,Y+6);gr.addColorStop(0,'#fff6b0');gr.addColorStop(1,col);c.fillStyle=gr;c.fill();c.lineWidth=2;c.strokeStyle=INK;c.stroke()});break;
+    case 'laser':both((x,g)=>{ell(c,x,Y,6.5,7.5);c.fillStyle=col;c.fill();ell(c,x,Y,3,3.5);c.fillStyle='#fff';c.fill();if(Math.sin(t*5)>.2){c.strokeStyle=col;c.lineWidth=3;c.globalAlpha=.7;c.beginPath();c.moveTo(x,Y);c.lineTo(x+g*26,Y+30);c.stroke();c.globalAlpha=1}});break;
+    case 'rainbow':both(x=>{const h=(t*90)%360;ell(c,x,Y,8,9.5);c.fillStyle=`hsl(${h},90%,60%)`;c.fill();c.lineWidth=2.5;c.strokeStyle=INK;c.stroke();ell(c,x,Y+1,4,4.5);c.fillStyle=`hsl(${(h+180)%360},90%,45%)`;c.fill();c.fillStyle='#fff';ell(c,x+2.5,Y-4,2.4,2.6);c.fill()});break;
+    case 'glitch':both(x=>{const j=Math.random()<.15?rnd(-3,3):0;c.fillStyle='rgba(255,40,80,.85)';c.fillRect(x-7+j-1.5,Y-7,14,14);c.fillStyle='rgba(40,230,255,.85)';c.fillRect(x-7+j+1.5,Y-7,14,14);c.fillStyle=INK;c.fillRect(x-6+j,Y-6,12,12);c.fillStyle='#fff';c.fillRect(x-1+j,Y-4,4,4)});break;
+    case 'void':both(x=>{const p=.6+.4*Math.sin(t*4);ell(c,x,Y,8.5,9.5);c.fillStyle='#05020c';c.fill();c.lineWidth=2.5;c.strokeStyle=col;c.globalAlpha=p;c.stroke();c.globalAlpha=1;ell(c,x+2,Y-3,1.5,1.7);c.fillStyle=col;c.fill()});break;
+    case 'electric':both((x,g)=>{ell(c,x,Y,6.5,8);c.fillStyle=col;c.fill();ell(c,x+2,Y-3,2.2,2.6);c.fillStyle='#fff';c.fill();if(Math.sin(t*9+g)>.3){c.strokeStyle='#fff';c.lineWidth=1.6;c.beginPath();c.moveTo(x+g*7,Y-6);c.lineTo(x+g*11,Y-9);c.lineTo(x+g*9,Y-3);c.lineTo(x+g*14,Y-5);c.stroke()}});break;
+    default:both(dotE)}
+  c.shadowBlur=0}
+function faceMouth(c,m,t){c.lineCap='round';c.strokeStyle=INK;
+  if(m==='smile'){c.beginPath();c.moveTo(-7,-80);c.quadraticCurveTo(0,-68,7,-80);c.closePath();fs(c,'#7a2a3a',2.5);ell(c,0,-74,3.5,2.2);c.fillStyle='#ff7aa2';c.fill()}
+  else if(m==='tongue'){c.beginPath();c.moveTo(0,-82);c.quadraticCurveTo(-3,-77,-7,-79);c.moveTo(0,-82);c.quadraticCurveTo(3,-77,7,-79);c.lineWidth=2.5;c.stroke();ell(c,2,-74,3.5,4.5);fs(c,'#ff7aa2',2)}
+  else if(m==='o'){ell(c,0,-76,3.5,4.5);fs(c,INK,0)}
+  else if(m==='grin'){c.beginPath();c.roundRect(-8,-81,16,7,3);fs(c,'#fff',2.5);c.lineWidth=1.5;c.beginPath();for(const x of[-4,0,4]){c.moveTo(x,-81);c.lineTo(x,-74)}c.stroke()}
+  else if(m==='smirk'){c.beginPath();c.moveTo(-6,-79);c.quadraticCurveTo(1,-76,8,-82);c.lineWidth=2.8;c.stroke()}
+  else if(m==='fang'){c.beginPath();c.moveTo(0,-82);c.quadraticCurveTo(-3,-77,-7,-79);c.moveTo(0,-82);c.quadraticCurveTo(3,-77,7,-79);c.lineWidth=2.5;c.stroke();for(const s of[-1,1]){c.beginPath();c.moveTo(s*2,-79);c.lineTo(s*5,-79);c.lineTo(s*3.5,-74);c.closePath();fs(c,'#fff',1.5)}}
+  else if(m==='wave'){c.beginPath();c.moveTo(-8,-79);for(let i=1;i<=8;i++)c.lineTo(-8+i*2,-79+(i%2?-2:2));c.lineWidth=2.5;c.stroke()}
+  else if(m==='kiss'){c.save();c.translate(2,-77);c.beginPath();c.moveTo(0,3);c.bezierCurveTo(-6,-1,-3,-6,0,-3);c.bezierCurveTo(3,-6,6,-1,0,3);fs(c,'#ff5e7a',1.8);c.restore()}
+  else if(m==='frown'){c.beginPath();c.arc(0,-72,6,Math.PI*1.15,Math.PI*1.85);c.lineWidth=2.8;c.stroke()}
 }
+function faceExtra(c,x,col,t){
+  if(x==='freckles'){c.fillStyle='rgba(140,80,40,.55)';for(const s of[-1,1])for(const[a,b]of[[18,-88],[23,-85],[20,-82],[26,-89]]){ell(c,s*a,b,1.4,1.4);c.fill()}}
+  if(x==='sweat'){const b=Math.sin(t*3)*1.5;c.beginPath();c.moveTo(30,-118+b);c.quadraticCurveTo(36,-108+b,30,-104+b);c.quadraticCurveTo(24,-108+b,30,-118+b);fs(c,'#8fd0ff',2)}
+  if(x==='sticker'){starPath(c,24,-86,6,.2);fs(c,col,2)}
+  if(x==='hsticker'){c.save();c.translate(-24,-86);c.beginPath();c.moveTo(0,5);c.bezierCurveTo(-8,-1,-5,-8,0,-4);c.bezierCurveTo(5,-8,8,-1,0,5);fs(c,col,2);c.restore()}
+  if(x==='bandage'){c.save();c.translate(22,-108);c.rotate(-.5);c.beginPath();c.roundRect(-9,-3.5,18,7,3);fs(c,'#f0d0a8',2);c.fillStyle='rgba(120,80,40,.4)';for(const a of[-2,2]){ell(c,a,0,.9,.9);c.fill()}c.restore()}
+  if(x==='paint'){c.strokeStyle=col;c.lineWidth=3;for(const s of[-1,1]){c.beginPath();c.moveTo(s*8,-86);c.lineTo(s*20,-86);c.moveTo(s*9,-82);c.lineTo(s*19,-82);c.stroke()}}
+  if(x==='glitter'){for(let i=0;i<4;i++){const ph=(t*.8+i/4)%1,a=i*1.7+t*.3;starPath(c,Math.cos(a)*34,-96+Math.sin(a)*24,2+Math.sin(ph*Math.PI)*2.5,a);c.fillStyle=i%2?'#fff':col;c.globalAlpha=Math.sin(ph*Math.PI);c.fill()}c.globalAlpha=1}
+}
+
 function kzFace(c,f,t,blink){c.lineCap='round';
   const eyes=(fn)=>{for(const g of[-1,1])fn(g*13,g)};
   if(f==='happy'){eyes(x=>{c.beginPath();c.arc(x,-94,6.5,Math.PI*1.1,Math.PI*1.9);c.lineWidth=4;c.strokeStyle=INK;c.stroke()});return true}
@@ -1017,14 +1099,15 @@ function drawKZ(c,x,y,s,eq,t,tilt=0){
   // head
   ell(c,0,-94,38,34);fs(c,sk.base);
   ell(c,0,-82,16,11);fs(c,sk.belly,0);
-  const me=S&&(eq===S.eq||eq.__me),ST=S&&S.set||{},face=me?ST.face||'normal':'normal';
-  if(!(me&&ST.blush===false)){c.globalAlpha=face==='love'?.7:.45;ell(c,-23,-84,7,5);fs(c,ST.blushCol&&me?ST.blushCol:'#ff7fa8',0);ell(c,23,-84,7,5);fs(c,ST.blushCol&&me?ST.blushCol:'#ff7fa8',0);c.globalAlpha=1}
+  const me=S&&(eq===S.eq||eq.__me),ST=S&&S.set||{},fd=eq.face&&eq.face!=='none'&&FACES[eq.face]?FACES[eq.face]:null;
+  if(!(me&&ST.blush===false)){c.globalAlpha=fd&&fd.e==='heart'?.7:.45;ell(c,-23,-84,7,5);fs(c,ST.blushCol&&me?ST.blushCol:'#ff7fa8',0);ell(c,23,-84,7,5);fs(c,ST.blushCol&&me?ST.blushCol:'#ff7fa8',0);c.globalAlpha=1}
   const blink=(t%4.2)<.13||(kzSleep&&c===ctx&&!G);
-  if(face!=='normal'&&!(kzSleep&&c===ctx&&!G)&&kzFace(c,face,t,blink)){}
+  if(fd&&!(kzSleep&&c===ctx&&!G)){c.save();faceEyes(c,fd,t,blink);c.restore()}
   else if(blink){c.beginPath();c.moveTo(-19,-96);c.quadraticCurveTo(-13,-92,-7,-96);c.moveTo(7,-96);c.quadraticCurveTo(13,-92,19,-96);c.lineWidth=3.5;c.strokeStyle=INK;c.stroke()}
   else{ell(c,-13,-97,6.5,8);fs(c,INK,0);ell(c,13,-97,6.5,8);fs(c,INK,0);c.fillStyle='#fff';ell(c,-11,-100,2.4,2.8);c.fill();ell(c,15,-100,2.4,2.8);c.fill()}
   c.beginPath();c.moveTo(-4.5,-87);c.lineTo(4.5,-87);c.lineTo(0,-82);c.closePath();fs(c,'#ff7aa2',2);
-  c.beginPath();c.moveTo(0,-82);c.quadraticCurveTo(-3,-77,-7,-79);c.moveTo(0,-82);c.quadraticCurveTo(3,-77,7,-79);c.lineWidth=2.5;c.strokeStyle=INK;c.stroke();
+  if(fd&&fd.m&&fd.m!=='def'){c.save();faceMouth(c,fd.m,t);c.restore()}else{c.beginPath();c.moveTo(0,-82);c.quadraticCurveTo(-3,-77,-7,-79);c.moveTo(0,-82);c.quadraticCurveTo(3,-77,7,-79);c.lineWidth=2.5;c.strokeStyle=INK;c.stroke()}
+  if(fd&&fd.x&&fd.x!=='none'){c.save();faceExtra(c,fd.x,fd.ec,t);c.restore()}
   if(!(me&&ST.whisk===false)){c.lineWidth=2;c.beginPath();for(const g of[-1,1]){c.moveTo(g*15,-84);c.lineTo(g*35,-88);c.moveTo(g*15,-81);c.lineTo(g*35,-78)}c.stroke()}
   // lop ears
   const ew=Math.sin(t*2.2)*.07;
@@ -2492,11 +2575,12 @@ const thumbCache={};
 function thumb(slot,id){
   const skin=slot==='skin'?id:S.eq.skin,key=slot+':'+id+':'+skin;if(thumbCache[key])return thumbCache[key];
   const c=document.createElement('canvas');c.width=c.height=144;const x=c.getContext('2d');
-  const eq={top:'none',skin,head:'none',caps:'none',shoes:'none',acc:'none',trail:'none',aura:'none',gear:'none'};if(slot!=='skin')eq[slot]=id;
+  const eq={top:'none',skin,head:'none',caps:'none',shoes:'none',acc:'none',trail:'none',aura:'none',gear:'none',face:'none'};if(slot!=='skin')eq[slot]=id;
   const t=1.3;
   if(slot==='trail'&&id!=='none'){const old=parts,pe=S.set.parts;S.set.parts=true;parts=[];let guard=0;while(parts.length<26&&guard++<400)emitTrail(id,rnd(8,70),rnd(70,128),t+guard*.07);
     for(const p of parts){p.life=Math.random()*p.max*.55;p.x+=p.vx*.15;p.y+=p.vy*.15}const tp=parts;parts=old;S.set.parts=pe;for(const p of tp)drawPart(x,p,t);x.globalAlpha=1}
-  if(slot==='head'||slot==='caps')drawKZ(x,72,204,1.08,eq,t,0);
+  if(slot==='face')drawKZ(x,72,212,1.42,eq,t,0);
+  else if(slot==='head'||slot==='caps')drawKZ(x,72,204,1.08,eq,t,0);
   else if(slot==='shoes')drawKZ(x,72,104,1.6,eq,t,0);
   else if(slot==='top')drawKZ(x,72,128,1.35,eq,t,0);
   else if(slot==='trail')drawKZ(x,100,142,.72,eq,t,-.12);
@@ -2899,6 +2983,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:50,l:'1.3.9',items:['😊 Новый раздел Cosmetics → Лица: 180 лиц — глаза, рты и украшения','🛒 40 лиц в магазине, 🎲 50 выпадают в забегах, 🎮 30 за мини-игры, 💎 60 эксклюзивных со свечением и анимацией в Kotograde (галактические, огненные, лазерные, глючные, глаза бездны…)','🆓 9 базовых выражений лица — бесплатно для всех']},
  {v:49,l:'1.3.9',items:['🎨 Кастомизация: «Мои образы» — сохрани 3 наряда и переключай одним нажатием, плюс случайный образ','🐰 Котозаяц: 9 выражений лица, румянец и его цвет, усы, цвет обводки, размер и место в меню, табличка с ником, покачивание, тень, питомец','🎮 Игра: тени на земле — куда упадёт предмет, красная подсветка метеоритов','🖼 Интерфейс: прозрачность окон, форма углов, отключение анимаций и звука кнопок']},
  {v:48,l:'1.3.9',items:['🛍 Мега-пак Cosmetics: 400 новых вещей во всех разделах, включая Gear','🛒 180 обычных вещей в магазине — 10 новых тем (мятная, персиковая, клубничная, небесная, шоколадная…)','🎮 100 вещей за мини-игры — выпадают за победы в шашках, шахматах, дураке, крестиках-ноликах, NoomiClone, Ракете и в саду','💎 120 уникальных вещей только в Kotograde — галактические, фениксовые, бриллиантовые, рубиновые и другие со свечением','🔎 Фильтр в Cosmetics: магазин / мои / эксклюзивы / мини-игры / трофеи']},
  {v:47,l:'1.3.9',items:['🗡 Новая вкладка Cosmetics → Gear: вещи в лапку с небольшими бонусами — сачок, магнит, звёздный меч, щит, песочные часы, палочка удачи и другие (под каждой вещью написано, что она даёт)','💎 Эксклюзивы Gear в Kotograde: Зонт-неуязвимость (+1 жизнь) и Кристалл силы']},
@@ -3332,11 +3417,12 @@ function renderLook(){const t=S.set;let h='';for(const[id,th]of Object.entries(U
   $('#cFont').value=t.font;$('#cScale').value=t.scale;$('#vScale').textContent=t.scale+'%';$('#cCursor').value=t.cursor;$('#cLand').value=t.land;$('#cBody').value=t.body;$('#cWeather').value=t.weather;$('#cStarsN').value=t.stars;$('#vStars').textContent=t.stars+'%';$('#cShoot').checked=t.shoot;try{cusX()}catch(e){}}
 
 /* ---- extra customization ---- */
-function cusX(){const t=S.set;$('#cFace').value=t.face||'normal';$('#cBlush').checked=t.blush!==false;$('#cBlushCol').value=t.blushCol||'#ff7fa8';$('#cWhisk').checked=t.whisk!==false;$('#cInk').value=t.ink||'ink';
+function cusX(){const t=S.set;$('#cBlush').checked=t.blush!==false;$('#cBlushCol').value=t.blushCol||'#ff7fa8';$('#cWhisk').checked=t.whisk!==false;$('#cInk').value=t.ink||'ink';
   $('#cKzSize').value=t.kzSize||100;$('#vKzSize').textContent=(t.kzSize||100)+'%';$('#cKzPos').value=t.kzPos||'right';$('#cPlate').value=t.plate||'';$('#cPlateCol').value=t.plateCol||'#ffc93c';$('#cBob').checked=t.bob!==false;$('#cShadow').checked=t.shadow!==false;$('#cPetMenu').checked=t.petMenu!==false;
   $('#cLandSh').checked=!!t.landSh;$('#cMetRing').checked=!!t.metRing;$('#cPanelA').value=t.panelA??100;$('#vPanelA').textContent=(t.panelA??100)+'%';$('#cRound').value=t.round||'';$('#cAnim').checked=!t.noAnim;$('#cClick').checked=t.clickSnd!==false;outRender()}
-for(const[id,k,kind]of[['#cFace','face','v'],['#cBlush','blush','c'],['#cBlushCol','blushCol','v'],['#cWhisk','whisk','c'],['#cInk','ink','v'],['#cKzPos','kzPos','v'],['#cPlate','plate','v'],['#cPlateCol','plateCol','v'],['#cBob','bob','c'],['#cShadow','shadow','c'],['#cPetMenu','petMenu','c'],['#cLandSh','landSh','c'],['#cMetRing','metRing','c'],['#cRound','round','v'],['#cClick','clickSnd','c']])
+for(const[id,k,kind]of[['#cBlush','blush','c'],['#cBlushCol','blushCol','v'],['#cWhisk','whisk','c'],['#cInk','ink','v'],['#cKzPos','kzPos','v'],['#cPlate','plate','v'],['#cPlateCol','plateCol','v'],['#cBob','bob','c'],['#cShadow','shadow','c'],['#cPetMenu','petMenu','c'],['#cLandSh','landSh','c'],['#cMetRing','metRing','c'],['#cRound','round','v'],['#cClick','clickSnd','c']])
   $(id)[kind==='c'||id==='#cBlushCol'||id==='#cPlateCol'?'onchange':'onchange']=e=>{S.set[k]=kind==='c'?e.target.checked:e.target.value;persist();applyLook();SND.click();if(k==='ink'||k==='face'||k==='blush'||k==='whisk')outRender()};
+$('#cFaceGo').onclick=()=>{cosTab='face';show('cos')};
 $('#cAnim').onchange=e=>{S.set.noAnim=!e.target.checked;persist();applyLook()};
 $('#cKzSize').oninput=e=>{S.set.kzSize=+e.target.value;$('#vKzSize').textContent=e.target.value+'%'};$('#cKzSize').onchange=()=>persist();
 $('#cPanelA').oninput=e=>{S.set.panelA=+e.target.value;$('#vPanelA').textContent=e.target.value+'%';applyLook()};$('#cPanelA').onchange=()=>persist();
@@ -3460,7 +3546,7 @@ $('#sSh').oninput=e=>{S.set.shStr=+e.target.value;$('#vSh').textContent=S.set.sh
 
 /* ---------------- kotograde ---------------- */
 let kgSel={},kgTarget=null,kgSpin=null,kgResult=null,kgCoins=0,kgSortDesc=false;
-const SLOT_RU={top:'Кофта',skin:'Скин',head:'Голова',caps:'Кепка',acc:'Аксессуар',shoes:'Обувь',trail:'След',aura:'Аура',gear:'Gear'};
+const SLOT_RU={top:'Кофта',skin:'Скин',head:'Голова',caps:'Кепка',acc:'Аксессуар',shoes:'Обувь',trail:'След',aura:'Аура',gear:'Gear',face:'Лицо'};
 function kInfo(k){const[sl,id]=k.split(':');const d=itemDef(sl,id);return{sl,id,n:d.n,v:itemVal(sl,id),rc:rarity(d).c,img:thumb(sl,id)}}
 function kgInVal(){let v=0;for(const k in kgSel)v+=itemVal(...k.split(':'))*kgSel[k];return v+(kgCoins||0)}
 function kgSelCount(){let n=0;for(const k in kgSel)n+=kgSel[k];return n}
@@ -4246,7 +4332,7 @@ $('#adAdd').onclick=()=>{S.coins=Math.max(0,S.coins+admNum('#adCoins',-1e9,1e9))
 $('#adSetC').onclick=()=>{S.coins=admNum('#adCoins',0,1e9);persist();SND.buy();renderAdm()};
 $('#adLv').onclick=()=>{S.bpXp=admNum('#adBp',0,BP_LV)*BP_XP;S.evXp=admNum('#adEv',0,EV_LV)*EV_XP;
   S.bpClaimed=S.bpClaimed.filter(l=>l<=S.bpXp/BP_XP);S.evClaimed=S.evClaimed.filter(l=>l<=S.evXp/EV_XP);persist();toast('Уровни обновлены');renderAdm()};
-$('#adAll').onclick=()=>{S.own.skin=[...SKIN_ORDER];for(const t of ['head','caps','acc','top','shoes','trail','aura','gear'])S.own[t]=Object.keys(ITEMS[t]);syncInv();persist();SND.win();toast('Вся косметика открыта')};
+$('#adAll').onclick=()=>{S.own.skin=[...SKIN_ORDER];for(const t of ['head','caps','acc','top','shoes','trail','aura','gear','face'])S.own[t]=Object.keys(ITEMS[t]);syncInv();persist();SND.win();toast('Вся косметика открыта')};
 $('#adClaim').onclick=()=>{S.bpXp=Math.max(S.bpXp,BP_LV*BP_XP);S.evXp=Math.max(S.evXp,EV_LV*EV_XP);for(let l=1;l<=BP_LV;l++)claim('bp',l,true);for(let l=1;l<=EV_LV;l++)claim('ev',l,true);persist();SND.win();toast('Все награды забраны');renderAdm()};
 $('#adGod').onchange=e=>{S.adm.god=e.target.checked;persist()};
 $('#adMag').onchange=e=>{S.adm.mag=e.target.checked;persist()};
@@ -4337,7 +4423,7 @@ function admApply(c){const a=c.a||{};let u=a.u;if(u==='*'){if(!user)return'ни�
     case 'inspect':{let sv=null,nk=u;if(u===user&&S){sv=S;nk=nick}else{const db=loadDB();if(!db[u])return'нет аккаунта';sv=fixSave(db[u].save);nk=db[u].nick}const gd=sv.garden;return JSON.stringify({nick:nk,coins:sv.coins,best:sv.best,bp:Math.min(BP_LV,Math.floor(sv.bpXp/BP_XP)),ev:Math.min(EV_LV,Math.floor(sv.evXp/EV_XP)),items:Object.values(sv.inv||{}).reduce((x,y)=>x+y,0),pets:Object.values(sv.pets||{}).reduce((x,y)=>x+y,0),eggs:Object.values(sv.eggs||{}).reduce((x,y)=>x+y,0),glv:gd?Math.floor(Math.sqrt(gd.xp/40))+1:'—',games:(sv.stats&&sv.stats.games)||0,ach:Object.keys(sv.ach||{}).length,banned:!!sv.banned,eq:[sv.eq.skin,sv.eq.head,sv.eq.caps,sv.eq.top,sv.eq.acc].filter(x=>x&&x!=='none').map(x=>x).join(', ')||'—',dev:devName(),ver:'v'+(window.KZ_VNAME||window.KZ_VER)})}
     case 'garden':{const k=String(a.k);if(!admEdit(u,sv=>{const keep=S;S=sv;const g=gData();if(k==='grow')for(const pl of g.plots){if(pl.id)pl.p=1}if(k==='seeds')for(const id in PLANTS)g.seeds[id]=(g.seeds[id]||0)+10;if(k==='lvl'){const lv=Math.floor(Math.sqrt(g.xp/40))+1;g.xp=gLvXp(lv+5)}if(k==='plots')while(g.plots.length<G_MAXPLOTS)g.plots.push({id:null,p:0,w:false,t:Date.now()});S=keep}))return'нет аккаунта';admNote(u,'🌻 Администратор помог твоему саду!');if(u===user&&cur==='garden')gRender();return'ok'}
     case 'lock':{const m=+a.m===0?0:clamp(Math.round(+a.m||10),1,240);lsSet('kz_lock',String(m?Date.now()+m*60000:0));if(m){if(G&&!isAdm())quitToMenu();toast('🛠 Технические работы '+m+' мин — игра временно недоступна')}else toast('✅ Технические работы закончились — можно играть!');return'ok'}
-    case 'allitems':{if(!admEdit(u,sv=>{sv.own.skin=[...SKIN_ORDER];for(const t of ['head','caps','acc','top','shoes','trail','aura','gear'])sv.own[t]=Object.keys(ITEMS[t]);syncInv(sv)}))return'нет аккаунта';admNote(u,'Администратор открыл тебе всю косметику ✨');if(u===user)confetti(100);return'ok'}
+    case 'allitems':{if(!admEdit(u,sv=>{sv.own.skin=[...SKIN_ORDER];for(const t of ['head','caps','acc','top','shoes','trail','aura','gear','face'])sv.own[t]=Object.keys(ITEMS[t]);syncInv(sv)}))return'нет аккаунта';admNote(u,'Администратор открыл тебе всю косметику ✨');if(u===user)confetti(100);return'ok'}
     case 'setbest':{const v=Math.max(0,Math.round(+a.v||0));if(!admEdit(u,sv=>{sv.best=v}))return'нет аккаунта';admNote(u,'Твой рекорд теперь: '+v);return'ok'}
     case 'kick':{if(u!==user)return'игрок не в игре';if(G)quitToMenu();show('menu');toast('🚪 Администратор отправил тебя в меню');return'ok'}
     case 'ban':{const on=!!a.on;if(!admEdit(u,sv=>{sv.banned=on}))return'нет аккаунта';if(u===user){if(on&&G)quitToMenu();toast(on?'⛔ Администратор заблокировал тебе игру':'✅ Администратор снял блокировку')}return'ok'}
