@@ -1,9 +1,9 @@
 {
- "version": 72,
+ "version": 73,
  "label": "1.4.0",
- "name": "1.4.0: приколы",
+ "name": "1.4.0: прокрутка главного меню",
  "file": "game.html",
- "sha256": "84f88c016a512da1b57f0ae7a7ae9217541e034818e844af411032cc913d9f6b",
+ "sha256": "3f67056cc1c93e19558fcab3380cd6a59eb7b4cf64da3e64f8bf992a6274d3a2",
  "date": "2026-10-18",
  "exe": {
   "version": 4,

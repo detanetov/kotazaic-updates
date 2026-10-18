@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=72;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=73;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -67,6 +67,9 @@ html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
 #menu .col{gap:11px!important}
 #menu .col .btn{text-align:left;font-size:22px;padding:10px 22px;display:flex;justify-content:space-between;align-items:center}
 #menu .col .btn small{font-size:13px;opacity:.75;font-weight:700}
+#menu.screen{overflow-y:auto;overflow-x:hidden;align-items:flex-start!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+#menu .col{margin-top:auto!important;margin-bottom:auto!important;padding-bottom:28px;flex-shrink:0}
+#menu.screen::-webkit-scrollbar{width:10px}#menu.screen::-webkit-scrollbar-thumb{background:rgba(255,255,255,.35);border-radius:8px}
 #menu .logo{margin-bottom:14px}
 @media (max-width:760px){#menu{align-items:flex-start}#menu .col{margin:0 auto}#menu .col .btn{font-size:20px}}
 /* auth */
@@ -3062,6 +3065,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:73,l:'1.4.0',items:['📜 Главное меню теперь можно листать вниз колёсиком мыши или пальцем — все кнопки помещаются на любом экране']},
  {v:72,l:'1.4.0',items:['😂 Кнопка «Приколы» в меню: 18 быстрых приколов с котозайцем (желе, гигант, мини, вверх ногами, невидимка, RGB, полёт, дожди из морковок, котиков и уток, пирог в лицо, хаос…)','🔊 16 смешных звуков котозайца','🤫 33 новых секретных кода с подсказками (всего 66)','😜 Подшути над другом из его профиля: пирог, утки, конфетти, перевёрнутый экран, фейковые лаги (можно выключить в настройках чата)','🐰 Котозаяц в меню сам иногда прикалывается, новые анекдоты, комплименты и «почти научные» факты','🏅 5 новых достижений']},
  {v:71,l:'1.4.0',items:['👔 Ещё 100 костюмов — теперь их 250, и у каждого нового свои 5 вещей (ещё 500 вещей в Cosmetics)','⚽ Новая вкладка «Спорт» пополнилась: баскетбол, теннис, бокс, хоккей, плавание, велоспорт, карате, гольф, бейсбол, шахматы','⬇ Костюмы показываются по 40 — кнопка «Показать ещё»','🏅 Достижения «Тысяча лиц» и «Легенда моды»']},
  {v:70,l:'1.4.0',items:['👔 Ещё 100 костюмов — теперь их 150','🆕 500 новых вещей в Cosmetics: у каждого нового костюма свои 5 вещей (голова, кофта, обувь, аксессуар, Gear), которые больше нигде не повторяются','🗂 Новые вкладки костюмов: Животные, Еда, Техно, Стихии','🔎 Фильтр «Из костюмов» в Cosmetics','🏅 Достижения «Костюмер» и «Повелитель гардероба»']},
