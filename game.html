@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=58;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=59;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -150,6 +150,8 @@ html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
 .bindl{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:6px}.bindh{grid-column:1/-1;font-weight:900;font-size:15px;margin:10px 0 2px;color:var(--ink)}.bindr{display:flex;align-items:center;gap:6px;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:5px 8px;font-weight:800;font-size:13px;color:var(--ink)}.bindr>span:first-child{flex:1;min-width:0}.bindr.wait{background:#ffe9f3}.kbd{background:#24203a;color:#fff;border-radius:7px;padding:3px 9px;font-family:monospace;font-size:12px;min-width:44px;text-align:center;white-space:nowrap}
 @media(max-width:560px){.bindl{grid-template-columns:1fr}}
 .dq{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px;margin-top:8px;color:var(--ink)}.dq.cl{opacity:.6}.dq .bar i,.lvbox .bar i{display:block;height:100%;background:var(--mint);border-radius:6px}.lvbox{background:#f3ecff;border:3px solid var(--ink);border-radius:14px;padding:10px;margin-top:10px;color:var(--ink)}
+.modec{display:flex;flex-direction:column;gap:3px;background:#fff;border:3px solid var(--ink);border-left:12px solid var(--mc);border-radius:14px;padding:10px 92px 10px 12px;margin-top:8px;cursor:pointer;color:var(--ink);position:relative;transition:transform .1s}.modec:hover{transform:translateX(4px)}.modec b{font-size:17px}.modec small{opacity:.8}.modec .chip{position:absolute;right:10px;top:10px}
+#menu #mDaily,#menu #mWs,#menu #mGift{font-size:14px;padding:7px 12px;min-height:0;width:auto;flex:none;box-shadow:0 3px 0 var(--ink)}
 .admc{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:6px 8px;margin-bottom:6px;font-size:13px;color:var(--ink)}
 .perk{display:block;font-size:11px;font-weight:800;color:#2a8a6a;background:#e3f8ef;border:2px solid #9fdcc6;border-radius:8px;padding:3px 7px;line-height:1.25}
 .it{cursor:pointer;position:relative}
@@ -400,7 +402,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
     <button class="btn" data-go="chat" id="mChat" style="background:#c8b0ff">💬 Chat <small id="mChatN">общий и ЛС</small></button>
     <button class="btn ghost" data-go="set">⚙ Settings <small id="mSetN">настройки</small></button>
     <button class="btn vio" data-go="adm" id="mAdm" style="display:none">🛠 ADM <small>админ</small></button>
-    <div class="row" style="gap:8px"><div class="chip">🏆 Рекорд: <span id="mBest">0</span></div><button class="btn sm mint giftbtn" id="mGift">🎁 Подарок дня</button><button class="btn sm" id="mDaily" style="background:#c8b0ff">📋 Задания <small id="mDailyN"></small></button></div>
+    <div class="row" style="gap:8px"><div class="chip">🏆 Рекорд: <span id="mBest">0</span></div><button class="btn sm mint giftbtn" id="mGift">🎁 Подарок дня</button><button class="btn sm" id="mDaily" style="background:#c8b0ff">📋 Задания <small id="mDailyN"></small></button><button class="btn sm" id="mWs" style="background:#ffd0a0">🔧 Мастерская</button></div>
     <div class="chip pred" id="mPred">🔮</div>
   </div>
 </div>
@@ -788,6 +790,8 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
 </div>
 <div id="pfOv" class="pfov"></div>
 <div id="dqOv" class="pfov"></div>
+<div id="modeOv" class="pfov"></div>
+<div id="wsOv" class="pfov"></div>
 <div id="ptPop" class="ptpop" style="display:none"></div>
 
 <div class="screen" id="fishing">
@@ -1529,9 +1533,10 @@ function tasMove(dt,top,cx,cy,R){
   for(const it of G.items){if(it.dead)continue;const vy=it.vy*gk*sm,vx=((it.vx||0)+wnd)*sm;if(vy<=1)continue;const met=it.k==='meteor',rr=it.r+R+(met?(low?13:10):-4);
     const tIn=(cy-rr-it.y)/vy,tOut=(cy+rr-it.y)/vy;if(tOut<0)continue;
     if(tIn>N*h){if(met)late.push({x:it.x+vx*tIn,t:tIn,rr});else if(tIn<N*h+1.2)late.push({x:it.x+vx*tIn,t:tIn,rr,good:it.k==='gold'?6:it.k==='heart'&&G.lives<G.maxLives?8:1});continue}
-    const w=met?0:it.k==='heart'?(G.lives<G.maxLives?(low?60:25):0):it.k==='gold'?30:({pink:3,candy:4,pumpkin:6,fish:3,carrot:3}[it.k]||(PU[it.k]?20:1.5));const idx=id++;vals.push(w);
+    const w=met?0:it.k==='chest'?40:it.k==='heart'?(G.lives<G.maxLives?(low?60:25):0):it.k==='gold'?30:({pink:3,candy:4,pumpkin:6,fish:3,carrot:3}[it.k]||(PU[it.k]?20:1.5));const idx=id++;vals.push(w);
     const k0=Math.max(0,Math.ceil(tIn/h)),k1=Math.min(N,Math.floor(tOut/h));
     for(let k=k0;k<=k1;k++){const t=k*h,dy=cy-(it.y+vy*t),l2=rr*rr-dy*dy;if(l2>0)band[k].push(idx,it.x+vx*t,Math.sqrt(l2),met?1:0)}}
+  for(const z of G.zaps||[]){if(z.t<=0)continue;const k0=Math.max(0,Math.floor((z.t-.08)/h)),k1=Math.min(N,Math.ceil((z.t+.12)/h));for(let k=k0;k<=k1;k++)band[k].push(id,z.x,z.w/2+R*.55+6,1)}vals.push(0);id++;
   const seen=new Int32Array(id+1);let stamp=0;
   const ev=(x1,tsw,x2)=>{stamp++;let px=cx,s=0;
     for(let k=1;k<=N;k++){const tx=k*h<=tsw?x1:x2;for(let q=0;q<2;q++){const pv=Math.max(-spd,Math.min(spd,(tx-px)*22));px=Math.max(L,Math.min(Rr,px+pv*h*.5))}
@@ -2012,7 +2017,7 @@ function xKey(id){if(!id||id[0]!=='x'||id[3]!=='_')return null;const th=id.slice
 function XC(th,t){const T=XTH[th];if(!T.rb)return T;const h=(t*70)%360;return{a:`hsl(${h},85%,58%)`,b:`hsl(${(h+70)%360},90%,70%)`,c:`hsl(${(h+160)%360},85%,60%)`,g:`hsl(${h},100%,70%)`}}
 /* drops in games */
 function mgDrop(ch,from){return gameDrop(ch,from,'mgd')}
-function gameDrop(ch,from,src){src=src||'drop';if(admDropUntil>Date.now())ch=Math.min(1,ch*2);if(!S||Math.random()>ch)return null;const all=[];for(const sl of SLOTS){const pool=sl==='skin'?SKINS:ITEMS[sl];for(const id in pool)if(pool[id].src===src)all.push([sl,id])}
+function gameDrop(ch,from,src){src=src||'drop';if(admDropUntil>Date.now())ch=Math.min(1,ch*2);ch=Math.min(1,ch*(1+wsV('drop')));if(!S||Math.random()>ch)return null;const all=[];for(const sl of SLOTS){const pool=sl==='skin'?SKINS:ITEMS[sl];for(const id in pool)if(pool[id].src===src)all.push([sl,id])}
   const fresh=all.filter(([sl,id])=>!S.own[sl].includes(id)),pk=(fresh.length?fresh:all)[Math.floor(Math.random()*(fresh.length?fresh:all).length)];if(!pk)return null;
   addItem(pk[0],pk[1]);stat('drops');persist();const d=itemDef(pk[0],pk[1]);setTimeout(()=>{toast(`${src==='mgd'?'🎮 Награда мини-игры':'🎲 Трофей'}${from?' ('+from+')':''}: ${d.n}!`);SND.win()},700);return d}
 /* head */
@@ -2312,6 +2317,7 @@ const VALUES={star:1,pink:2,candy:5,pumpkin:10,fish:3,gold:25,carrot:3};
 const SCORES={star:10,pink:25,candy:40,pumpkin:80,fish:30,gold:250,carrot:30};
 function drawItem(c,it){
   if(PU[it.k]){drawPU(c,it);return}
+  if(it.k==='chest'){drawChest(c,it);return}
   const{x,y,r,rot}=it;
   switch(it.k){
     case 'carrot':{carrotShape(c,x,y,r/10,Math.sin(rot)*.6);break}
@@ -2382,20 +2388,21 @@ function startGame(mode,startWave){
   if(S.banUntil>Date.now()){G=null;toast('⏳ Играть можно будет через '+Math.ceil((S.banUntil-Date.now())/60000)+' мин');show('menu');return}
   {const lk=+(lsGet('kz_lock')||0);if(lk>Date.now()&&!isAdm()){G=null;toast('🛠 Технические работы ещё '+Math.ceil((lk-Date.now())/60000)+' мин');show('menu');return}}
   if(isAdm()&&S.adm.nine){G.lives=9;G.maxLives=9}
+  if(mode!=='hw'&&!MODES[mode])G.mode='normal';try{modeSetup();wsSetup();tutStart()}catch(e){console.error(e)}
   parts=[];mouseX=null;show('game');$('#hud').classList.add('on');updHud();
   banner(mode==='hw'?'Ночь тыкв!':'Волна '+G.wave,mode==='hw'?'#ff9a3d':null);sfx(440,.15,'triangle',.05,440);
 }
-function updHud(){if(!G)return;$('#hScore').textContent=G.score;$('#hCoins').textContent=G.coins;$('#hWave').textContent=G.phase==='boss'?'БОСС!':G.phase==='super'?'Суперволна!':'Волна '+G.wave+({fish:' 🐟',ufo:' 🛸',mirror:' 🙃',starstorm:' ✨',heavy:' 💰',giant:' 🦖',wind:' 🌪',slowmo:' ⏳',dark:' 🔦',hiccup:' 😮',goldrush:' 🤑',carrots:' 🥕'}[G.ev]||'')+(isAdm()&&S.adm.tas?' · 🤖 TAS':'');$('#hLives').textContent='❤'.repeat(clamp(G.lives,0,G.maxLives))+'♡'.repeat(Math.max(0,3-G.lives))}
+function updHud(){if(!G)return;$('#hScore').textContent=G.score;$('#hCoins').textContent=G.coins;$('#hWave').textContent=(G.mode==='time'?'⏱ '+Math.ceil(G.timeLeft||0)+' с · ':G.mode==='hard'?'💀 ':'')+(G.phase==='boss'?'БОСС!':G.phase==='super'?'Суперволна!':'Волна '+G.wave+({fish:' 🐟',ufo:' 🛸',mirror:' 🙃',starstorm:' ✨',heavy:' 💰',giant:' 🦖',wind:' 🌪',slowmo:' ⏳',dark:' 🔦',hiccup:' 😮',goldrush:' 🤑',carrots:' 🥕'}[G.ev]||'')+(isAdm()&&S.adm.tas?' · 🤖 TAS':''));$('#hLives').textContent='❤'.repeat(clamp(G.lives,0,G.maxLives))+'♡'.repeat(Math.max(0,3-G.lives))}
 function groundY(){return H-34}
-function spawn(kind,x,vy,extra){if(isAdm()&&S.adm){if(S.adm.nomet&&kind==='meteor')return;if(S.adm.allgold&&(kind==='star'||kind==='pink'))kind='gold'}const r=({star:16,pink:18,candy:14,pumpkin:18,heart:15,meteor:20,fish:16,gold:22,carrot:17}[kind])||(PU[kind]?19:16);if(kind==='meteor'&&isAdm()&&S.adm.slowmet)vy*=.5;if(kind==='meteor'&&gearP().met)vy*=1-gearP().met;G.items.push(Object.assign({k:kind,x:x??rnd(30,W-30),y:-30,vx:0,vy,r,rot:Math.random()*6,spin:rnd(-2,2)},extra||{}))}
+function spawn(kind,x,vy,extra){if(isAdm()&&S.adm){if(S.adm.nomet&&kind==='meteor')return;if(S.adm.allgold&&(kind==='star'||kind==='pink'))kind='gold'}const r=kind==='chest'?24:({star:16,pink:18,candy:14,pumpkin:18,heart:15,meteor:20,fish:16,gold:22,carrot:17}[kind])||(PU[kind]?19:16);if(kind==='meteor'&&isAdm()&&S.adm.slowmet)vy*=.5;if(kind==='meteor'&&gearP().met)vy*=1-gearP().met;G.items.push(Object.assign({k:kind,x:x??rnd(30,W-30),y:-30,vx:0,vy,r,rot:Math.random()*6,spin:rnd(-2,2)},extra||{}))}
 function pickNormal(){
   const w=G.wave,r=Math.random();let acc=0;
-  const st=S.set,met=st.zen?0:Math.min(.36,.12+w*.025)*({easy:.6,normal:1,hard:1.45}[st.diff]||1);
+  const st=S.set,met=st.zen?0:Math.min(.36,.12+w*.025)*({easy:.6,normal:1,hard:1.45}[st.diff]||1)*(G.dch&&G.dch.met||1);
   if(r<(acc+=met))return 'meteor';
-  if(G.lives<G.maxLives&&r<(acc+=.018*(1+(gearP().heart||0))))return 'heart';
+  if(!(G.dch&&G.dch.noheart)&&G.lives<G.maxLives&&r<(acc+=.018*(1+(gearP().heart||0))))return 'heart';
   if(G.mode==='hw'){if(r<(acc+=.05))return 'pumpkin';if(r<(acc+=.13))return 'candy'}
-  if(r<(acc+=.015*(1+(gearP().gold||0))))return 'gold';
-  if(r<(acc+=.022))return puPick();
+  if(r<(acc+=.015*(1+(gearP().gold||0))*(G.dch&&G.dch.gold||1)))return 'gold';
+  if(r<(acc+=.022*(1+wsV('puch'))))return puPick();
   if(r<(acc+=.13))return 'pink';
   return 'star';
 }
@@ -2435,10 +2442,10 @@ function endPhase(){
   updHud();
 }
 function catchItem(it,cx,cy){
-  const k=it.k;if(PU[k]){puGot(k);burst(it.x,it.y,PU[k].c,18,'star',220);if(G.coop&&G.coop.host)G.coop.fx.push([Math.round(it.x),Math.round(it.y),'star']);return}if(G.coop&&G.coop.host&&!(k==='meteor'&&G.inv>0))G.coop.fx.push([Math.round(it.x),Math.round(it.y),k]);
-  if(k==='meteor'){if(G.inv>0)return;if(G.pu&&G.pu.shield>0){G.pu.shield--;G.inv=1;burst(it.x,it.y,'#8fc4ff',22,'star',240);banner('🛡 Щит спас от метеорита!','#8fc4ff');sfx(700,.15,'triangle',.05,300);return}G.combo=0;if(isAdm()&&S.adm.god){burst(it.x,it.y,'#5ee6c1',10);sfx(300,.08,'sine',.04);return}if(gearP().shield&&!G.shieldUsed){G.shieldUsed=true;G.inv=1;burst(it.x,it.y,'#8fc4ff',20,'star',220);banner('🛡 Щит отразил метеорит!','#8fc4ff');sfx(700,.15,'triangle',.05,300);return}say(pick(['Ай!','Мой нос!','Ой-ой-ой','За что?!','Больно же!']),1);G.lives--;G.inv=1.3+(gearP().inv||0);G.shake=.35;if(S.set.vib&&navigator.vibrate)try{navigator.vibrate(140)}catch(e){};SND.hit();burst(it.x,it.y,'#ff8a3d',16);updHud();if(G.lives<=0)gameOver();return}
+  const k=it.k;if(k==='chest'){chestOpen();burst(it.x,it.y,'#ffcf33',40,'star',320);return}if(PU[k]){puGot(k);burst(it.x,it.y,PU[k].c,18,'star',220);if(G.coop&&G.coop.host)G.coop.fx.push([Math.round(it.x),Math.round(it.y),'star']);return}if(G.coop&&G.coop.host&&!(k==='meteor'&&G.inv>0))G.coop.fx.push([Math.round(it.x),Math.round(it.y),k]);
+  if(k==='meteor'){if(G.inv>0)return;if(G.pu&&G.pu.shield>0){G.pu.shield--;G.inv=1;burst(it.x,it.y,'#8fc4ff',22,'star',240);banner('🛡 Щит спас от метеорита!','#8fc4ff');sfx(700,.15,'triangle',.05,300);return}G.combo=0;if(isAdm()&&S.adm.god){burst(it.x,it.y,'#5ee6c1',10);sfx(300,.08,'sine',.04);return}if(gearP().shield&&!G.shieldUsed){G.shieldUsed=true;G.inv=1;burst(it.x,it.y,'#8fc4ff',20,'star',220);banner('🛡 Щит отразил метеорит!','#8fc4ff');sfx(700,.15,'triangle',.05,300);return}say(pick(['Ай!','Мой нос!','Ой-ой-ой','За что?!','Больно же!']),1);if(G.mode==='time'){G.timeLeft=Math.max(0,G.timeLeft-5);addFloat(cx,cy-40,'-5 с','#ff8a8a')}else G.lives--;G.inv=1.3+(gearP().inv||0);G.shake=.35;if(S.set.vib&&navigator.vibrate)try{navigator.vibrate(140)}catch(e){};SND.hit();burst(it.x,it.y,'#ff8a3d',16);updHud();if(G.lives<=0)gameOver();return}
   if(k==='heart'){missionInc('hearts',1);G.lives=Math.min(G.maxLives,G.lives+1);SND.heart();burst(it.x,it.y,'#ff4d6d',12);addFloat(it.x,it.y,'+❤','#ff6b8a');updHud();return}
-  const gp=gearP(),v0=(isAdm()&&S.adm.c10?10:1)*VALUES[k]*(G.ev==='heavy'?2:1)*(admBoostUntil>Date.now()?2:1)*(1+(gp.coin||0))*(gp.carrot&&(k==='carrot'||k==='fish')?2:1),m=S.set.zen?.5:S.set.diff==='hard'?1.25:1;G.cf=(G.cf||0)+v0*m;const v=Math.floor(G.cf);G.cf-=v;G.coins+=v;G.score+=Math.round(SCORES[k]*(1+(gp.score||0))*comboMult()*(G.pu&&G.pu.pu_x2>0?2:1));G.caught++;comboHit();if(k==='star'||k==='pink'||k==='gold')missionInc('stars',1);if(k==='gold')missionInc('gold',1);
+  const gp=gearP(),v0=(isAdm()&&S.adm.c10?10:1)*(G.mode==='hard'?2:1)*(G.dch&&G.dch.coin||1)*(1+wsV('coin'))*VALUES[k]*(G.ev==='heavy'?2:1)*(admBoostUntil>Date.now()?2:1)*(1+(gp.coin||0))*(gp.carrot&&(k==='carrot'||k==='fish')?2:1),m=S.set.zen?.5:S.set.diff==='hard'?1.25:1;G.cf=(G.cf||0)+v0*m;const v=Math.floor(G.cf);G.cf-=v;G.coins+=v;G.score+=Math.round(SCORES[k]*(1+(gp.score||0))*comboMult()*(G.pu&&G.pu.pu_x2>0?2:1)*(G.mode==='hard'?2:1));G.caught++;comboHit();if(k==='star'||k==='pink'||k==='gold')missionInc('stars',1);if(k==='gold')missionInc('gold',1);
   if(k==='candy'){G.candies++;if(G.mode==='hw')G.evXp+=5}
   if(k==='pumpkin'){G.pumpkins++;if(G.mode==='hw')G.evXp+=10}
   SND[k]();burst(it.x,it.y,{star:'#ffd84a',pink:'#ff8fd0',candy:'#ff5e8a',pumpkin:'#ff9440',fish:'#ffb347',gold:'#fff3a0',carrot:'#ff8a3d'}[k],k==='gold'?40:10,'star',k==='gold'?320:160);
@@ -2453,18 +2460,19 @@ function catchItem(it,cx,cy){
 function addFloat(x,y,txt,col){if(G&&G.coop&&G.coop.host)G.coop.fl.push([Math.round(x),Math.round(y),txt,col]);if(/^\+0🪙/.test(txt))return;if(S&&S.set.floats===false&&/🪙/.test(txt))return;G.floats.push({x,y,txt,col,life:0})}
 function update(dt){
   if(G.coop&&!G.coop.host){coopFollow(dt);return}
-  G.t+=dt;G.phaseT+=dt;if(G.inv>0)G.inv-=dt;if(G.shake>0)G.shake-=dt;if(G.hop>0)G.hop-=dt*3;puTick(dt);comboTick(dt);
+  G.t+=dt;G.phaseT+=dt;if(G.inv>0)G.inv-=dt;if(G.shake>0)G.shake-=dt;if(G.hop>0)G.hop-=dt*3;puTick(dt);comboTick(dt);modeTick(dt);if(!G||G.over)return;
   // movement
   let dir=((keys.ArrowRight||keys.KeyD)?1:0)-((keys.ArrowLeft||keys.KeyA)?1:0);const mirror=G.ev==='mirror';if(mirror)dir=-dir;
   const top=Math.max(1050,W*.95)*S.set.spd/100*(1+(gearP().spd||0));
   if(dir){G.pvx+=(dir*top-G.pvx)*Math.min(1,dt*18);mouseX=null}else if(mouseX!=null){G.pvx=clamp(((mirror?W-mouseX:mouseX)-G.px)*22,-top*2.8,top*2.8)}else G.pvx*=Math.pow(.0005,dt);
-  if(isAdm()&&S.adm.tas){const ks0=kzScale();tasMove(dt,top,G.px,groundY()-82*ks0/.92,40*ks0/.92*(1+(gearP().mag||0)));mouseX=null}
+  if(isAdm()&&S.adm.tas){const ks0=kzScale();tasMove(dt,top,G.px,groundY()-82*ks0/.92,40*ks0/.92*(1+(gearP().mag||0)+wsV('mag')));mouseX=null}
   G.px=clamp(G.px+G.pvx*dt,44,W-44);G.dist+=Math.abs(G.pvx*dt);
   if(S.pet){if(G.petX==null)G.petX=G.px-60;if(Math.abs(G.pvx)>40)G.petDir=G.pvx>0?1:-1;const tx=clamp(G.px-(G.petDir||1)*62,20,W-20);G.petX+=(tx-G.petX)*Math.min(1,dt*5)}
   G.sneezeT-=dt;if(G.sneezeT<=0){G.sneezeT=rnd(30,50);if(Math.random()<.45&&!G.boss){const d=Math.random()<.5?-1:1;G.pvx=d*1500;mouseX=null;say(pick(['Апчхи! 🤧','А-а-апчхи!','Пчхи!']),1.3);sfx(500,.18,'sawtooth',.04,-350);for(let i=0;i<10;i++)parts.push({x:G.px-d*20,y:groundY()-80,vx:-d*rnd(60,200),vy:rnd(-60,40),life:0,max:.6,size:rnd(2,4),col:'#e8f8ff',kind:'dot'});G.sneezes++;stat('sneezes')}}
   for(const m of G.minis){m.x+=m.vx*dt;if(!m.got&&Math.abs(m.x-G.px)<50){m.got=true;G.coins+=5;G.score+=50;burst(m.x,groundY()-30,'#ff9cc8',14,'star',180);sfx(990,.1,'triangle',.05,400);say(pick(['Привет, малыш!','Ути-пути!','Мини-я! 🐰']),1.2);stat('minis');updHud()}}
   G.minis=G.minis.filter(m=>!m.got&&m.x>-80&&m.x<W+80);
   const py=groundY(),cx=G.px,ks=kzScale(),cy=py-82*ks/.92,PXS=G.coop?coopPXS(cx):[cx];
+  zapTick(dt,cx,cy,40*ks/.92);if(!G||G.over)return;
   if(Math.abs(G.pvx)>50||['comet','rainbow','fire','snow'].includes(S.eq.trail)){if(Math.random()<dt*60)emitTrail(S.eq.trail,cx,py-45,G.t)}
   // phase timing
   if(G.phase==='normal'&&G.phaseT>22){G.ev=null;G.ufo=null;endPhase()}
@@ -2483,7 +2491,7 @@ function update(dt){
   G.spawnT-=dt;
   if(G.spawnT<=0){
     const sp=1+G.wave*.12;
-    if(G.phase==='normal'){spawn(pickNormal(),undefined,rnd(150,210)*Math.min(sp,2.4));G.spawnT=Math.max(.24,.85-G.wave*.06)}
+    if(G.phase==='normal'){spawn(pickNormal(),undefined,rnd(150,210)*Math.min(sp,2.4)*(G.dch&&G.dch.spd||1));G.spawnT=Math.max(.24,.85-G.wave*.06)}
     else if(G.phase==='super'){const r=Math.random();const k=G.mode==='hw'&&r<.25?'candy':r<.3?'pink':'star';spawn(k,undefined,rnd(240,330));G.spawnT=.065}
     else{spawn(Math.random()<.2?'pink':(G.mode==='hw'&&Math.random()<.2?'candy':'star'),undefined,rnd(170,230));G.spawnT=.5}
   }
@@ -2509,7 +2517,7 @@ function update(dt){
   const gk=S.fun.grav?.5:1;
   const idt=dt*(G.ev==='slowmo'?.45:1)*(G.pu&&G.pu.pu_slow>0?.5:1),wnd=G.ev==='wind'?G.wind:0;
   for(const it of G.items){it.y-=it.vy*idt*(1-gk);if(mag&&it.k!=='meteor'){it.vx+=(cx-it.x)*dt*6;it.vx*=Math.pow(.2,dt)}it.x+=(it.vx+wnd)*idt;it.y+=it.vy*idt;it.rot+=it.spin*dt;
-    if(!it.dead){for(const qx of PXS){const dx=it.x-qx,dy=it.y-cy;if(dx*dx+dy*dy<(it.r+40*ks/.92*(1+(gearP().mag||0)))**2){it.dead=true;catchItem(it,qx,cy);break}}if(!G||G.over)return}}
+    if(!it.dead){for(const qx of PXS){const dx=it.x-qx,dy=it.y-cy;if(dx*dx+dy*dy<(it.r+40*ks/.92*(1+(gearP().mag||0)+wsV('mag')))**2){it.dead=true;catchItem(it,qx,cy);break}}if(!G||G.over)return}}
   G.items=G.items.filter(it=>!it.dead&&it.y<H+50&&it.x>-80&&it.x<W+80);
   // shots
   for(const s of G.shots){s.life+=dt;if(G.boss&&G.boss.hp>0){const dx=G.boss.x-s.x,dy=G.boss.y-s.y,d=Math.hypot(dx,dy)||1;s.vx+=(dx/d*1400-s.vx)*Math.min(1,dt*4);s.vy+=(dy/d*1400-s.vy)*Math.min(1,dt*4);
@@ -2519,7 +2527,7 @@ function update(dt){
   for(const f of G.floats){f.life+=dt;f.y-=50*dt}G.floats=G.floats.filter(f=>f.life<1);
   if(G.coop&&G.coop.host)coopSnap(dt);
 }
-function bossDown(){const B=G.boss;stat('bosses');missionInc('boss',1);const bonus=25+G.wave*5;G.coins+=bonus;G.score+=300+G.wave*20;G.bossKills++;if(G.mode==='hw')G.evXp+=50;
+function bossDown(){const B=G.boss;stat('bosses');missionInc('boss',1);setTimeout(()=>{if(G&&!G.over)spawn('chest',clamp(B.x,60,W-60),150)},400);const bonus=25+G.wave*5;G.coins+=bonus;G.score+=300+G.wave*20;G.bossKills++;if(G.mode==='hw')G.evXp+=50;
   burst(B.x,B.y,'#ffd84a',40,'star',360);burst(B.x,B.y,'#ff8fd0',30,'dot',300);addFloat(B.x,B.y,'+'+bonus+'🪙','#ffd84a');banner('Босс повержен!','#5ee6c1');SND.win();G.items=G.items.filter(i=>i.k!=='meteor');updHud()}
 function drawBoss(B,t){
   ctx.save();ctx.translate(B.x,B.y+Math.sin(t*2)*8);
@@ -2548,6 +2556,7 @@ function drawGame(t,dt){
   if(G.boss)drawBoss(G.boss,t);
   if(G.ufo)drawUfo(G.ufo,t);
   for(const m of G.minis)drawKZ(ctx,m.x,groundY()+Math.abs(Math.sin(G.t*12+m.ph))*-8,.32,{skin:m.skin,head:'none',caps:'none',acc:'none',trail:'none',aura:'none'},G.t+m.ph,Math.sin(G.t*12+m.ph)*.15);
+  try{zapDraw()}catch(e){}
   if(S.set.landSh){const gy=groundY();for(const it of G.items){if(it.vy<=0)continue;const k=clamp(1-(gy-it.y)/gy,0,1);ctx.globalAlpha=.12+.3*k;ell(ctx,it.x+(it.vx||0)*(gy-it.y)/Math.max(60,it.vy),gy+4,it.r*(.5+.6*k),4);ctx.fillStyle=it.k==='meteor'?'#ff3d3d':'#ffe066';ctx.fill()}ctx.globalAlpha=1}
   for(const it of G.items)drawItem(ctx,it);
   if(isAdm()&&S.adm.hit){const ks2=kzScale(),cy2=groundY()-82*ks2/.92,R2=40*ks2/.92*(1+(gearP().mag||0));ctx.save();ctx.lineWidth=2;for(const it of G.items){ell(ctx,it.x,it.y,it.r,it.r);ctx.strokeStyle=it.k==='meteor'?'#ff3d3d':'#5ee6c1';ctx.stroke()}ell(ctx,G.px,cy2,R2,R2);ctx.strokeStyle='#ffe066';ctx.setLineDash([5,5]);ctx.stroke();ctx.restore()}
@@ -2574,12 +2583,13 @@ function commitRun(){
   if(!G||G.committed)return null;G.committed=true;stat('games');missionInc('games',1);missionMax('score',G.score);if((G.maxCombo||0)>(S.stats.maxCombo||0))S.stats.maxCombo=G.maxCombo;G.xpGain=Math.floor(G.score/10)+G.bossKills*30;{const xg=G.xpGain;setTimeout(()=>accXp(xg),300)}
   const bpx=Math.floor(G.score/8),evx=G.mode==='hw'?G.evXp+Math.floor(G.score/20):0;
   const oldBp=Math.min(BP_LV,Math.floor(S.bpXp/BP_XP)),oldEv=Math.min(EV_LV,Math.floor(S.evXp/EV_XP));
-  const pe=Math.round(G.coins*petBonus());S.coins+=G.coins+pe;S.bpXp+=bpx;S.evXp+=evx;const rec=!S.set.zen&&G.score>S.best;if(rec)S.best=G.score;if(G.coop){stat('coopPts',G.score);if(G.score>(S.coopBest||0)){S.coopBest=G.score;S.coopTeam=PT.mem.filter(x=>x.gid!==S.gid).map(x=>x.nick).slice(0,2);if(G.score>0)setTimeout(()=>toast('🤝 Новый рекорд совместных игр: '+G.score+'!'),1500)}try{publishPresence()}catch(e){}}persist();
+  const pe=Math.round(G.coins*petBonus());S.coins+=G.coins+pe;S.bpXp+=bpx;S.evXp+=evx;const md=G.mode==='hw'?'normal':G.mode;let rec=false;if(md==='normal'){rec=!S.set.zen&&G.score>S.best;if(rec)S.best=G.score}else{S.bestM=S.bestM||{};rec=G.score>(S.bestM[md]||0);if(rec)S.bestM[md]=G.score}
+  if(G.mode==='daily'&&G.score>=3000&&!(S.dailyCh&&S.dailyCh.day===dqDay())){S.dailyCh={day:dqDay()};S.coins+=300;setTimeout(()=>{toast('🌟 Испытание дня пройдено! +300 🪙');SND.win();confetti(100)},800);stat('dailyCh')}if(G.coop){stat('coopPts',G.score);if(G.score>(S.coopBest||0)){S.coopBest=G.score;S.coopTeam=PT.mem.filter(x=>x.gid!==S.gid).map(x=>x.nick).slice(0,2);if(G.score>0)setTimeout(()=>toast('🤝 Новый рекорд совместных игр: '+G.score+'!'),1500)}try{publishPresence()}catch(e){}}persist();
   return{pe,bpx,evx,rec,bpUp:Math.min(BP_LV,Math.floor(S.bpXp/BP_XP))-oldBp,evUp:Math.min(EV_LV,Math.floor(S.evXp/EV_XP))-oldEv};
 }
 function gameOver(){
   G.over=true;if(G.coop&&G.coop.host)coopSnap(0,true);const r=commitRun();gameDrop(G.score>=1500?.4:G.score>=300?.22:.06,'забег');SND.hit();setTimeout(()=>sfx(196,.5,'triangle',.05,-80),200);
-  $('#oTitle').textContent=r.rec?'Новый рекорд! 🏆':pick(['Котозаяц устал и прилёг 😴','Метеорит победил… в этот раз','Ушки не спасли! 🐰','«Я просто моргнул!» — котозаяц','Нужно больше морковки 🥕','Котозаяц ушёл пить чай ☕','Это был тренировочный забег!']);
+  $('#oTitle').textContent=G.timeUp?'⏱ Время вышло!'+(r.rec?' Новый рекорд! 🏆':''):r.rec?'Новый рекорд! 🏆'+(G.mode!=='normal'&&G.mode!=='hw'?' ('+MODES[G.mode].n+')':''):pick(['Котозаяц устал и прилёг 😴','Метеорит победил… в этот раз','Ушки не спасли! 🐰','«Я просто моргнул!» — котозаяц','Нужно больше морковки 🥕','Котозаяц ушёл пить чай ☕','Это был тренировочный забег!']);
   let h=`<div>Очки<b>${G.score}</b></div><div>Монеты<b>+${G.coins} 🪙</b></div><div>Battle Pass<b>+${r.bpx} XP</b></div><div>Боссы<b>${G.bossKills}</b></div>${r.pe?`<div>Бонус питомца<b>+${r.pe} 🪙</b></div>`:''}<div>🔥 Макс. комбо<b>${G.maxCombo||0}</b></div><div>✨ Опыт<b>+${G.xpGain||0}</b></div>${G.puN?`<div>🎁 Бонусов<b>${G.puN}</b></div>`:''}<div>Пробежал<b>${Math.round(G.dist/40)} м</b></div><div>Моргнул<b>${Math.floor(G.t/4.2)} раз</b></div>${G.sneezes?`<div>Чихнул<b>${G.sneezes} раз 🤧</b></div>`:''}`;
   if(G.mode==='hw')h+=`<div>Конфеты / тыквы<b>${G.candies} / ${G.pumpkins}</b></div><div>Event-пасс<b>+${r.evx} XP</b></div>`;
   if(r.bpUp>0||r.evUp>0)h+=`<div style="grid-column:1/-1;background:#fff1c9">🎁 Новые уровни пасса — загляни за наградами!</div>`;
@@ -3051,6 +3061,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:59,l:'1.3.9',items:['▶ Режимы игры: Обычный, ⏱ На время, 💀 Хардкор (×2 очки и монеты) и 🌟 Испытание дня с особыми правилами и наградой','🔧 Мастерская: 8 постоянных улучшений котозайца по 5 уровней (жизни, щит на старте, бонусы, комбо, монеты…)','⚡ С 4 волны — молнии: красная полоса предупреждает, куда ударит','📦 После каждого босса падает сундук с вещью и монетами','👋 Подсказки для новичков в первом забеге','🏆 Свой рекорд для каждого режима']},
  {v:58,l:'1.3.9',items:['🔥 Комбо: лови без ударов — множитель очков растёт до ×4','🎁 5 бонусов в забеге: 🧲 магнит, 🛡 щит, ⏱ замедление, ✖2 двойные очки, 🌠 звездопад','☄ Новый босс — Король Комет с метеоритным дождём','📋 Задания дня (3 в день) с наградами и бонусом за все','⭐ Уровень аккаунта: опыт за забеги и задания, монеты за каждый уровень и вещь каждые 5 уровней','📊 Полоска прогресса волны и больше статистики после забега']},
  {v:57,l:'1.3.9',items:['⌨ ADM: бинды для мини-игр']},
  {v:56,l:'1.3.9',items:['⌨ ADM: раздел «Бинды» — любые функции на клавиши']},
@@ -3285,13 +3296,13 @@ function coopSnap(dt,force){const C=G.coop;C.st=(C.st||0)-dt;if(C.st>0&&!force)r
   ptAll({t:'st',q:C.q,w:r(W),h:r(H),s:G.score,c:G.coins,l:G.lives,ml:G.maxLives,wv:G.wave,ph:G.phase,ev:G.ev||'',inv:G.inv>0?1:0,p:G.paused?1:0,o:G.over?1:0,
     it:G.items.slice(0,90).map(i=>[i.id||(i.id=++C.nid),i.k,r(i.x),r(i.y),r(((i.vx||0)+wnd)*idt),r(i.vy*idt),i.r]),
     b:G.boss?[G.boss.kind,r(G.boss.x),r(G.boss.y),G.boss.hp,G.boss.max,G.boss.hit>0?1:0,G.boss.name]:0,u:G.ufo?[r(G.ufo.x),r(G.ufo.y)]:0,
-    sh:G.shots.slice(0,30).map(s=>[r(s.x),r(s.y)]),mn:G.minis.map(x=>[r(x.x),x.skin,+(+x.ph).toFixed(2)]),fx:C.fx.splice(0,40),bn:C.bn.splice(0,5),fl:C.fl.splice(0,20)})}
+    sh:G.shots.slice(0,30).map(s=>[r(s.x),r(s.y)]),mn:G.minis.map(x=>[r(x.x),x.skin,+(+x.ph).toFixed(2)]),fx:C.fx.splice(0,40),bn:C.bn.splice(0,5),fl:C.fl.splice(0,20),zp:(G.zaps||[]).map(z=>[r(z.x),r(z.w),+z.t.toFixed(2),+z.f.toFixed(2)])})}
 const COOP_COL={star:'#ffd84a',pink:'#ff8fd0',candy:'#ff5e8a',pumpkin:'#ff9440',fish:'#ffb347',gold:'#fff3a0',carrot:'#ff8a3d'};
 function coopRecv(m){if(!G||!G.coop||G.coop.host||m.from!==G.coop.hostId)return;const C=G.coop;if(m.q<=(C.q||0))return;C.q=m.q;C.last=Date.now();const kx=W/(m.w||W),ky=(H-34)/(((m.h||H)-34)||1);
   G.score=+m.s||0;G.coins=+m.c||0;G.lives=+m.l;G.maxLives=+m.ml||5;G.wave=+m.wv||1;G.phase=m.ph||'normal';G.ev=m.ev||null;if(m.inv&&!(G.inv>0))G.inv=.4;
   const old=new Map(G.items.map(i=>[i.id,i]));G.items=(Array.isArray(m.it)?m.it:[]).map(a=>{const x=a[2]*kx,y=a[3]*ky,o=old.get(a[0]);if(o){o.tx=x;o.ty=y;o.vx=a[4]*kx;o.vy=a[5]*ky;return o}return{id:a[0],k:String(a[1]),x,y,tx:x,ty:y,vx:a[4]*kx,vy:a[5]*ky,r:+a[6]||16,rot:Math.random()*6,spin:rnd(-2,2)}});
   if(m.b){const b=m.b,B=G.boss&&G.boss.kind===b[0]?G.boss:{age:0,x:b[1]*kx,y:b[2]*ky};B.kind=b[0];B.tx=b[1]*kx;B.ty2=b[2]*ky;B.hp=b[3];B.max=b[4];B.hit=b[5]?.1:B.hit;B.name=String(b[6]||'Босс');G.boss=B}else G.boss=null;
-  G.ufo=m.u?{x:m.u[0]*kx,y:m.u[1]*ky}:null;G.shots=(m.sh||[]).map(([x,y],i)=>({x:x*kx,y:y*ky,life:(G.t+i)%3}));G.minis=(m.mn||[]).map(([x,skin,ph])=>({x:x*kx,skin:SKINS[skin]?skin:'grey',ph:+ph||0,vx:0}));
+  G.ufo=m.u?{x:m.u[0]*kx,y:m.u[1]*ky}:null;G.zaps=(m.zp||[]).map(([x,w,t,f])=>({x:x*kx,w:w*kx,t,f}));G.shots=(m.sh||[]).map(([x,y],i)=>({x:x*kx,y:y*ky,life:(G.t+i)%3}));G.minis=(m.mn||[]).map(([x,skin,ph])=>({x:x*kx,skin:SKINS[skin]?skin:'grey',ph:+ph||0,vx:0}));
   for(const[x0,y0,k]of(m.fx||[])){const x=x0*kx,y=y0*ky;if(k==='meteor'){SND.hit();G.shake=.35;burst(x,y,'#ff8a3d',16);if(S.set.vib&&navigator.vibrate)try{navigator.vibrate(140)}catch(e){}}else if(k==='heart'){SND.heart();burst(x,y,'#ff4d6d',12)}else{try{SND[k]&&SND[k]()}catch(e){}burst(x,y,COOP_COL[k]||'#ffd84a',k==='gold'?40:10,'star',k==='gold'?320:160);if(k==='gold')confetti(60)}}
   for(const[t,col]of(m.bn||[]))banner(String(t),col||null);
   for(const[x,y,txt,col]of(m.fl||[]))G.floats.push({x:x*kx,y:y*ky,txt:String(txt),col,life:0});
@@ -3318,7 +3329,7 @@ addEventListener('beforeunload',()=>{if(G)commitRun();persist()});
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-go],[data-claim],[data-eq],[data-buy],[data-tab],[data-sk],[data-try]');if(!b)return;
-  if(b.dataset.go){SND.click();const g=b.dataset.go;if(g==='play')startGame('normal');else show(g)}
+  if(b.dataset.go){SND.click();const g=b.dataset.go;if(g==='play')modeOpen();else show(g)}
   else if(b.dataset.claim){const[w,l]=b.dataset.claim.split(':');claim(w,+l);persist();renderPass(w);refreshTop()}
   else if(b.dataset.eq){const[t,id]=b.dataset.eq.split(':');equip(t,id)}
   else if(b.dataset.buy){const[t,id]=b.dataset.buy.split(':');buy(t,id)}
@@ -4102,16 +4113,16 @@ const PU={pu_mag:{n:'Магнит',i:'🧲',c:'#e8355d',t:10},pu_shield:{n:'Щи
 function puPick(){const k=Object.keys(PU);return k[Math.floor(Math.random()*k.length)]}
 function puGot(k){G.pu=G.pu||{};const P=PU[k];missionInc('pu',1);if(k==='pu_shield'){G.pu.shield=(G.pu.shield||0)+1;banner('🛡 Щит! Блокирует один удар',P.c)}
   else if(k==='pu_rain'){for(let i=0;i<26;i++)setTimeout(()=>{if(G&&!G.over)spawn(Math.random()<.2?'pink':'star',undefined,rnd(240,330))},i*45);banner('🌠 Звездопад!',P.c)}
-  else{G.pu[k]=P.t;banner(P.i+' '+P.n+' на '+P.t+' с',P.c)}SND.win();G.puN=(G.puN||0)+1}
+  else{const T=Math.round(P.t*(1+wsV('pudur')));G.pu[k]=T;banner(P.i+' '+P.n+' на '+T+' с',P.c)}SND.win();G.puN=(G.puN||0)+1}
 function puTick(dt){if(!G.pu)return;for(const k of['pu_mag','pu_slow','pu_x2'])if(G.pu[k]>0)G.pu[k]=Math.max(0,G.pu[k]-dt)}
 function comboMult(){return Math.min(4,1+Math.floor((G.combo||0)/10)*.5)}
-function comboHit(){G.combo=(G.combo||0)+1;G.comboT=2.4;if(G.combo>(G.maxCombo||0))G.maxCombo=G.combo;missionMax('combo',G.combo);if(G.combo%10===0){const m=comboMult();addFloat(G.px,groundY()-170,'КОМБО ×'+m,'#5ee6c1');sfx(600+G.combo*8,.12,'triangle',.05,300)}}
+function comboHit(){G.combo=(G.combo||0)+1;G.comboT=2.4+wsV('combo');if(G.combo>(G.maxCombo||0))G.maxCombo=G.combo;missionMax('combo',G.combo);if(G.combo%10===0){const m=comboMult();addFloat(G.px,groundY()-170,'КОМБО ×'+m,'#5ee6c1');sfx(600+G.combo*8,.12,'triangle',.05,300)}}
 function comboTick(dt){if(G.comboT>0){G.comboT-=dt;if(G.comboT<=0){G.combo=0}}}
 function drawCoreHud(){const ctx2=ctx;ctx2.save();const cx=W/2;
   // wave progress
   const pr=G.phase==='normal'?clamp(G.phaseT/22,0,1):G.phase==='super'?clamp(G.phaseT/6.5,0,1):G.boss&&G.boss.max?1-clamp(G.boss.hp/G.boss.max,0,1):0;if(G.phase!=='boss'){const bw=Math.min(300,W*.4);ctx2.fillStyle='rgba(255,255,255,.25)';ctx2.beginPath();ctx2.roundRect(cx-bw/2,58,bw,7,4);ctx2.fill();ctx2.fillStyle=G.phase==='super'?'#5ee6c1':'#ffc93c';ctx2.beginPath();ctx2.roundRect(cx-bw/2,58,bw*pr,7,4);ctx2.fill();ctx2.font='800 11px Trebuchet MS,sans-serif';ctx2.textAlign='center';ctx2.fillStyle='rgba(255,255,255,.75)';ctx2.fillText(G.phase==='super'?'суперволна':(G.wave%3===2?'до босса':'до суперволны'),cx,78)}
   // combo
-  if((G.combo||0)>=3){const m=comboMult(),k=clamp(G.comboT/2.4,0,1);ctx2.font='900 '+(18+Math.min(10,G.combo/5))+'px Trebuchet MS,sans-serif';ctx2.textAlign='center';ctx2.lineWidth=5;ctx2.strokeStyle=INK;const t='🔥 '+G.combo+' комбо'+(m>1?' · ×'+m:'');ctx2.strokeText(t,cx,104);ctx2.fillStyle=m>=3?'#ff8a3d':m>=2?'#ffcf33':'#fff';ctx2.fillText(t,cx,104);ctx2.fillStyle='rgba(255,255,255,.3)';ctx2.fillRect(cx-50,110,100,4);ctx2.fillStyle='#5ee6c1';ctx2.fillRect(cx-50,110,100*k,4)}
+  if((G.combo||0)>=3){const m=comboMult(),k=clamp(G.comboT/(2.4+wsV('combo')),0,1);ctx2.font='900 '+(18+Math.min(10,G.combo/5))+'px Trebuchet MS,sans-serif';ctx2.textAlign='center';ctx2.lineWidth=5;ctx2.strokeStyle=INK;const t='🔥 '+G.combo+' комбо'+(m>1?' · ×'+m:'');ctx2.strokeText(t,cx,104);ctx2.fillStyle=m>=3?'#ff8a3d':m>=2?'#ffcf33':'#fff';ctx2.fillText(t,cx,104);ctx2.fillStyle='rgba(255,255,255,.3)';ctx2.fillRect(cx-50,110,100,4);ctx2.fillStyle='#5ee6c1';ctx2.fillRect(cx-50,110,100*k,4)}
   // power-ups
   let x=12,y=H-70;const P=G.pu||{};const list=[];if(P.shield)list.push(['🛡×'+P.shield,'#3d8bff',1]);for(const k of['pu_mag','pu_slow','pu_x2'])if(P[k]>0)list.push([PU[k].i+' '+Math.ceil(P[k])+'с',PU[k].c,P[k]/PU[k].t]);
   for(const[t,col,f]of list){ctx2.fillStyle='rgba(0,0,0,.45)';ctx2.beginPath();ctx2.roundRect(x,y,78,28,14);ctx2.fill();ctx2.fillStyle=col;ctx2.beginPath();ctx2.roundRect(x,y+24,78*clamp(f,0,1),4,2);ctx2.fill();ctx2.font='900 14px Trebuchet MS,sans-serif';ctx2.textAlign='center';ctx2.fillStyle='#fff';ctx2.fillText(t,x+39,y+19);x+=84}
@@ -4140,6 +4151,45 @@ function accLvlFrac(){const l=accLvl(),a=accNeed(l-1),b=accNeed(l);return clamp(
 function accXp(n){if(!S||!(n>0))return;const l0=accLvl();S.xp=(S.xp||0)+Math.round(n);const l1=accLvl();if(l1>l0){let txt='';for(let l=l0+1;l<=l1;l++){S.coins+=50*l;txt+=(txt?', ':'')+l;if(l%5===0){const pool=allPaid().filter(k=>{const d=itemDef(...k.split(':'));return d&&!d.src&&itemVal(...k.split(':'))<=600});const k=pool[Math.floor(Math.random()*pool.length)];if(k){addItem(...k.split(':'));setTimeout(()=>toast('🎁 Награда за '+l+' уровень: '+itemDef(...k.split(':')).n),1600)}}}setTimeout(()=>{banner('⭐ Новый уровень '+l1+'!','#b46bff');toast('⭐ Уровень '+l1+'! +'+(50*l1)+' 🪙');SND.win();confetti(90)},400);S.stats.accLvl=l1;checkAch()}persist();refreshTop()}
 setInterval(()=>{if(S)dqBadge()},5000);
 ACH.push({id:'combo1',n:'Комбо-мастер',d:'Набрать комбо 50 в одном забеге',k:'maxCombo',goal:50,r:200,i:'🔥'},{id:'lvl10',n:'Ветеран',d:'Достичь 10 уровня аккаунта',k:'accLvl',goal:10,r:500,i:'⭐'},{id:'dq1',n:'Исполнитель',d:'Выполнить все задания дня',k:'dqAll',goal:1,r:150,i:'📋'});
+
+/* ---------------- Core ×100: modes, workshop, lightning, boss chest, tutorial ---------------- */
+const MODES={normal:{n:'▶ Обычный',d:'Классика: волны, боссы, события. Рекорд идёт в общий топ.',c:'#ffc93c'},time:{n:'⏱ На время',d:'2 минуты — набери как можно больше очков. Метеориты отнимают 5 секунд.',c:'#5ee6c1'},
+  hard:{n:'💀 Хардкор',d:'Одна жизнь, без сердечек. Зато очки и монеты ×2.',c:'#e8355d'},daily:{n:'🌟 Испытание дня',d:'Особые правила каждый день. Набери 3000 очков — получи 300 🪙 (раз в день).',c:'#b46bff'}};
+const DCH=[{n:'🌪 Вечный ураган',ev:'wind'},{n:'🤑 Золотая лихорадка',gold:5,met:1.3},{n:'🔦 Вечная ночь',ev:'dark'},{n:'⚡ Гиперскорость',spd:1.45},{n:'💔 Без сердечек',noheart:1,coin:1.5},{n:'🐟 Рыбный день',ev:'fish'},{n:'🙃 Всё наоборот',ev:'mirror'},{n:'🦖 Великан',ev:'giant'},{n:'⏳ Вечное замедление',ev:'slowmo',met:1.5}];
+function dchToday(){const d=new Date();return DCH[(d.getFullYear()*372+d.getMonth()*31+d.getDate())%DCH.length]}
+function modeBest(m){return m==='normal'?S.best:((S.bestM||{})[m]||0)}
+function modeOpen(){const el=$('#modeOv');const dc=dchToday(),done=S.dailyCh&&S.dailyCh.day===dqDay();
+  el.innerHTML=`<div class="pfbox" style="max-width:520px"><div class="row" style="justify-content:space-between"><h3 style="margin:0">▶ Выбери режим</h3><button class="btn sm ghost" data-modeclose>✕</button></div>
+  ${Object.entries(MODES).map(([k,M])=>`<div class="modec" data-mode="${k}" style="--mc:${M.c}"><b>${M.n}</b><small>${k==='daily'?'Сегодня: <b>'+dc.n+'</b>. '+(done?'✓ награда за сегодня получена':M.d):M.d}</small><span class="chip">🏆 ${modeBest(k)}</span></div>`).join('')}</div>`;el.style.display='flex'}
+document.addEventListener('click',e=>{if(!S)return;const t=e.target;if(t.id==='modeOv'||t.closest('[data-modeclose]')){$('#modeOv').style.display='none';return}const m=t.closest('[data-mode]');if(m){$('#modeOv').style.display='none';G=null;startGame(m.dataset.mode);SND.click()}});
+function modeSetup(){const m=G.mode;if(m==='time'){G.timeLeft=120}if(m==='hard'){G.lives=1;G.maxLives=1}if(m==='daily'){G.dch=dchToday();setTimeout(()=>{if(G&&G.mode==='daily')banner('🌟 Испытание дня: '+G.dch.n,'#b46bff')},1200)}}
+function modeTick(dt){if(G.mode==='time'){G.timeLeft-=dt;if(G.timeLeft<=0&&!G.over){G.timeLeft=0;G.timeUp=true;gameOver()}}
+  if(G.mode==='daily'&&G.dch&&G.dch.ev&&G.phase==='normal'&&G.ev!==G.dch.ev){G.ev=G.dch.ev;G.evLeft=999;if(G.ev==='wind'&&!G.wind)G.wind=(Math.random()<.5?-1:1)*150}}
+/* workshop */
+const WS={life:{n:'❤ Запас жизней',d:['+1 к максимуму жизней','+1 жизнь на старте','+1 к максимуму','ещё +1 на старте','+1 к максимуму']},mag:{n:'🧲 Длинные лапки',d:'ловит на +3% дальше за уровень'},pudur:{n:'⏳ Долгие бонусы',d:'бонусы действуют на +12% дольше'},combo:{n:'🔥 Горячая серия',d:'комбо сгорает на 0,35 с позже'},
+  shield:{n:'🛡 Стартовый щит',d:['щит в начале забега','','2 щита','','3 щита']},coin:{n:'💰 Копилка',d:'+4% монет за уровень'},puch:{n:'🎁 Щедрое небо',d:'бонусы падают на 15% чаще'},drop:{n:'🍀 Охотник за трофеями',d:'+10% шанс трофеев'}};
+const WS_COST=[300,800,1800,3500,7000];
+function wsL(k){return(S&&S.ws&&S.ws[k])||0}
+function wsV(k){const l=wsL(k);return k==='mag'?l*.03:k==='pudur'?l*.12:k==='combo'?l*.35:k==='coin'?l*.04:k==='puch'?l*.15:k==='drop'?l*.1:l}
+function wsRender(){const el=$('#wsOv');S.ws=S.ws||{};el.innerHTML=`<div class="pfbox" style="max-width:640px"><div class="row" style="justify-content:space-between"><h3 style="margin:0">🔧 Мастерская</h3><button class="btn sm ghost" data-wsclose>✕</button></div><p class="hint">Постоянные улучшения котозайца — действуют в каждом забеге. 🪙 ${S.coins}</p><div class="fup">`+
+  Object.entries(WS).map(([k,P])=>{const l=wsL(k),max=l>=5,c=WS_COST[l];const desc=Array.isArray(P.d)?P.d.filter((x,i)=>x&&i<Math.max(1,l)).join(', ')||P.d[0]:P.d;const nxt=Array.isArray(P.d)&&!max?P.d.slice(l).find(x=>x):null;
+    return`<div class="fupc"><b>${P.n}</b><div class="fbar">${[0,1,2,3,4].map(i=>`<i class="${i<l?'on':''}"></i>`).join('')}</div><small>${l?'Сейчас: '+desc:(nxt?'Даст: '+nxt:P.d)}${!max&&Array.isArray(P.d)&&l&&nxt?' → '+nxt:''}</small><button class="btn sm ${max?'ghost':'mint'}" data-wsbuy="${k}" ${max||S.coins<c?'disabled':''}>${max?'Максимум':'Улучшить 🪙 '+c}</button></div>`}).join('')+`</div></div>`;el.style.display='flex'}
+document.addEventListener('click',e=>{if(!S)return;const t=e.target;if(t.id==='mWs'||t.closest('#mWs')){wsRender();SND.click();return}if(t.id==='wsOv'||t.closest('[data-wsclose]')){$('#wsOv').style.display='none';return}
+  const b=t.closest('[data-wsbuy]');if(b){const k=b.dataset.wsbuy,l=wsL(k),c=WS_COST[l];if(l>=5||S.coins<c)return;S.coins-=c;S.ws=S.ws||{};S.ws[k]=l+1;stat('wsUp');persist();refreshTop();SND.buy();toast('🔧 '+WS[k].n+' → ур. '+(l+1));wsRender()}});
+function wsSetup(){if(G.mode==='hard')return;const l=wsL('life');G.maxLives+=(l>=1?1:0)+(l>=3?1:0)+(l>=5?1:0);G.lives+=(l>=2?1:0)+(l>=4?1:0);const s=wsL('shield');const n=(s>=1?1:0)+(s>=3?1:0)+(s>=5?1:0);if(n){G.pu=G.pu||{};G.pu.shield=n}}
+/* lightning */
+function zapTick(dt,cx,cy,R){G.zaps=G.zaps||[];if(G.phase==='normal'&&G.wave>=4&&!(isAdm()&&S.adm.nomet)&&G.mode!=='daily'||G.mode==='daily'&&G.wave>=4&&G.phase==='normal'){if(Math.random()<dt*Math.min(.38,.08+G.wave*.012)&&G.zaps.length<2)G.zaps.push({x:rnd(60,W-60),w:rnd(60,100),t:1.15,f:0})}
+  for(const z of G.zaps){if(z.t>0){z.t-=dt;if(z.t<=0){z.f=.25;sfx(120,.25,'sawtooth',.06,-60);G.shake=Math.max(G.shake,.2);if(Math.abs(cx-z.x)<z.w/2+R*.55&&!z.hit){z.hit=1;catchItem({k:'meteor',x:cx,y:cy,vx:0,vy:1},cx,cy)}}}else z.f-=dt}G.zaps=G.zaps.filter(z=>z.t>0||z.f>0)}
+function zapDraw(){for(const z of G.zaps||[]){if(z.t>0){const p=.25+.25*Math.sin(G.t*20);ctx.fillStyle=`rgba(255,60,60,${p})`;ctx.fillRect(z.x-z.w/2,0,z.w,H);ctx.strokeStyle='rgba(255,120,120,.8)';ctx.setLineDash([8,8]);ctx.lineWidth=2;ctx.strokeRect(z.x-z.w/2,0,z.w,H);ctx.setLineDash([]);ctx.font='900 22px sans-serif';ctx.textAlign='center';ctx.fillText('⚡',z.x,90)}
+  else{ctx.save();ctx.globalAlpha=clamp(z.f/.25,0,1);ctx.fillStyle='rgba(255,255,220,.35)';ctx.fillRect(z.x-z.w/2,0,z.w,H);ctx.shadowColor='#fff6b0';ctx.shadowBlur=30;ctx.strokeStyle='#fffbe0';ctx.lineWidth=6;ctx.beginPath();let x=z.x,y=0;ctx.moveTo(x,y);while(y<H){x=z.x+rnd(-z.w*.35,z.w*.35);y+=rnd(30,60);ctx.lineTo(x,y)}ctx.stroke();ctx.restore()}}}
+/* chest */
+function chestOpen(){const pool=allPaid().filter(k=>{const d=itemDef(...k.split(':'));return d&&itemVal(...k.split(':'))<=900&&(!d.src||d.src==='drop')});const k=pool[Math.floor(Math.random()*pool.length)];const c=30+G.wave*6;G.coins+=c;stat('chests');
+  if(k){addItem(...k.split(':'));banner('📦 Сундук босса: '+itemDef(...k.split(':')).n+' + '+c+' 🪙','#ffcf33')}else banner('📦 Сундук: +'+c+' 🪙','#ffcf33');SND.win();confetti(60)}
+function drawChest(c,it){const{x,y,r}=it,b=Math.sin(G?G.t*4:0)*2;c.save();c.translate(x,y+b);const g=c.createRadialGradient(0,0,4,0,0,r*2.4);g.addColorStop(0,'rgba(255,224,102,.7)');g.addColorStop(1,'rgba(255,224,102,0)');c.fillStyle=g;c.fillRect(-r*2.4,-r*2.4,r*4.8,r*4.8);c.beginPath();c.roundRect(-r,-r*.3,r*2,r*1.1,4);fs(c,'#a0703c',3);c.beginPath();c.moveTo(-r,-r*.3);c.quadraticCurveTo(0,-r*1.2,r,-r*.3);c.closePath();fs(c,'#c8904a',3);c.fillStyle='#ffcf33';c.fillRect(-r,-r*.34,r*2,r*.18);c.fillRect(-r*.12,-r*.7,r*.24,r*1.5);ell(c,0,r*.1,r*.22,r*.22);fs(c,'#ffe066',2);c.restore()}
+/* tutorial */
+function tutStart(){if((S.stats.games||0)>0||G.mode!=='normal')return;const T=[[1.2,'👋 Двигай котозайца мышкой, пальцем или стрелками','#5ee6c1'],[5,'⭐ Лови звёзды — это очки и монеты','#ffe066'],[9,'☄ Уворачивайся от метеоритов — они отнимают жизни','#ff8a8a'],[13,'🫧 Пузыри — бонусы: магнит, щит, замедление…','#b46bff'],[17,'🔥 Лови без перерыва — растёт комбо и множитель очков!','#ff8a3d']];
+  for(const[t,txt,col]of T)setTimeout(()=>{if(G&&!G.over&&G.mode==='normal')banner(txt,col)},t*1000)}
+ACH.push({id:'ws1',n:'Механик',d:'Купить 10 улучшений в Мастерской',k:'wsUp',goal:10,r:300,i:'🔧'},{id:'chest1',n:'Кладоискатель',d:'Открыть 5 сундуков боссов',k:'chests',goal:5,r:250,i:'📦'});
 
 ACH.push({id:'ck',n:'Мастер шашек',d:'Обыграть сложного бота в шашки',k:'ckHard',goal:1,r:150,i:'⛀'});
 ACH.push({id:'chess',n:'Гроссмейстер',d:'Обыграть сложного бота в шахматы',k:'chessHard',goal:1,r:150,i:'♟️'},{id:'durak',n:'Не дурак',d:'Выиграть в дурака 3 раза',k:'durakWins',goal:3,r:80,i:'🃏'},{id:'ttt',n:'Крестоносец',d:'Обыграть сложного бота в крестики-нолики',k:'tttHard',goal:1,r:60,i:'❌'});
