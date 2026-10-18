@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=78;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=79;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -865,7 +865,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
 <div class="screen overlay" id="pause">
   <div class="panel"><h2>Пауза</h2>
     <div class="btns"><button class="btn mint" id="pRes">Продолжить</button><button class="btn ghost" id="pMenu">Забрать награды и в меню</button></div>
-    <div class="btns" id="pAdm" style="display:none"><div class="row" style="justify-content:center"><button class="btn sm vio" id="paBoss">Босс</button><button class="btn sm vio" id="paWave">След. волна</button><button class="btn sm vio" id="paLife">+❤</button></div></div>
+    <div class="btns" id="pAdm" style="display:none"><div class="row" style="justify-content:center"><button class="btn sm vio" id="paBoss">Босс</button><button class="btn sm vio" id="paWave">След. волна</button><button class="btn sm vio" id="paLife">+❤</button><button class="btn sm vio" id="paTas">🤖 TAS</button></div></div>
   </div>
 </div>
 
@@ -2468,7 +2468,7 @@ function update(dt){
   let dir=((keys.ArrowRight||keys.KeyD)?1:0)-((keys.ArrowLeft||keys.KeyA)?1:0);const mirror=G.ev==='mirror';if(mirror)dir=-dir;
   const top=Math.max(1050,W*.95)*S.set.spd/100*(1+(gearP().spd||0));
   if(dir){G.pvx+=(dir*top-G.pvx)*Math.min(1,dt*18);mouseX=null}else if(mouseX!=null){G.pvx=clamp(((mirror?W-mouseX:mouseX)-G.px)*22,-top*2.8,top*2.8)}else G.pvx*=Math.pow(.0005,dt);
-  if(isAdm()&&S.adm.tas){const ks0=kzScale();tasMove(dt,top,G.px,groundY()-82*ks0/.92,40*ks0/.92*(1+(gearP().mag||0)+wsV('mag')));mouseX=null}
+  if(isAdm()&&S.adm.tas){try{const ks0=kzScale();tasMove(dt,top,G.px,groundY()-82*ks0/.92,40*ks0/.92*(1+(gearP().mag||0)+wsV('mag')))}catch(e){if(!window._tasErr){window._tasErr=1;console.error('TAS',e)}}mouseX=null}
   G.px=clamp(G.px+G.pvx*dt,44,W-44);G.dist+=Math.abs(G.pvx*dt);
   if(S.pet){if(G.petX==null)G.petX=G.px-60;if(Math.abs(G.pvx)>40)G.petDir=G.pvx>0?1:-1;const tx=clamp(G.px-(G.petDir||1)*62,20,W-20);G.petX+=(tx-G.petX)*Math.min(1,dt*5)}
   G.sneezeT-=dt;if(G.sneezeT<=0){G.sneezeT=rnd(30,50);if(Math.random()<.45&&!G.boss){const d=Math.random()<.5?-1:1;G.pvx=d*1500;mouseX=null;say(pick(['Апчхи! 🤧','А-а-апчхи!','Пчхи!']),1.3);sfx(500,.18,'sawtooth',.04,-350);for(let i=0;i<10;i++)parts.push({x:G.px-d*20,y:groundY()-80,vx:-d*rnd(60,200),vy:rnd(-60,40),life:0,max:.6,size:rnd(2,4),col:'#e8f8ff',kind:'dot'});G.sneezes++;stat('sneezes')}}
@@ -3065,6 +3065,8 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:79,l:'1.4.0',items:['🟩 Новая мини-игра Paper.io: Котозайцы — захватывай территорию, обводя её следом, выбивай соперников, пересекая их след','🌐 Онлайн: если в игре есть другие игроки — играешь с ними на одной карте; если никого нет — с 6 ботами','🗺 Мини-карта, таблица лидеров, монеты за территорию и выбитых соперников','🏅 4 новых достижения']},
+ {v:79,l:'1.4.0',items:['🤖 Фикс TAS: работает и в совместной игре (когда ты не хост пати), больше не замирает при ошибке расчёта','⏸ Кнопка «🤖 TAS» в паузе — включить/выключить прямо во время забега']},
  {v:78,l:'1.4.0',items:['💃 В колесе танцев вместо смайликов теперь твой котозаяц: наведи курсор — он покажет танец','⌨ Колесо танцев открывается на V (можно поменять в Settings → Эмоции)','🧹 Убрана кнопка танцев в углу экрана']},
  {v:77,l:'1.4.0',items:['💃 Эмоции стали танцами: 30 танцев котозайца с музыкой — шаффл, твист, лунная походка, робот, флосс, дэб, казачок, брейк-данс, сальто, канкан, тектоник, летка-енька и другие','🎡 Колесо танцев по 8 на страницу, стрелки ◀ ▶, клавиша Q (меняется в Settings → Эмоции)','🕺 Танцуй в меню и прямо в забеге, друзья в пати видят твой танец','🏅 Достижение «Король танцпола»']},
  {v:76,l:'1.4.0',items:['😀 Эмоции: 30 эмоций с анимацией котозайца и звуком','🎡 Колесо эмоций: 8 эмоций на страницу, стрелки ◀ ▶ для следующих страниц, выбор мышкой или цифрами 1–8','⚙ Вкладка «Эмоции» в Settings: клавиша колеса (по умолчанию Q), порядок и набор эмоций, звук','💬 В забеге эмоция появляется над котозайцем, друзья в пати тоже её видят','📱 Кнопка 😀 в углу экрана для телефона']},
@@ -3336,6 +3338,7 @@ function coopFollow(dt){G.t+=dt;G.phaseT+=dt;if(G.inv>0)G.inv-=dt;if(G.shake>0)G
   let dir=((keys.ArrowRight||keys.KeyD)?1:0)-((keys.ArrowLeft||keys.KeyA)?1:0);const mirror=G.ev==='mirror';if(mirror)dir=-dir;
   const top=Math.max(1050,W*.95)*S.set.spd/100;
   if(dir){G.pvx+=(dir*top-G.pvx)*Math.min(1,dt*18);mouseX=null}else if(mouseX!=null){G.pvx=clamp(((mirror?W-mouseX:mouseX)-G.px)*22,-top*2.8,top*2.8)}else G.pvx*=Math.pow(.0005,dt);
+  if(isAdm()&&S.adm.tas){try{const ks0=kzScale();tasMove(dt,top,G.px,groundY()-82*ks0/.92,40*ks0/.92*(1+(gearP().mag||0)+wsV('mag')))}catch(e){}mouseX=null}
   G.px=clamp(G.px+G.pvx*dt,44,W-44);G.dist+=Math.abs(G.pvx*dt);
   if(S.pet){if(G.petX==null)G.petX=G.px-60;if(Math.abs(G.pvx)>40)G.petDir=G.pvx>0?1:-1;const tx=clamp(G.px-(G.petDir||1)*62,20,W-20);G.petX+=(tx-G.petX)*Math.min(1,dt*5)}
   if(Math.abs(G.pvx)>50&&Math.random()<dt*60)emitTrail(S.eq.trail,G.px,groundY()-45,G.t);
@@ -6607,6 +6610,92 @@ emoHover=function(e){const w=emoWheel;if(!w)return;const box=w.el.querySelector(
 document.addEventListener('click',e=>{const b=e.target.closest('[data-emokeydef]');if(!b||!S)return;e.stopImmediatePropagation();emoCfg().key='KeyV';persist();emoSetRender();toast('💃 Колесо танцев: клавиша V')},true);
 for(const h of HELP)if(h[0]==='💃 Эмоции-танцы')h[1]='Колесо танцев: клавиша V (меняется в Settings → Эмоции). Наведи курсор на котозайца в колесе — он покажет танец. 30 танцев с музыкой, по 8 на страницу, стрелки ◀ ▶. Друзья в пати видят твой танец.';
 
+/* ================= Paper.io clone: online + bots ================= */
+const PN=90,PSP=7.5,PIO_SID='p'+Math.random().toString(36).slice(2,9);let PW=null,pioCnt=0;
+const PCOLS=['#ff5e8a','#5ee6c1','#ffcf33','#8b6cff','#3d8bff','#ff8a3d','#7cd46a','#ff3df0','#3fd3b0','#e8283c','#c39bff','#a0703c','#5eb6ff','#c9e83a'];
+const PBOTN=['Морковкин','Ушастик','Пушок','Звёздочка','Бублик','Кексик','Шустрик','Тортик','Пончик','Хрустик','Зефирка','Котлетка','Пельмешек','Сырник'];
+const PV={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]},POPP={L:'R',R:'L',U:'D',D:'U'},PORD=['U','R','D','L'];
+function pioHash(s){let h=0;for(const ch of s)h=(h*31+ch.charCodeAt(0))|0;return Math.abs(h)}
+function pioEnt(id,n,c,local,bot,sk){if(!PW.idx[id]){PW.idx[id]=PW.nextIdx++;if(PW.nextIdx>250)PW.nextIdx=1}const idx=PW.idx[id];PW.cols[idx]=c;const e={id,n,c,idx,sk:sk||'grey',x:0,y:0,px:0,py:0,sx:0,sy:0,d:'R',nd:'R',tr:[],ts:new Set(),al:false,local,bot,acc:0,last:Date.now(),kills:0,b:{}};PW.E[id]=e;return e}
+function pioRLE(cells){cells=cells.slice().sort((a,b)=>a-b);const o=[];for(let i=0;i<cells.length;){let j=i;while(j+1<cells.length&&cells[j+1]===cells[j]+1)j++;o.push(cells[i],j-i+1);i=j+1}return o}
+function pioUnRLE(a){const o=[];for(let i=0;i+1<a.length;i+=2)for(let k=0;k<a[i+1];k++)o.push(a[i]+k);return o}
+function pioSend(m){if(!PW||!NET.ok())return;m.from=PIO_SID;NET.pub(TP+'pio',m)}
+function pioClear(e){for(let i=0;i<PW.g.length;i++)if(PW.g[i]===e.idx)PW.g[i]=0;e.tr=[];e.ts.clear()}
+function pioSpawn(e){let cx=45,cy=45;for(let t=0;t<80;t++){const x=5+Math.floor(Math.random()*(PN-10)),y=5+Math.floor(Math.random()*(PN-10));let n=0;for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++)if(PW.g[(y+dy)*PN+x+dx])n++;let bad=false;for(const o of Object.values(PW.E))if(o!==e&&o.al&&Math.abs(o.x-x)+Math.abs(o.y-y)<8)bad=true;cx=x;cy=y;if(!n&&!bad)break}
+  const cells=[];for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++){if(Math.abs(dx)+Math.abs(dy)>4)continue;const i=(cy+dy)*PN+cx+dx;PW.g[i]=e.idx;cells.push(i)}
+  Object.assign(e,{x:cx,y:cy,px:cx,py:cy,sx:cx,sy:cy,d:pick(PORD),tr:[],ts:new Set(),al:true,acc:0,b:{mode:'out',st:0}});e.nd=e.d;if(e.local)pioSend({t:'pio_c',id:e.id,n:e.n,c:e.c,k:e.sk,cells:pioRLE(cells)})}
+function pioTurn(e,k){if(e&&e.al&&k!==POPP[e.d])e.nd=k}
+function pioDie(e,by){if(!e||!e.al)return;e.al=false;pioClear(e);if(e.local)pioSend({t:'pio_d',id:e.id,by:by?by.id:null});if(e.bot)e.rt=Date.now()+3000;
+  if(PW.fx)PW.fx.push({x:e.x,y:e.y,t:1,s:'💥'});if(e.id===PW.me){sfx(160,.4,'sawtooth',.06,-60);arcEnd(false)}}
+function pioKill(o,by){by.kills++;if(by.id===PW.me){AS.kills++;sfx(1000,.12,'triangle',.05,400);PW.fx.push({x:o.x,y:o.y,t:1.2,s:'⚔ '+o.n})}if(o.local)pioDie(o,by);else{pioSend({t:'pio_k',v:o.id,by:by.id});o.tr=[];o.ts.clear()}}
+function pioCapture(e){const g=PW.g,idx=e.idx,cells=e.tr.slice();for(const i of e.tr)g[i]=idx;e.tr=[];e.ts.clear();const vis=new Uint8Array(PN*PN),q=new Int32Array(PN*PN);let h=0,t=0;
+  const push=i=>{if(!vis[i]&&g[i]!==idx){vis[i]=1;q[t++]=i}};for(let k=0;k<PN;k++){push(k);push((PN-1)*PN+k);push(k*PN);push(k*PN+PN-1)}
+  while(h<t){const i=q[h++],x=i%PN,y=(i-x)/PN;if(x>0)push(i-1);if(x<PN-1)push(i+1);if(y>0)push(i-PN);if(y<PN-1)push(i+PN)}
+  for(let i=0;i<PN*PN;i++)if(!vis[i]&&g[i]!==idx){g[i]=idx;cells.push(i)}
+  if(e.local)pioSend({t:'pio_c',id:e.id,n:e.n,c:e.c,k:e.sk,cells:pioRLE(cells)});if(e.id===PW.me)sfx(700+Math.min(600,cells.length*3),.1,'triangle',.05,300)}
+function pioMove(e){if(e.nd!==POPP[e.d])e.d=e.nd;const[vx,vy]=PV[e.d],nx=e.x+vx,ny=e.y+vy;e.px=e.x;e.py=e.y;if(nx<0||ny<0||nx>=PN||ny>=PN){pioDie(e,null);return}const i=ny*PN+nx;
+  if(e.ts.has(i)){pioDie(e,null);return}for(const o of Object.values(PW.E))if(o!==e&&o.al&&o.ts.has(i))pioKill(o,e);
+  e.x=nx;e.y=ny;if(PW.g[i]===e.idx){if(e.tr.length)pioCapture(e)}else{e.tr.push(i);e.ts.add(i)}}
+function pioNearOwn(e){const g=PW.g;for(let r=1;r<40;r++){for(let k=-r;k<=r;k++)for(const[x,y]of[[e.x+k,e.y-r],[e.x+k,e.y+r],[e.x-r,e.y+k],[e.x+r,e.y+k]]){if(x>=0&&y>=0&&x<PN&&y<PN&&g[y*PN+x]===e.idx)return[x,y]}}return null}
+function pioBot(e){const b=e.b,g=PW.g,home=g[e.y*PN+e.x]===e.idx;
+  const ok=d=>{if(d===POPP[e.d])return false;const nx=e.x+PV[d][0],ny=e.y+PV[d][1];if(nx<1||ny<1||nx>PN-2||ny>PN-2)return false;return!e.ts.has(ny*PN+nx)};
+  const turn=s=>PORD[(PORD.indexOf(e.d)+s+4)%4];let want=e.d;
+  if(home){b.mode='out';b.st=0;b.L1=3+Math.floor(Math.random()*9);b.L2=3+Math.floor(Math.random()*8);b.tn=Math.random()<.5?1:-1;if(Math.random()<.12||!ok(want))want=pick(PORD.filter(ok).concat([e.d]))}
+  else{b.st++;if(b.mode==='out'&&b.st===b.L1)want=turn(b.tn);else if(b.mode==='out'&&b.st===b.L1+b.L2){want=turn(b.tn);b.mode='home'}if(e.tr.length>32)b.mode='home';
+    if(b.st%3===0&&Math.random()<.5){let best=null,bd=6;for(const o of Object.values(PW.E)){if(o===e||!o.al||!o.tr.length)continue;for(let j=Math.max(0,o.tr.length-14);j<o.tr.length;j++){const c=o.tr[j],cx=c%PN,cy=(c-cx)/PN,d=Math.abs(cx-e.x)+Math.abs(cy-e.y);if(d<bd){bd=d;best=[cx,cy]}}}
+      if(best){const dx=best[0]-e.x,dy=best[1]-e.y,c=Math.abs(dx)>Math.abs(dy)?(dx>0?'R':'L'):(dy>0?'D':'U');if(ok(c))want=c}}
+    if(b.mode==='home'){const h=pioNearOwn(e);if(h){const dx=h[0]-e.x,dy=h[1]-e.y,a=dx?(dx>0?'R':'L'):null,bb=dy?(dy>0?'D':'U'):null,pref=Math.abs(dx)>Math.abs(dy)?[a,bb]:[bb,a];for(const p of pref)if(p&&ok(p)){want=p;break}}}}
+  if(!ok(want)){const c=PORD.filter(ok);if(c.length){const h=b.mode==='home'?pioNearOwn(e):null;c.sort((p,q)=>h?(Math.abs(e.x+PV[p][0]-h[0])+Math.abs(e.y+PV[p][1]-h[1]))-(Math.abs(e.x+PV[q][0]-h[0])+Math.abs(e.y+PV[q][1]-h[1])):Math.random()-.5);want=c[0]}}
+  e.nd=want}
+function pioStats(){const cnt=new Int32Array(256),g=PW.g;for(let i=0;i<g.length;i++)cnt[g[i]]++;PW.cnt=cnt;const me=PW.E[PW.me];if(me&&me.al){const p=cnt[me.idx]/(PN*PN)*100;AS.pct=p;AS.maxPct=Math.max(AS.maxPct||0,p)}
+  const id=PW.mini.getContext('2d').createImageData(PN,PN);for(let i=0;i<g.length;i++){const o=g[i],c=o?PW.rgb[o]||(PW.rgb[o]=hexRgb(PW.cols[o]||'#888')):[42,32,80];id.data[i*4]=c[0];id.data[i*4+1]=c[1];id.data[i*4+2]=c[2];id.data[i*4+3]=o?255:120}PW.mini.getContext('2d').putImageData(id,0,0)}
+function hexRgb(h){h=h.replace('#','');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]}
+function pioStep(st,dt){const now=Date.now(),W_=PW;W_.hbT-=dt;if(W_.hbT<=0){W_.hbT=1;pioSend({t:'pio_hb',n:nick})}
+  for(const h in W_.humans)if(now-W_.humans[h].t>4000)delete W_.humans[h];const hum=[PIO_SID,...Object.keys(W_.humans)].sort();W_.online=hum.length>1;const host=hum[0]===PIO_SID,want=host?Math.max(0,7-hum.length):0;
+  const bots=Object.values(W_.E).filter(e=>e.bot);if(bots.length<want){const n=W_.botN++,used=new Set(Object.values(W_.E).map(o=>o.c)),fc=PCOLS.filter(c=>!used.has(c)),e=pioEnt(PIO_SID+'_b'+n,PBOTN[n%PBOTN.length],fc.length?pick(fc):PCOLS[(n+3)%PCOLS.length],true,true,pick(Object.keys(SKINS)));pioSpawn(e)}
+  else if(bots.length>want){const e=bots[bots.length-1];if(e.al)pioDie(e,null);pioSend({t:'pio_d',id:e.id});pioClear(e);delete W_.E[e.id]}
+  for(const e of Object.values(W_.E)){if(e.local){if(!e.al){if(e.bot&&e.rt&&now>e.rt){e.rt=0;pioSpawn(e)}continue}e.acc+=dt*PSP;while(e.acc>=1&&e.al){e.acc-=1;if(e.bot)pioBot(e);pioMove(e)}if(st.over)return}
+    else{if(now-e.last>3500){pioClear(e);delete W_.E[e.id];continue}const k=Math.min(1,dt*12);e.sx+=(e.x-e.sx)*k;e.sy+=(e.y-e.sy)*k}}
+  W_.sendT-=dt;if(W_.online&&W_.sendT<=0){W_.sendT=.13;pioSend({t:'pio_s',e:Object.values(W_.E).filter(e=>e.local&&e.al).map(e=>({id:e.id,n:e.n,c:e.c,k:e.sk,x:e.x,y:e.y,d:e.d,tr:e.tr}))})}
+  W_.statT-=dt;if(W_.statT<=0){W_.statT=.3;pioStats()}for(const f of W_.fx)f.t-=dt;W_.fx=W_.fx.filter(f=>f.t>0)}
+function pioRecv(m){if(!PW||!AS||AS.g!=='pio'||cur!=='arc'||m.from===PIO_SID)return;const now=Date.now();PW.humans[m.from]=Object.assign(PW.humans[m.from]||{},{t:now});
+  const get=(id,n,c,k)=>{let e=PW.E[id];if(!e)e=pioEnt(id,String(n||'Игрок').slice(0,16),/^#[0-9a-f]{6}$/i.test(c)?c:'#888888',false,false,SKINS[k]?k:'grey');e.last=now;return e};
+  if(m.t==='pio_hb'){PW.humans[m.from].n=m.n;return}
+  if(m.t==='pio_req'){for(const e of Object.values(PW.E))if(e.local&&e.al){const cells=[];for(let i=0;i<PW.g.length;i++)if(PW.g[i]===e.idx)cells.push(i);pioSend({t:'pio_c',id:e.id,n:e.n,c:e.c,k:e.sk,cells:pioRLE(cells)})}return}
+  if(m.t==='pio_s'&&Array.isArray(m.e)){for(const d of m.e){if(!d||!d.id)continue;const e=get(d.id,d.n,d.c,d.k);if(e.local)continue;if(!e.al){e.sx=d.x;e.sy=d.y}e.al=true;e.x=d.x|0;e.y=d.y|0;e.d=d.d;e.tr=Array.isArray(d.tr)?d.tr.slice(0,400):[];e.ts=new Set(e.tr)}return}
+  if(m.t==='pio_c'&&Array.isArray(m.cells)){const e=get(m.id,m.n,m.c,m.k);if(e.local)return;for(const i of pioUnRLE(m.cells))if(i>=0&&i<PN*PN)PW.g[i]=e.idx;return}
+  if(m.t==='pio_d'){const e=PW.E[m.id];if(e&&!e.local){e.al=false;pioClear(e)}return}
+  if(m.t==='pio_k'){const e=PW.E[m.v];if(e&&e.local)pioDie(e,{id:m.by})}}
+{const _mr=mmRecv;mmRecv=function(m){if(m&&typeof m.t==='string'&&m.t.startsWith('pio_')){try{pioRecv(m)}catch(e){}return}return _mr.apply(this,arguments)}}
+function pioDraw(c,st,t){if(!PW)return;const me=PW.E[PW.me],CS=16,fr=me&&me.al?Math.min(1,me.acc):1;const camX=me?(me.px+(me.x-me.px)*fr):45,camY=me?(me.py+(me.y-me.py)*fr):45;
+  c.fillStyle='#1d1838';c.fillRect(0,0,480,480);const ox=240-camX*CS-CS/2,oy=240-camY*CS-CS/2,x0=Math.max(0,Math.floor(camX-16)),x1=Math.min(PN-1,Math.ceil(camX+16)),y0=Math.max(0,Math.floor(camY-16)),y1=Math.min(PN-1,Math.ceil(camY+16));
+  c.fillStyle='#f6f1e6';c.fillRect(ox,oy,PN*CS,PN*CS);c.strokeStyle='rgba(0,0,0,.05)';c.lineWidth=1;c.beginPath();for(let x=x0;x<=x1+1;x++){c.moveTo(ox+x*CS,oy+y0*CS);c.lineTo(ox+x*CS,oy+(y1+1)*CS)}for(let y=y0;y<=y1+1;y++){c.moveTo(ox+x0*CS,oy+y*CS);c.lineTo(ox+(x1+1)*CS,oy+y*CS)}c.stroke();
+  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const o=PW.g[y*PN+x];if(!o)continue;c.fillStyle=PW.cols[o]||'#888';c.globalAlpha=.75;c.fillRect(ox+x*CS,oy+y*CS,CS+.5,CS+.5)}c.globalAlpha=1;
+  c.strokeStyle=INK;c.lineWidth=3;c.strokeRect(ox,oy,PN*CS,PN*CS);
+  for(const e of Object.values(PW.E)){if(!e.al)continue;c.fillStyle=e.c;c.globalAlpha=.55;for(const i of e.tr){const x=i%PN,y=(i-x)/PN;if(x<x0||x>x1||y<y0||y>y1)continue;c.fillRect(ox+x*CS+2,oy+y*CS+2,CS-4,CS-4)}c.globalAlpha=1}
+  for(const e of Object.values(PW.E)){if(!e.al)continue;let hx,hy;if(e.local){const f=Math.min(1,e.acc);hx=e.px+(e.x-e.px)*f;hy=e.py+(e.y-e.py)*f}else{hx=e.sx;hy=e.sy}const X=ox+hx*CS+CS/2,Y=oy+hy*CS+CS/2;if(X<-40||X>520||Y<-40||Y>520)continue;
+    ell(c,X,Y+2,13,13);c.fillStyle=e.c;c.fill();c.lineWidth=3;c.strokeStyle=INK;c.stroke();drawKZ(c,X,Y+10,.17,e.id===PW.me?S.eq:{skin:e.sk,head:'none',caps:'none',top:'none',shoes:'none',acc:'none',trail:'none',aura:'none',gear:'none',face:'none'},t+e.idx,0);
+    arcTxt(c,e.id===PW.me?'Ты':e.n,X,Y-28,11,'#fff')}
+  for(const f of PW.fx)arcTxt(c,f.s,ox+f.x*CS+CS/2,oy+f.y*CS-20*(1.2-f.t),16,'#ffe066');
+  c.save();c.globalAlpha=.9;c.fillStyle='#2a2050';c.fillRect(384,6,90,90);c.imageSmoothingEnabled=false;c.drawImage(PW.mini,384,6,90,90);c.restore();c.strokeStyle=INK;c.lineWidth=2;c.strokeRect(384,6,90,90);if(me){c.fillStyle='#fff';c.fillRect(384+me.x-1.5,6+me.y-1.5,3,3)}
+  if(PW.cnt){const L=Object.values(PW.E).filter(e=>e.al||PW.cnt[e.idx]).map(e=>[e,PW.cnt[e.idx]/(PN*PN)*100]).sort((a,b)=>b[1]-a[1]).slice(0,6);c.fillStyle='rgba(20,14,46,.72)';arcRR(c,6,6,150,18+L.length*16,8);c.fill();
+    L.forEach(([e,p],i)=>{c.fillStyle=e.c;c.fillRect(14,16+i*16,9,9);c.font='800 11px Trebuchet MS';c.textAlign='left';c.textBaseline='middle';c.fillStyle=e.id===PW.me?'#ffe066':'#fff';c.fillText((i+1)+'. '+(e.id===PW.me?'Ты':e.n).slice(0,12)+'  '+p.toFixed(1)+'%',28,21+i*16)})}
+  const hum=Object.keys(PW.humans).length;arcTxt(c,`🟩 ${(st.pct||0).toFixed(1)}%  ·  ⚔ ${st.kills||0}  ·  ${hum?'🌐 игроков: '+(hum+1):'🤖 играешь с ботами'}`,240,466,14,'#fff')}
+ARC.pio={n:'Paper.io: Котозайцы',i:'🟩',hint:'Захватывай территорию: выходи за свою зону и возвращайся — всё, что обвёл, твоё. Пересёк чужой след — соперник выбыл; задели твой след или ты наступил на свой — проигрыш. Стрелки / WASD, свайп или тап. Есть игроки в сети — играешь с ними, нет — с ботами.',fmt:v=>v+'%',
+  init(st){PW={g:new Uint8Array(PN*PN),E:{},idx:{},cols:[null],rgb:{},nextIdx:1,humans:{},me:null,hbT:0,sendT:0,statT:0,botN:0,fx:[],online:false,mini:Object.assign(document.createElement('canvas'),{width:PN,height:PN})};st.kills=0;st.maxPct=0;st.pct=0;
+    const me=pioEnt(PIO_SID+'_m'+(++pioCnt),nick||'Ты',PCOLS[pioHash(PIO_SID)%PCOLS.length],true,false,S.eq.skin);PW.me=me.id;pioSpawn(me);NET.start();NET.sub(TP+'pio');setTimeout(()=>pioSend({t:'pio_req'}),300);pioStats()},
+  key(st,k){if(PV[k])pioTurn(PW.E[PW.me],k)},swipe(st,d){pioTurn(PW.E[PW.me],d)},tap(st,x,y){const dx=x-240,dy=y-240;pioTurn(PW.E[PW.me],Math.abs(dx)>Math.abs(dy)?(dx>0?'R':'L'):(dy>0?'D':'U'))},
+  step(st,dt){pioStep(st,dt)},draw(c,st,t){pioDraw(c,st,t)},
+  val:st=>Math.round((st.maxPct||0)*10)/10,reward:st=>Math.min(250,(st.maxPct||0)*6+(st.kills||0)*20),sum:st=>`Макс. территория: ${(st.maxPct||0).toFixed(1)}% · соперников выбито: ${st.kills||0}`,
+  after(st){S.stats.pioBest=Math.max(S.stats.pioBest||0,Math.round(st.maxPct||0));stat('pioKills',st.kills||0);checkAch()}};
+const PIO_ON=false;(function(){const L=document.querySelector('#stMg .mglist');if(!L||!PIO_ON)return;const A=ARC.pio;L.insertAdjacentHTML('afterbegin',`<div class="mgcard"><div class="mgic">${A.i}</div><div class="mgtx"><b>${A.n} <span style="display:inline-block;font-size:10px;padding:1px 6px;background:#ff9cf0;border:2px solid var(--ink);border-radius:8px;vertical-align:middle;margin-left:4px">НОВОЕ</span></b><small>Захватывай территорию, обводя её своим следом. Онлайн с живыми игроками, а если никого нет — с ботами.</small><small class="mgst arcst" data-arcst="pio" style="display:block;font-weight:900;color:#2b8a6a;margin-top:2px"></small></div><button class="btn sm mint" data-arc="pio">Играть</button></div>`)})();
+if(PIO_ON)MQ_POOL.push(['arc_pio',[2,3],'Сыграй в Paper.io: {g}'],['pioKills',[2,5],'Выбей соперников в Paper.io: {g}']);
+if(PIO_ON)ACH.push({id:'pio_10',n:'Землемер',d:'Захватить 10% карты в Paper.io',k:'pioBest',goal:10,r:200,i:'🟩'},{id:'pio_30',n:'Захватчик',d:'Захватить 30% карты в Paper.io',k:'pioBest',goal:30,r:800,i:'🗺'},{id:'pio_50',n:'Император карты',d:'Захватить 50% карты в Paper.io',k:'pioBest',goal:50,r:2500,i:'👑'},{id:'pio_k25',n:'Охотник на следы',d:'Выбить 25 соперников в Paper.io',k:'pioKills',goal:25,r:600,i:'⚔'});
+Object.assign(STAT_RU,{pioBest:['🟩','Рекорд Paper.io, %'],pioKills:['⚔','Выбито в Paper.io']});
+if(PIO_ON)HELP.push(['🟩 Paper.io','Settings → Мини-игры. Выходи из своей зоны и возвращайся — обведённое становится твоим. Пересеки чужой след, чтобы выбить соперника. Онлайн с игроками, если никого нет — с ботами.']);
+
+$('#paTas').onclick=()=>{admTog('tas','TAS');$('#paTas').classList.toggle('mint',!!S.adm.tas)};
+{const _pg2=pauseGame;pauseGame=function(){_pg2.apply(this,arguments);try{$('#paTas').classList.toggle('mint',!!(S&&S.adm.tas))}catch(e){}}}
 resize();
 const sess=lsGet('kz_session');
 if(!(sess&&login(sess)))show('auth');

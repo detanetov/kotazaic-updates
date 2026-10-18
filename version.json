@@ -1,9 +1,9 @@
 {
- "version": 78,
+ "version": 79,
  "label": "1.4.0",
- "name": "1.4.0: колесо танцев с котозайцами, бинд V",
+ "name": "1.4.0: фикс TAS",
  "file": "game.html",
- "sha256": "45b1d78e55ce02e64751eae79774823059e6186b41d4acb23e42ff5b88fd9ad8",
+ "sha256": "79bf23f877d7be58b19ade730671041bd5ab848e6931ae9f9d3a18cd0bf93af0",
  "date": "2026-10-18",
  "exe": {
   "version": 6,
