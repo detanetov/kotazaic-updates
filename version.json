@@ -1,9 +1,9 @@
 {
- "version": 74,
+ "version": 75,
  "label": "1.4.0",
- "name": "1.4.0: скины, питомцы, яйца, 3 мини-игры",
+ "name": "1.4.0: баланс мини-игр и Сад 3.0",
  "file": "game.html",
- "sha256": "3800ab0199c7baf273c74c586bf2c08f8aaf73dac92e466dc9e0e9769a9fb8ca",
+ "sha256": "bbae4b34274212455bb9e46b2b43ae8d4d0684fbf40542d0213ff6329430a5b5",
  "date": "2026-10-18",
  "exe": {
   "version": 4,
