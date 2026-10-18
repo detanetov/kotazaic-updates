@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=32;window.KZ_VNAME='1.3.8';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=33;window.KZ_VNAME='1.3.8';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -2367,6 +2367,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:33,l:'1.3.8',items:['🎁 Исправлено: подарки из почты от администратора теперь всегда можно забрать']},
  {v:32,l:'1.3.8',items:['✉ В ADM появилась почта с подарками — монеты, вещи, питомцы и яйца конкретному игроку или всем']},
  {v:30,l:'1.3.9',items:['🔒 Можно закрыть почту от игроков — обновления и подарки от админа всё равно приходят']},
  {v:29,l:'1.3.8',items:['✉ Почта в настройках: письма об обновлениях с тем, что добавлено','🎁 Подарки от администратора приходят письмом, даже если ты был не в сети','📨 Письма игрокам — онлайн и оффлайн, ответ и блокировка']},
@@ -2406,7 +2407,7 @@ function mlSendTo(p,subj,body,extra){const id='m'+Date.now().toString(36)+Math.r
 async function mlAdmSend(p,subj,body,gift){if(!SIGK_G){toast('🔑 Сначала введи пароль ADM');return false}const id='a'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);const signed=JSON.stringify({id,to:p.gid,subj,body,gift:gift||null,ts:Date.now()});
   const sig=u8b64(await crypto.subtle.sign({name:'ECDSA',hash:'SHA-256'},SIGK_G,mqEnc.encode(signed)));NET.pub(TP+'mail/'+p.gid+'/'+id,{t:'mail',id,kind:gift?'gift':'adm',fromGid:S.gid,fromU:user,fromNick:'Администратор',subj,body,ts:Date.now(),signed,sig},true);return true}
 function mlGiftText(g){if(!g)return'';if(Array.isArray(g))return g.map(mlGiftText).join(' · ');const a=g.a||{};if(g.op==='give'){const d=itemDef(a.sl,a.id);return '🎁 '+(d?d.n:'вещь')+(a.n>1?' ×'+a.n:'')}if(g.op==='coins')return '🪙 '+(a.d>0?'+':'')+a.d+' монет';if(g.op==='pe'){const L=a.key==='pets'?PETS:EGGS;return (a.key==='pets'?'🐰 ':'🥚 ')+(a.ids||[]).map(i=>L[i]?L[i].n:i).join(', ')+(a.n>1?' ×'+a.n:'')}if(g.op==='allitems')return '✨ Вся косметика';if(g.op==='setcoins')return '🪙 Монеты = '+a.v;if(g.op==='levels')return '★ Уровни BP '+a.bp+' / Event '+a.ev;return '🎁 Подарок'}
-function mlClaim(m){if(!m.gift||m.claimed)return;S.mailClaimed=S.mailClaimed||[];if(S.mailClaimed.includes(m.id)){m.claimed=true;persist();return}const g=m.gift,list=Array.isArray(g)?g:[g];let r='ok';for(const x of list){const rr=admApply({op:x.op,a:Object.assign({},x.a||{},{u:user})});if(rr!=='ok')r=rr}if(r==='ok'||list.length>1){m.claimed=true;S.mailClaimed.push(m.id);persist();confetti(80);SND.win();toast('🎁 Подарок получен: '+mlGiftText(g))}else toast('⚠ '+r);mlRender()}
+function mlClaim(m){if(!m.gift||m.claimed)return;S.mailClaimed=S.mailClaimed||[];if(S.mailClaimed.includes(m.id)){m.claimed=true;persist();return}const g=m.gift,list=Array.isArray(g)?g:[g];let r='ok';for(const x of list){if(!x||!x.op)continue;const rr=admApply({op:x.op,a:Object.assign({},x.a||{},{u:user})});if(rr!=='ok'&&rr!=='неизвестная команда')r=rr}if(r==='ok'||list.length>1){m.claimed=true;S.mailClaimed.push(m.id);persist();confetti(80);SND.win();toast('🎁 Подарок получен: '+mlGiftText(g))}else toast('⚠ '+r);mlRender()}
 let mlOpen=null,mlLastSend=0;
 function mlRender(){if(!S||!$('#mlList'))return;$('#mlClosed').checked=!!S.mailClosed;$('#mlNew').disabled=false;const box=mlBox();let h='';if(!box.length)h='<p class="hint">Писем пока нет.</p>';
   for(const m of box){const ic={upd:'📰',gift:'🎁',adm:'👑',mail:'✉',sys:'📢'}[m.kind]||'✉',d=new Date(m.ts),dt=d.toLocaleDateString('ru-RU')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
@@ -3502,7 +3503,7 @@ $('#amSend').onclick=async()=>{if(!SIGK_G){toast('🔑 Сначала введи
   const subj=$('#amSubj').value.trim()||'👑 Письмо от администратора',body=$('#amBody').value.trim()||(gift.length?'Тебе подарок! Нажми «Забрать подарок».':'');if(!gift.length&&!body){toast('Добавь подарок или текст письма');return}
   let targets;if($('#amWho').value==='all'){targets=amPlayers();if(!targets.length){toast('Пока нет известных игроков');return}if(!confirm('Отправить письмо'+(gift.length?' с подарком':'')+' '+targets.length+' игрокам?'))return}
   else{const u=$('#amTo').value.trim().toLowerCase().replace(/^@/,''),t=amPlayers().filter(p=>p.u.toLowerCase()===u).sort((a,b)=>b.last-a.last)[0];if(!t){toast('Игрок «'+u+'» не найден');return}targets=[t]}
-  let ok=0;for(const t of targets){if(await mlAdmSend(t,subj,body,gift.length?gift:null))ok++}
+  let ok=0;for(const t of targets){let good=true;if(!gift.length)good=await mlAdmSend(t,subj,body,null);else for(let i=0;i<gift.length;i++){const sub=gift.length>1?subj+' ('+(i+1)+'/'+gift.length+')':subj;if(!await mlAdmSend(t,sub,body,gift[i]))good=false}if(good)ok++}
   const what=gift.length?mlGiftText(gift):'письмо';toast('📨 Отправлено: '+ok+(targets.length>1?' игрокам':' → '+targets[0].u));admLog('✉ почта '+(targets.length>1?'всем ('+ok+')':'→ '+targets[0].u)+': '+what);SND.win();$('#amBody').value=''};
 function admPickLabel(){return admPick?`🎯 Выдавать: <b>${esc(admPickName())}</b> · нажми на игрока ещё раз, чтобы снять`:'👆 Нажми на игрока в списке, чтобы выбрать, кому выдавать'}
 async function admUnlock(pw){const v=KZ_VAULT;const base=await crypto.subtle.importKey('raw',mqEnc.encode(pw),'PBKDF2',false,['deriveKey']);
