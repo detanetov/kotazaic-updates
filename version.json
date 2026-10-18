@@ -11,8 +11,8 @@
   "sha256": "315a02bed2462107fb240390ae75f1a4986d95bf94c37e1fee2618cab23116fa"
  },
  "launcher": {
-  "version": 3,
+  "version": 4,
   "file": "KotazaicLauncher.exe",
-  "sha256": "f37947e09d648546d23d147256252ee53838ff6e8e03ab47034d0bdad75e85a3"
+  "sha256": "a061f70f1ace78ca9461219810b076ad7f817f23fe315b5841cbcb06fafe7213"
  }
 }
