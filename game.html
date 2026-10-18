@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=62;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=63;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -151,7 +151,7 @@ html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
 @media(max-width:560px){.bindl{grid-template-columns:1fr}}
 .dq{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px;margin-top:8px;color:var(--ink)}.dq.cl{opacity:.6}.dq .bar i,.lvbox .bar i{display:block;height:100%;background:var(--mint);border-radius:6px}.lvbox{background:#f3ecff;border:3px solid var(--ink);border-radius:14px;padding:10px;margin-top:10px;color:var(--ink)}
 .modec{display:flex;flex-direction:column;gap:3px;background:#fff;border:3px solid var(--ink);border-left:12px solid var(--mc);border-radius:14px;padding:10px 92px 10px 12px;margin-top:8px;cursor:pointer;color:var(--ink);position:relative;transition:transform .1s}.modec:hover{transform:translateX(4px)}.modec b{font-size:17px}.modec small{opacity:.8}.modec .chip{position:absolute;right:10px;top:10px}
-#menu #mDaily,#menu #mWs,#menu #mGift{font-size:14px;padding:7px 12px;min-height:0;width:auto;flex:none;box-shadow:0 3px 0 var(--ink)}
+#menu #xMenu2 .btn,#menu #mDaily,#menu #mWs,#menu #mGift{font-size:14px;padding:7px 12px;min-height:0;width:auto;flex:none;box-shadow:0 3px 0 var(--ink)}
 .admc{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:6px 8px;margin-bottom:6px;font-size:13px;color:var(--ink)}
 .perk{display:block;font-size:11px;font-weight:800;color:#2a8a6a;background:#e3f8ef;border:2px solid #9fdcc6;border-radius:8px;padding:3px 7px;line-height:1.25}
 .it{cursor:pointer;position:relative}
@@ -3062,6 +3062,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:63,l:'1.4.0',items:['🎡 Колесо удачи: бесплатное вращение каждый день и ещё 5 за монеты','📅 Календарь входа: серия 7 дней с растущими наградами, на 7-й день трофей','🔔 Центр наград: всё, что можно забрать, в одном окне','🌈 Событие недели: каждую неделю новый бонус (монеты, трофеи, удача, рыбалка, опыт, конфеты)','🏅 25 новых достижений']},
  {v:62,l:'1.4.0',items:['🎉 Новая версия 1.4.0! В неё вошли режимы игры, Мастерская, молнии, сундуки боссов, рыбалка и большие улучшения Settings, пассов, Cosmetics, Kotograde, Trades, Chat и ADM']},
  {v:61,l:'1.4.0',items:['⚙ Settings: поиск настроек, вкладки 📊 Статистика и 💾 Сохранения (код, файл, резервные копии)','★ Battle Pass и 🎃 Halloween: задания дня, покупка уровней, бонусные сундуки после финала, ×2 опыт BP в выходные, картинки наград','🍬 Тыквенная лавка за конфеты из Halloween-забегов','✿ Cosmetics: поиск, сортировка, ★ избранное, прогресс коллекции, 🎲 случайный образ, 🧹 снять всё','⬆ Kotograde: статистика, история, бонус к шансу после неудач, быстрый шанс, дубликаты, быстрая прокрутка','🤝 Trades: шкала честности, чат обмена, поиск, все дубликаты, статистика обменов','💬 Chat: смайлики, команды /roll /coin /me, упоминания @ник, блокировка, поиск, настройки чата','🛠 ADM: поиск, ⚡ Быстро, пресеты читов, 🗃 База предметов']},
  {v:60,l:'1.3.9',items:['🖼 Исправлены пустые синие миниатюры в Cosmetics и других разделах — предпросмотр вещей снова виден']},
@@ -5401,6 +5402,111 @@ document.addEventListener('click',e=>{if(!S||cur!=='adm'||!isAdm())return;const 
   if(d.admpl){const o=XS().admPre[d.admpl];if(!o)return;for(const[k]of ADM_FLAGS)S.adm[k]=!!o[k];persist();toast('🧪 Включён пресет «'+d.admpl+'»');try{renderAdm()}catch(er){}admQuickRender();return}
   if(d.admpd){delete XS().admPre[d.admpd];persist();admQuickRender();return}
   if(d.admdb){const[sl,id]=d.admdb.split(':');addItem(sl,id);syncInv();persist();refreshTop();SND.buy();toast('🎁 '+itemName(sl,id)+' выдан(а) тебе');admLogX('Выдано себе: '+itemName(sl,id));admDbRender()}});
+
+/* ================= ×100 pack 2: wheel, login calendar, rewards hub, weekly event, achievements ================= */
+(function(){const st=document.createElement('style');st.textContent=`
+#xOv .pfbox{max-width:560px;width:100%}
+.xwheel{display:flex;flex-direction:column;align-items:center;gap:10px}
+.xwheel canvas{width:300px;height:300px;max-width:80vw;max-height:80vw}
+.xcal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:8px 0}
+.xcal div{background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:6px 2px;text-align:center;font-weight:900;font-size:12px}
+.xcal div b{display:block;font-size:22px}
+.xcal .got{background:#c9f7d8}.xcal .now{background:#ffe066;box-shadow:0 0 0 3px #ff9cf0}
+.xhub{display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow:auto}
+.xmenu2{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start;align-items:center}
+.xmenu2 .chip{font-size:13px}
+.xmenu2 .chip{cursor:pointer}
+.xbdg{background:#ff4d6d;color:#fff;border-radius:10px;padding:0 6px;font-size:12px;margin-left:4px}
+`;document.head.appendChild(st)})();
+function xOv(html){let o=$('#xOv');if(!o){o=document.createElement('div');o.id='xOv';o.className='pfov';o.onclick=e=>{if(e.target===o||e.target.closest('[data-xclose]'))xOvClose()};document.body.appendChild(o)}o.innerHTML=`<div class="pfbox">${html}</div>`;o.style.display='flex'}
+function xOvClose(){const o=$('#xOv');if(o){o.style.display='none';o.innerHTML=''}xWh.anim=null}
+const xHead=t=>`<div class="row" style="justify-content:space-between"><h3 style="margin:0">${t}</h3><button class="btn sm ghost" data-xclose>✕</button></div>`;
+function xDayStr(off){const d=new Date(Date.now()+off*864e5);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+
+/* ---------- weekly event ---------- */
+const XWEEK=[{id:'coins',n:'💰 Неделя монет',d:'Монеты в забегах ×1.25'},{id:'drops',n:'🎲 Неделя трофеев',d:'Шанс трофеев ×1.5'},{id:'kg',n:'🍀 Неделя удачи',d:'+5% к шансу Kotograde'},{id:'fish',n:'🎣 Неделя рыбалки',d:'Рыба продаётся ×1.5'},{id:'xp',n:'⭐ Неделя опыта',d:'Опыт пассов ×1.5'},{id:'candy',n:'🍬 Сладкая неделя',d:'Конфеты в Halloween ×2'}];
+function xWeek(){return XWEEK[Math.floor((Date.now()/864e5+3)/7)%XWEEK.length]}
+function xWeekLeft(){const t=Date.now()/864e5+3,end=(Math.floor(t/7)+1)*7;return Math.max(0,(end-t)*864e5)}
+const _cr2=commitRun;commitRun=function(){const w=xWeek().id;if(G&&!G.committed&&w==='coins')G.coins=Math.round((G.coins||0)*1.25);const r=_cr2.apply(this,arguments);
+  if(r&&w==='xp'){const eb=Math.round(r.bpx*.5),ee=Math.round(r.evx*.5);S.bpXp+=eb;S.evXp+=ee;r.bpx+=eb;r.evx+=ee;persist()}return r};
+const _gd=gameDrop;gameDrop=function(ch){const a=[...arguments];if(xWeek().id==='drops')a[0]=Math.min(1,ch*1.5);return _gd.apply(this,a)};
+const _kgc2=kgChance;kgChance=function(){const c=_kgc2();return c>0&&xWeek().id==='kg'?clamp(c+.05,.01,.85):c};
+const _fpr=fPrice;fPrice=function(f){const v=_fpr(f);return xWeek().id==='fish'?Math.round(v*1.5):v};
+const _pqr=pqRun;pqRun=function(g){const c0=XS().candy;_pqr.apply(this,arguments);if(g&&g.mode==='hw'&&xWeek().id==='candy')XS().candy+=XS().candy-c0};
+
+/* ---------- login calendar ---------- */
+const XCAL=[50,80,120,160,220,300,600];
+function xCal(){const x=XS();x.lg=x.lg||{last:'',n:0};return x.lg}
+const _cd=claimDaily;claimDaily=function(){const was=S&&S.daily===today();_cd.apply(this,arguments);if(!S||was||S.daily!==today())return;const lg=xCal();
+  lg.n=lg.last===xDayStr(-1)?lg.n+1:1;lg.last=today();const day=(lg.n-1)%7+1,c=XCAL[day-1];S.coins+=c;S.stats.bestStreak=Math.max(S.stats.bestStreak||0,lg.n);
+  if(day===7)try{gameDrop(1,'7-й день серии')}catch(e){}stat('loginDays');persist();refreshTop();setTimeout(()=>{toast('📅 День '+day+' серии входа: +'+c+' 🪙'+(day===7?' и трофей!':''));xMenuRender()},1200)};
+function xCalOpen(){const lg=xCal(),alive=lg.last===today()||lg.last===xDayStr(-1),n=alive?lg.n:0,claimedToday=lg.last===today(),cd=claimedToday?(n-1)%7+1:n%7+1;
+  let h=xHead('📅 Календарь входа')+`<p class="sub">Заходи каждый день и забирай 🎁 Подарок дня — к нему добавляется награда серии. Пропустишь день — серия начнётся заново.</p><div class="xcal">`;
+  for(let d=1;d<=7;d++){const got=claimedToday?d<=cd:d<cd;h+=`<div class="${got?'got':''} ${d===cd&&!claimedToday?'now':''}">День ${d}<b>${d===7?'🎁':got?'✅':'🪙'}</b>${XCAL[d-1]}${d===7?'+🎲':''}</div>`}
+  h+=`</div><p style="font-weight:900;text-align:center">🔥 Серия: ${n} дн. · рекорд ${S.stats.bestStreak||0} дн.</p><div class="row" style="justify-content:center">${S.daily===today()?'<span class="chip">✓ Сегодня уже забрано — приходи завтра</span>':'<button class="btn mint" data-xgift>🎁 Забрать подарок дня</button>'}</div>`;xOv(h)}
+
+/* ---------- wheel of fortune ---------- */
+const XWH=[{n:'50 🪙',c:'#ffe066',w:30,f:()=>{S.coins+=50}},{n:'100 🪙',c:'#5ee6c1',w:22,f:()=>{S.coins+=100}},{n:'40 🍬',c:'#ff9a3d',w:12,f:()=>{XS().candy+=40}},{n:'+150 XP ★',c:'#8fc4ff',w:10,f:()=>{S.bpXp+=BP_XP}},{n:'250 🪙',c:'#c39bff',w:12,f:()=>{S.coins+=250}},{n:'🎲 Трофей',c:'#7cc46a',w:8,f:()=>{try{gameDrop(1,'колесо удачи')}catch(e){S.coins+=200}}},{n:'1000 🪙',c:'#ff5e8a',w:3,f:()=>{S.coins+=1000;confetti(150)}},{n:'🔄 Ещё раз',c:'#ffffff',w:3,f:()=>{XS().wh.bonus=(XS().wh.bonus||0)+1}}];
+const xWh={ang:0,anim:null},XWH_COST=150,XWH_MAX=5;
+function xWhSt(){const x=XS();if(!x.wh||x.wh.day!==today())x.wh={day:today(),free:1,paid:0,bonus:0};return x.wh}
+function xWhDraw(){const c=$('#xWhCv');if(!c)return;const x=c.getContext('2d'),R=150,n=XWH.length;x.setTransform(2,0,0,2,0,0);x.clearRect(0,0,300,300);
+  for(let i=0;i<n;i++){const a0=xWh.ang+i/n*Math.PI*2,a1=a0+Math.PI*2/n;x.beginPath();x.moveTo(R,R);x.arc(R,R,R-8,a0,a1);x.closePath();x.fillStyle=XWH[i].c;x.fill();x.lineWidth=3;x.strokeStyle='#2a2050';x.stroke();
+    x.save();x.translate(R,R);x.rotate(a0+Math.PI/n);x.textAlign='right';x.fillStyle='#2a2050';x.font='900 15px Trebuchet MS,sans-serif';x.fillText(XWH[i].n,R-20,5);x.restore()}
+  x.beginPath();x.arc(R,R,22,0,Math.PI*2);x.fillStyle='#2a2050';x.fill();x.fillStyle='#ffe066';x.font='900 20px sans-serif';x.textAlign='center';x.fillText('★',R,R+7);
+  x.beginPath();x.moveTo(R-14,2);x.lineTo(R+14,2);x.lineTo(R,30);x.closePath();x.fillStyle='#ff4d6d';x.fill();x.lineWidth=3;x.strokeStyle='#2a2050';x.stroke()}
+function xWhOpen(){const w=xWhSt(),spins=w.free+w.bonus;xOv(xHead('🎡 Колесо удачи')+`<div class="xwheel"><canvas id="xWhCv" width="600" height="600"></canvas>
+  <div class="row" style="gap:8px;justify-content:center">${spins?`<button class="btn mint" data-xspin="free">🎡 Крутить бесплатно${spins>1?' ('+spins+')':''}</button>`:''}<button class="btn" data-xspin="paid" ${w.paid>=XWH_MAX||S.coins<XWH_COST?'disabled':''}>🪙 ${XWH_COST} · крутить</button></div>
+  <small class="hint">Бесплатно — 1 раз в день. Платно — ещё до ${XWH_MAX} раз в день (сегодня осталось ${XWH_MAX-w.paid}). Монеты из игры, не настоящие деньги.</small></div>`);xWhDraw()}
+function xWhSpin(kind){if(xWh.anim)return;const w=xWhSt();if(kind==='free'){if(w.bonus>0)w.bonus--;else if(w.free>0)w.free--;else return}else{if(w.paid>=XWH_MAX||S.coins<XWH_COST){toast('Нельзя крутить');return}S.coins-=XWH_COST;w.paid++}
+  let t=Math.random()*XWH.reduce((a,p)=>a+p.w,0),i=0;for(;i<XWH.length;i++){t-=XWH[i].w;if(t<=0)break}i=Math.min(i,XWH.length-1);const n=XWH.length,seg=Math.PI*2/n;
+  const target=-Math.PI/2-(i*seg+seg*(.2+Math.random()*.6));let to=target;while(to>xWh.ang-Math.PI*2*6)to-=Math.PI*2;
+  persist();refreshTop();stat('wheelSpins');xWh.anim={from:xWh.ang,to,t0:performance.now(),dur:3600,i,last:0};document.querySelectorAll('[data-xspin]').forEach(b=>b.disabled=true);
+  const step=now=>{const a=xWh.anim;if(!a)return;const k=Math.min(1,(now-a.t0)/a.dur),e=1-Math.pow(1-k,4);xWh.ang=a.from+(a.to-a.from)*e;const tick=Math.floor(xWh.ang/seg);if(tick!==a.last){a.last=tick;sfx(1100,.02,'square',.015)}xWhDraw();
+    if(k<1){requestAnimationFrame(step);return}xWh.anim=null;const p=XWH[a.i];p.f();persist();refreshTop();SND.win();confetti(60);toast('🎡 Выпало: '+p.n);xWhOpen();xMenuRender()};requestAnimationFrame(step)}
+
+/* ---------- rewards hub ---------- */
+function xHubList(){const L=[];if(!S)return L;
+  if(S.daily!==today())L.push({i:'🎁',n:'Подарок дня и награда серии входа',a:'gift'});
+  const w=xWhSt();if(w.free+w.bonus>0)L.push({i:'🎡',n:'Бесплатное вращение колеса',a:'wheel'});
+  for(const[k,maxL,per,xp,cl,nm]of[['bp',BP_LV,BP_XP,S.bpXp,S.bpClaimed,'Battle Pass'],['ev',EV_LV,EV_XP,S.evXp,S.evClaimed,'Halloween']]){const lv=Math.min(maxL,Math.floor(xp/per));let n=0;for(let l=1;l<=lv;l++)if(!cl.includes(l))n++;if(n)L.push({i:k==='bp'?'★':'🎃',n:`${nm}: наград не забрано — ${n}`,a:k});
+    const q=pqGet()[k].filter(q=>!q.c&&q.p>=q.g).length;if(q)L.push({i:'📋',n:`${nm}: выполнено заданий — ${q}`,a:k});const o=passOver(k).left;if(o)L.push({i:'📦',n:`${nm}: бонусных сундуков — ${o}`,a:k})}
+  const m=mlUnread();if(m)L.push({i:'✉',n:'Непрочитанных писем — '+m,a:'mail'});return L}
+function xHubOpen(){const L=xHubList();xOv(xHead('🔔 Награды и новости')+`<div class="xhub">${L.map(r=>`<div class="xq"><span style="font-size:20px">${r.i}</span><span style="flex:1">${r.n}</span><button class="btn sm mint" data-xhub="${r.a}">Забрать →</button></div>`).join('')||'<p class="hint" style="text-align:center">Всё забрано! Загляни позже 🙂</p>'}</div>
+  <div class="xbox"><b>${xWeek().n}</b> — ${xWeek().d}<br><small class="hint" style="margin:0">До смены события: ${fmtTime(xWeekLeft()/1000)}</small></div>`)}
+function xMenuRender(){if(!S||cur!=='menu')return;let r=$('#xMenu2');if(!r){r=document.createElement('div');r.id='xMenu2';r.className='xmenu2';const pr=$('#mPred');pr.before(r)}
+  const n=xHubList().length,lg=xCal(),alive=lg.last===today()||lg.last===xDayStr(-1),w=xWhSt();
+  r.innerHTML=`<button class="btn sm" data-xopen="hub" style="background:#ffd6f0">🔔 Награды${n?`<span class="xbdg">${n}</span>`:''}</button><button class="btn sm" data-xopen="wheel" style="background:#c9f7d8">🎡 Колесо${w.free+w.bonus?'<span class="xbdg">!</span>':''}</button><span class="chip" data-xopen="cal">📅 Серия ${alive?lg.n:0} дн.</span><span class="chip" data-xopen="hub" title="${xWeek().d}">${xWeek().n}</span>`}
+const _rm=refreshMenu;refreshMenu=function(){_rm.apply(this,arguments);try{xMenuRender()}catch(e){console.error(e)}};
+document.addEventListener('click',e=>{if(!S)return;const b=e.target.closest('[data-xopen],[data-xspin],[data-xhub],[data-xgift]');if(!b||b.disabled)return;const d=b.dataset;SND.click();
+  if(d.xopen==='hub')xHubOpen();else if(d.xopen==='wheel')xWhOpen();else if(d.xopen==='cal')xCalOpen();
+  else if(d.xspin)xWhSpin(d.xspin);
+  else if(b.hasAttribute('data-xgift')){claimDaily();setTimeout(xCalOpen,1300)}
+  else if(d.xhub){const a=d.xhub;if(a==='gift'){claimDaily();setTimeout(()=>{xHubOpen();xMenuRender()},1300)}else if(a==='wheel')xWhOpen();else{xOvClose();if(a==='mail'){show('set');setSetTab('mail')}else show(a)}}});
+setInterval(()=>{try{if(cur==='menu')xMenuRender()}catch(e){}},15000);
+
+/* ---------- achievements: 25 new ---------- */
+const _sv=statVal;statVal=function(k){if(!S)return 0;if(k==='favN')return Object.keys(XS().fav).length;if(k==='collect'){let n=0;for(const sl of SLOTS)n+=(S.own[sl]||[]).filter(i=>i!=='none').length;return n}if(k==='invVal')return Object.entries(S.inv||{}).reduce((a,[q,n])=>a+itemVal(...q.split(':'))*n,0);return _sv(k)};
+ACH.push(
+ {id:'x_kg10',n:'Азартный котозаяц',d:'Сделать 10 попыток Kotograde',k:'kgTries',goal:10,r:150,i:'🎰'},{id:'x_kg50',n:'Хозяин колеса',d:'Сделать 50 попыток Kotograde',k:'kgTries',goal:50,r:400,i:'🎡'},{id:'x_upg25',n:'Мастер апгрейда',d:'25 успешных Kotograde',k:'upgrades',goal:25,r:600,i:'⬆'},
+ {id:'x_pq5',n:'Исполнитель',d:'Выполнить 5 заданий пассов',k:'pqDone',goal:5,r:150,i:'📋'},{id:'x_pq30',n:'Трудоголик',d:'Выполнить 30 заданий пассов',k:'pqDone',goal:30,r:500,i:'💼'},
+ {id:'x_wh7',n:'Крутящий',d:'Крутить колесо удачи 7 раз',k:'wheelSpins',goal:7,r:120,i:'🎡'},{id:'x_wh30',n:'Фортуна любит меня',d:'Крутить колесо удачи 30 раз',k:'wheelSpins',goal:30,r:400,i:'🍀'},
+ {id:'x_st3',n:'Постоялец',d:'Серия входа 3 дня',k:'bestStreak',goal:3,r:100,i:'📅'},{id:'x_st7',n:'Неделя с котозайцем',d:'Серия входа 7 дней',k:'bestStreak',goal:7,r:300,i:'🗓'},{id:'x_st30',n:'Верный друг',d:'Серия входа 30 дней',k:'bestStreak',goal:30,r:1500,i:'💖'},
+ {id:'x_cs1',n:'Сладкоежка',d:'Купить что-нибудь в Тыквенной лавке',k:'candyBuy',goal:1,r:80,i:'🍬'},{id:'x_cs10',n:'Король конфет',d:'10 покупок в Тыквенной лавке',k:'candyBuy',goal:10,r:350,i:'🍭'},
+ {id:'x_pb5',n:'Экспресс-пасс',d:'Купить 5 уровней пасса',k:'passBuys',goal:5,r:200,i:'⏩'},{id:'x_pc1',n:'Бонусник',d:'Открыть бонусный сундук пасса',k:'passChests',goal:1,r:100,i:'📦'},{id:'x_pc10',n:'Сундучный магнат',d:'Открыть 10 бонусных сундуков',k:'passChests',goal:10,r:400,i:'🧰'},
+ {id:'x_cmd',n:'Командир чата',d:'Использовать 5 команд в чате',k:'chatCmd',goal:5,r:80,i:'⌨'},{id:'x_trm',n:'Переговорщик',d:'Написать 10 сообщений в чате обмена',k:'trMsgs',goal:10,r:120,i:'🗣'},{id:'x_bak',n:'Осторожный',d:'Сделать резервную копию вручную',k:'backups',goal:1,r:60,i:'🛟'},
+ {id:'x_fav',n:'Коллекционер мечты',d:'Добавить 10 вещей в избранное',k:'favN',goal:10,r:80,i:'★'},
+ {id:'x_col100',n:'Модник',d:'Собрать 100 вещей',k:'collect',goal:100,r:300,i:'👗'},{id:'x_col300',n:'Икона стиля',d:'Собрать 300 вещей',k:'collect',goal:300,r:800,i:'💃'},{id:'x_col600',n:'Музей котозайца',d:'Собрать 600 вещей',k:'collect',goal:600,r:2000,i:'🏛'},
+ {id:'x_inv10',n:'Богатый инвентарь',d:'Инвентарь стоимостью 10 000 🪙',k:'invVal',goal:10000,r:300,i:'💰'},{id:'x_inv50',n:'Сокровищница',d:'Инвентарь стоимостью 50 000 🪙',k:'invVal',goal:50000,r:1000,i:'💎'},
+ {id:'x_fish500',n:'Рыбный магнат',d:'Поймать 500 рыб',k:'fishCaught',goal:500,r:800,i:'🐋'});
+{const _f=finishKG;finishKG=function(){if(kgSpin)stat('kgTries');return _f.apply(this,arguments)}}
+{const _f=pqClaim;pqClaim=function(w,i){const q=pqGet()[w][i],ok=q&&!q.c&&q.p>=q.g;_f.apply(this,arguments);if(ok)stat('pqDone')}}
+{const _f=evShopBuy;evShopBuy=function(){const c=XS().candy;_f.apply(this,arguments);if(XS().candy<c)stat('candyBuy')}}
+{const _f=passBuy;passBuy=function(){const a=S.bpXp+S.evXp;_f.apply(this,arguments);if(S.bpXp+S.evXp>a)stat('passBuys')}}
+{const _f=passChest;passChest=function(w){const a=passOver(w).left;_f.apply(this,arguments);if(passOver(w).left<a)stat('passChests')}}
+{const _f=chCmd;chCmd=function(x){const r=_f.apply(this,arguments);if(String(x||'').trim()[0]==='/'&&r!==null&&r!==String(x||'').trim())stat('chatCmd');return r}}
+{const _f=trMsgSend;trMsgSend=function(x){if(TR.st&&String(x||'').trim())stat('trMsgs');return _f.apply(this,arguments)}}
+{const _f=bakMake;bakMake=function(tag){const r=_f.apply(this,arguments);if(r&&tag==='вручную')stat('backups');return r}}
+Object.assign(STAT_RU,{kgTries:['🎰','Попыток Kotograde'],pqDone:['📋','Заданий пассов'],wheelSpins:['🎡','Вращений колеса'],bestStreak:['📅','Лучшая серия входа'],loginDays:['🗓','Дней со входом'],candyBuy:['🍬','Покупок в лавке'],passBuys:['⏩','Купленных уровней'],passChests:['📦','Бонусных сундуков'],chatCmd:['⌨','Команд в чате'],trMsgs:['🗣','Сообщений в обменах'],backups:['🛟','Резервных копий']});
 
 resize();
 const sess=lsGet('kz_session');
