@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=31;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=32;window.KZ_VNAME='1.3.8';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -2367,7 +2367,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
- {v:31,l:'1.4.0',items:['✉ В ADM появилась почта с подарками — монеты, вещи, питомцы и яйца конкретному игроку или всем']},
+ {v:32,l:'1.3.8',items:['✉ В ADM появилась почта с подарками — монеты, вещи, питомцы и яйца конкретному игроку или всем']},
  {v:30,l:'1.3.9',items:['🔒 Можно закрыть почту от игроков — обновления и подарки от админа всё равно приходят']},
  {v:29,l:'1.3.8',items:['✉ Почта в настройках: письма об обновлениях с тем, что добавлено','🎁 Подарки от администратора приходят письмом, даже если ты был не в сети','📨 Письма игрокам — онлайн и оффлайн, ответ и блокировка']},
  {v:28,l:'1.3.7',items:['🤝 Trades — обмен вещами, питомцами и монетами с другими игроками','📜 История обменов','🏅 Достижения «Торговец» и «Барыга»']},
@@ -2388,7 +2388,7 @@ function mlBox(){if(!S.mail)S.mail=[];return S.mail}
 function mlAdd(m){const box=mlBox();if(box.some(x=>x.id===m.id))return false;box.unshift(Object.assign({read:false,ts:Date.now()},m));box.length=Math.min(box.length,80);persist();mlBadge();if(cur==='set'&&setTab==='mail')mlRender();return true}
 function mlUnread(){return S&&S.mail?S.mail.filter(m=>!m.read).length:0}
 function mlBadge(){const n=mlUnread();try{const b=$('#mailBadge');b.textContent=n;b.style.display=n?'inline':'none';$('#mSetN').textContent=n?'✉ '+n+' новых':'настройки'}catch(e){}}
-function mlCheckUpdates(){if(!S)return;const seen=S.mailVer||0;if(seen>=window.KZ_VER)return;const fresh=CHANGELOG.filter(c=>c.v>seen&&c.v<=window.KZ_VER).slice(0,seen?5:1);
+function mlCheckUpdates(){if(!S)return;{const o=(S.mail||[]).find(m=>m.id==='upd31');if(o){o.id='upd32';o.subj='🎉 Вышло обновление 1.3.8!'}}const seen=S.mailVer||0;if(seen>=window.KZ_VER)return;const fresh=CHANGELOG.filter(c=>c.v>seen&&c.v<=window.KZ_VER).slice(0,seen?5:1);
   for(const c of fresh.reverse())mlAdd({id:'upd'+c.v,kind:'upd',from:'Kotazaic and Stars',subj:'🎉 Вышло обновление '+c.l+'!',body:'Что добавлено:',list:c.items,ts:Date.now()});
   if(!fresh.length&&seen)mlAdd({id:'upd'+window.KZ_VER,kind:'upd',from:'Kotazaic and Stars',subj:'🎉 Вышло обновление '+(window.KZ_VNAME||window.KZ_VER)+'!',body:'Игра обновилась до новой версии.',ts:Date.now()});
   S.mailVer=window.KZ_VER;persist()}
