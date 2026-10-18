@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=66;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=67;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3062,6 +3062,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:67,l:'1.4.0',items:['🔄 Автообновление теперь проверяется только при запуске игры и больше не мешает во время игры: если обновление скачалось позже, оно установится при следующем запуске','⚙ Кнопка «Проверить обновления» в Settings работает как раньше']},
  {v:66,l:'1.4.0',items:['🕹 5 новых мини-игр: 🧩 Котозаяц 2048, 🐍 Змейка-морковка, 🧠 Мемори, 💣 Сапёр, 🪽 Летающий котозаяц','🏆 У каждой свой рекорд, монеты за результат и шанс на трофей','📋 Новые задания мини-игр дня для аркады','🏅 9 новых достижений']},
  {v:65,l:'1.4.0',items:['🐾 Прокачка питомцев дубликатами до 5 уровня (+20% к бонусу за уровень)','✉ Почта: прочитать всё, забрать все подарки, удалить прочитанные, поиск','🏆 Поиск игрока в топе','📈 История забегов и график, сравнение со средним результатом и лучший за сегодня','⏸ В паузе — статистика забега и задания Battle Pass','📜 Последние уведомления в центре наград','❓ Справочник по всем разделам и быстрые клавиши в меню']},
  {v:64,l:'1.4.0',items:['🌻 Сад 2.0: 29 новых растений (теперь 41) и уровни сада до 30','📋 Заказы от жителей леса за монеты, опыт и подарки','🐔 Ферма: курочки, пчёлы, коровы, овечки и свинки дают продукты даже без игры','🍳 Кухня: 23 блюда из урожая и продуктов фермы','📈 Рынок с ценами дня, ☀ погода в саду, 🦣 гигантский и 🌈 радужный урожай','🎨 Декор с бонусами, 📖 альбом растений, 🔧 8 улучшений сада, 🔁 автопосев','🎮 Задания мини-игр на каждый день, статистика на карточках, 🐟 рыба дня ×2','🏅 12 новых достижений сада']},
@@ -5118,7 +5119,10 @@ try{if(KZ_MODE==='web'&&+localStorage.getItem('kz_upd_try')===window.KZ_VER)loca
 setTimeout(()=>{try{if(KZ_MODE==='exe')fetch('/ok?v='+window.KZ_VER).catch(()=>{});else if(KZ_MODE==='android'&&location.href.indexOf('android_asset')<0){localStorage.setItem('kz_a_ok',window.KZ_VER);KZAndroid.markOk()}}catch(e){}},3000);
 async function sha256hex(t){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 let updBusy=false;
+const KZ_T0=Date.now();let updManual=false;
+function updCanNow(){return !G&&(cur==='menu'||cur==='auth')&&Date.now()-KZ_T0<90000}
 function applyUpdate(how){
+  if(!updManual&&!updCanNow()){updSplash(null);if(!window._kzUpdLater){window._kzUpdLater=true;setTimeout(()=>toast('✅ Обновление скачано — установится при следующем запуске игры'),cur==='menu'?0:3000)}return}
   if(G&&!G.over){updSplash(null);toast('🎉 Обновление скачано — установится, когда выйдешь в меню');window._kzUpdApply=how;return}
   persist();updSplash('✅ Обновление установлено, перезапускаю…');setTimeout(how,700)}
 // raw.githubusercontent.com caches "main" for minutes; ask the API for the newest commit and read the files of that exact commit
@@ -5127,7 +5131,7 @@ async function freshBase(){const base=window.KZ_UPD,m=/^https:\/\/raw\.githubuse
   return base}
 async function checkUpdate(manual){
   if(updBusy){if(manual)toast('Уже проверяю…');return}
-  updBusy=true;try{
+  updManual=!!manual;updBusy=true;try{
     if(KZ_MODE==='exe'){
       if(manual)updSplash('🔄 Проверяю обновления…');
       const j=await(await fetch('/upd-check',{cache:'no-store'})).json();updSplash(null);
@@ -5137,7 +5141,7 @@ async function checkUpdate(manual){
     const r=await fetch(base+'version.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();
     let bad=0;try{bad=+localStorage.getItem('kz_upd_bad')||0}catch(e){}
     if(!(+j.version>window.KZ_VER)||+j.version===bad){if(manual)toast('У тебя последняя версия ✓ (v'+(window.KZ_VNAME||window.KZ_VER)+')');return}
-    updSplash('⬇ Скачиваю обновление'+(j.name?' «'+j.name+'»':'')+'…');
+    if(manual||updCanNow())updSplash('⬇ Скачиваю обновление'+(j.name?' «'+j.name+'»':'')+'…');
     const h=await(await fetch(base+(j.file||'game.html')+'?t='+Date.now(),{cache:'no-store'})).text();
     if(h.indexOf('window.KZ_VER='+j.version+';')<0||(j.sha256&&await sha256hex(h)!==j.sha256))throw 1;
     if(KZ_MODE==='android'){
@@ -5151,7 +5155,7 @@ async function checkUpdate(manual){
 function updSplash(t){let d=$('#updSplash');if(!t){if(d)d.remove();return}if(!d){d=document.createElement('div');d.id='updSplash';d.style.cssText='position:fixed;inset:0;z-index:50;background:rgba(10,6,30,.88);display:flex;align-items:center;justify-content:center;color:#fff;font:900 22px Trebuchet MS,sans-serif;text-align:center;padding:20px';document.body.appendChild(d)}d.textContent=t}
 // the .exe already checked before opening the window; phones and browsers check right after start
 if(KZ_MODE!=='exe')setTimeout(()=>checkUpdate(false),1500);
-setInterval(()=>{if(window._kzUpdApply&&!G){const f=window._kzUpdApply;window._kzUpdApply=null;persist();f();return}if(!G)checkUpdate(false)},10*60*1000);
+// no background checks during the session: updates are checked once at launch (and by the manual button)
 const _qtm=quitToMenu;quitToMenu=function(){_qtm();if(window._kzUpdApply){const f=window._kzUpdApply;window._kzUpdApply=null;persist();updSplash('✅ Устанавливаю обновление…');setTimeout(f,600)}};
 
 /* ================= ×100 pack: settings, passes, cosmetics, kotograde, trades, chat, adm ================= */
