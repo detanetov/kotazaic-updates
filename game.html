@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=42;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=43;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -914,7 +914,7 @@ function refreshTop(){if(!S)return;$('#tNick').textContent=nick;$('#tCoins').tex
 function refreshMenu(){if(!S)return;refreshFunChips();$('#mAdm').style.display=isAdm()?'flex':'none';$('#mBp').textContent='ур. '+Math.min(BP_LV,Math.floor(S.bpXp/BP_XP));$('#mEv').textContent='ур. '+Math.min(EV_LV,Math.floor(S.evXp/EV_XP));$('#mBest').textContent=S.best}
 let toastT=0;
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),1900)}
-function banner(t,col){const e=$('#banner');e.textContent=t;e.style.color=col||'#ffc93c';e.classList.remove('go');void e.offsetWidth;e.classList.add('go')}
+function banner(t,col){if(G&&G.coop&&G.coop.host)G.coop.bn.push([t,col||'']);const e=$('#banner');e.textContent=t;e.style.color=col||'#ffc93c';e.classList.remove('go');void e.offsetWidth;e.classList.add('go')}
 
 /* ---------------- sound ---------------- */
 let AC=null,muted=lsGet('kz_muted')==='1';
@@ -2055,7 +2055,7 @@ function endPhase(){
   updHud();
 }
 function catchItem(it,cx,cy){
-  const k=it.k;
+  const k=it.k;if(G.coop&&G.coop.host&&!(k==='meteor'&&G.inv>0))G.coop.fx.push([Math.round(it.x),Math.round(it.y),k]);
   if(k==='meteor'){if(G.inv>0)return;if(isAdm()&&S.adm.god){burst(it.x,it.y,'#5ee6c1',10);sfx(300,.08,'sine',.04);return}say(pick(['Ай!','Мой нос!','Ой-ой-ой','За что?!','Больно же!']),1);G.lives--;G.inv=1.3;G.shake=.35;if(S.set.vib&&navigator.vibrate)try{navigator.vibrate(140)}catch(e){};SND.hit();burst(it.x,it.y,'#ff8a3d',16);updHud();if(G.lives<=0)gameOver();return}
   if(k==='heart'){G.lives=Math.min(G.maxLives,G.lives+1);SND.heart();burst(it.x,it.y,'#ff4d6d',12);addFloat(it.x,it.y,'+❤','#ff6b8a');updHud();return}
   const v0=VALUES[k]*(G.ev==='heavy'?2:1)*(admBoostUntil>Date.now()?2:1),m=S.set.zen?.5:S.set.diff==='hard'?1.25:1;G.cf=(G.cf||0)+v0*m;const v=Math.floor(G.cf);G.cf-=v;G.coins+=v;G.score+=SCORES[k];G.caught++;
@@ -2070,8 +2070,9 @@ function catchItem(it,cx,cy){
   if(G.boss&&G.boss.hp>0)G.shots.push({x:cx,y:cy-20,vx:rnd(-200,200),vy:-420,dmg:k==='star'?1:k==='pink'?2:k==='candy'?3:5,life:0});
   updHud();
 }
-function addFloat(x,y,txt,col){if(/^\+0🪙/.test(txt))return;if(S&&S.set.floats===false&&/🪙/.test(txt))return;G.floats.push({x,y,txt,col,life:0})}
+function addFloat(x,y,txt,col){if(G&&G.coop&&G.coop.host)G.coop.fl.push([Math.round(x),Math.round(y),txt,col]);if(/^\+0🪙/.test(txt))return;if(S&&S.set.floats===false&&/🪙/.test(txt))return;G.floats.push({x,y,txt,col,life:0})}
 function update(dt){
+  if(G.coop&&!G.coop.host){coopFollow(dt);return}
   G.t+=dt;G.phaseT+=dt;if(G.inv>0)G.inv-=dt;if(G.shake>0)G.shake-=dt;if(G.hop>0)G.hop-=dt*3;
   // movement
   let dir=((keys.ArrowRight||keys.KeyD)?1:0)-((keys.ArrowLeft||keys.KeyA)?1:0);const mirror=G.ev==='mirror';if(mirror)dir=-dir;
@@ -2083,7 +2084,7 @@ function update(dt){
   G.sneezeT-=dt;if(G.sneezeT<=0){G.sneezeT=rnd(30,50);if(Math.random()<.45&&!G.boss){const d=Math.random()<.5?-1:1;G.pvx=d*1500;mouseX=null;say(pick(['Апчхи! 🤧','А-а-апчхи!','Пчхи!']),1.3);sfx(500,.18,'sawtooth',.04,-350);for(let i=0;i<10;i++)parts.push({x:G.px-d*20,y:groundY()-80,vx:-d*rnd(60,200),vy:rnd(-60,40),life:0,max:.6,size:rnd(2,4),col:'#e8f8ff',kind:'dot'});G.sneezes++;stat('sneezes')}}
   for(const m of G.minis){m.x+=m.vx*dt;if(!m.got&&Math.abs(m.x-G.px)<50){m.got=true;G.coins+=5;G.score+=50;burst(m.x,groundY()-30,'#ff9cc8',14,'star',180);sfx(990,.1,'triangle',.05,400);say(pick(['Привет, малыш!','Ути-пути!','Мини-я! 🐰']),1.2);stat('minis');updHud()}}
   G.minis=G.minis.filter(m=>!m.got&&m.x>-80&&m.x<W+80);
-  const py=groundY(),cx=G.px,ks=kzScale(),cy=py-82*ks/.92;
+  const py=groundY(),cx=G.px,ks=kzScale(),cy=py-82*ks/.92,PXS=G.coop?coopPXS(cx):[cx];
   if(Math.abs(G.pvx)>50||['comet','rainbow','fire','snow'].includes(S.eq.trail)){if(Math.random()<dt*60)emitTrail(S.eq.trail,cx,py-45,G.t)}
   // phase timing
   if(G.phase==='normal'&&G.phaseT>22){G.ev=null;G.ufo=null;endPhase()}
@@ -2114,7 +2115,7 @@ function update(dt){
     if(B.hp>0){
       B.age+=dt;
       // boss attacks
-      B.shootT-=dt;if(S.set.zen)B.shootT=Math.max(B.shootT,.5);if(B.shootT<=0){B.shootT=Math.max(.6,1.4-G.wave*.05);B.n++;const base=Math.atan2(cy-B.y,cx-B.x),v=260+G.wave*10,spread=B.n%4===0?[-.28,0,.28]:[rnd(-.12,.12)];
+      B.shootT-=dt;if(S.set.zen)B.shootT=Math.max(B.shootT,.5);if(B.shootT<=0){B.shootT=Math.max(.6,1.4-G.wave*.05);B.n++;const base=Math.atan2(cy-B.y,PXS[B.n%PXS.length]-B.x),v=260+G.wave*10,spread=B.n%4===0?[-.28,0,.28]:[rnd(-.12,.12)];
         for(const o of spread)G.items.push({k:'meteor',x:B.x,y:B.y+40,vx:Math.cos(base+o)*v,vy:Math.sin(base+o)*v,r:17,rot:0,spin:3});sfx(220,.12,'sawtooth',.03,-80)}
       // kotozayac auto-fires (Space = faster)
       G.fireT-=dt;if(G.fireT<=0&&B.y>B.ty-40){G.fireT=keys.Space?.18:.4;G.shots.push({x:cx+rnd(-10,10),y:cy-30,vx:rnd(-90,90),vy:-620,dmg:1,life:0});sfx(1200,.04,'triangle',.015,400)}
@@ -2128,7 +2129,7 @@ function update(dt){
   const gk=S.fun.grav?.5:1;
   const idt=dt*(G.ev==='slowmo'?.45:1),wnd=G.ev==='wind'?G.wind:0;
   for(const it of G.items){it.y-=it.vy*idt*(1-gk);if(mag&&it.k!=='meteor'){it.vx+=(cx-it.x)*dt*6;it.vx*=Math.pow(.2,dt)}it.x+=(it.vx+wnd)*idt;it.y+=it.vy*idt;it.rot+=it.spin*dt;
-    const dx=it.x-cx,dy=it.y-cy;if(dx*dx+dy*dy<(it.r+40*ks/.92)**2&&!it.dead){it.dead=true;catchItem(it,cx,cy);if(!G||G.over)return}}
+    if(!it.dead){for(const qx of PXS){const dx=it.x-qx,dy=it.y-cy;if(dx*dx+dy*dy<(it.r+40*ks/.92)**2){it.dead=true;catchItem(it,qx,cy);break}}if(!G||G.over)return}}
   G.items=G.items.filter(it=>!it.dead&&it.y<H+50&&it.x>-80&&it.x<W+80);
   // shots
   for(const s of G.shots){s.life+=dt;if(G.boss&&G.boss.hp>0){const dx=G.boss.x-s.x,dy=G.boss.y-s.y,d=Math.hypot(dx,dy)||1;s.vx+=(dx/d*1400-s.vx)*Math.min(1,dt*4);s.vy+=(dy/d*1400-s.vy)*Math.min(1,dt*4);
@@ -2136,6 +2137,7 @@ function update(dt){
     else s.dead=true;s.x+=s.vx*dt;s.y+=s.vy*dt;if(Math.random()<.6)parts.push({x:s.x,y:s.y,vx:0,vy:0,life:0,max:.3,size:4,col:'#ffe066',kind:'dot'})}
   G.shots=G.shots.filter(s=>!s.dead&&s.life<3);
   for(const f of G.floats){f.life+=dt;f.y-=50*dt}G.floats=G.floats.filter(f=>f.life<1);
+  if(G.coop&&G.coop.host)coopSnap(dt);
 }
 function bossDown(){const B=G.boss;stat('bosses');const bonus=25+G.wave*5;G.coins+=bonus;G.score+=300+G.wave*20;G.bossKills++;if(G.mode==='hw')G.evXp+=50;
   burst(B.x,B.y,'#ffd84a',40,'star',360);burst(B.x,B.y,'#ff8fd0',30,'dot',300);addFloat(B.x,B.y,'+'+bonus+'🪙','#ffd84a');banner('Босс повержен!','#5ee6c1');SND.win();G.items=G.items.filter(i=>i.k!=='meteor');updHud()}
@@ -2189,16 +2191,16 @@ function commitRun(){
   return{pe,bpx,evx,rec,bpUp:Math.min(BP_LV,Math.floor(S.bpXp/BP_XP))-oldBp,evUp:Math.min(EV_LV,Math.floor(S.evXp/EV_XP))-oldEv};
 }
 function gameOver(){
-  G.over=true;const r=commitRun();gameDrop(G.score>=1500?.4:G.score>=300?.22:.06,'забег');SND.hit();setTimeout(()=>sfx(196,.5,'triangle',.05,-80),200);
+  G.over=true;if(G.coop&&G.coop.host)coopSnap(0,true);const r=commitRun();gameDrop(G.score>=1500?.4:G.score>=300?.22:.06,'забег');SND.hit();setTimeout(()=>sfx(196,.5,'triangle',.05,-80),200);
   $('#oTitle').textContent=r.rec?'Новый рекорд! 🏆':pick(['Котозаяц устал и прилёг 😴','Метеорит победил… в этот раз','Ушки не спасли! 🐰','«Я просто моргнул!» — котозаяц','Нужно больше морковки 🥕','Котозаяц ушёл пить чай ☕','Это был тренировочный забег!']);
   let h=`<div>Очки<b>${G.score}</b></div><div>Монеты<b>+${G.coins} 🪙</b></div><div>Battle Pass<b>+${r.bpx} XP</b></div><div>Боссы<b>${G.bossKills}</b></div>${r.pe?`<div>Бонус питомца<b>+${r.pe} 🪙</b></div>`:''}<div>Пробежал<b>${Math.round(G.dist/40)} м</b></div><div>Моргнул<b>${Math.floor(G.t/4.2)} раз</b></div>${G.sneezes?`<div>Чихнул<b>${G.sneezes} раз 🤧</b></div>`:''}`;
   if(G.mode==='hw')h+=`<div>Конфеты / тыквы<b>${G.candies} / ${G.pumpkins}</b></div><div>Event-пасс<b>+${r.evx} XP</b></div>`;
   if(r.bpUp>0||r.evUp>0)h+=`<div style="grid-column:1/-1;background:#fff1c9">🎁 Новые уровни пасса — загляни за наградами!</div>`;
-  $('#oStats').innerHTML=h;show('over');
+  if(G.coop)h=`<div style="grid-column:1/-1;background:#d8f7ec">🎮 Совместная игра · общий счёт и монеты: ${esc(PT.mem.map(x=>x.gid===S.gid?nick:x.nick).join(', '))}</div>`+h;$('#oStats').innerHTML=h;show('over');
 }
-function pauseGame(){if(!G||G.over||G.paused)return;G.paused=true;$('#pAdm').style.display=isAdm()?'flex':'none';show('pause')}
-function resumeGame(){if(!G)return;G.paused=false;show('game');$('#hud').classList.add('on')}
-function quitToMenu(){commitRun();G=null;parts=[];$('#hud').classList.remove('on');show('menu')}
+function pauseGame(net){if(!G||G.over||G.paused)return;if(G.coop&&!net)ptAll({t:'cp',v:1});G.paused=true;$('#pAdm').style.display=isAdm()?'flex':'none';show('pause')}
+function resumeGame(net){if(!G)return;if(G.coop&&!net&&G.paused)ptAll({t:'cp',v:0});G.paused=false;show('game');$('#hud').classList.add('on')}
+function quitToMenu(){if(G&&G.coop&&!G.over&&!G.coop.ended){G.coop.ended=true;ptAll({t:'cq'})}commitRun();G=null;parts=[];$('#hud').classList.remove('on');show('menu')}
 
 /* ---------------- passes UI ---------------- */
 function rewardHtml(r){
@@ -2655,6 +2657,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:43,l:'1.3.9',items:['🎮 Совместная игра: у всех в пати теперь один и тот же мир — те же звёзды, метеориты, боссы и события','🤝 Общий счёт, жизни, монеты и рекорд на всех','🚪 Если один выходит — игра заканчивается у всех; пауза тоже общая']},
  {v:42,l:'1.3.9',items:['🎮 Кнопка «Играть вместе» в ЛС, в профиле друга и во вкладке Пати: когда нажмут все — игра запускается у всех одновременно с отсчётом 3…2…1']},
  {v:41,l:'1.3.9',items:['💬 Новая кнопка Chat в меню: общий чат со всеми живыми игроками (без ботов) и ЛС с друзьями','👤 Профили: нажми на игрока в топе или в чате — рекорд, скин, статистика, «Добавить в друзья»','🎉 Пати до 3 игроков: пригласи друга из ЛС (если он онлайн) — его котозаяц с ником встанет рядом с твоим в меню, а в игре будет бегать рядом']},
  {v:40,l:'1.3.9',items:['🎁 Огромный набор: 360 новых вещей — 12 тем (неон, лёд, лава, золото, космос, конфеты, лес, тень, радуга, хрусталь, море, вишня) в каждом разделе Cosmetics','💎 180 эксклюзивов — короны, нимбы, крылья, плащи, бомберы, крылатые кеды, пламя и звёздные вихри — только через Kotograde','🎲 180 игровых трофеев — выпадают за забеги, победы в мини-играх, NoomiClone, Ракету и урожай в саду']},
@@ -2863,8 +2866,42 @@ addEventListener('keyup',e=>{keys[e.code]=false});
 cv.addEventListener('mousemove',e=>{if(G&&S.set.mouse)mouseX=e.clientX});
 cv.addEventListener('touchstart',e=>{if(G&&S.set.mouse)mouseX=e.touches[0].clientX},{passive:true});
 cv.addEventListener('touchmove',e=>{if(G&&S.set.mouse){mouseX=e.touches[0].clientX;e.preventDefault()}},{passive:false});
-addEventListener('blur',()=>{for(const k in keys)keys[k]=false;if(S&&S.set.auto)pauseGame()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&S&&S.set.auto)pauseGame()});
+/*coop*/
+/* ---------------- Co-op: one shared world (party leader hosts) ---------------- */
+function coopPXS(cx){const out=[cx],now=Date.now();for(const m of ptOthers()){const p=PT.pos[m.gid];if(p&&now-p.t<2000)out.push(p.x*W)}return out}
+function coopSnap(dt,force){const C=G.coop;C.st=(C.st||0)-dt;if(C.st>0&&!force)return;C.st=.09;C.q=(C.q||0)+1;const r=Math.round,idt=G.ev==='slowmo'?.45:1,wnd=G.ev==='wind'?G.wind:0;
+  ptAll({t:'st',q:C.q,w:r(W),h:r(H),s:G.score,c:G.coins,l:G.lives,ml:G.maxLives,wv:G.wave,ph:G.phase,ev:G.ev||'',inv:G.inv>0?1:0,p:G.paused?1:0,o:G.over?1:0,
+    it:G.items.slice(0,90).map(i=>[i.id||(i.id=++C.nid),i.k,r(i.x),r(i.y),r(((i.vx||0)+wnd)*idt),r(i.vy*idt),i.r]),
+    b:G.boss?[G.boss.kind,r(G.boss.x),r(G.boss.y),G.boss.hp,G.boss.max,G.boss.hit>0?1:0,G.boss.name]:0,u:G.ufo?[r(G.ufo.x),r(G.ufo.y)]:0,
+    sh:G.shots.slice(0,30).map(s=>[r(s.x),r(s.y)]),mn:G.minis.map(x=>[r(x.x),x.skin,+(+x.ph).toFixed(2)]),fx:C.fx.splice(0,40),bn:C.bn.splice(0,5),fl:C.fl.splice(0,20)})}
+const COOP_COL={star:'#ffd84a',pink:'#ff8fd0',candy:'#ff5e8a',pumpkin:'#ff9440',fish:'#ffb347',gold:'#fff3a0',carrot:'#ff8a3d'};
+function coopRecv(m){if(!G||!G.coop||G.coop.host||m.from!==G.coop.hostId)return;const C=G.coop;if(m.q<=(C.q||0))return;C.q=m.q;C.last=Date.now();const kx=W/(m.w||W),ky=(H-34)/(((m.h||H)-34)||1);
+  G.score=+m.s||0;G.coins=+m.c||0;G.lives=+m.l;G.maxLives=+m.ml||5;G.wave=+m.wv||1;G.phase=m.ph||'normal';G.ev=m.ev||null;if(m.inv&&!(G.inv>0))G.inv=.4;
+  const old=new Map(G.items.map(i=>[i.id,i]));G.items=(Array.isArray(m.it)?m.it:[]).map(a=>{const x=a[2]*kx,y=a[3]*ky,o=old.get(a[0]);if(o){o.tx=x;o.ty=y;o.vx=a[4]*kx;o.vy=a[5]*ky;return o}return{id:a[0],k:String(a[1]),x,y,tx:x,ty:y,vx:a[4]*kx,vy:a[5]*ky,r:+a[6]||16,rot:Math.random()*6,spin:rnd(-2,2)}});
+  if(m.b){const b=m.b,B=G.boss&&G.boss.kind===b[0]?G.boss:{age:0,x:b[1]*kx,y:b[2]*ky};B.kind=b[0];B.tx=b[1]*kx;B.ty2=b[2]*ky;B.hp=b[3];B.max=b[4];B.hit=b[5]?.1:B.hit;B.name=String(b[6]||'Босс');G.boss=B}else G.boss=null;
+  G.ufo=m.u?{x:m.u[0]*kx,y:m.u[1]*ky}:null;G.shots=(m.sh||[]).map(([x,y],i)=>({x:x*kx,y:y*ky,life:(G.t+i)%3}));G.minis=(m.mn||[]).map(([x,skin,ph])=>({x:x*kx,skin:SKINS[skin]?skin:'grey',ph:+ph||0,vx:0}));
+  for(const[x0,y0,k]of(m.fx||[])){const x=x0*kx,y=y0*ky;if(k==='meteor'){SND.hit();G.shake=.35;burst(x,y,'#ff8a3d',16);if(S.set.vib&&navigator.vibrate)try{navigator.vibrate(140)}catch(e){}}else if(k==='heart'){SND.heart();burst(x,y,'#ff4d6d',12)}else{try{SND[k]&&SND[k]()}catch(e){}burst(x,y,COOP_COL[k]||'#ffd84a',k==='gold'?40:10,'star',k==='gold'?320:160);if(k==='gold')confetti(60)}}
+  for(const[t,col]of(m.bn||[]))banner(String(t),col||null);
+  for(const[x,y,txt,col]of(m.fl||[]))G.floats.push({x:x*kx,y:y*ky,txt:String(txt),col,life:0});
+  updHud();
+  if(m.p&&!G.paused)pauseGame(true);else if(!m.p&&G.paused&&!m.o)resumeGame(true);
+  if(m.o&&!G.over){C.fromNet=true;gameOver()}}
+function coopFollow(dt){G.t+=dt;G.phaseT+=dt;if(G.inv>0)G.inv-=dt;if(G.shake>0)G.shake-=dt;if(G.hop>0)G.hop-=dt*3;
+  let dir=((keys.ArrowRight||keys.KeyD)?1:0)-((keys.ArrowLeft||keys.KeyA)?1:0);const mirror=G.ev==='mirror';if(mirror)dir=-dir;
+  const top=Math.max(1050,W*.95)*S.set.spd/100;
+  if(dir){G.pvx+=(dir*top-G.pvx)*Math.min(1,dt*18);mouseX=null}else if(mouseX!=null){G.pvx=clamp(((mirror?W-mouseX:mouseX)-G.px)*22,-top*2.8,top*2.8)}else G.pvx*=Math.pow(.0005,dt);
+  G.px=clamp(G.px+G.pvx*dt,44,W-44);G.dist+=Math.abs(G.pvx*dt);
+  if(S.pet){if(G.petX==null)G.petX=G.px-60;if(Math.abs(G.pvx)>40)G.petDir=G.pvx>0?1:-1;const tx=clamp(G.px-(G.petDir||1)*62,20,W-20);G.petX+=(tx-G.petX)*Math.min(1,dt*5)}
+  if(Math.abs(G.pvx)>50&&Math.random()<dt*60)emitTrail(S.eq.trail,G.px,groundY()-45,G.t);
+  const k=Math.min(1,dt*8);for(const it of G.items){it.tx+=it.vx*dt;it.ty+=it.vy*dt;it.x+=it.vx*dt;it.y+=it.vy*dt;it.x+=(it.tx-it.x)*k;it.y+=(it.ty-it.y)*k;it.rot+=it.spin*dt}
+  const B=G.boss;if(B){B.x+=(B.tx-B.x)*k;B.y+=(B.ty2-B.y)*k;B.age+=dt;if(B.hit>0)B.hit-=dt}
+  for(const s of G.shots)s.life+=dt;for(const f of G.floats){f.life+=dt;f.y-=50*dt}G.floats=G.floats.filter(f=>f.life<1);
+  if(Date.now()-G.coop.last>7000)coopEnd('📴 Связь с хостом пропала — совместная игра окончена')}
+function coopEnd(msg){if(!G||!G.coop||G.coop.ended)return;G.coop.ended=true;if(msg)toast(msg);if(!G.over)quitToMenu()}
+addEventListener('beforeunload',()=>{try{if(G&&G.coop&&!G.over)ptAll({t:'cq'});ptLeave(true)}catch(e){}});
+
+addEventListener('blur',()=>{for(const k in keys)keys[k]=false;if(S&&S.set.auto&&!(G&&G.coop))pauseGame()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&S&&S.set.auto&&!(G&&G.coop))pauseGame()});
 addEventListener('beforeunload',()=>{if(G)commitRun();persist()});
 
 document.addEventListener('click',e=>{
@@ -2882,7 +2919,7 @@ $('#skR').onclick=()=>{cosSkin=(cosSkin+1)%SKIN_ORDER.length;SND.click();renderC
 $('#bpAll').onclick=()=>claimAll('bp');$('#evAll').onclick=()=>claimAll('ev');
 $('#evPlay').onclick=()=>startGame('hw');
 $('#bPause').onclick=()=>pauseGame();$('#pRes').onclick=()=>resumeGame();$('#pMenu').onclick=()=>quitToMenu();
-$('#oAgain').onclick=()=>{const m=G?G.mode:'normal';G=null;startGame(m)};$('#oMenu').onclick=()=>quitToMenu();
+$('#oAgain').onclick=()=>{if(G&&G.coop){quitToMenu();setTimeout(()=>{if(PT.pid&&!PT.ready[S.gid])ptPlay()},300);return}const m=G?G.mode:'normal';G=null;startGame(m)};$('#oMenu').onclick=()=>quitToMenu();
 $('#bMute').onclick=()=>{muted=!muted;lsSet('kz_muted',muted?'1':'0');refreshTop()};
 $('#gbMute').onclick=()=>$('#bMute').click();$('#gsMute').onclick=()=>$('#bMute').click();$('#gsOut').onclick=()=>$('#bOut').click();$('#gbOut').onclick=()=>$('#bOut').click();
 const GB_ON='<svg viewBox="0 0 16 14"><path d="M1 4.5h3L8 1v12L4 9.5H1z"/><path d="M10.5 4.2a3.6 3.6 0 0 1 0 5.6l-.9-1a2.3 2.3 0 0 0 0-3.6zM12.4 2a6.6 6.6 0 0 1 0 10l-.9-1a5.2 5.2 0 0 0 0-8z"/></svg>',GB_OFF='<svg viewBox="0 0 16 14"><path d="M1 4.5h3L8 1v12L4 9.5H1z"/><path d="m10 4.6 1-1 1.9 1.9 1.9-1.9 1 1-1.9 1.9 1.9 1.9-1 1-1.9-1.9L11 9.4l-1-1 1.9-1.9z"/></svg>';
@@ -3451,7 +3488,7 @@ function socRecv(tp,pl){if(!socOk())return;let m=null;if(pl.length){try{m=JSON.p
   if(p[0]==='chat'){if(m&&m.t==='gc')gcAdd(m);return}
   if(p[0]==='dm'){if(!m||m.t!=='dm'||m.from!==p[2])return;if(p[1]===S.gid&&soc().fr[p[2]])dmMerge(p[2],m.msgs,p[2],m);else if(p[2]===S.gid)dmMerge(p[1],m.msgs,S.gid);return}
   if(p[0]==='fr'){if(p[1]===S.gid&&m)frRecv(p[2],m);return}
-  if(p[0]==='pt'){if(p[1]!==S.gid||!m||!m.from||m.from===S.gid)return;if(m.t!=='pos'&&m.t!=='hb'){if(!m.id||SOC.ids.has(m.id))return;SOC.ids.add(m.id);if(SOC.ids.size>2000)SOC.ids.clear()}ptRecv(m)}}
+  if(p[0]==='pt'){if(p[1]!==S.gid||!m||!m.from||m.from===S.gid)return;if(m.t!=='pos'&&m.t!=='hb'&&m.t!=='st'){if(!m.id||SOC.ids.has(m.id))return;SOC.ids.add(m.id);if(SOC.ids.size>2000)SOC.ids.clear()}ptRecv(m)}}
 /* global chat */
 function gcAdd(m,cached){if(!m||!m.id||SOC.gcIds.has(m.id)||typeof m.x!=='string'||!m.from)return;if(Date.now()-m.ts>3*864e5)return;SOC.gcIds.add(m.id);
   SOC.gc.push({id:m.id,from:String(m.from),nick:String(m.nick||'?').slice(0,24),u:String(m.u||'').slice(0,24),x:m.x.slice(0,200),ts:+m.ts||0,skin:String(m.skin||'grey'),seq:+m.seq||0});SOC.seq=Math.max(SOC.seq,+m.seq||0);
@@ -3507,6 +3544,9 @@ function ptRecv(m){const f=m.from,nm=String(m.nick||socNick(f)).slice(0,24);
   if(m.t==='pos'){const o=PT.pos[f]||{};o.x=clamp(+m.x||0,0,1);o.h=+m.h||0;o.tl=clamp(+m.tl||0,-.3,.3);o.t=Date.now();PT.pos[f]=o;return}
   if(m.t==='rdy'){PT.ready[f]=!!m.v;if(m.v&&!PT.ready[S.gid]){PT.ask={from:f,nick:nm,ts:Date.now()};ptPop();sfx(660,.12,'triangle',.05,300)}else if(!m.v&&PT.ask&&PT.ask.from===f){PT.ask=null;ptPop()}ptUi();ptCheck();return}
   if(m.t==='go'){ptGo(clamp(+m.d||3000,500,6000));return}
+  if(m.t==='st'){coopRecv(m);return}
+  if(m.t==='cq'){if(G&&G.coop)coopEnd('🚪 '+nm+' вышел(а) — совместная игра окончена для всех');return}
+  if(m.t==='cp'){if(G&&G.coop&&!G.over){if(m.v){if(!G.paused){pauseGame(true);toast('⏸ '+nm+' поставил(а) паузу')}}else if(G.paused){resumeGame(true);toast('▶ '+nm+' продолжил(а) игру')}}return}
   if(m.t==='leave')ptDrop(f,'👋 '+nm+' вышел(а) из пати')}
 function ptPlay(g){if(!socOk())return;if(g&&!PT.mem.some(x=>x.gid===g)){ptInvite(g,true);return}
   if(!PT.pid||PT.mem.length<2){toast('Сначала позови друга: в ЛС нажми «🎮 Играть вместе» — он должен быть онлайн');return}
@@ -3514,8 +3554,8 @@ function ptPlay(g){if(!socOk())return;if(g&&!PT.mem.some(x=>x.gid===g)){ptInvite
 function ptCheck(){if(!PT.pid||PT.lead!==S.gid||PT.mem.length<2||Date.now()-PT.goT<3500)return;if(PT.mem.every(x=>PT.ready[x.gid])){PT.goT=Date.now();ptAll({t:'go',d:3200});ptGo(3200)}}
 function ptGo(d){if(Date.now()-PT.goT<2000&&PT.goT&&PT.lead!==S.gid)return;PT.goT=Date.now();PT.ready={};PT.ask=null;PT.inv=null;ptPop();SOC.prof=null;profRender();ptUi();SND.win();
   const n=Math.round(d/1000);for(let i=0;i<n;i++)setTimeout(()=>banner('🎮 Играем вместе через '+(n-i)+'…','#5ee6c1'),i*1000);
-  setTimeout(()=>{if(!PT.pid)return;G=null;startGame('normal');stat('coopGames')},d)}
-function ptDrop(g,msg){PT.mem=PT.mem.filter(x=>x.gid!==g);delete PT.pos[g];delete PT.hb[g];delete PT.ready[g];if(PT.ask&&PT.ask.from===g){PT.ask=null;ptPop()}if(msg)toast(msg);if(PT.mem.length<=1){ptReset();if(msg)setTimeout(()=>toast('Пати распалась'),1200);return}if(g===PT.lead)PT.lead=PT.mem[0].gid;if(PT.lead===S.gid)ptRoster();ptUi()}
+  setTimeout(()=>{if(!PT.pid)return;G=null;startGame('normal');if(G){G.coop={host:PT.lead===S.gid,hostId:PT.lead,fx:[],bn:[],fl:[],nid:0,last:Date.now()+3000,q:0};if(!G.coop.host)G.items=[]}stat('coopGames')},d)}
+function ptDrop(g,msg){if(G&&G.coop&&!G.over)setTimeout(()=>coopEnd('🚪 Игрок вышел — совместная игра окончена для всех'),0);PT.mem=PT.mem.filter(x=>x.gid!==g);delete PT.pos[g];delete PT.hb[g];delete PT.ready[g];if(PT.ask&&PT.ask.from===g){PT.ask=null;ptPop()}if(msg)toast(msg);if(PT.mem.length<=1){ptReset();if(msg)setTimeout(()=>toast('Пати распалась'),1200);return}if(g===PT.lead)PT.lead=PT.mem[0].gid;if(PT.lead===S.gid)ptRoster();ptUi()}
 setInterval(()=>{if(!PT.pid||!S)return;ptAll({t:'hb',nick,eq:S.eq});const now=Date.now();for(const x of PT.mem.slice())if(x.gid!==S.gid&&now-(PT.hb[x.gid]||now)>25000)ptDrop(x.gid,'📴 '+x.nick+' пропал(а) из сети — вышел из пати')},6000);
 setInterval(()=>{if(PT.inv&&Date.now()-PT.inv.ts>30000){PT.inv=null;ptPop()}if(PT.ask&&Date.now()-PT.ask.ts>60000){PT.ask=null;ptPop()}},2000);
 function ptUi(){chBadge();if(cur==='chat')chRender();profRender()}
