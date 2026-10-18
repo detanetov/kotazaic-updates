@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=63;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=64;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3062,6 +3062,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:64,l:'1.4.0',items:['🌻 Сад 2.0: 29 новых растений (теперь 41) и уровни сада до 30','📋 Заказы от жителей леса за монеты, опыт и подарки','🐔 Ферма: курочки, пчёлы, коровы, овечки и свинки дают продукты даже без игры','🍳 Кухня: 23 блюда из урожая и продуктов фермы','📈 Рынок с ценами дня, ☀ погода в саду, 🦣 гигантский и 🌈 радужный урожай','🎨 Декор с бонусами, 📖 альбом растений, 🔧 8 улучшений сада, 🔁 автопосев','🎮 Задания мини-игр на каждый день, статистика на карточках, 🐟 рыба дня ×2','🏅 12 новых достижений сада']},
  {v:63,l:'1.4.0',items:['🎡 Колесо удачи: бесплатное вращение каждый день и ещё 5 за монеты','📅 Календарь входа: серия 7 дней с растущими наградами, на 7-й день трофей','🔔 Центр наград: всё, что можно забрать, в одном окне','🌈 Событие недели: каждую неделю новый бонус (монеты, трофеи, удача, рыбалка, опыт, конфеты)','🏅 25 новых достижений']},
  {v:62,l:'1.4.0',items:['🎉 Новая версия 1.4.0! В неё вошли режимы игры, Мастерская, молнии, сундуки боссов, рыбалка и большие улучшения Settings, пассов, Cosmetics, Kotograde, Trades, Chat и ADM']},
  {v:61,l:'1.4.0',items:['⚙ Settings: поиск настроек, вкладки 📊 Статистика и 💾 Сохранения (код, файл, резервные копии)','★ Battle Pass и 🎃 Halloween: задания дня, покупка уровней, бонусные сундуки после финала, ×2 опыт BP в выходные, картинки наград','🍬 Тыквенная лавка за конфеты из Halloween-забегов','✿ Cosmetics: поиск, сортировка, ★ избранное, прогресс коллекции, 🎲 случайный образ, 🧹 снять всё','⬆ Kotograde: статистика, история, бонус к шансу после неудач, быстрый шанс, дубликаты, быстрая прокрутка','🤝 Trades: шкала честности, чат обмена, поиск, все дубликаты, статистика обменов','💬 Chat: смайлики, команды /roll /coin /me, упоминания @ник, блокировка, поиск, настройки чата','🛠 ADM: поиск, ⚡ Быстро, пресеты читов, 🗃 База предметов']},
@@ -5507,6 +5508,187 @@ ACH.push(
 {const _f=trMsgSend;trMsgSend=function(x){if(TR.st&&String(x||'').trim())stat('trMsgs');return _f.apply(this,arguments)}}
 {const _f=bakMake;bakMake=function(tag){const r=_f.apply(this,arguments);if(r&&tag==='вручную')stat('backups');return r}}
 Object.assign(STAT_RU,{kgTries:['🎰','Попыток Kotograde'],pqDone:['📋','Заданий пассов'],wheelSpins:['🎡','Вращений колеса'],bestStreak:['📅','Лучшая серия входа'],loginDays:['🗓','Дней со входом'],candyBuy:['🍬','Покупок в лавке'],passBuys:['⏩','Купленных уровней'],passChests:['📦','Бонусных сундуков'],chatCmd:['⌨','Команд в чате'],trMsgs:['🗣','Сообщений в обменах'],backups:['🛟','Резервных копий']});
+
+/* ================= Garden 2.0 + mini-game extras ================= */
+Object.assign(PLANTS,{
+  potato:{n:'Картошка',e:'🥔',cost:6,time:40,sell:12,lv:1,leaf:'#5a9e3a'},
+  onion:{n:'Лук',e:'🧅',cost:10,time:60,sell:20,lv:2,leaf:'#6fbf4a'},
+  wheat:{n:'Пшеница',e:'🌾',cost:12,time:70,sell:24,lv:2,leaf:'#d9b84a'},
+  cucumber:{n:'Огурец',e:'🥒',cost:18,time:100,sell:38,lv:3,leaf:'#3a9e3a'},
+  pepper:{n:'Перец',e:'🫑',cost:22,time:130,sell:46,lv:3,leaf:'#3f9e4a'},
+  cabbage:{n:'Капуста',e:'🥬',cost:28,time:160,sell:58,lv:4,leaf:'#7cd45a'},
+  eggplant:{n:'Баклажан',e:'🍆',cost:35,time:200,sell:72,lv:5,leaf:'#4a8a3a'},
+  broccoli:{n:'Брокколи',e:'🥦',cost:42,time:230,sell:88,lv:5,leaf:'#3a8a3a'},
+  garlic:{n:'Чеснок',e:'🧄',cost:50,time:280,sell:105,lv:6,leaf:'#9ad47a'},
+  blueberry:{n:'Черника',e:'🫐',cost:70,time:360,sell:150,lv:7,leaf:'#3a7a4a'},
+  mushroom:{n:'Гриб',e:'🍄',cost:90,time:420,sell:190,lv:8,leaf:'#8a6a4a'},
+  cherry:{n:'Вишня',e:'🍒',cost:110,time:480,sell:235,lv:9,leaf:'#3a8a3a'},
+  peach:{n:'Персик',e:'🍑',cost:150,time:600,sell:320,lv:11,leaf:'#5a9e3a'},
+  pear:{n:'Груша',e:'🍐',cost:170,time:660,sell:365,lv:12,leaf:'#6aae3a'},
+  apple:{n:'Яблоко',e:'🍎',cost:190,time:720,sell:410,lv:13,leaf:'#4a9e3a'},
+  lemon:{n:'Лимон',e:'🍋',cost:220,time:780,sell:470,lv:14,leaf:'#5aae3a'},
+  orange:{n:'Апельсин',e:'🍊',cost:250,time:840,sell:540,lv:15,leaf:'#4a9e2a'},
+  banana:{n:'Банан',e:'🍌',cost:290,time:900,sell:620,lv:16,leaf:'#7ac43a'},
+  kiwi:{n:'Киви',e:'🥝',cost:330,time:960,sell:700,lv:17,leaf:'#6a9e3a'},
+  mango:{n:'Манго',e:'🥭',cost:380,time:1080,sell:810,lv:18,leaf:'#4a8a2a'},
+  pineapple:{n:'Ананас',e:'🍍',cost:430,time:1200,sell:920,lv:19,leaf:'#5a9e4a'},
+  coconut:{n:'Кокос',e:'🥥',cost:500,time:1320,sell:1080,lv:20,leaf:'#3a7a2a'},
+  tulip:{n:'Тюльпан',e:'🌷',cost:560,time:1440,sell:1200,lv:21,leaf:'#5ac45a'},
+  sakura:{n:'Сакура',e:'🌸',cost:640,time:1560,sell:1380,lv:22,leaf:'#ff9cc8'},
+  cactus:{n:'Цветущий кактус',e:'🌵',cost:720,time:1680,sell:1560,lv:23,leaf:'#3a9e5a'},
+  firepepper:{n:'Огненный перец',e:'🌶',cost:820,time:1800,sell:1780,lv:24,leaf:'#ff5a3a'},
+  icecherry:{n:'Ледяная ягода',e:'❄️',cost:940,time:2000,sell:2050,lv:25,leaf:'#8fe3ff'},
+  rainbowfl:{n:'Радужный цветок',e:'🌈',cost:1100,time:2400,sell:2450,lv:27,leaf:'#c39bff'},
+  crystal:{n:'Кристальная лилия',e:'💎',cost:1400,time:3000,sell:3200,lv:30,leaf:'#5ee6ff'}});
+const GPROD={egg:{n:'Яйцо',e:'🥚',v:25},honey:{n:'Мёд',e:'🍯',v:60},milk:{n:'Молоко',e:'🥛',v:80},wool:{n:'Шерсть',e:'🧶',v:120},truffle:{n:'Трюфель',e:'🟤',v:300}};
+const GANI={chick:{n:'Курочка',e:'🐔',p:'egg',T:480,cost:400,lv:2},bee:{n:'Улей',e:'🐝',p:'honey',T:900,cost:1200,lv:5},cow:{n:'Корова',e:'🐄',p:'milk',T:1200,cost:2500,lv:8},sheep:{n:'Овечка',e:'🐑',p:'wool',T:1800,cost:4500,lv:12},pig:{n:'Свинка',e:'🐖',p:'truffle',T:2700,cost:9000,lv:18}};
+const G_FEED=['wheat','potato','carrot','corn','cabbage'];
+const GREC=[
+ {id:'juice',n:'Морковный сок',e:'🧃',need:{carrot:4},lv:1},{id:'fries',n:'Картошка фри',e:'🍟',need:{potato:4,onion:1},lv:2},
+ {id:'omelet',n:'Яичница',e:'🍳',need:{egg:3,onion:1},lv:2},{id:'salad',n:'Овощной салат',e:'🥗',need:{tomato:2,cucumber:1,cabbage:1},lv:4},
+ {id:'bread',n:'Хлеб',e:'🍞',need:{wheat:4,egg:1},lv:3},{id:'pancake',n:'Блины',e:'🥞',need:{egg:2,milk:1,wheat:2},lv:8},
+ {id:'strawcream',n:'Клубника со сливками',e:'🍨',need:{straw:3,milk:1},lv:8},{id:'popcorn',n:'Попкорн',e:'🍿',need:{corn:3},lv:3},
+ {id:'pie',n:'Тыквенный пирог',e:'🥧',need:{pumpkin:1,egg:2,wheat:2},lv:5},{id:'stew',n:'Овощное рагу',e:'🍲',need:{potato:3,eggplant:1,pepper:1,onion:1},lv:5},
+ {id:'honeycake',n:'Медовик',e:'🍰',need:{honey:2,wheat:3,egg:2},lv:5},{id:'pizza',n:'Пицца',e:'🍕',need:{wheat:3,tomato:2,milk:1,mushroom:1},lv:8},
+ {id:'muffin',n:'Ягодный кекс',e:'🧁',need:{blueberry:2,cherry:1,egg:1,wheat:2},lv:9},{id:'jam',n:'Вишнёвое варенье',e:'🫙',need:{cherry:3,honey:1},lv:9},
+ {id:'applepie',n:'Шарлотка',e:'🥮',need:{apple:2,egg:2,wheat:2},lv:13},{id:'lemonade',n:'Лимонад',e:'🍋',need:{lemon:2,honey:1},lv:14},
+ {id:'smoothie',n:'Тропический смузи',e:'🍹',need:{banana:1,mango:1,pineapple:1,milk:1},lv:19},{id:'scarf',n:'Тёплый шарф',e:'🧣',need:{wool:3},lv:12},
+ {id:'risotto',n:'Трюфельное ризотто',e:'🥘',need:{truffle:1,mushroom:2,milk:1,garlic:1},lv:18},{id:'bouquet',n:'Весенний букет',e:'💐',need:{tulip:2,sakura:1,sun:1},lv:22},
+ {id:'starcake',n:'Звёздный торт',e:'🎂',need:{starflower:1,honey:2,milk:2,egg:3},lv:10},{id:'rainbowdes',n:'Радужный десерт',e:'🍧',need:{rainbowfl:1,icecherry:1,honey:2},lv:27},
+ {id:'crystalele',n:'Кристальный эликсир',e:'🧪',need:{crystal:1,moonrose:1,honey:3},lv:30}];
+const GUP={soil:{n:'🌱 Плодородная почва',d:'+8% к скорости роста',max:10,c:500},gene:{n:'🧬 Селекция',d:'+1.5% к шансу золотого урожая',max:8,c:800},basket:{n:'🧺 Рыночная корзина',d:'+6% к цене продажи',max:10,c:600},can:{n:'💧 Большая лейка',d:'поливает соседние грядки (1 ур. — соседи, 2 — ряд, 3 — 2 ряда, 4 — всё поле)',max:4,c:900},fert:{n:'🧪 Сильные удобрения',d:'+10% к силе удобрения',max:5,c:700},seedsale:{n:'🏷 Оптовые семена',d:'−4% к цене семян',max:5,c:650},xp:{n:'📚 Опытный садовник',d:'+10% к опыту сада',max:5,c:900},barn:{n:'🏠 Тёплый хлев',d:'+15% к скорости животных',max:6,c:1000}};
+const GDEC={flowers:{n:'Клумба',e:'🌼',b:'sell',v:.02,c:300},gnome:{n:'Садовый гном',e:'🧙',b:'gold',v:.01,c:900},fountain:{n:'Фонтан',e:'⛲',b:'grow',v:.05,c:1500},lantern:{n:'Фонарики',e:'🏮',b:'xp',v:.05,c:1200},bench:{n:'Скамейка',e:'🪑',b:'order',v:.05,c:1000},oak:{n:'Старый дуб',e:'🌳',b:'grow',v:.05,c:2500},tent:{n:'Ярмарочный шатёр',e:'🎪',b:'sell',v:.05,c:4000},mill:{n:'Мельница',e:'🌬',b:'animal',v:.1,c:3500},statue:{n:'Статуя котозайца',e:'🗿',b:'all',v:.05,c:25000}};
+const GNPC=['🦔 Ёжик Фёдор','🦉 Бабушка Сова','🦊 Лисичка Рыжик','🐻 Мишка Топтыжка','🐿 Белочка Шустрик','🐸 Лягушонок Квак','🐭 Мышка Пик','🐺 Волчок Серый','🦝 Енот Полоскун','🐢 Черепаха Тиша','🐰 Зайчиха Пуша','🦆 Утка Кря'];
+function g2(){const g=gData();g.up=g.up||{};g.an=g.an||{};g.prod=g.prod||{};g.dish=g.dish||{};g.rain=g.rain||{};g.ord=g.ord||[];g.dec=g.dec||{};g.book=g.book||{};return g}
+const gU=k=>(g2().up[k]||0);
+function gDecB(b){let v=0;for(const k in g2().dec)if(GDEC[k]&&(GDEC[k].b===b||GDEC[k].b==='all'))v+=GDEC[k].v;return v}
+/* weather & market */
+const GWX={sun:{n:'☀ Солнечно',d:'обычный день'},heat:{n:'🔥 Жара',d:'растения растут на 25% быстрее'},rainbow:{n:'🌈 Радуга',d:'золотой и радужный урожай ×2'},frost:{n:'❄ Заморозки',d:'рост −25%, но урожай дороже на 15%'},breeze:{n:'🍃 Свежий ветер',d:'животные работают на 25% быстрее'}};
+function gWx(){const k=Math.floor(Date.now()/360000),r=xRng('wx'+k)();return r<.5?'sun':r<.65?'heat':r<.75?'rainbow':r<.87?'frost':'breeze'}
+function gMarket(){const day=dqDay();if(gMarket.d!==day){const r=xRng('mk'+day),m={};for(const id in PLANTS)m[id]=Math.round((.8+r()*.5)*100)/100;const ids=Object.keys(PLANTS).filter(id=>PLANTS[id].lv<=Math.max(3,gLevel()));const hot=ids[Math.floor(r()*ids.length)];m[hot]=2;gMarket.d=day;gMarket.m=m;gMarket.hot=hot}return gMarket}
+function gSellMul(){return(1+gU('basket')*.06+gDecB('sell'))*(gWx()==='frost'?1.15:1)}
+function gPrice(id){const P=PLANTS[id];return Math.max(1,Math.round(P.sell*(gMarket().m[id]||1)*gSellMul()))}
+function gProdPrice(k){return Math.round(GPROD[k].v*gSellMul())}
+function gDishVal(r){let v=0;for(const k in r.need)v+=(PLANTS[k]?PLANTS[k].sell:GPROD[k]?GPROD[k].v:0)*r.need[k];return Math.round(v*1.5+20)}
+function gDishPrice(r){return Math.round(gDishVal(r)*gSellMul())}
+function gHave(k){const g=g2();return PLANTS[k]?(g.crops[k]||0):GPROD[k]?(g.prod[k]||0):(g.dish[k]||0)}
+function gTake(k,n){const g=g2(),box=PLANTS[k]?g.crops:GPROD[k]?g.prod:g.dish;box[k]=Math.max(0,(box[k]||0)-n)}
+function gNameOf(k){const P=PLANTS[k]||GPROD[k];if(P)return P.e+' '+P.n;const r=GREC.find(r=>r.id===k);return r?r.e+' '+r.n:k}
+/* growth */
+gUpdate=function(now){const g=g2(),wx=gWx(),mul=(1+gU('soil')*.08+gDecB('grow'))*(wx==='heat'?1.25:wx==='frost'?.75:1);
+  for(const pl of g.plots){if(!pl.id){pl.t=now;continue}const P=PLANTS[pl.id];if(!P){pl.id=null;continue}const el=Math.min(7*86400,Math.max(0,(now-(pl.t||now))/1000));if(g.sprinkler)pl.w=true;pl.p=Math.min(1,pl.p+el/P.time*(pl.w?2:1)*mul);pl.t=now}
+  const am=(1+gU('barn')*.15+gDecB('animal'))*(wx==='breeze'?1.25:1);
+  for(const k in g.an){const a=g.an[k],A=GANI[k];if(!A||!a.n){if(a)a.t=now;continue}let el=Math.min(7*86400,Math.max(0,(now-(a.t||now))/1000));const fed=Math.max(0,Math.min(el,((a.fed||0)-(a.t||now))/1000));a.acc=(a.acc||0)+(el+fed)*am*a.n/A.T;const w=Math.floor(a.acc);a.acc-=w;a.st=Math.min(6*a.n,(a.st||0)+w);a.t=now}};
+function gGrowMul(){const wx=gWx();return(1+gU('soil')*.08+gDecB('grow'))*(wx==='heat'?1.25:wx==='frost'?.75:1)}
+/* actions */
+gAct=function(i,pl,R){const g=g2(),st=gStage(pl);
+  if(st===4){const P=PLANTS[pl.id],wx=gWx(),gm=wx==='rainbow'?2:1,lv0=gLevel(),b=g.book[pl.id]=g.book[pl.id]||{n:0,g:0,r:0};
+    const rain=Math.random()<.005*gm,gold=!rain&&!P.gold&&Math.random()<(.06+gU('gene')*.015+gDecB('gold'))*gm,giant=!rain&&!gold&&Math.random()<.05;
+    if(rain){g.rain[pl.id]=(g.rain[pl.id]||0)+1;b.r++;stat('gRainbow');gTip('🌈 РАДУЖНЫЙ урожай: '+P.n+'! (×10)','#ff9cf0');confetti(120);SND.win()}
+    else if(gold){g.gold[pl.id]=(g.gold[pl.id]||0)+1;b.g++;stat('gGold');gTip('✨ Золотой урожай: '+P.n+'!','#ffe066');confetti(40)}
+    else{const n=giant?3:1;g.crops[pl.id]=(g.crops[pl.id]||0)+n;gTip(giant?'🦣 Гигантский урожай! +3 '+P.e:'+1 '+P.e+' '+P.n,giant?'#5ee6c1':'#fff');if(giant)stat('gGiant')}
+    b.n++;if(b.n===1){const c=10+P.lv*10;S.coins+=c;setTimeout(()=>gTip('📖 Новое в альбоме: '+P.e+' '+P.n+' +'+c+' 🪙','#5ee6c1'),700)}if(b.n===25){const c=P.sell*8;S.coins+=c;stat('gMaster');setTimeout(()=>gTip('🏅 Мастер: '+P.n+' (25 урожаев) +'+c+' 🪙','#ffe066'),900)}
+    g.xp+=Math.ceil(P.sell/3*(1+gU('xp')*.1+gDecB('xp')));g.harvested++;stat('gHarvest');gameDrop(.035,'сад');mgDrop(.04,'сад');const lv1=gLevel();if(lv1>lv0){S.stats.gLevel=lv1;checkAch();gTip('🎉 Уровень сада '+lv1+'! Новые семена','#5ee6c1');SND.win()}else SND.star();
+    for(let k=0;k<10;k++)gFx.push({p:1,x:R.x+R.w/2,y:R.y+R.h/2,vx:rnd(-80,80),vy:rnd(-160,-60),life:.8,col:P.leaf});
+    if(g.autoRe&&(g.seeds[pl.id]||0)>0){g.seeds[pl.id]--;pl.p=0;pl.w=g.sprinkler;pl.t=Date.now()}else{pl.id=null;pl.p=0;pl.w=false}gRender();persist();return}
+  if(gTool.k==='shovel'){if(pl.id){pl.id=null;pl.p=0;pl.w=false;gTip('Грядка очищена');sfx(200,.1,'square',.03);gRender();persist()}return}
+  if(!pl.id){if(gTool.k!=='seed'){gTip('Выбери семена внизу 🌱');return}const id=gTool.id;if(!(g.seeds[id]>0)){gTip('Нет семян «'+PLANTS[id].n+'» — купи в магазине');return}g.seeds[id]--;pl.id=id;pl.p=0;pl.w=g.sprinkler;pl.t=Date.now();gTip('Посажено: '+PLANTS[id].e+' '+PLANTS[id].n);sfx(500,.06,'triangle',.04,200);if(!(g.seeds[id]>0)){const nx=Object.keys(g.seeds).find(k=>g.seeds[k]>0);if(nx)gTool={k:'seed',id:nx}}gRender();persist();return}
+  if(gTool.k==='water'){const cv=gU('can'),cols=4,row=Math.floor(i/cols),tg=g.plots.map((p,j)=>j).filter(j=>cv>=4||j===i||(cv>=1&&Math.floor(j/cols)===row&&Math.abs(j-i)===1)||(cv>=2&&Math.floor(j/cols)===row)||(cv>=3&&Math.abs(Math.floor(j/cols)-row)<=1&&Math.floor(j/cols)>=row));let n=0;
+    for(const j of tg){const p=g.plots[j];if(p.id&&!p.w&&gStage(p)<4){p.w=true;n++;const RR=gPlotRect(j);for(let k=0;k<5;k++)gFx.push({p:1,x:RR.x+RR.w/2+rnd(-30,30),y:RR.y,vx:0,vy:rnd(60,120),life:.6,col:'#8fe3ff'})}}
+    if(!n){gTip(pl.w?'Уже полито 💧':'Тут нечего поливать');return}gTip(n>1?'💧 Полито грядок: '+n:'Полито! Растёт в 2 раза быстрее 💧','#8fe3ff');sfx(700,.12,'sine',.03,-300);persist();return}
+  if(gTool.k==='fert'){if(!(g.fert>0)){gTip('Нет удобрений — купи в «Улучшениях»');return}g.fert--;pl.p=Math.min(1,pl.p+.5*(1+gU('fert')*.1));gTip('🧪 Удобрение: +'+Math.round(50*(1+gU('fert')*.1))+'% роста','#c39bff');sfx(400,.15,'triangle',.04,500);gRender();persist();return}
+  const P=PLANTS[pl.id];gTip(P.e+' '+P.n+': ещё '+gFmt((1-pl.p)*P.time/(pl.w?2:1)/gGrowMul())+(pl.w?'':' (полей — будет быстрее)'))};
+/* orders */
+function gOrdSlots(){const lv=gLevel();return 3+(lv>=10?1:0)+(lv>=20?1:0)}
+function gOrdGen(){const g=g2(),lv=gLevel(),r=Math.random;const crops=Object.keys(PLANTS).filter(id=>PLANTS[id].lv<=lv&&!PLANTS[id].gold),prods=Object.keys(GANI).filter(k=>g.an[k]&&g.an[k].n).map(k=>GANI[k].p),dishes=GREC.filter(d=>d.lv<=lv&&Object.keys(d.need).every(k=>PLANTS[k]?PLANTS[k].lv<=lv:prods.includes(k))).map(d=>d.id);
+  const need={},lines=1+Math.floor(r()*Math.min(3,1+lv/4));for(let i=0;i<lines;i++){const u=r();let k,q;if(u<.18&&dishes.length&&lv>=3){k=pick(dishes);q=1}else if(u<.42&&prods.length){k=pick(prods);q=1+Math.floor(r()*3)}else{const pool=crops.slice().sort((a,b)=>PLANTS[a].sell-PLANTS[b].sell),id=pool[Math.min(pool.length-1,Math.floor(Math.pow(r(),1.6)*pool.length))];k=id;q=Math.max(1,Math.round((2+r()*6)*Math.min(1,60/PLANTS[id].sell+.25)))}need[k]=(need[k]||0)+q}
+  let v=0;for(const k in need)v+=need[k]*(PLANTS[k]?PLANTS[k].sell:GPROD[k]?GPROD[k].v:gDishVal(GREC.find(d=>d.id===k)));const u=r(),bonus=u<.12?{t:'item'}:u<.3?{t:'fert',n:3}:u<.45?{t:'seed',id:pick(crops),n:5}:null;
+  return{id:Math.random().toString(36).slice(2,8),npc:pick(GNPC),need,c:Math.round((v*1.5+20)*(1+gDecB('order'))),xp:Math.round(v/4),bonus,until:0}}
+function gOrdTick(){const g=g2(),now=Date.now(),n=gOrdSlots();while(g.ord.length<n)g.ord.push({wait:now});for(let i=0;i<g.ord.length;i++){const o=g.ord[i];if(o.wait!=null&&now>=o.wait)g.ord[i]=gOrdGen()}}
+function gOrdDo(i){const g=g2(),o=g.ord[i];if(!o||o.wait!=null)return;for(const k in o.need)if(gHave(k)<o.need[k]){gTip('Не хватает: '+gNameOf(k));return}for(const k in o.need)gTake(k,o.need[k]);
+  const lv0=gLevel();S.coins+=o.c;g.xp+=o.xp;let bt='';if(o.bonus){if(o.bonus.t==='fert'){g.fert+=o.bonus.n;bt=' +🧪'+o.bonus.n}else if(o.bonus.t==='seed'&&PLANTS[o.bonus.id]){g.seeds[o.bonus.id]=(g.seeds[o.bonus.id]||0)+o.bonus.n;bt=' +'+PLANTS[o.bonus.id].e+'×'+o.bonus.n}else if(o.bonus.t==='item'){try{mgDrop(1,'заказ в саду')}catch(e){}}}
+  g.ord[i]={wait:Date.now()+60000};stat('gOrders');SND.win();confetti(40);gTip(o.npc.split(' ')[0]+' Спасибо! +'+o.c+' 🪙'+bt,'#ffe066');if(gLevel()>lv0){S.stats.gLevel=gLevel();checkAch();gTip('🎉 Уровень сада '+gLevel()+'!','#5ee6c1')}persist();gRender()}
+/* animals */
+function gAniCost(k){const a=g2().an[k];return Math.round(GANI[k].cost*Math.pow(1.7,(a&&a.n)||0))}
+/* rendering of new tabs */
+function g2Tabs(){const t=$('#gTabs');if(!t||t.querySelector('[data-gt="ord"]'))return;t.insertAdjacentHTML('beforeend','<button class="btn sm" data-gt="ord">📋 Заказы</button><button class="btn sm" data-gt="farm">🐔 Ферма</button><button class="btn sm" data-gt="cook">🍳 Кухня</button><button class="btn sm" data-gt="dec">🎨 Декор</button><button class="btn sm" data-gt="book">📖 Альбом</button>');
+  const hd=$('#gLvl');if(hd&&!$('#gWx'))hd.insertAdjacentHTML('beforebegin','<span class="chip" id="gWx" style="cursor:help"></span>')}
+const gCard=(t,d,btn,style)=>`<div class="it" style="${style||''}"><div class="ihead"><div class="itx"><b>${t}</b>${d}</div></div>${btn||''}</div>`;
+function g2Render(){g2Tabs();const g=g2(),lv=gLevel(),P=$('#gPanel');gOrdTick();const wx=GWX[gWx()];const w=$('#gWx');if(w){w.textContent=wx.n;w.title=wx.d}
+  if(gTab==='shop'){let hid=0;for(const c of P.querySelectorAll('.it')){const b=c.querySelector('b');const id=Object.keys(PLANTS).find(k=>b&&b.textContent===PLANTS[k].e+' '+PLANTS[k].n);if(id&&PLANTS[id].lv>lv+2){c.style.display='none';hid++}const bb=c.querySelector('[data-gbuy]');if(bb&&gU('seedsale')){for(const x of c.querySelectorAll('[data-gbuy]')){const[q,n]=x.dataset.gbuy.split(':');x.textContent=(n==='1'?'Купить':'×'+n)+' 🪙 '+gSeedCost(q,+n);x.disabled=S.coins<gSeedCost(q,+n)}}}
+    P.insertAdjacentHTML('afterbegin',`<div class="xrow" style="margin-top:8px"><label class="ck" style="font-weight:800"><input type="checkbox" data-gauto ${g.autoRe?'checked':''}> 🔁 Автопосев: после сбора сразу сажать то же семя (если есть)</label></div>`);
+    if(hid)P.insertAdjacentHTML('beforeend',`<p class="hint">🔒 Ещё ${hid} растений откроются на следующих уровнях сада (всего видов: ${Object.keys(PLANTS).length})</p>`)}
+  if(gTab==='inv'){const mk=gMarket();let h=`<div class="xbox"><b>📈 Рынок сегодня:</b> 🔥 ${PLANTS[mk.hot].e} ${PLANTS[mk.hot].n} — цена ×2! Цены других растений меняются каждый день (0.8–1.3×). Бонус продажи: +${Math.round((gSellMul()-1)*100)}%</div><div class="items" style="margin-top:8px">`,any=0;
+    for(const k in GPROD){const n=g.prod[k]||0;if(!n)continue;any=1;h+=gCard(`${GPROD[k].e} ${GPROD[k].n} ×${n}`,`<small>${gProdPrice(k)} 🪙 за штуку</small>`,`<button class="btn sm mint" data-g2sell="p:${k}">Продать все за ${n*gProdPrice(k)} 🪙</button>`)}
+    for(const r of GREC){const n=g.dish[r.id]||0;if(!n)continue;any=1;h+=gCard(`${r.e} ${r.n} ×${n}`,`<small>${gDishPrice(r)} 🪙 за штуку</small>`,`<button class="btn sm mint" data-g2sell="d:${r.id}">Продать все за ${n*gDishPrice(r)} 🪙</button>`,'border-color:#ff9a3d')}
+    for(const k in g.rain){const n=g.rain[k];if(!n||!PLANTS[k])continue;any=1;h+=gCard(`🌈 Радужн. ${PLANTS[k].n} ×${n}`,`<small>${PLANTS[k].sell*10} 🪙 за штуку (×10)</small>`,`<button class="btn sm mint" data-g2sell="r:${k}">Продать за ${n*PLANTS[k].sell*10} 🪙</button>`,'border-color:#ff9cf0;background:#fff0fb')}
+    h+='</div>';P.insertAdjacentHTML('afterbegin',h);if(!any){const it=P.querySelector('.xbox+.items');if(it&&!it.children.length)it.remove()}
+    {let tot=0;for(const id in PLANTS)tot+=(g.crops[id]||0)*gPrice(id)+(g.gold[id]||0)*Math.round(PLANTS[id].sell*5*gSellMul());for(const b of P.querySelectorAll('b'))if(b.textContent.startsWith('Урожай на '))b.textContent='Урожай на '+tot+' 🪙'}
+    for(const b of P.querySelectorAll('[data-gsell]')){const[k,n]=b.dataset.gsell.split(':');if(k==='all'||k.startsWith('gold_')||!PLANTS[k])continue;if(n==='all')b.textContent='Все за '+(g.crops[k]||0)*gPrice(k)+' 🪙';const sm=b.closest('.it')&&b.closest('.it').querySelector('small');if(sm)sm.textContent=gPrice(k)+' 🪙 за штуку'+(k===mk.hot?' 🔥':'')}}
+  if(gTab==='up'){let h='<h4 style="margin:12px 0 4px">🔧 Прокачка сада</h4><div class="items">';for(const k in GUP){const U=GUP[k],l=gU(k),c=Math.round(U.c*Math.pow(1.6,l));h+=gCard(`${U.n} · ур. ${l}/${U.max}`,`<small>${U.d}</small><div class="bar" style="height:8px;margin:4px 0 0;border-width:2px"><i style="width:${l/U.max*100}%"></i></div>`,l>=U.max?'<b>✓ Максимум</b>':`<button class="btn sm" data-g2up="${k}" ${S.coins<c?'disabled':''}>Улучшить 🪙 ${c}</button>`)}P.insertAdjacentHTML('beforeend',h+'</div>')}
+  if(gTab==='ord'){let h=`<p class="sub" style="margin-top:8px">Жители леса просят урожай, продукты фермы и блюда. За заказ — монеты, опыт сада и иногда подарки. Слотов: ${gOrdSlots()} (ещё +1 на 10 и 20 уровне).</p><div class="items">`;
+    g.ord.forEach((o,i)=>{if(o.wait!=null){h+=gCard('⏳ Новый заказ скоро',`<small>через ${gFmt((o.wait-Date.now())/1000)}</small>`,'','opacity:.6');return}let ok=true,L='';for(const k in o.need){const hv=gHave(k),q=o.need[k];if(hv<q)ok=false;L+=`<div style="font-weight:800;font-size:13px;color:${hv>=q?'#2b8a6a':'#c0284a'}">${gNameOf(k)} ${Math.min(hv,q)}/${q}</div>`}
+      const bn=o.bonus?o.bonus.t==='item'?' + 🎁 вещь':o.bonus.t==='fert'?' + 🧪×'+o.bonus.n:o.bonus.t==='seed'&&PLANTS[o.bonus.id]?' + '+PLANTS[o.bonus.id].e+'×'+o.bonus.n:'':'';
+      h+=gCard(o.npc,L+`<small>Награда: 🪙 ${o.c} · ✨ ${o.xp} XP${bn}</small>`,`<div class="row" style="gap:6px"><button class="btn sm mint" data-gord="${i}" ${ok?'':'disabled'}>📦 Отдать</button><button class="btn sm ghost" data-gskip="${i}">✕ Другой</button></div>`,ok?'background:#e3fbef':'')});P.innerHTML=h+'</div>'}
+  if(gTab==='farm'){let h=`<p class="sub" style="margin-top:8px">Животные производят продукты, даже когда игра закрыта. Накорми их (🌾 пшеница, 🥔, 🥕, 🌽 или 🥬) — 30 минут работают в 2 раза быстрее. Продукты нужны для кухни и заказов.</p><div class="row" style="gap:6px;margin-bottom:6px"><button class="btn sm mint" data-gcol>🧺 Собрать всё</button><button class="btn sm" data-gfeed="all">🌾 Накормить всех</button></div><div class="items">`;
+    for(const k in GANI){const A=GANI[k],a=g.an[k]||{n:0},lock=A.lv>lv,c=gAniCost(k),fed=(a.fed||0)>Date.now(),T=A.T/((1+gU('barn')*.15+gDecB('animal'))*(gWx()==='breeze'?1.25:1)*(fed?2:1));
+      h+=gCard(`${A.e} ${A.n}${a.n?' ×'+a.n:''}`,lock?`<small>🔒 с ${A.lv} уровня сада</small>`:`<small>Даёт ${GPROD[A.p].e} ${GPROD[A.p].n} раз в ${gFmt(T)}${a.n>1?' (каждое животное)':''}</small>${a.n?`<small>Готово: ${GPROD[A.p].e} ${a.st||0} / ${6*a.n} ${fed?'· 😋 сыто ещё '+gFmt((a.fed-Date.now())/1000):'· 🍽 голодное'}</small>`:''}`,lock?'':`<div class="row" style="gap:6px">${a.n<5?`<button class="btn sm" data-gani="${k}" ${S.coins<c?'disabled':''}>${a.n?'＋ Ещё':'Купить'} 🪙 ${c}</button>`:'<b>✓ 5/5</b>'}${a.n?`<button class="btn sm ghost" data-gfeed="${k}" ${fed?'disabled':''}>🌾 Покормить</button>`:''}</div>`)}
+    P.innerHTML=h+'</div>'}
+  if(gTab==='cook'){let h='<p class="sub" style="margin-top:8px">Готовь блюда из урожая и продуктов фермы — они стоят дороже, чем ингредиенты по отдельности, и нужны в заказах.</p><div class="items">';
+    for(const r of GREC){const lock=r.lv>lv;let ok=!lock,L='';for(const k in r.need){const hv=gHave(k),q=r.need[k];if(hv<q)ok=false;L+=`<span style="font-weight:800;font-size:12px;color:${hv>=q?'#2b8a6a':'#c0284a'};margin-right:6px">${gNameOf(k)} ${hv}/${q}</span>`}
+      h+=gCard(`${r.e} ${r.n}${g.dish[r.id]?' · есть '+g.dish[r.id]:''}`,lock?`<small>🔒 с ${r.lv} уровня сада</small>`:`<div>${L}</div><small>Продаётся за ${gDishPrice(r)} 🪙</small>`,lock?'':`<div class="row" style="gap:6px"><button class="btn sm mint" data-gcook="${r.id}:1" ${ok?'':'disabled'}>🍳 Приготовить</button><button class="btn sm ghost" data-gcook="${r.id}:max" ${ok?'':'disabled'}>Сколько можно</button></div>`,lock?'opacity:.55':'')}
+    P.innerHTML=h+'</div>'}
+  if(gTab==='dec'){let h='<p class="sub" style="margin-top:8px">Украшения появляются в саду и дают постоянные бонусы.</p><div class="items">';const bn={sell:'к цене продажи',gold:'к шансу золотого урожая',grow:'к скорости роста',xp:'к опыту сада',order:'к наградам заказов',animal:'к скорости животных',all:'ко всему'};
+    for(const k in GDEC){const D=GDEC[k],own=g.dec[k];h+=gCard(`${D.e} ${D.n}`,`<small>+${Math.round(D.v*100)}% ${bn[D.b]}</small>`,own?'<b>✓ Стоит в саду</b>':`<button class="btn sm" data-gdec="${k}" ${S.coins<D.c?'disabled':''}>Купить 🪙 ${D.c.toLocaleString('ru')}</button>`,own?'background:#e3fbef':'')}P.innerHTML=h+'</div>'}
+  if(gTab==='book'){const ids=Object.keys(PLANTS).sort((a,b)=>PLANTS[a].lv-PLANTS[b].lv),got=ids.filter(id=>g.book[id]&&g.book[id].n).length;let h=`<p class="sub" style="margin-top:8px">Альбом растений: открыто ${got} из ${ids.length}. За первый урожай нового растения — монеты, за 25 урожаев — звание «Мастер» и большая награда.</p><div class="xgrid">`;
+    for(const id of ids){const P2=PLANTS[id],b=g.book[id];h+=`<div class="xshop" style="${b&&b.n?'':'opacity:.45'}"><div class="xi">${b&&b.n?P2.e:'❔'}</div><span>${b&&b.n?P2.n:'???'}</span><small class="hint" style="margin:0">${b&&b.n?`собрано ${b.n}${b.n>=25?' 🏅':''}${b.g?' · ✨'+b.g:''}${b.r?' · 🌈'+b.r:''}`:'ур. '+P2.lv}</small></div>`}P.innerHTML=h+'</div>'}}
+function gSeedCost(id,n){return Math.max(1,Math.round(PLANTS[id].cost*n*(1-gU('seedsale')*.04)))}
+const _gr=gRender;gRender=function(){_gr.apply(this,arguments);try{g2Render()}catch(e){console.error(e)}};
+document.addEventListener('change',e=>{if(e.target.matches&&e.target.matches('[data-gauto]')){g2().autoRe=e.target.checked;persist();gTip(e.target.checked?'🔁 Автопосев включён':'Автопосев выключен')}});
+document.addEventListener('click',e=>{if(cur!=='garden'||!S)return;const g=g2();
+  const sb=e.target.closest('[data-gsell]');if(sb){e.stopPropagation();const[k,n]=sb.dataset.gsell.split(':');let earn=0;const one=(id,gold,cnt)=>{const box=gold?g.gold:g.crops,have=box[id]||0,q=cnt==='all'?have:Math.min(have,1);box[id]=have-q;earn+=q*(gold?Math.round(PLANTS[id].sell*5*gSellMul()):gPrice(id))};
+    if(k==='all'){for(const id in PLANTS){one(id,false,'all');one(id,true,'all')}for(const p in g.prod){earn+=(g.prod[p]||0)*gProdPrice(p);g.prod[p]=0}}else if(k.startsWith('gold_'))one(k.slice(5),true,n);else one(k,false,n);
+    if(earn){S.coins+=earn;SND.buy();gTip('Продано на '+earn+' 🪙','#ffe066');stat('gEarned',earn)}gRender();persist();return}
+  const bb=e.target.closest('[data-gbuy]');if(bb){e.stopPropagation();const[id,n]=bb.dataset.gbuy.split(':'),P=PLANTS[id],cost=gSeedCost(id,+n);if(S.coins<cost)return;S.coins-=cost;g.seeds[id]=(g.seeds[id]||0)+(+n);gTool={k:'seed',id};SND.buy();gTip('Куплено: '+P.e+' ×'+n);gRender();persist();return}
+  const b=e.target.closest('[data-g2sell],[data-g2up],[data-gord],[data-gskip],[data-gani],[data-gfeed],[data-gcol],[data-gcook],[data-gdec]');if(!b||b.disabled)return;const d=b.dataset;
+  if(d.g2sell){const[t,k]=d.g2sell.split(':');let earn=0;if(t==='p'){earn=(g.prod[k]||0)*gProdPrice(k);g.prod[k]=0}if(t==='d'){const r=GREC.find(x=>x.id===k);earn=(g.dish[k]||0)*gDishPrice(r);g.dish[k]=0}if(t==='r'){earn=(g.rain[k]||0)*PLANTS[k].sell*10;g.rain[k]=0}if(earn){S.coins+=earn;stat('gEarned',earn);SND.buy();gTip('Продано на '+earn+' 🪙','#ffe066')}}
+  if(d.g2up){const U=GUP[d.g2up],l=gU(d.g2up),c=Math.round(U.c*Math.pow(1.6,l));if(l>=U.max||S.coins<c)return;S.coins-=c;g.up[d.g2up]=l+1;SND.buy();stat('gUps');gTip(U.n+' → ур. '+(l+1),'#5ee6c1')}
+  if(d.gord!=null){gOrdDo(+d.gord);return}
+  if(d.gskip!=null){g.ord[+d.gskip]={wait:Date.now()+180000};SND.click();gTip('Заказ отменён — новый через 3 мин')}
+  if(d.gani){const k=d.gani,c=gAniCost(k),a=g.an[k]=g.an[k]||{n:0,st:0,acc:0,t:Date.now()};if(a.n>=5||S.coins<c)return;gUpdate(Date.now());S.coins-=c;a.n++;a.t=Date.now();SND.win();gTip('Новое на ферме: '+GANI[k].e+' '+GANI[k].n+'!','#5ee6c1');stat('gAnimals')}
+  if(d.gfeed){const ks=d.gfeed==='all'?Object.keys(g.an).filter(k=>g.an[k].n&&!((g.an[k].fed||0)>Date.now())):[d.gfeed];let n=0;gUpdate(Date.now());for(const k of ks){const f=G_FEED.find(c=>(g.crops[c]||0)>0);if(!f){gTip('Нужен корм: 🌾 пшеница, 🥔, 🥕, 🌽 или 🥬');break}g.crops[f]--;g.an[k].fed=Date.now()+1800000;n++}if(n){SND.star();gTip('😋 Накормлено: '+n,'#5ee6c1')}}
+  if(b.hasAttribute('data-gcol')){gUpdate(Date.now());let n=0;for(const k in g.an){const a=g.an[k];if(!a.st)continue;const p=GANI[k].p;g.prod[p]=(g.prod[p]||0)+a.st;n+=a.st;a.st=0}if(n){stat('gProd',n);SND.star();gTip('🧺 Собрано продуктов: '+n,'#ffe066')}else gTip('Пока нечего собирать')}
+  if(d.gcook){const[id,m]=d.gcook.split(':'),r=GREC.find(x=>x.id===id);if(!r)return;let n=0;const can=()=>Object.keys(r.need).every(k=>gHave(k)>=r.need[k]);while(can()&&(m==='max'||n<1)&&n<99){for(const k in r.need)gTake(k,r.need[k]);g.dish[id]=(g.dish[id]||0)+1;n++}if(n){g.xp+=Math.round(gDishVal(r)/6*n);stat('gDishes',n);SND.win();gTip('🍳 Готово: '+r.e+' '+r.n+(n>1?' ×'+n:''),'#ffe066')}}
+  if(d.gdec){const D=GDEC[d.gdec];if(g.dec[d.gdec]||S.coins<D.c)return;S.coins-=D.c;g.dec[d.gdec]=1;SND.win();confetti(50);gTip(D.e+' '+D.n+' теперь в саду!','#5ee6c1')}
+  persist();gRender()},true);
+/* canvas extras: animals, decor, weather */
+const _gst=gardenStep;gardenStep=function(dt){_gst.apply(this,arguments);if(!GV)return;try{const c=GV.c,t=performance.now()/1000,g=g2(),wx=gWx();
+  if(wx==='heat'){c.fillStyle='rgba(255,140,40,.08)';c.fillRect(0,0,960,470)}if(wx==='frost'){c.fillStyle='rgba(160,210,255,.12)';c.fillRect(0,0,960,470);c.fillStyle='#fff';for(let i=0;i<50;i++){const x=(i*131+t*20)%960,y=(i*71+t*40)%470;ell(c,x,y,2,2);c.fill()}}
+  if(wx==='rainbow'){c.save();c.globalAlpha=.35;const cols=['#ff4d4d','#ff9a3d','#ffe066','#5ee66a','#5eb6ff','#8b6cff'];cols.forEach((col,i)=>{c.beginPath();c.arc(560,160,260-i*10,Math.PI*1.05,Math.PI*1.95);c.lineWidth=10;c.strokeStyle=col;c.stroke()});c.restore()}
+  c.textAlign='center';c.textBaseline='alphabetic';let x=940;c.font='32px serif';for(const k of Object.keys(GDEC).reverse())if(g.dec[k]){c.fillText(GDEC[k].e,x,110);x-=64}
+  let ax=30;for(const k in GANI){const a=g.an[k];if(!a||!a.n)continue;const px=ax+Math.sin(t*.5+ax)*6,py=124+Math.abs(Math.sin(t*3+ax))*-3;c.font='26px serif';c.save();c.translate(px,py);if(Math.cos(t*.5+ax)<0)c.scale(-1,1);c.fillText(GANI[k].e,0,0);c.restore();
+    c.font='900 11px Trebuchet MS';c.lineWidth=3;c.strokeStyle=INK;if(a.n>1){c.strokeText('×'+a.n,px+14,py+2);c.fillStyle='#fff';c.fillText('×'+a.n,px+14,py+2)}if(a.st){c.font='15px serif';c.fillText(GPROD[GANI[k].p].e,px,92+Math.sin(t*4)*2);c.font='900 11px Trebuchet MS';c.strokeText(String(a.st),px+11,90);c.fillStyle='#ffe066';c.fillText(String(a.st),px+11,90)}ax+=46}
+  if(Math.random()<dt*.5){const w=$('#gWx');if(w)w.textContent=GWX[wx].n}}catch(e){}};
+/* garden achievements */
+ACH.push({id:'g_lv15',n:'Агроном',d:'Достичь 15 уровня сада',k:'gLevel',goal:15,r:500,i:'🌳'},{id:'g_lv30',n:'Повелитель грядок',d:'Достичь 30 уровня сада',k:'gLevel',goal:30,r:2500,i:'👑'},{id:'g_ord10',n:'Добрый сосед',d:'Выполнить 10 заказов в саду',k:'gOrders',goal:10,r:250,i:'📦'},{id:'g_ord100',n:'Лучший поставщик',d:'Выполнить 100 заказов в саду',k:'gOrders',goal:100,r:1500,i:'🚚'},
+ {id:'g_dish10',n:'Повар',d:'Приготовить 10 блюд',k:'gDishes',goal:10,r:200,i:'🍳'},{id:'g_dish100',n:'Шеф-котозаяц',d:'Приготовить 100 блюд',k:'gDishes',goal:100,r:1200,i:'👨‍🍳'},{id:'g_prod50',n:'Фермер года',d:'Собрать 50 продуктов фермы',k:'gProd',goal:50,r:300,i:'🥚'},{id:'g_ani',n:'Скотный двор',d:'Завести 10 животных',k:'gAnimals',goal:10,r:600,i:'🐄'},
+ {id:'g_rain',n:'Радужное чудо',d:'Вырастить радужный урожай',k:'gRainbow',goal:1,r:500,i:'🌈'},{id:'g_giant',n:'Великан огорода',d:'Собрать 10 гигантских урожаев',k:'gGiant',goal:10,r:250,i:'🦣'},{id:'g_master',n:'Мастер-садовод',d:'Получить «Мастера» за 5 растений',k:'gMaster',goal:5,r:800,i:'🏅'},{id:'g_up',n:'Инженер сада',d:'Купить 20 улучшений сада',k:'gUps',goal:20,r:600,i:'🔧'});
+Object.assign(STAT_RU,{gLevel:['🌱','Уровень сада'],gOrders:['📦','Заказов в саду'],gDishes:['🍳','Блюд приготовлено'],gProd:['🥚','Продуктов фермы'],gAnimals:['🐄','Животных куплено'],gRainbow:['🌈','Радужных урожаев'],gGiant:['🦣','Гигантских урожаев'],gGold:['✨','Золотых урожаев']});
+
+/* ---------- mini-games: daily tasks, stats on cards, fish of the day ---------- */
+const MQ_POOL=[['tttWin',[1,2],'Победи в крестиках-ноликах: {g}'],['durakWins',[1,2],'Победи в дурака: {g}'],['chessWin',[1],'Победи в шахматах'],['ckWin',[1,2],'Победи в шашках: {g}'],['fishCaught',[10,25],'Поймай рыб: {g}'],['gHarvest',[10,30],'Собери урожай в саду: {g}'],['gOrders',[1,3],'Выполни заказы в саду: {g}'],['noomiRuns',[1,2],'Забег в NoomiClone от 300 очков: {g}'],['rkCash',[2,4],'Удачно выведи в Ракете: {g}'],['gDishes',[1,3],'Приготовь блюда в саду: {g}']];
+function mqGet(){const x=XS(),day=dqDay();if(!x.mq||x.mq.day!==day){const r=xRng('mq'+day),p=MQ_POOL.slice(),out=[];while(out.length<3){const q=p.splice(Math.floor(r()*p.length),1)[0];out.push({k:q[0],g:q[1][Math.floor(r()*q[1].length)],p:0,c:0})}x.mq={day,q:out,all:0}}return x.mq}
+const _st=stat;stat=function(k,n=1){_st.apply(this,arguments);try{if(!S)return;const m=mqGet();for(const q of m.q)if(q.k===k&&!q.c)q.p=Math.min(q.g,q.p+n)}catch(e){}};
+function mqRender(){const box=$('#stMg');if(!box)return;let el=$('#mqBox');if(!el){el=document.createElement('div');el.id='mqBox';box.querySelector('.mglist').before(el)}const m=mqGet();
+  let h='<div class="xbox" style="margin-bottom:10px"><h4>📋 Задания мини-игр на сегодня <small class="hint">каждое +150 🪙, все три — ещё вещь в подарок</small></h4>';m.q.forEach((q,i)=>{const d=MQ_POOL.find(a=>a[0]===q.k);h+=`<div class="xq ${q.c?'done':''}"><span style="flex:2">${q.c?'✅':q.p>=q.g?'🎁':'⬜'} ${d[2].replace('{g}',q.g)}</span><div class="bar"><i style="width:${q.p/q.g*100}%"></i></div><span>${q.p}/${q.g}</span>${q.c?'':`<button class="btn sm mint" data-mqc="${i}" ${q.p>=q.g?'':'disabled'}>Забрать</button>`}</div>`});el.innerHTML=h+'</div>';
+  const SK={ttt:['tttWin','побед'],durak:['durakWins','побед'],chess:['chessWin','побед'],ck:['ckWin','побед'],rocket:['rkCash','выводов'],fishing:['fishCaught','рыб'],garden:['gHarvest','урожаев'],noomi:['noomiRuns','забегов']};
+  for(const c of box.querySelectorAll('.mgcard')){const b=c.querySelector('button');if(!b)continue;const key=b.dataset.mgopen||(b.dataset.rocket?'rocket':b.dataset.fishing?'fishing':b.dataset.garden?'garden':b.dataset.noomi?'noomi':'');const s=SK[key];if(!s)continue;let ln=c.querySelector('.mgst');if(!ln){ln=document.createElement('small');ln.className='mgst';ln.style.cssText='display:block;font-weight:900;color:#2b8a6a;margin-top:2px';c.querySelector('.mgtx').appendChild(ln)}
+    let extra='';if(key==='garden'){try{extra=' · 🌱 ур. '+gLevel()+' · '+GWX[gWx()].n}catch(e){}}if(key==='fishing'){const f=fishDay();if(f)extra=' · 🐟 Рыба дня: '+f.n+' (×2)'}ln.textContent='📊 '+(S.stats[s[0]]||0)+' '+s[1]+extra}}
+function fishDay(){try{const r=xRng('fd'+dqDay())();return FSP[Math.floor(r*FSP.length)]}catch(e){return null}}
+const _fpr2=fPrice;fPrice=function(f){const v=_fpr2(f),fd=fishDay();return fd&&f&&f.id===fd.id?v*2:v};
+const _sst2=setSetTab;setSetTab=function(t){_sst2.apply(this,arguments);if(t==='mg')try{mqRender()}catch(e){console.error(e)}};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-mqc]');if(!b||!S||b.disabled)return;const m=mqGet(),q=m.q[+b.dataset.mqc];if(!q||q.c||q.p<q.g)return;q.c=1;S.coins+=150;SND.win();toast('📋 Задание выполнено: +150 🪙');if(m.q.every(x=>x.c)&&!m.all){m.all=1;try{mgDrop(1,'все задания мини-игр')}catch(er){}confetti(100)}persist();refreshTop();mqRender()});
+setInterval(()=>{try{if(cur==='garden'&&S&&(gTab==='ord'||gTab==='farm')&&!document.activeElement.matches('input'))gRender()}catch(e){}},5000);
 
 resize();
 const sess=lsGet('kz_session');
