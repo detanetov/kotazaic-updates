@@ -1,9 +1,9 @@
 {
- "version": 46,
+ "version": 47,
  "label": "1.3.9",
- "name": "1.3.9: оптимизация",
+ "name": "1.3.9: вкладка Gear",
  "file": "game.html",
- "sha256": "3c481660d43c44ce0cb6c04d342c45a3e5fd9a428f9a48349cbc7e25d12f0b95",
+ "sha256": "5dd9ae2ade75f54d47532d552bf8a2364ffc92ff01800735eaef9f993a9f3263",
  "date": "2026-10-18",
  "exe": {
   "version": 4,
