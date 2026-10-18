@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=44;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=45;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -578,7 +578,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
       <div class="box"><h3>🎮 Игра</h3>
         <div class="opt tg"><label>🛡 Бессмертие</label><input type="checkbox" id="adGod"></div>
         <div class="opt tg"><label>🧲 Магнит (звёзды летят к тебе)</label><input type="checkbox" id="adMag"></div>
-        <div class="opt tg"><label>🤖 TAS — котозаяц сам уворачивается от метеоритов и собирает монеты</label><input type="checkbox" id="adTas"></div>
+        <div class="opt tg"><label>🤖 TAS v2 — котозаяц сам играет идеально: просчитывает 2 секунды вперёд, не пропускает метеориты, собирает всё ценное</label><input type="checkbox" id="adTas"></div>
         <div class="row"><span>Старт с волны</span><input class="inp" id="adWave" type="number" min="1" max="50" value="1" style="width:70px"><button class="btn sm" id="adPlay">▶ Play</button><button class="btn sm org" id="adPlayHw">▶ Halloween</button></div>
         <div class="row" style="margin-top:6px"><span>Событие сразу</span><select class="inp" id="adEvSel"><option value="">— случайно —</option><option value="fish">🐟 Рыбки</option><option value="ufo">🛸 НЛО</option><option value="minis">🐰 Мини-котозайцы</option><option value="starstorm">✨ Звёздный ливень</option><option value="heavy">💰 Двойные монеты</option><option value="giant">🦖 Великан</option><option value="mirror">🙃 Наоборот</option><option value="wind">🌪 Ураган</option><option value="slowmo">⏳ Замедление</option><option value="dark">🔦 Темнота</option><option value="hiccup">😮 Икота</option><option value="goldrush">🤑 Золотая лихорадка</option><option value="carrots">🥕 Морковный дождь</option></select></div>
         <div class="opt tg"><label>🐌 Медленные метеориты (в 2 раза медленнее)</label><input type="checkbox" id="adSlowMet"></div>
@@ -1328,18 +1328,32 @@ function drawAuraKG(c,id,t,layer){
 
 /* ---------------- TAS: the kotozayac plays by itself (ADM) ---------------- */
 function tasMove(dt,top,cx,cy,R){
-  // simulate: kotozayac slides from px to candidate x, then waits there; check every falling thing against that path
-  const px=G.px,spd=top*2.2,gk=S.fun.grav?.5:1,HZ=1.6,mag=isAdm()&&S.adm.mag;
-  const sm=G.ev==='slowmo'?.45:1,wnd=G.ev==='wind'?G.wind:0;const fut=[];for(const it of G.items){if(it.dead)continue;const vy=it.vy*gk*sm;if(vy<=1)continue;const rr=it.r+R,t0=(cy-rr-it.y)/vy,t1=(cy+rr-it.y)/vy;if(t1<0||t0>HZ)continue;fut.push({it,vy,vx:(it.vx+wnd)*sm,rr,t0:Math.max(0,t0),t1:Math.min(HZ,t1)})}
-  const pos=(x,tr,t)=>tr<=0?x:px+(x-px)*Math.min(1,t/tr);
-  let best=px,bs=-1e9;const prev=G.tasX??px;
-  for(let x=44;x<=W-44;x+=8){const tr=Math.abs(x-px)/spd+.05;let s=-Math.abs(x-prev)*.004-Math.abs(x-W/2)*.0006;
-    for(const f of fut){const it=f.it,met=it.k==='meteor';let hit=false,ht=0;
-      for(let k=0;k<=6;k++){const t=f.t0+(f.t1-f.t0)*k/6,dx=pos(x,tr,t)-(it.x+f.vx*t),dy=cy-(it.y+f.vy*t);if(dx*dx+dy*dy<(f.rr+(met?14:-4))**2){hit=true;ht=t;break}}
-      if(met){if(hit)s-=5000/(1+ht*3);else{const d=Math.abs(x-(it.x+f.vx*f.t1));if(d<f.rr+40)s-=60*(1-d/(f.rr+40))}}
-      else{const w=it.k==='heart'?(G.lives<G.maxLives?40:0):it.k==='gold'?80:({pink:4,candy:6,pumpkin:9,fish:4}[it.k]||2);if(hit)s+=w*14/(1+ht*2);else if(!mag){const d=Math.abs(x-(it.x+f.vx*f.t1));if(d<f.rr*3)s+=w*.8/(1+f.t0*2)}}}
-    if(s>bs){bs=s;best=x}}
-  G.tasX=best;G.pvx=clamp((best-px)*22,-spd,spd)}
+  // TAS v2: exact forward simulation of the movement controller over a 2 s horizon,
+  // two-stage plans (go to x1, then switch to x2), per-step circle intersection with every falling thing.
+  const spd=top*2.2,gk=S.fun&&S.fun.grav?.5:1,sm=G.ev==='slowmo'?.45:1,wnd=G.ev==='wind'?G.wind:0,h=1/30,N=60,L=44,Rr=W-44,inv=G.inv||0,low=G.lives<=1;
+  const band=[];for(let k=0;k<=N;k++)band.push([]);const late=[],vals=[];let id=0;
+  for(const it of G.items){if(it.dead)continue;const vy=it.vy*gk*sm,vx=((it.vx||0)+wnd)*sm;if(vy<=1)continue;const met=it.k==='meteor',rr=it.r+R+(met?(low?13:10):-4);
+    const tIn=(cy-rr-it.y)/vy,tOut=(cy+rr-it.y)/vy;if(tOut<0)continue;
+    if(tIn>N*h){if(met)late.push({x:it.x+vx*tIn,t:tIn,rr});else if(tIn<N*h+1.2)late.push({x:it.x+vx*tIn,t:tIn,rr,good:it.k==='gold'?6:it.k==='heart'&&G.lives<G.maxLives?8:1});continue}
+    const w=met?0:it.k==='heart'?(G.lives<G.maxLives?(low?60:25):0):it.k==='gold'?30:({pink:3,candy:4,pumpkin:6,fish:3,carrot:3}[it.k]||1.5);const idx=id++;vals.push(w);
+    const k0=Math.max(0,Math.ceil(tIn/h)),k1=Math.min(N,Math.floor(tOut/h));
+    for(let k=k0;k<=k1;k++){const t=k*h,dy=cy-(it.y+vy*t),l2=rr*rr-dy*dy;if(l2>0)band[k].push(idx,it.x+vx*t,Math.sqrt(l2),met?1:0)}}
+  const seen=new Int32Array(id+1);let stamp=0;
+  const ev=(x1,tsw,x2)=>{stamp++;let px=cx,s=0;
+    for(let k=1;k<=N;k++){const tx=k*h<=tsw?x1:x2;for(let q=0;q<2;q++){const pv=Math.max(-spd,Math.min(spd,(tx-px)*22));px=Math.max(L,Math.min(Rr,px+pv*h*.5))}
+      const b=band[k];if(!b.length)continue;const t=k*h,df=1/(1+t*.7);
+      for(let j=0;j<b.length;j+=4){const d=Math.abs(px-b[j+1]),hw=b[j+2];
+        if(b[j+3]){if(t<inv-.06)continue;if(d<hw)s-=1e6*df;else if(d<hw+34)s-=120*(1-(d-hw)/34)*df}
+        else if(d<hw&&seen[b[j]]!==stamp){seen[b[j]]=stamp;s+=vals[b[j]]*100*df}}}
+    for(const m of late){const d=Math.abs(px-m.x),r=m.rr+40;if(d<r){if(m.good)s+=m.good*25*(1-d/r)/(1+m.t);else s-=3000*(1-d/r)/(1+m.t)}}
+    return s-Math.abs(px-W/2)*.003-Math.abs(x1-(G.tasX??cx))*.002};
+  let best={x1:cx,tsw:9,x2:cx,s:ev(cx,9,cx)};const res=[];const st1=Math.max(6,(Rr-L)/120);
+  for(let x=L;x<=Rr+.01;x+=st1){const s=ev(x,9,x);res.push({x1:x,tsw:9,x2:x,s});if(s>best.s)best=res[res.length-1]}
+  res.sort((a,b)=>b.s-a.s);const st2=Math.max(12,(Rr-L)/60);
+  for(const p of res.slice(0,6))for(const ts of[.1,.25,.45,.7,1])for(let x=L;x<=Rr+.01;x+=st2){const s=ev(p.x1,ts,x);if(s>best.s)best={x1:p.x1,tsw:ts,x2:x,s}}
+  const P=G.tasPlan;if(P){const ts=P.tsw-dt,s=ev(ts>0?P.x1:P.x2,ts,P.x2)+3;if(s>best.s)best={x1:ts>0?P.x1:P.x2,tsw:ts,x2:P.x2,s}}
+  for(const fine of[-4,-2,2,4]){const x=clamp(best.x1+fine,L,Rr),s=ev(x,best.tsw,best.x2);if(s>best.s)best={x1:x,tsw:best.tsw,x2:best.x2,s}}
+  G.tasPlan=best;G.tasX=best.tsw>0?best.x1:best.x2;G.pvx=clamp((G.tasX-cx)*22,-spd,spd)}
 /* ---------------- Exclusive brand pack (invented in-game brands, 10 per section) ---------------- */
 const BRANDS={
   zayka:{n:'ZAYKA',c:'#1d1d22',c2:'#ffffff',a:'#ff8a3d',tag:'#ff8a3d'},
@@ -2657,6 +2671,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:45,l:'1.3.9',items:['🤖 ADM: TAS v2 — новый автопилот: точная симуляция движения на 2 секунды вперёд, двухшаговые манёвры, учёт неуязвимости, ветра и замедления. В тестах — 0 попаданий метеоритов за 30 минут игры']},
  {v:44,l:'1.3.9',items:['🤝 В топе игроков новая вкладка «Совместные» — лучший счёт в совместных играх и с кем он набран','👤 В профиле видно совместный рекорд и количество совместных игр']},
  {v:43,l:'1.3.9',items:['🎮 Совместная игра: у всех в пати теперь один и тот же мир — те же звёзды, метеориты, боссы и события','🤝 Общий счёт, жизни, монеты и рекорд на всех','🚪 Если один выходит — игра заканчивается у всех; пауза тоже общая']},
  {v:42,l:'1.3.9',items:['🎮 Кнопка «Играть вместе» в ЛС, в профиле друга и во вкладке Пати: когда нажмут все — игра запускается у всех одновременно с отсчётом 3…2…1']},

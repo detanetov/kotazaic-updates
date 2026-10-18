@@ -1,9 +1,9 @@
 {
- "version": 44,
+ "version": 45,
  "label": "1.3.9",
- "name": "1.3.9: топ совместных игр",
+ "name": "1.3.9: TAS v2",
  "file": "game.html",
- "sha256": "397b835f12f93d4232239858244bb7fb308a812fb6a02da69e1c04e4ddeb6ed7",
+ "sha256": "e1de260b54b33dc26e9f9d4ad3acb0787dbcf792a2118548513c2739a33216e7",
  "date": "2026-10-18",
  "exe": {
   "version": 4,
