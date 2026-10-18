@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=60;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=61;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3062,6 +3062,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:61,l:'1.3.9',items:['⚙ Settings: поиск настроек, вкладки 📊 Статистика и 💾 Сохранения (код, файл, резервные копии)','★ Battle Pass и 🎃 Halloween: задания дня, покупка уровней, бонусные сундуки после финала, ×2 опыт BP в выходные, картинки наград','🍬 Тыквенная лавка за конфеты из Halloween-забегов','✿ Cosmetics: поиск, сортировка, ★ избранное, прогресс коллекции, 🎲 случайный образ, 🧹 снять всё','⬆ Kotograde: статистика, история, бонус к шансу после неудач, быстрый шанс, дубликаты, быстрая прокрутка','🤝 Trades: шкала честности, чат обмена, поиск, все дубликаты, статистика обменов','💬 Chat: смайлики, команды /roll /coin /me, упоминания @ник, блокировка, поиск, настройки чата','🛠 ADM: поиск, ⚡ Быстро, пресеты читов, 🗃 База предметов']},
  {v:60,l:'1.3.9',items:['🖼 Исправлены пустые синие миниатюры в Cosmetics и других разделах — предпросмотр вещей снова виден']},
  {v:59,l:'1.3.9',items:['▶ Режимы игры: Обычный, ⏱ На время, 💀 Хардкор (×2 очки и монеты) и 🌟 Испытание дня с особыми правилами и наградой','🔧 Мастерская: 8 постоянных улучшений котозайца по 5 уровней (жизни, щит на старте, бонусы, комбо, монеты…)','⚡ С 4 волны — молнии: красная полоса предупреждает, куда ударит','📦 После каждого босса падает сундук с вещью и монетами','👋 Подсказки для новичков в первом забеге','🏆 Свой рекорд для каждого режима']},
  {v:58,l:'1.3.9',items:['🔥 Комбо: лови без ударов — множитель очков растёт до ×4','🎁 5 бонусов в забеге: 🧲 магнит, 🛡 щит, ⏱ замедление, ✖2 двойные очки, 🌠 звездопад','☄ Новый босс — Король Комет с метеоритным дождём','📋 Задания дня (3 в день) с наградами и бонусом за все','⭐ Уровень аккаунта: опыт за забеги и задания, монеты за каждый уровень и вещь каждые 5 уровней','📊 Полоска прогресса волны и больше статистики после забега']},
@@ -5147,6 +5148,258 @@ function updSplash(t){let d=$('#updSplash');if(!t){if(d)d.remove();return}if(!d)
 if(KZ_MODE!=='exe')setTimeout(()=>checkUpdate(false),1500);
 setInterval(()=>{if(window._kzUpdApply&&!G){const f=window._kzUpdApply;window._kzUpdApply=null;persist();f();return}if(!G)checkUpdate(false)},10*60*1000);
 const _qtm=quitToMenu;quitToMenu=function(){_qtm();if(window._kzUpdApply){const f=window._kzUpdApply;window._kzUpdApply=null;persist();updSplash('✅ Устанавливаю обновление…');setTimeout(f,600)}};
+
+/* ================= ×100 pack: settings, passes, cosmetics, kotograde, trades, chat, adm ================= */
+function XS(){if(!S)return{};const x=S.x=S.x||{};x.fav=x.fav||{};x.kg=Object.assign({n:0,w:0,l:0,streak:0,best:0,profit:0,hist:[]},x.kg||{});x.block=x.block||{};x.chs=Object.assign({fs:15,ment:true,big:true},x.chs||{});x.trLog=x.trLog||[];x.candy=x.candy||0;x.bpOver=x.bpOver||0;x.evOver=x.evOver||0;x.admPre=x.admPre||{};x.admLog=x.admLog||[];return x}
+(function(){const st=document.createElement('style');st.textContent=`
+.xbox{background:#fff8ec;border:3px solid var(--ink);border-radius:16px;padding:10px 12px;margin-top:10px;color:var(--ink)}
+.xbox h4{margin:0 0 6px}
+.xrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.xq{display:flex;gap:8px;align-items:center;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:6px 10px;margin:4px 0;font-weight:800;font-size:14px}
+.xq .bar{flex:1;height:10px;margin:0;border-width:2px;min-width:60px}
+.xq.done{background:#e3fbef}
+.xgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.xshop{background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:8px;text-align:center;font-weight:800;font-size:13px;display:flex;flex-direction:column;gap:5px;align-items:center}
+.xshop img{width:64px;height:64px;border-radius:10px;background:#2a2050}
+.xshop .xi{font-size:40px;line-height:64px}
+.track .card .ic img{width:54px;height:54px;border-radius:10px;background:#2a2050;display:block;margin:0 auto}
+.xbanner{background:linear-gradient(90deg,#ffe066,#ff9cf0);border:3px solid var(--ink);border-radius:14px;padding:6px 12px;font-weight:900;margin:8px 0;text-align:center;color:var(--ink)}
+.cosx{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 8px}
+.cosx .inp{padding:6px 10px;font-size:13px}
+.cosx .prog{font-weight:900;font-size:12px;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:4px 8px}
+.cfav{position:absolute;right:4px;top:2px;text-shadow:0 0 3px #fff;border:0;background:none;font-size:18px;cursor:pointer;opacity:.35;padding:0;z-index:2;filter:grayscale(1)}
+.cfav.on{opacity:1;filter:none}
+.kgx{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:4px 0 10px}
+.kgx .chip{background:#2a2450;color:#fff;border-color:#5a4fa0;font-size:12px}
+.kgx .btn{font-size:12px}
+.kgx details{width:100%;background:#16122e;border:2px solid #3a3270;border-radius:12px;padding:6px 10px}
+.kgx summary{cursor:pointer;font-weight:900}
+.kgh{display:flex;gap:8px;align-items:center;font-size:12px;font-weight:700;padding:3px 0;border-bottom:1px solid #2a2450}
+.kgh img{width:28px;height:28px;border-radius:6px}
+.trfair{height:16px;border:2.5px solid var(--ink);border-radius:10px;overflow:hidden;display:flex;margin:6px 0}
+.trfair i{display:block;height:100%}
+.trchat{border:2.5px solid var(--ink);border-radius:12px;background:#fff;padding:6px;margin:8px 0}
+.trchat .log{max-height:120px;overflow:auto;font-size:13px;font-weight:700;display:flex;flex-direction:column;gap:3px}
+.trchat .log .me{text-align:right;color:#2b8a6a}
+.chm.ment .chb{background:#fff1a8!important;box-shadow:0 0 0 3px #ffcf33}
+.chb .chx.big{font-size:38px;line-height:1.1;display:block}
+.chemo{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:6px;margin-top:6px}
+.chemo button{border:0;background:none;font-size:22px;cursor:pointer;border-radius:6px;padding:2px}
+.chemo button:hover{background:#f3efe6}
+.xst{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px}
+.xst div{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:6px 10px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;gap:6px}
+.xst b{white-space:nowrap}
+.setq{width:100%;margin:4px 0 10px}
+.admq{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px}
+.admq .btn{white-space:normal;line-height:1.15;min-height:38px}
+.admdb{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px;max-height:520px;overflow:auto}
+.admdb .it2{display:flex;gap:8px;align-items:center;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:5px;font-size:12px;font-weight:700}
+.admdb img{width:46px;height:46px;border-radius:8px;background:#2a2050;flex:none}
+`;document.head.appendChild(st)})();
+const xRng=s=>{let h=2166136261;for(const c of s)h=Math.imul(h^c.charCodeAt(0),16777619);return()=>{h=Math.imul(h^h>>>15,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296}};
+const xWeekend=()=>{const d=new Date().getDay();return d===0||d===6};
+
+/* ---------- passes: daily quests, buy levels, bonus chests, candy shop ---------- */
+const PQ_BP=[['score',[1500,3000,5000],'Набери {g} очков за один забег'],['games',[3,5],'Сыграй {g} забега'],['bosses',[1,2,3],'Победи боссов: {g}'],['coins',[100,250],'Собери {g} 🪙 в забегах'],['combo',[20,40],'Сделай комбо ×{g}']];
+const PQ_EV=[['candies',[30,60],'Собери {g} 🍬 в Halloween'],['pumpkins',[10,20],'Собери {g} 🎃 в Halloween'],['hwgames',[2,3],'Сыграй {g} Halloween-забега'],['hwboss',[1],'Победи Тыквенного Короля'],['hwscore',[1500,2500],'Набери {g} очков в Halloween']];
+function pqGet(){const x=XS(),day=dqDay();if(!x.pq||x.pq.day!==day){const mk=(pool,seed)=>{const r=xRng(seed+day),p=pool.slice(),out=[];while(out.length<3&&p.length){const q=p.splice(Math.floor(r()*p.length),1)[0];out.push({k:q[0],g:q[1][Math.floor(r()*q[1].length)],p:0,c:0})}return out};x.pq={day,bp:mk(PQ_BP,'bp'),ev:mk(PQ_EV,'ev')}}return x.pq}
+function pqText(which,q){const pool=which==='bp'?PQ_BP:PQ_EV;const d=pool.find(a=>a[0]===q.k);return d?d[2].replace('{g}',q.g):q.k}
+function pqRun(g){if(!S||!g)return;const pq=pqGet();const hw=g.mode==='hw';const add=(q,v,max)=>{if(q.c)return;q.p=max?Math.max(q.p,v):q.p+v;q.p=Math.min(q.p,q.g)};
+  for(const q of pq.bp){if(q.k==='score')add(q,g.score,1);if(q.k==='games')add(q,1);if(q.k==='bosses')add(q,g.bossKills||0);if(q.k==='coins')add(q,g.coins||0);if(q.k==='combo')add(q,g.maxCombo||0,1)}
+  if(hw)for(const q of pq.ev){if(q.k==='candies')add(q,g.candies||0);if(q.k==='pumpkins')add(q,g.pumpkins||0);if(q.k==='hwgames')add(q,1);if(q.k==='hwboss')add(q,g.bossKills||0);if(q.k==='hwscore')add(q,g.score,1)}
+  if(hw){const x=XS();x.candy+=(g.candies||0)+(g.pumpkins||0)*3;x.hwBest=Math.max(x.hwBest||0,g.score||0)}}
+const _cr=commitRun;commitRun=function(){const g=G,r=_cr.apply(this,arguments);if(r&&g){try{if(xWeekend()&&r.bpx>0){const l0=Math.min(BP_LV,Math.floor(S.bpXp/BP_XP));S.bpXp+=r.bpx;r.bpx*=2;r.bpUp+=Math.min(BP_LV,Math.floor(S.bpXp/BP_XP))-l0}pqRun(g);persist()}catch(e){console.error(e)}}return r};
+function pqClaim(which,i){const pq=pqGet(),q=pq[which][i];if(!q||q.c||q.p<q.g)return;q.c=1;if(which==='bp')S.bpXp+=BP_XP;else{S.evXp+=EV_XP;XS().candy+=25}SND.win();toast(which==='bp'?'★ +'+BP_XP+' XP Battle Pass':'🎃 +'+EV_XP+' XP и +25 🍬');persist();renderPass(which)}
+const XP_COST={bp:300,ev:250};
+function passBuy(which){const isBp=which==='bp',maxL=isBp?BP_LV:EV_LV,per=isBp?BP_XP:EV_XP,xp=isBp?S.bpXp:S.evXp;const lvl=Math.floor(xp/per);if(lvl>=maxL){toast('Пасс уже пройден');return}const c=XP_COST[which];if(S.coins<c){toast('Нужно 🪙 '+c);return}S.coins-=c;const need=(lvl+1)*per-xp;if(isBp)S.bpXp+=need;else S.evXp+=need;SND.buy();toast('⬆ Уровень '+(lvl+1)+' куплен!');persist();refreshTop();renderPass(which)}
+function passOver(which){const isBp=which==='bp',maxL=isBp?BP_LV:EV_LV,per=isBp?BP_XP:EV_XP,xp=isBp?S.bpXp:S.evXp,x=XS();const tot=Math.max(0,Math.floor((xp-maxL*per)/(per*2)));return{tot,left:Math.max(0,tot-(isBp?x.bpOver:x.evOver)),into:xp>=maxL*per?(xp-maxL*per)%(per*2):0,per:per*2}}
+function passChest(which){const o=passOver(which);if(!o.left)return;const x=XS();if(which==='bp')x.bpOver++;else x.evOver++;const c=60+Math.floor(Math.random()*120);S.coins+=c;if(which==='ev')x.candy+=20;confetti(60);SND.win();toast('📦 Бонусный сундук: +'+c+' 🪙'+(which==='ev'?' и +20 🍬':''));if(Math.random()<.3)try{gameDrop(1,'бонусный сундук')}catch(e){}persist();refreshTop();renderPass(which)}
+function evShopList(){const lv=Math.min(EV_LV,Math.floor(S.evXp/EV_XP)),L=[{id:'box',n:'🎃 Тыквенный сундук',d:'случайный трофей + 50 🪙',c:120},{id:'xp',n:'⚡ +300 XP пасса',d:'3 уровня Event-пасса',c:80},{id:'coin',n:'🪙 100 монет',d:'обмен конфет',c:50}];
+  for(const l in EV_SPECIAL){const r=EV_SPECIAL[l];L.push({id:'it:'+r.t+':'+r.id,n:itemName(r.t,r.id),d:+l<=lv?'ещё одна копия (для обмена и Kotograde)':'🔒 нужен уровень '+l,c:Math.round(itemVal(r.t,r.id)/2),lock:+l>lv,sl:r.t,iid:r.id})}return L}
+function evShopBuy(id){const it=evShopList().find(a=>a.id===id),x=XS();if(!it||it.lock)return;if(x.candy<it.c){toast('Нужно 🍬 '+it.c);return}x.candy-=it.c;
+  if(id==='box'){S.coins+=50;try{gameDrop(1,'тыквенный сундук')}catch(e){}confetti(50)}else if(id==='xp')S.evXp+=300;else if(id==='coin')S.coins+=100;else{addItem(it.sl,it.iid);syncInv();toast('🎃 Получено: '+it.n)}
+  SND.buy();persist();refreshTop();renderPass('ev')}
+function passXRender(which){const isBp=which==='bp';let el=$('#'+which+'X');if(!el){el=document.createElement('div');el.id=which+'X';$('#'+which+'All').closest('.row').after(el)}
+  const pq=pqGet(),per=isBp?BP_XP:EV_XP,maxL=isBp?BP_LV:EV_LV,xp=isBp?S.bpXp:S.evXp,lvl=Math.min(maxL,Math.floor(xp/per)),x=XS(),o=passOver(which);
+  let h='';if(isBp&&xWeekend())h+='<div class="xbanner">🎉 Выходные: опыт Battle Pass ×2!</div>';
+  h+=`<div class="xbox"><h4>📋 Задания дня ${isBp?'Battle Pass':'Halloween'} <small class="hint">обновляются каждый день · каждое +1 уровень${isBp?'':' и 25 🍬'}</small></h4>`;
+  pq[which].forEach((q,i)=>{const ok=q.p>=q.g;h+=`<div class="xq ${q.c?'done':''}"><span style="flex:2">${q.c?'✅':ok?'🎁':'⬜'} ${pqText(which,q)}</span><div class="bar"><i style="width:${q.p/q.g*100}%"></i></div><span>${q.p}/${q.g}</span>${q.c?'':`<button class="btn sm ${isBp?'mint':'org'}" data-pqc="${which}:${i}" ${ok?'':'disabled'}>Забрать</button>`}</div>`});
+  if(!isBp)h+='<p class="hint" style="margin:4px 0 0">Задания Halloween засчитываются только в режиме ▶ Play Halloween.</p>';h+='</div>';
+  h+=`<div class="xbox"><div class="xrow" style="justify-content:space-between"><div><b>📈 Прогресс:</b> ур. ${lvl}/${maxL}${lvl<maxL?` · до конца ${(maxL*per-xp).toLocaleString('ru')} XP`:' · пасс пройден 🏁'}</div>${lvl<maxL?`<button class="btn sm ${isBp?'':'org'}" data-pbuy="${which}" ${S.coins<XP_COST[which]?'disabled':''}>⬆ Купить уровень · 🪙 ${XP_COST[which]}</button>`:''}</div>`;
+  if(lvl>=maxL)h+=`<div class="xrow" style="margin-top:6px"><span>📦 Бонусные уровни: каждые ${o.per} XP после финала — сундук</span><div class="bar" style="flex:1;height:12px;margin:0;border-width:2px;min-width:80px"><i style="width:${o.into/o.per*100}%"></i></div><button class="btn sm mint" data-pch="${which}" ${o.left?'':'disabled'}>📦 Открыть${o.left?' ('+o.left+')':''}</button></div>`;
+  else h+='<p class="hint" style="margin:4px 0 0">После финального уровня опыт не пропадает: за него будут бонусные сундуки 📦</p>';h+='</div>';
+  if(!isBp){h+=`<div class="xbox"><div class="xrow" style="justify-content:space-between"><h4 style="margin:0">🍬 Тыквенная лавка</h4><span class="chip">🍬 ${x.candy} конфет · 🏆 рекорд Halloween ${x.hwBest||0}</span></div><p class="hint" style="margin:4px 0 8px">Конфеты копятся в Halloween-забегах: 🍬 = 1, 🎃 = 3.</p><div class="xgrid">`;
+    for(const it of evShopList())h+=`<div class="xshop">${it.sl?`<img src="${thumb(it.sl,it.iid)}" alt="">`:`<div class="xi">${it.n.split(' ')[0]}</div>`}<span>${it.sl?esc(it.n):it.n.split(' ').slice(1).join(' ')}</span><small class="hint" style="margin:0">${it.d}</small><button class="btn sm org" data-evbuy="${it.id}" ${it.lock||x.candy<it.c?'disabled':''}>🍬 ${it.c}</button></div>`;h+='</div></div>'}
+  el.innerHTML=h}
+const _rp=renderPass;renderPass=function(which){_rp(which);try{passXRender(which)}catch(e){console.error(e)}};
+const _rwh=rewardHtml;rewardHtml=function(r){const o=_rwh(r);if(r.t!=='coins'&&r.id)try{o.ic=`<img src="${thumb(r.t,r.id)}" alt="">`}catch(e){}return o};
+document.addEventListener('click',e=>{if(!S)return;const b=e.target.closest('[data-pqc],[data-pbuy],[data-pch],[data-evbuy]');if(!b||b.disabled)return;const d=b.dataset;
+  if(d.pqc){const[w,i]=d.pqc.split(':');pqClaim(w,+i)}else if(d.pbuy)passBuy(d.pbuy);else if(d.pch)passChest(d.pch);else if(d.evbuy)evShopBuy(d.evbuy)});
+
+/* ---------- cosmetics: search, sort, favorites, collection, random outfit ---------- */
+let cosQ='',cosSort='def',cosFavOnly=false;
+function cosKeyOf(el){return el.dataset.sk?'skin:'+el.dataset.sk:el.dataset.try||''}
+function cosXRender(){let bar=$('#cosX');if(!bar){bar=document.createElement('div');bar.id='cosX';bar.className='cosx';bar.innerHTML=`<input class="inp" id="cosQ" placeholder="🔎 Поиск по названию" style="flex:1;min-width:140px"><select class="inp" id="cosSortS"><option value="def">↕ По умолчанию</option><option value="cheap">🪙 Сначала дешёвые</option><option value="exp">💎 Сначала дорогие</option><option value="name">🔤 По названию</option><option value="mine">✓ Сначала мои</option></select><button class="btn sm ghost" id="cosFavB">☆ Избранное</button><button class="btn sm ghost" id="cosRnd" title="Случайный образ из твоих вещей">🎲 Случайный образ</button><button class="btn sm ghost" id="cosClr" title="Снять всё, кроме скина">🧹 Снять всё</button><span class="prog" id="cosProg"></span>`;$('#items').before(bar);
+    $('#cosQ').oninput=e=>{cosQ=e.target.value.trim().toLowerCase();cosPost()};$('#cosSortS').onchange=e=>{cosSort=e.target.value;cosPost()};$('#cosFavB').onclick=()=>{cosFavOnly=!cosFavOnly;SND.click();cosPost()};
+    $('#cosRnd').onclick=()=>{for(const sl of SLOTS){const own=S.own[sl]||[];if(!own.length)continue;if(sl==='skin'){S.eq.skin=pick(own);continue}S.eq[sl]=Math.random()<.25?'none':pick(own)}tryOn={};cosSkin=SKIN_ORDER.indexOf(S.eq.skin);persist();SND.win();toast('🎲 Новый образ!');renderCos();refreshTop()};
+    $('#cosClr').onclick=()=>{for(const sl of SLOTS)if(sl!=='skin'&&sl!=='face')S.eq[sl]='none';tryOn={};persist();SND.click();toast('🧹 Всё снято');renderCos();refreshTop()}}
+  else if($('#items').previousElementSibling!==bar)$('#items').before(bar);
+  $('#cosFavB').textContent=cosFavOnly?'★ Избранное':'☆ Избранное';$('#cosFavB').className='btn sm '+(cosFavOnly?'':'ghost');
+  const pool=cosTab==='skin'?SKINS:ITEMS[cosTab],tot=Object.keys(pool).filter(i=>i!=='none').length,own=(S.own[cosTab]||[]).filter(i=>i!=='none'&&pool[i]).length;let T=0,O=0;for(const sl of SLOTS){const p=sl==='skin'?SKINS:ITEMS[sl];T+=Object.keys(p).filter(i=>i!=='none').length;O+=(S.own[sl]||[]).filter(i=>i!=='none'&&p[i]).length}
+  $('#cosProg').textContent=`📚 Раздел ${own}/${tot} · Всего ${O}/${T} (${Math.round(O/T*100)}%)`}
+function cosPost(){const box=$('#items');if(!box)return;const fav=XS().fav,cards=[...box.querySelectorAll('.it')];
+  for(const c of cards){const k=cosKeyOf(c);if(!k)continue;let s=c.querySelector('.cfav');if(!s){s=document.createElement('button');s.className='cfav';s.dataset.cfav=k;s.title='В избранное';s.textContent='★';c.appendChild(s)}s.classList.toggle('on',!!fav[k]);
+    const nm=(c.querySelector('b')||{}).textContent||'';c.style.display=(!cosQ||nm.toLowerCase().includes(cosQ))&&(!cosFavOnly||fav[k])?'':'none'}
+  if(cosSort!=='def'){const val=c=>{const[sl,id]=cosKeyOf(c).split(':');return itemVal(sl,id)},own=c=>{const[sl,id]=cosKeyOf(c).split(':');return(S.own[sl]||[]).includes(id)?1:0},nm=c=>(c.querySelector('b')||{}).textContent||'';
+    cards.sort((a,b)=>cosSort==='cheap'?val(a)-val(b):cosSort==='exp'?val(b)-val(a):cosSort==='name'?nm(a).localeCompare(nm(b),'ru'):own(b)-own(a));for(const c of cards)box.appendChild(c)}
+  try{thScan(box)}catch(e){}}
+const _rc=renderCos;renderCos=function(){_rc.apply(this,arguments);try{cosXRender();cosPost()}catch(e){console.error(e)}};
+$('#items').addEventListener('click',e=>{const s=e.target.closest('[data-cfav]');if(!s)return;e.stopPropagation();e.preventDefault();const f=XS().fav,k=s.dataset.cfav;if(f[k])delete f[k];else f[k]=1;s.classList.toggle('on',!!f[k]);SND.click();persist();if(cosFavOnly)cosPost()},true);
+
+/* ---------- Kotograde: stats, history, pity bonus, quick chance, turbo ---------- */
+function kgPity(){const s=XS().kg.streak||0;return s>=3?Math.min(.15,(s-2)*.03):0}
+const _kgc=kgChance;kgChance=function(){const c=_kgc();return c>0?clamp(c+kgPity(),.01,.8):0};
+function kgXRender(){let el=$('#kgX');if(!el){el=document.createElement('div');el.id='kgX';el.className='kgx';document.querySelector('#kg .kgtop').before(el)}const k=XS().kg,p=kgPity();
+  let h=`<span class="chip">🎰 Попыток ${k.n}</span><span class="chip">✅ ${k.w} · ❌ ${k.l}${k.n?' · '+Math.round(k.w/k.n*100)+'%':''}</span><span class="chip">${k.profit>=0?'📈':'📉'} Итог ${k.profit>=0?'+':''}${k.profit.toLocaleString('ru')} 🪙</span><span class="chip">🏆 Лучший апгрейд 🪙 ${k.best}</span>${p?`<span class="chip" style="background:#5a2a80">🍀 Утешение +${Math.round(p*100)}% к шансу</span>`:k.streak?`<span class="chip">Неудач подряд: ${k.streak} (с 3-й — бонус к шансу)</span>`:''}
+  <span style="flex:1"></span><span class="hint" style="margin:0;color:#c8c0ff">Быстрый шанс:</span>${[75,50,25,10].map(v=>`<button class="btn sm ghost" data-kgq="${v}">${v}%</button>`).join('')}<button class="btn sm ghost" data-kgdup>＋ Все дубликаты</button><button class="btn sm ghost" data-kgclr>↺ Сброс</button><label class="ck" style="font-size:12px;font-weight:800"><input type="checkbox" id="kgTurbo" ${XS().kgTurbo?'checked':''}> ⚡ Быстрая прокрутка</label>`;
+  if(k.hist.length){h+=`<details ${kgXOpen?'open':''} id="kgHistD"><summary>📜 История апгрейдов (${k.hist.length})</summary>`;for(const r of k.hist){let i;try{i=kInfo(r.tg)}catch(e){continue}h+=`<div class="kgh">${r.win?'✅':'❌'}<img src="${i.img}" alt=""><span style="flex:1">${esc(i.n)}</span><span>${Math.round(r.ch*100)}%</span><span>🪙 ${r.in} → ${i.v}</span><span class="hint" style="margin:0">${tm(r.t)}</span></div>`}h+='</details>'}
+  el.innerHTML=h;const d=$('#kgHistD');if(d)d.ontoggle=()=>{kgXOpen=d.open};$('#kgTurbo').onchange=e=>{XS().kgTurbo=e.target.checked;persist()}}
+let kgXOpen=false;
+const _rkg=renderKG;renderKG=function(){_rkg.apply(this,arguments);try{kgXRender()}catch(e){console.error(e)}};
+const _fkg=finishKG;finishKG=function(){const sp=kgSpin,inV=kgInVal(),tv=sp?itemVal(...sp.target.split(':')):0;const k=XS().kg;
+  if(sp){k.n++;if(sp.win){k.w++;k.streak=0;k.profit+=tv-inV;k.best=Math.max(k.best,tv)}else{k.l++;k.streak++;k.profit-=inV}k.hist.unshift({t:Date.now(),win:sp.win,ch:sp.ch,in:inV,tg:sp.target});k.hist.length=Math.min(k.hist.length,20)}
+  _fkg.apply(this,arguments)};
+{const _go=$('#kgGo').onclick;$('#kgGo').onclick=function(){_go.apply(this,arguments);if(kgSpin&&XS().kgTurbo)kgSpin.dur=1.1}}
+document.addEventListener('click',e=>{if(!S||cur!=='kg'||kgSpin)return;const b=e.target.closest('[data-kgq],[data-kgdup],[data-kgclr]');if(!b)return;
+  if(b.dataset.kgq){if(!kgSelCount()){toast('Сначала выбери предметы из инвентаря');return}const want=+b.dataset.kgq/100,inV=kgInVal();let best=null,bd=9;for(const k of allPaid()){const v=itemVal(...k.split(':'));if(v<=inV)continue;const ch=clamp(inV/v*.9,.01,.75)+kgPity();const d=Math.abs(ch-want);if(d<bd){bd=d;best=k}}if(!best){toast('Нет предметов дороже ставки');return}kgTarget=best;kgResult=null;SND.click();renderKG();return}
+  if(b.hasAttribute('data-kgdup')){let n=0;for(const k in S.inv)if(S.inv[k]>1&&itemVal(...k.split(':'))>0){kgSel[k]=S.inv[k]-1;n+=S.inv[k]-1}if(!n){toast('Дубликатов нет');return}kgTarget=null;SND.click();toast('Выбрано дубликатов: '+n);renderKG();return}
+  if(b.hasAttribute('data-kgclr')){kgSel={};kgTarget=null;kgCoins=0;kgResult=null;SND.click();renderKG()}});
+
+/* ---------- Trades: fairness bar, chat, search, stats ---------- */
+let trQv='';const trMsgSeen=new Set();
+const _trr=trRender;trRender=function(){const ae=document.activeElement,fid=ae&&ae.id,fv=fid==='trMsg'?ae.value:null;_trr.apply(this,arguments);try{trXPost();if(fid==='trQ'||fid==='trMsg'){const el=$('#'+fid);if(el){if(fv!=null)el.value=fv;el.focus();try{el.setSelectionRange(el.value.length,el.value.length)}catch(e){}}}}catch(e){console.error(e)}};
+function trXPost(){if(cur!=='trade'||!S)return;const st=TR.st,body=$('#trBody');if(!body)return;
+  if(!st){const L=XS().trLog;if(!L.length)return;const gv=L.reduce((a,x)=>a+x.gv,0),tv=L.reduce((a,x)=>a+x.tv,0);let h=`<div class="xbox"><h4>📊 Статистика обменов</h4><div class="xst"><div>🤝 Обменов<b>${statVal('trades')}</b></div><div>📤 Отдано ≈<b>🪙 ${gv.toLocaleString('ru')}</b></div><div>📥 Получено ≈<b>🪙 ${tv.toLocaleString('ru')}</b></div><div>${tv>=gv?'📈':'📉'} Итог<b>${tv-gv>=0?'+':''}${(tv-gv).toLocaleString('ru')}</b></div></div>`;
+    for(const x of L.slice(0,8))h+=`<div class="hint" style="margin:6px 0 0;color:var(--ink)"><b>${new Date(x.t).toLocaleDateString('ru-RU')} ${tm(x.t)} · ${esc(x.with)}</b><br>📤 ${esc(x.gave.join(', ')||'—')}<br>📥 ${esc(x.got.join(', ')||'—')}</div>`;body.insertAdjacentHTML('beforeend',h+'</div>');return}
+  const mv=trVal(st.my),tv=trVal(st.their),sum=mv+tv||1,cols=body.querySelector('.trcols');
+  if(cols){const diff=tv-mv,lbl=!mv&&!tv?'Добавь вещи, чтобы сравнить':Math.abs(diff)<=sum*.1?'⚖ Честный обмен':diff>0?'📈 Ты в плюсе на ≈'+diff+' 🪙':'📉 Ты в минусе на ≈'+(-diff)+' 🪙';
+    cols.insertAdjacentHTML('afterend',`<div class="trfair" title="Сравнение стоимости"><i style="width:${mv/sum*100}%;background:#ff9a8a"></i><i style="width:${tv/sum*100}%;background:#5ee6c1"></i></div><div style="text-align:center;font-weight:900;font-size:13px">📤 ${mv} 🪙 · ${lbl} · 📥 ${tv} 🪙</div>
+    <div class="trchat"><div class="log" id="trLogC">${(st.chat||[]).map(m=>`<div class="${m.me?'me':''}">${m.me?'Ты':esc(st.pn)}: ${esc(m.x)}</div>`).join('')||'<div class="hint" style="margin:0">💬 Чат обмена — договоритесь о цене</div>'}</div><div class="xrow" style="margin-top:6px"><input class="inp" id="trMsg" maxlength="120" placeholder="Сообщение ${esc(st.pn)}…" style="flex:1;min-width:120px">${['👍','🤔','❌','🙏','🔥'].map(x=>`<button class="btn sm ghost" data-trem="${x}">${x}</button>`).join('')}<button class="btn sm mint" id="trMsgGo">➤</button></div></div>`);
+    const lg=$('#trLogC');if(lg)lg.scrollTop=lg.scrollHeight}
+  const inv=$('#trInv');if(inv){inv.insertAdjacentHTML('beforebegin',`<div class="xrow" style="margin:6px 0"><input class="inp" id="trQ" placeholder="🔎 Поиск в инвентаре" value="${esc(trQv)}" style="flex:1;min-width:140px">${TR.pick==='items'&&!st.myConf?'<button class="btn sm ghost" id="trDup">＋ Все дубликаты</button>':''}</div>`);trFilt()}}
+function trFilt(){const inv=$('#trInv');if(!inv)return;for(const c of inv.querySelectorAll('.trit')){const n=(c.querySelector('span')||{}).textContent||'';c.style.display=!trQv||n.toLowerCase().includes(trQv)?'':'none'}}
+function trMsgSend(x){const st=TR.st;x=String(x||'').trim().slice(0,120);if(!st||!x)return;st.chat=st.chat||[];st.chat.push({me:1,x});trSend(st.peer,{t:'tmsg',tid:st.tid,x});SND.click();trRender()}
+document.addEventListener('input',e=>{if(e.target.id==='trQ'){trQv=e.target.value.trim().toLowerCase();trFilt()}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='trMsg'){e.preventDefault();const v=e.target.value;e.target.value='';trMsgSend(v)}});
+document.addEventListener('click',e=>{if(!S||!TR.st)return;const b=e.target.closest('[data-trem],#trMsgGo,#trDup');if(!b)return;const st=TR.st;
+  if(b.dataset.trem){trMsgSend(b.dataset.trem);return}if(b.id==='trMsgGo'){const i=$('#trMsg');const v=i.value;i.value='';trMsgSend(v);return}
+  if(b.id==='trDup'){let n=0;for(const k in S.inv)if(S.inv[k]>1){const w=S.inv[k]-1;if((st.my.items[k]||0)<w){st.my.items[k]=w;n++}}if(!n){toast('Дубликатов нет');return}trChanged()}});
+const _trv=trRecv;trRecv=function(m){_trv.apply(this,arguments);try{const st=TR.st;if(m&&m.t==='tmsg'&&st&&st.tid===m.tid&&st.peer===m.from&&!trMsgSeen.has(m.mid)){trMsgSeen.add(m.mid);st.chat=st.chat||[];st.chat.push({x:String(m.x||'').slice(0,120)});if(st.chat.length>50)st.chat.shift();sfx(760,.08,'triangle',.04,200);trRender()}}catch(e){}};
+const _tra=trApply;trApply=function(){const st=TR.st;const snap=st&&!st.done?{with:st.pu,gave:Object.entries(st.my.items).map(([k,n])=>kInfo(k).n+(n>1?' x'+n:'')).concat(Object.entries(st.my.pets).map(([k,n])=>'🐰 '+(PETS[k]?PETS[k].n:k)+(n>1?' x'+n:''))).concat(st.my.coins?['🪙 '+st.my.coins]:[]),got:Object.entries(st.their.items).filter(([k])=>itemDef(...k.split(':'))).map(([k,n])=>kInfo(k).n+(n>1?' x'+n:'')).concat(Object.entries(st.their.pets).map(([k,n])=>'🐰 '+(PETS[k]?PETS[k].n:k)+(n>1?' x'+n:''))).concat(st.their.coins?['🪙 '+st.their.coins]:[]),gv:trVal(st.my),tv:trVal(st.their)}:null;
+  _tra.apply(this,arguments);if(snap&&st.done){const L=XS().trLog;L.unshift(Object.assign({t:Date.now()},snap));L.length=Math.min(L.length,30);persist();if(cur==='trade')trRender()}};
+
+/* ---------- Chat: commands, emoji, mentions, block list, search, settings ---------- */
+const CH_EMO='😀😂🤣😊😍🥰😎🤩🥳😜🤔😴😭😡😱👍👎👏🙏💪🔥✨⭐🌟💥💯❤️💔🎉🎁🏆🥕🐰🐱🌙☀️🍬🎃👻🚀🎮🎣'.match(/\p{Extended_Pictographic}️?/gu);
+let chQv='',chEmoOpen=false;
+function chCmd(x){x=String(x||'').trim();if(x[0]!=='/')return x;const[c,...a]=x.split(' '),r=a.join(' ');
+  if(c==='/roll'){const n=clamp(parseInt(r)||100,2,1e6);return `🎲 выбрасывает ${1+Math.floor(Math.random()*n)} (из ${n})`}
+  if(c==='/coin')return '🪙 подбрасывает монетку: '+(Math.random()<.5?'орёл!':'решка!');
+  if(c==='/me'&&r)return '✨ '+nick+' '+r;
+  if(c==='/shrug')return (r?r+' ':'')+'¯\\_(ツ)_/¯';
+  if(c==='/rec')return '🏆 мой рекорд: '+(S.best||0)+' очков';
+  if(c==='/help'){toast('Команды: /roll [N], /coin, /me текст, /shrug, /rec');return null}
+  toast('Неизвестная команда. Напиши /help');return null}
+const _gcs=gcSend;gcSend=function(x){const y=chCmd(x);return y===null?true:_gcs.call(this,y)};
+const _dms=dmSend;dmSend=function(g,x){const y=chCmd(x);return y===null?true:_dms.call(this,g,y)};
+function chMent(x){if(!x||!S)return false;const t=x.toLowerCase();return(user&&t.includes('@'+user.toLowerCase()))||(nick&&t.includes('@'+nick.toLowerCase()))}
+const _gca=gcAdd;gcAdd=function(m,cached){const had=m&&SOC.gcIds.has(m.id);_gca.apply(this,arguments);try{if(m&&!had&&!cached&&S&&m.from!==S.gid&&!XS().block[m.from]&&XS().chs.ment&&chMent(m.x)&&Date.now()-m.ts<60000){sfx(990,.12,'triangle',.06,300);toast('📣 '+m.nick+' упомянул(а) тебя в чате')}}catch(e){}};
+const _chl=chLog;chLog=function(){_chl.apply(this,arguments);try{const el=$('#chLog');if(!el)return;const bl=XS().block,cs=XS().chs;el.style.fontSize=cs.fs+'px';
+  for(const m of el.querySelectorAll('.chm')){const g=(m.querySelector('[data-prof]')||{dataset:{}}).dataset.prof;if(g&&bl[g]&&g!==S.gid){m.remove();continue}const b=m.querySelector('.chb');if(!b)continue;
+    for(const n of [...b.childNodes])if(n.nodeType===3&&n.textContent.trim()){const s=document.createElement('span');s.className='chx';s.textContent=n.textContent;if(cs.big&&/^(\p{Extended_Pictographic}[️‍]?){1,3}$/u.test(n.textContent.trim()))s.classList.add('big');n.replaceWith(s)}
+    const tx=(b.querySelector('.chx')||{}).textContent||'';if(chMent(tx)&&!m.classList.contains('me'))m.classList.add('ment');if(chQv)m.style.display=b.textContent.toLowerCase().includes(chQv)?'':'none'}}catch(e){console.error(e)}};
+const _chr=chRender;chRender=function(){_chr.apply(this,arguments);try{chXPost()}catch(e){console.error(e)}};
+function chXPost(){if(cur!=='chat'||!S||!socOk())return;const tabs=document.querySelector('#chBody .chtabs');if(tabs&&!tabs.querySelector('[data-cht="o"]'))tabs.insertAdjacentHTML('beforeend',`<button class="btn sm ${SOC.tab==='o'?'mint':'ghost'}" data-cht="o">⚙ Настройки чата</button>`);
+  const inp=document.querySelector('#chBody .chin');if(inp&&!$('#chEmoB')){const b=document.createElement('button');b.className='btn ghost';b.id='chEmoB';b.textContent='😀';b.title='Смайлики';inp.insertBefore(b,$('#chSend'));
+    const p=document.createElement('div');p.id='chEmo';p.className='chemo';p.style.display=chEmoOpen?'grid':'none';p.innerHTML=CH_EMO.map(e=>`<button data-chemo="${e}">${e}</button>`).join('');inp.after(p)}
+  const log=$('#chLog');if(log&&SOC.tab==='g'&&!$('#chQ')){log.insertAdjacentHTML('beforebegin',`<div class="xrow" style="margin-bottom:6px"><input class="inp" id="chQ" placeholder="🔎 Поиск по чату" value="${esc(chQv)}" style="flex:1;padding:6px 10px;font-size:13px"><span class="hint" style="margin:0">/help — команды · @ник — упомянуть</span></div>`)}
+  if(SOC.tab==='o'){const x=XS(),cs=x.chs,bl=Object.entries(x.block);$('#chBody').insertAdjacentHTML('beforeend',`<div class="xbox"><h4>⚙ Настройки чата</h4>
+    <div class="opt"><label>🔠 Размер текста <b>${cs.fs}px</b></label><input type="range" min="12" max="22" step="1" value="${cs.fs}" data-chset="fs"></div>
+    <div class="opt tg"><label>📣 Звук и уведомление, когда тебя упоминают через @${esc(user)}</label><input type="checkbox" data-chset="ment" ${cs.ment?'checked':''}></div>
+    <div class="opt tg"><label>😀 Большие смайлики, если сообщение только из них</label><input type="checkbox" data-chset="big" ${cs.big?'checked':''}></div>
+    <h4 style="margin-top:10px">🚫 Заблокированные (${bl.length})</h4>${bl.length?bl.map(([g,n])=>`<div class="xq"><span style="flex:1">${esc(n)}</span><button class="btn sm ghost" data-chunb="${esc(g)}">Разблокировать</button></div>`).join(''):'<p class="hint">Никого. Заблокировать можно в профиле игрока — его сообщения перестанут показываться.</p>'}
+    <h4 style="margin-top:10px">⌨ Команды</h4><div class="xst"><div>/roll 100<b>🎲 случайное число</b></div><div>/coin<b>🪙 орёл или решка</b></div><div>/me текст<b>✨ действие</b></div><div>/shrug<b>¯\\_(ツ)_/¯</b></div><div>/rec<b>🏆 твой рекорд</b></div><div>@ник<b>📣 упоминание</b></div></div></div>`)}}
+document.addEventListener('input',e=>{const t=e.target;if(t.id==='chQ'){chQv=t.value.trim().toLowerCase();chLog()}if(t.dataset&&t.dataset.chset==='fs'){XS().chs.fs=+t.value;t.previousElementSibling.querySelector('b').textContent=t.value+'px';persist()}});
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset&&t.dataset.chset&&t.dataset.chset!=='fs'){XS().chs[t.dataset.chset]=t.checked;persist();SND.click()}});
+document.addEventListener('click',e=>{if(!S)return;const b=e.target.closest('#chEmoB,[data-chemo],[data-chunb],[data-chblk]');if(!b)return;
+  if(b.id==='chEmoB'){chEmoOpen=!chEmoOpen;const p=$('#chEmo');if(p)p.style.display=chEmoOpen?'grid':'none';return}
+  if(b.dataset.chemo){const i=$('#chIn');if(!i)return;const s=i.selectionStart??i.value.length;i.value=(i.value.slice(0,s)+b.dataset.chemo+i.value.slice(i.selectionEnd??s)).slice(0,200);i.focus();const np=s+b.dataset.chemo.length;try{i.setSelectionRange(np,np)}catch(er){}return}
+  if(b.dataset.chunb){delete XS().block[b.dataset.chunb];persist();SND.click();chRender();return}
+  if(b.dataset.chblk){const g=b.dataset.chblk,x=XS();if(x.block[g]){delete x.block[g];toast('✓ Разблокирован')}else{x.block[g]=b.dataset.chbn||'Игрок';toast('🚫 Сообщения этого игрока скрыты')}persist();profRender();if(cur==='chat')chRender()}});
+const _pfr=profRender;profRender=function(){_pfr.apply(this,arguments);try{const g=SOC.prof;if(!g||!S||g===S.gid)return;const rows=document.querySelectorAll('#pfOv .pfbox > .row');const row=rows[rows.length-1];if(!row)return;const nk=(document.querySelector('#pfOv .pfnk')||{}).textContent||'Игрок';const bl=!!XS().block[g];row.insertAdjacentHTML('beforeend',`<button class="btn sm ghost" data-chblk="${esc(g)}" data-chbn="${esc(nk)}">${bl?'✓ Разблокировать':'🚫 Заблокировать'}</button>`)}catch(e){}};
+
+/* ---------- Settings: search, statistics tab, saves tab ---------- */
+const STAT_RU={games:['🎮','Забегов сыграно'],bosses:['👹','Боссов побеждено'],maxCombo:['🔥','Лучшее комбо'],carrots:['🥕','Морковок'],minis:['🐰','Мини-котозайцев'],drops:['🎲','Трофеев выпало'],chests:['📦','Сундуков открыто'],upgrades:['⬆','Успешных Kotograde'],trades:['🤝','Обменов'],mgwins:['⚔','Побед в мини-играх'],fishCaught:['🎣','Рыб поймано'],fishCoins:['🐟','Монет с рыбалки'],fishCleaned:['🔪','Рыб почищено'],fishKraken:['🦑','Кракенов'],rkWon:['🚀','Ракета: выигрышей'],rkLost:['💥','Ракета: проигрышей'],rkCash:['💰','Ракета: заработано'],gHarvest:['🌱','Урожаев в саду'],gEarned:['🌻','Монет с сада'],hatched:['🥚','Яиц вылуплено'],chatMsgs:['💬','Сообщений в чате'],friends:['👥','Друзей добавлено'],parties:['🎉','Пати'],coopGames:['🤝','Совместных игр'],coopPts:['⭐','Очков в совместных'],daily:['🎁','Подарков дня'],dailyCh:['🌟','Испытаний дня'],dqAll:['📋','Дней со всеми заданиями'],wsUp:['🔧','Улучшений Мастерской'],jackpots:['🎰','Джекпотов'],sneezes:['🤧','Чихов'],sleeps:['😴','Снов в меню'],pokes:['👆','Тыков котозайца'],petpokes:['🐾','Тыков питомца'],noomiRuns:['🕹','Забегов NoomiClone'],durakWins:['🃏','Побед в дурака'],mailsSent:['✉','Писем отправлено'],moon:['🌙','Кликов по луне']};
+function fmtTime(s){s=Math.floor(s||0);const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?h+' ч '+m+' мин':m+' мин'}
+setInterval(()=>{if(!S||document.hidden)return;const x=XS();x.play=(x.play||0)+5;if(G&&!G.over&&!G.paused)x.playG=(x.playG||0)+5},5000);
+function setXInit(){const tabs=$('#setTabs');if(!tabs||$('#stStats'))return;tabs.insertAdjacentHTML('beforeend','<button class="btn sm" data-st="stats">📊 Статистика</button><button class="btn sm" data-st="save">💾 Сохранения</button>');
+  tabs.insertAdjacentHTML('beforebegin','<input class="inp setq" id="setQ" placeholder="🔎 Поиск настройки — например «звук», «тряска», «FPS»">');
+  const pan=tabs.parentElement;pan.insertAdjacentHTML('beforeend','<div id="stStats" style="display:none"></div><div id="stSave" style="display:none"></div>');
+  $('#setQ').oninput=()=>setQApply()}
+function setQApply(){const q=($('#setQ')||{}).value?.trim().toLowerCase()||'';const pan=$('#setTabs').parentElement;
+  if(q&&setTab!=='main')setSetTab('main');let n=0;for(const o of pan.querySelectorAll('#stMain .opt')){const ok=!q||o.textContent.toLowerCase().includes(q);o.style.display=ok?'':'none';if(ok)n++}
+  for(const h of pan.querySelectorAll('#stMain h3,#stMain h4,#stMain .sub'))h.style.display=q?'none':'';let m=$('#setQn');if(q&&!n){if(!m){m=document.createElement('p');m.id='setQn';m.className='hint';$('#stMain').prepend(m)}m.textContent='Ничего не нашлось по «'+q+'»';m.style.display=''}else if(m)m.style.display='none'}
+function renderStatsTab(){const x=XS(),st=S.stats||{};let own=0;for(const sl of SLOTS)own+=(S.own[sl]||[]).filter(i=>i!=='none').length;const inv=Object.values(S.inv||{}).reduce((a,b)=>a+b,0),invV=Object.entries(S.inv||{}).reduce((a,[k,n])=>a+itemVal(...k.split(':'))*n,0);
+  const main=[['⏱','Время в игре',fmtTime(x.play)],['🏃','Из них в забегах',fmtTime(x.playG)],['⭐','Уровень аккаунта',(()=>{try{return accLvl()}catch(e){return '—'}})()],['🪙','Монет сейчас',(S.coins||0).toLocaleString('ru')],['🏆','Рекорд (Обычный)',S.best||0],['⏱','Рекорд «На время»',(S.bestM||{}).time||0],['💀','Рекорд «Хардкор»',(S.bestM||{}).hard||0],['🌟','Рекорд «Испытание дня»',(S.bestM||{}).daily||0],['🎃','Рекорд Halloween',x.hwBest||0],['🤝','Совместный рекорд',S.coopBest||0],['✿','Вещей собрано',own],['🎒','Предметов в инвентаре',inv],['💎','Стоимость инвентаря ≈',invV.toLocaleString('ru')+' 🪙'],['🏅','Достижений',Object.keys(S.ach||{}).length+' / '+ACH.length],['★','Battle Pass',Math.min(BP_LV,Math.floor(S.bpXp/BP_XP))+' / '+BP_LV],['🎃','Halloween-пасс',Math.min(EV_LV,Math.floor(S.evXp/EV_XP))+' / '+EV_LV],['🎰','Kotograde: попыток',x.kg.n+(x.kg.n?' ('+Math.round(x.kg.w/x.kg.n*100)+'% удачных)':'')]];
+  let h='<p class="sub">Вся твоя статистика за всё время.</p><h4>📌 Главное</h4><div class="xst">'+main.map(([i,n,v])=>`<div>${i} ${n}<b>${v}</b></div>`).join('')+'</div><h4 style="margin-top:12px">📈 Счётчики</h4><div class="xst">';
+  const keys=Object.keys(STAT_RU).filter(k=>typeof st[k]==='number'&&st[k]>0);h+=keys.map(k=>`<div>${STAT_RU[k][0]} ${STAT_RU[k][1]}<b>${(+st[k]).toLocaleString('ru')}</b></div>`).join('')||'<p class="hint">Сыграй пару забегов — здесь появятся цифры.</p>';
+  h+=`</div><h4 style="margin-top:12px">⌨ Горячие клавиши</h4><div class="xst"><div>← → или A / D<b>движение</b></div><div>Пробел<b>прыжок / старт</b></div><div>Esc или P<b>пауза</b></div><div>M<b>музыка</b></div><div>Enter<b>отправить в чат</b></div></div>`;$('#stStats').innerHTML=h}
+function bakKey(){return 'kz_bak_'+user}
+function bakList(){try{return JSON.parse(lsGet(bakKey())||'[]')}catch(e){return[]}}
+function bakMake(tag){if(!S||!user||user==='__guest')return false;const L=bakList();L.unshift({t:Date.now(),tag:tag||'авто',d:JSON.stringify(S)});while(L.length>3)L.pop();for(let i=0;i<3;i++){try{localStorage.setItem(bakKey(),JSON.stringify(L));return true}catch(e){L.pop();if(!L.length)return false}}return false}
+setInterval(()=>{if(S&&user&&user!=='__guest'&&!G)bakMake('авто')},15*60*1000);
+function saveCode(){return 'KZ1:'+btoa(unescape(encodeURIComponent(JSON.stringify(S))))}
+function saveLoad(obj,src){if(!obj||typeof obj!=='object'||!obj.own||!obj.eq){toast('⚠ Это не сохранение игры');return}if(!confirm('Заменить текущий прогресс сохранением ('+src+')? Текущий прогресс сначала попадёт в резервную копию.'))return;bakMake('перед загрузкой');const gid=S.gid;S=fixSave(obj);S.gid=gid;syncInv();persist();refreshTop();try{applyLook()}catch(e){}toast('💾 Сохранение загружено');SND.win();renderSaveTab()}
+function renderSaveTab(){const L=bakList(),gs=user==='__guest';$('#stSave').innerHTML=`<p class="sub">Резервные копии и перенос прогресса. Код сохранения — это весь твой прогресс, не показывай его другим.</p>
+  <div class="xbox"><h4>📤 Экспорт</h4><div class="xrow"><button class="btn sm mint" id="svCopy">📋 Скопировать код</button><button class="btn sm" id="svFile">⬇ Скачать файл .json</button><small class="hint" style="margin:0">≈ ${Math.round(JSON.stringify(S).length/1024)} КБ</small></div></div>
+  <div class="xbox"><h4>📥 Импорт</h4><textarea class="inp" id="svIn" rows="3" style="width:100%;resize:vertical" placeholder="Вставь сюда код сохранения KZ1:…"></textarea><div class="xrow" style="margin-top:6px"><button class="btn sm org" id="svLoad">📥 Загрузить код</button><label class="btn sm ghost" style="cursor:pointer">📁 Из файла<input type="file" id="svFileIn" accept=".json,application/json" style="display:none"></label></div></div>
+  <div class="xbox"><h4>🛟 Резервные копии</h4>${gs?'<p class="hint">У гостя копии не сохраняются.</p>':`<p class="hint" style="margin:0 0 6px">Автокопия делается каждые 15 минут (хранятся 3 последние).</p>${L.map((b,i)=>`<div class="xq"><span style="flex:1">🗂 ${new Date(b.t).toLocaleDateString('ru-RU')} ${tm(b.t)} · ${esc(b.tag)}</span><button class="btn sm ghost" data-bakr="${i}">↩ Восстановить</button></div>`).join('')||'<p class="hint">Копий пока нет.</p>'}<button class="btn sm mint" id="svBak" style="margin-top:6px">➕ Сделать копию сейчас</button>`}</div>`}
+const _sst=setSetTab;setSetTab=function(t){_sst.apply(this,arguments);try{setXInit();const mine={stats:'#stStats',save:'#stSave'};for(const k in mine)$(mine[k]).style.display=t===k?'block':'none';if(t==='stats')renderStatsTab();if(t==='save')renderSaveTab();if(t!=='main'&&$('#setQ')&&$('#setQ').value){$('#setQ').value='';setQApply()}}catch(e){console.error(e)}};
+setXInit();
+document.addEventListener('click',e=>{if(!S||cur!=='set')return;const b=e.target.closest('#svCopy,#svFile,#svLoad,#svBak,[data-bakr]');if(!b)return;
+  if(b.id==='svCopy'){const c=saveCode();(navigator.clipboard?navigator.clipboard.writeText(c):Promise.reject()).then(()=>toast('📋 Код скопирован')).catch(()=>{$('#svIn').value=c;$('#svIn').select();toast('Код в поле импорта — скопируй его вручную')});return}
+  if(b.id==='svFile'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='kotazaic-'+(user||'save')+'-'+dqDay()+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);toast('⬇ Файл сохранения скачан');return}
+  if(b.id==='svLoad'){const v=$('#svIn').value.trim();let o=null;try{o=JSON.parse(v.startsWith('KZ1:')?decodeURIComponent(escape(atob(v.slice(4)))):v)}catch(er){}saveLoad(o,'код');return}
+  if(b.id==='svBak'){toast(bakMake('вручную')?'🛟 Копия сделана':'⚠ Не хватило места для копии');renderSaveTab();return}
+  if(b.dataset.bakr){const L=bakList(),c=L[+b.dataset.bakr];if(!c)return;let o=null;try{o=JSON.parse(c.d)}catch(er){}saveLoad(o,'копия')}});
+document.addEventListener('change',e=>{if(e.target.id!=='svFileIn')return;const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{let o=null;try{o=JSON.parse(r.result)}catch(er){}saveLoad(o,'файл')};r.readAsText(f)});
+
+/* ---------- ADM: search, quick panel, presets, item database ---------- */
+Object.assign(ADM_TABS,{quick:'⚡ Быстро',db:'🗃 База предметов'});
+const ADM_Q=[['🪙 +1 000 монет',()=>{S.coins+=1000}],['🪙 +100 000 монет',()=>{S.coins+=1e5}],['🍬 +500 конфет',()=>{XS().candy+=500}],['★ BP на максимум',()=>{S.bpXp=Math.max(S.bpXp,BP_LV*BP_XP)}],['🎃 Event на максимум',()=>{S.evXp=Math.max(S.evXp,EV_LV*EV_XP)}],['📋 Задания пассов выполнить',()=>{const p=pqGet();for(const q of p.bp.concat(p.ev))q.p=q.g}],['🔧 Мастерская на максимум',()=>{try{S.ws=S.ws||{};for(const k in WS)S.ws[k]=5}catch(e){}}],['🎰 Kotograde: сбросить статистику',()=>{XS().kg={n:0,w:0,l:0,streak:0,best:0,profit:0,hist:[]}}],['🎲 Случайный трофей',()=>{try{gameDrop(1,'ADM')}catch(e){}}],['🧹 Очистить избранное',()=>{XS().fav={}}],['▶ Play сразу',()=>{$('#adPlay')&&$('#adPlay').click()}],['▶ Halloween сразу',()=>{$('#adPlayHw')&&$('#adPlayHw').click()}]];
+const ADM_FLAGS=[['god','🛡 Бессмертие'],['mag','🧲 Магнит'],['tas','🤖 TAS'],['kgwin','🎰 Kotograde всегда успешный'],['slowmet','🐢 Медленные метеориты'],['nine','9️⃣ 9 жизней']];
+let admDbQ='',admDbSl='all';
+function admXInit(){const grid=document.querySelector('#adm .admgrid');if(!grid||$('#admQuickBox'))return;
+  grid.insertAdjacentHTML('afterbegin',`<div class="box" id="admQuickBox" data-admt="quick" style="grid-column:1/-1"><h3>⚡ Быстрые действия</h3><div class="admq" id="admQ"></div><h3 style="margin-top:12px">🎛 Переключатели</h3><div class="admq" id="admFl"></div><h3 style="margin-top:12px">🧪 Пресеты читов</h3><div class="xrow"><input class="inp" id="admPreN" placeholder="Название пресета" maxlength="24" style="flex:1;min-width:140px"><button class="btn sm mint" id="admPreSave">💾 Сохранить текущие</button></div><div id="admPreL" style="margin-top:6px"></div></div>
+  <div class="box" id="admDbBox" data-admt="db" style="grid-column:1/-1"><h3>🗃 База предметов</h3><div class="xrow" style="margin-bottom:8px"><input class="inp" id="admDbQ" placeholder="🔎 Название или id" style="flex:1;min-width:160px"><select class="inp" id="admDbSl"><option value="all">Все разделы</option>${SLOTS.map(s=>`<option value="${s}">${SLOT_ICON[s]} ${SLOT_NAMES[s]}</option>`).join('')}</select><span class="chip" id="admDbN"></span></div><div class="admdb" id="admDbL"></div></div>`);
+  const tb=$('#admTabs');if(tb&&!tb.querySelector('[data-admtab="quick"]'))tb.insertAdjacentHTML('beforeend',`<button class="btn sm" data-admtab="quick">${ADM_TABS.quick}</button><button class="btn sm" data-admtab="db">${ADM_TABS.db}</button>`);
+  if(tb&&!$('#admSearch'))tb.insertAdjacentHTML('beforebegin','<input class="inp setq" id="admSearch" placeholder="🔎 Поиск по ADM — найдёт нужную функцию в любой вкладке">');
+  $('#admSearch').oninput=()=>admSearchApply();$('#admDbQ').oninput=e=>{admDbQ=e.target.value.trim().toLowerCase();admDbRender()};$('#admDbSl').onchange=e=>{admDbSl=e.target.value;admDbRender()}}
+function admSearchApply(){const q=($('#admSearch')||{}).value?.trim().toLowerCase()||'';if(!q){admTabApply();return}const g=document.querySelector('#adm .admgrid');if(g)g.style.display='';for(const el of document.querySelectorAll('#adm [data-admt]'))el.style.display=el.textContent.toLowerCase().includes(q)?'':'none'}
+function admQuickRender(){const q=$('#admQ');if(!q)return;q.innerHTML=ADM_Q.map(([n],i)=>`<button class="btn sm" data-admq="${i}">${n}</button>`).join('');
+  $('#admFl').innerHTML=ADM_FLAGS.map(([k,n])=>`<button class="btn sm ${S.adm[k]?'mint':'ghost'}" data-admfl="${k}">${S.adm[k]?'✅':'⬜'} ${n}</button>`).join('');
+  const P=XS().admPre;$('#admPreL').innerHTML=Object.keys(P).map(n=>`<div class="xq"><span style="flex:1">🧪 ${esc(n)} <small class="hint">${ADM_FLAGS.filter(([k])=>P[n][k]).map(([,t])=>t.split(' ')[0]).join(' ')||'всё выключено'}</small></span><button class="btn sm mint" data-admpl="${esc(n)}">Включить</button><button class="btn sm ghost" data-admpd="${esc(n)}">🗑</button></div>`).join('')||'<p class="hint">Сохрани набор переключателей, чтобы включать его одной кнопкой.</p>'}
+function admDbRender(){const L=$('#admDbL');if(!L)return;const out=[];for(const sl of SLOTS){if(admDbSl!=='all'&&sl!==admDbSl)continue;const pool=sl==='skin'?SKINS:ITEMS[sl];for(const id in pool){if(id==='none')continue;const d=pool[id];if(admDbQ&&!(d.n||'').toLowerCase().includes(admDbQ)&&!id.toLowerCase().includes(admDbQ))continue;out.push([sl,id,d])}}
+  $('#admDbN').textContent='Найдено: '+out.length+(out.length>150?' (показаны 150)':'');
+  L.innerHTML=out.slice(0,150).map(([sl,id,d])=>{const rr=rarity(d),n=S.inv[sl+':'+id]||((S.own[sl]||[]).includes(id)?1:0);return `<div class="it2"><img ${thAttr(sl,id)} alt=""><div style="flex:1;min-width:0"><b>${esc(d.n)}</b><br><small>${SLOT_ICON[sl]} ${sl}:${esc(id)}</small><br><span class="rar" style="background:${rr.c};font-size:10px">${rr.n}</span> <small>🪙 ${itemVal(sl,id)} · у тебя ${n}</small></div><button class="btn sm mint" data-admdb="${sl}:${esc(id)}" title="Выдать себе">＋</button></div>`}).join('')||'<p class="hint">Ничего не найдено</p>';try{thScan(L)}catch(e){}}
+function admLogX(t){try{const L=XS().admLog;L.unshift({t:Date.now(),x:t});L.length=Math.min(L.length,40)}catch(e){}}
+const _ata=admTabApply;admTabApply=function(){try{admXInit()}catch(e){console.error(e)}_ata.apply(this,arguments);try{if(admTab==='quick'||admTab==='all')admQuickRender();if(admTab==='db'||admTab==='all')admDbRender();const s=$('#admSearch');if(s&&s.value)admSearchApply()}catch(e){console.error(e)}};
+document.addEventListener('click',e=>{if(!S||cur!=='adm'||!isAdm())return;const b=e.target.closest('[data-admq],[data-admfl],[data-admpl],[data-admpd],[data-admdb],#admPreSave');if(!b)return;const d=b.dataset;
+  if(d.admq){const a=ADM_Q[+d.admq];if(!a)return;a[1]();admLogX(a[0]);persist();refreshTop();SND.click();toast('✅ '+a[0]);if(cur==='adm')admQuickRender();return}
+  if(d.admfl){S.adm[d.admfl]=!S.adm[d.admfl];persist();SND.click();try{renderAdm()}catch(er){}admQuickRender();return}
+  if(b.id==='admPreSave'){const n=($('#admPreN').value.trim()||'Пресет '+(Object.keys(XS().admPre).length+1)).slice(0,24);const o={};for(const[k]of ADM_FLAGS)o[k]=!!S.adm[k];XS().admPre[n]=o;persist();toast('🧪 Пресет «'+n+'» сохранён');admQuickRender();return}
+  if(d.admpl){const o=XS().admPre[d.admpl];if(!o)return;for(const[k]of ADM_FLAGS)S.adm[k]=!!o[k];persist();toast('🧪 Включён пресет «'+d.admpl+'»');try{renderAdm()}catch(er){}admQuickRender();return}
+  if(d.admpd){delete XS().admPre[d.admpd];persist();admQuickRender();return}
+  if(d.admdb){const[sl,id]=d.admdb.split(':');addItem(sl,id);syncInv();persist();refreshTop();SND.buy();toast('🎁 '+itemName(sl,id)+' выдан(а) тебе');admLogX('Выдано себе: '+itemName(sl,id));admDbRender()}});
 
 resize();
 const sess=lsGet('kz_session');
