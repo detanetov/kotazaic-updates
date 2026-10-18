@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=29;window.KZ_VNAME='1.3.8';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=30;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -466,6 +466,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
     </div>
     <div id="stMail" style="display:none">
       <div class="row" style="justify-content:space-between"><p class="sub" style="margin:0">Письма об обновлениях, подарки от администратора и письма от игроков.</p><div class="row" style="gap:6px"><button class="btn sm mint" id="mlNew">✏ Написать письмо</button><button class="btn sm ghost" id="mlReadAll">Прочитать все</button></div></div>
+      <div class="opt tg" style="margin-top:8px"><label>🔒 Закрыть почту от игроков <small style="display:block;opacity:.7">Обновления и подарки от администратора будут приходить, а письма от игроков — нет</small></label><input type="checkbox" id="mlClosed"></div>
       <div id="mlCompose" class="box" style="display:none;margin-top:8px"></div>
       <div id="mlList" style="margin-top:8px"></div>
     </div>
@@ -2358,6 +2359,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:30,l:'1.3.9',items:['🔒 Можно закрыть почту от игроков — обновления и подарки от админа всё равно приходят']},
  {v:29,l:'1.3.8',items:['✉ Почта в настройках: письма об обновлениях с тем, что добавлено','🎁 Подарки от администратора приходят письмом, даже если ты был не в сети','📨 Письма игрокам — онлайн и оффлайн, ответ и блокировка']},
  {v:28,l:'1.3.7',items:['🤝 Trades — обмен вещами, питомцами и монетами с другими игроками','📜 История обменов','🏅 Достижения «Торговец» и «Барыга»']},
  {v:27,l:'1.3.6',items:['🖥 GUI 3 «Полоса» с надписью gs','📊 FPS · PING · CPU · LOSS','🔘 Кнопки справа в той же теме']},
@@ -2387,7 +2389,7 @@ async function mlVerify(m){if(!m.sig)return false;for(let i=0;i<40&&!admK;i++)aw
 async function mlNetRecv(topic,payload){if(!S||!payload.length)return;const gid=topic.slice((TP+'mail/').length).split('/')[0];if(gid!==S.gid)return;let m;try{m=JSON.parse(mqDec.decode(payload))}catch(e){return}if(!m||m.t!=='mail'||!m.id)return;
   if(!mlSeenNet.has(m.id)){mlSeenNet.add(m.id);
     let adm=false,gift=null;if(m.sig){adm=await mlVerify(m);if(adm){try{const sd=JSON.parse(m.signed);if(sd.to!==S.gid||sd.id!==m.id)adm=false;else{m.subj=sd.subj;m.body=sd.body;gift=sd.gift||null}}catch(e){adm=false}}}
-    const blocked=(S.mailBlock||[]).includes(m.fromGid);
+    const blocked=(S.mailBlock||[]).includes(m.fromGid)||(!adm&&!!S.mailClosed);
     if(!blocked&&!(m.kind==='gift'&&!adm)){if(mlAdd({id:m.id,kind:adm?(gift?'gift':'adm'):'mail',from:adm?'👑 Администратор':(m.fromNick||'?')+' @'+(m.fromU||'?'),fromGid:m.fromGid,fromU:m.fromU,subj:String(m.subj||'(без темы)').slice(0,80),body:String(m.body||'').slice(0,1000),gift,ts:m.ts||Date.now()})){toast('✉ Новое письмо: '+String(m.subj||'').slice(0,40));sfx(1046,.12,'triangle',.05,300)}}}
   NET.pub(topic,null,true)}
 function mlResolve(u){u=String(u||'').trim().toLowerCase().replace(/^@/,'');let best=null;for(const p of Object.values(netPlayers))if(String(p.u).toLowerCase()===u&&(!best||p.last>best.last))best=p;return best}
@@ -2397,7 +2399,7 @@ async function mlAdmSend(p,subj,body,gift){if(!SIGK_G){toast('🔑 Сначал�
 function mlGiftText(g){if(!g)return'';const a=g.a||{};if(g.op==='give'){const d=itemDef(a.sl,a.id);return '🎁 '+(d?d.n:'вещь')+(a.n>1?' ×'+a.n:'')}if(g.op==='coins')return '🪙 '+(a.d>0?'+':'')+a.d+' монет';if(g.op==='pe'){const L=a.key==='pets'?PETS:EGGS;return (a.key==='pets'?'🐰 ':'🥚 ')+(a.ids||[]).map(i=>L[i]?L[i].n:i).join(', ')+(a.n>1?' ×'+a.n:'')}if(g.op==='allitems')return '✨ Вся косметика';if(g.op==='setcoins')return '🪙 Монеты = '+a.v;if(g.op==='levels')return '★ Уровни BP '+a.bp+' / Event '+a.ev;return '🎁 Подарок'}
 function mlClaim(m){if(!m.gift||m.claimed)return;S.mailClaimed=S.mailClaimed||[];if(S.mailClaimed.includes(m.id)){m.claimed=true;persist();return}const g=m.gift,a=Object.assign({},g.a||{},{u:user});const r=admApply({op:g.op,a});if(r==='ok'){m.claimed=true;S.mailClaimed.push(m.id);persist();confetti(80);SND.win();toast('🎁 Подарок получен: '+mlGiftText(g))}else toast('⚠ '+r);mlRender()}
 let mlOpen=null,mlLastSend=0;
-function mlRender(){if(!S||!$('#mlList'))return;const box=mlBox();let h='';if(!box.length)h='<p class="hint">Писем пока нет.</p>';
+function mlRender(){if(!S||!$('#mlList'))return;$('#mlClosed').checked=!!S.mailClosed;$('#mlNew').disabled=false;const box=mlBox();let h='';if(!box.length)h='<p class="hint">Писем пока нет.</p>';
   for(const m of box){const ic={upd:'📰',gift:'🎁',adm:'👑',mail:'✉',sys:'📢'}[m.kind]||'✉',d=new Date(m.ts),dt=d.toLocaleDateString('ru-RU')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
     h+=`<div class="mlrow ${m.read?'':'new'} ${mlOpen===m.id?'open':''}" data-mlid="${esc(m.id)}"><div class="mh"><span class="ic">${ic}</span><div class="tx"><b>${m.read?'':'● '}${esc(m.subj)}</b><small>${esc(m.from)} · ${dt}</small></div>${m.gift?(m.claimed?'<small>✅ получено</small>':'<span class="chip" style="font-size:12px">🎁 подарок</span>'):''}</div>
     <div class="mb">${esc(m.body)}${m.list?'<ul>'+m.list.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':''}${m.gift?`<div style="margin-top:8px"><b>${esc(mlGiftText(m.gift))}</b></div>`:''}
@@ -2414,13 +2416,14 @@ document.addEventListener('click',e=>{if(!S)return;const t=e.target;
   if(t.closest('#mlClose')){$('#mlCompose').style.display='none';return}
   if(t.closest('#mlReadAll')){for(const m of mlBox())m.read=true;persist();mlRender();return}
   if(t.closest('#mlSend')){if(Date.now()-mlLastSend<8000){toast('Подожди немного перед следующим письмом');return}const to=$('#mlTo').value,p=mlResolve(to),subj=$('#mlSubj').value.trim()||'(без темы)',body=$('#mlBody').value.trim();
-    if(!p){toast('Игрок «'+to+'» не найден — он должен хоть раз зайти в новую версию игры');return}if(p.gid===S.gid){toast('Нельзя писать самому себе 🙂');return}if(!body){toast('Напиши текст письма');return}if(!NET.ok()){toast('Нет связи с онлайн-сервером');return}
+    if(!p){toast('Игрок «'+to+'» не найден — он должен хоть раз зайти в новую версию игры');return}if(p.gid===S.gid){toast('Нельзя писать самому себе 🙂');return}if(p.mc){toast('🔒 У '+p.u+' закрыта почта от игроков');return}if(!body){toast('Напиши текст письма');return}if(!NET.ok()){toast('Нет связи с онлайн-сервером');return}
     mlSendTo(p,subj,body);mlLastSend=Date.now();$('#mlCompose').style.display='none';toast('📨 Письмо отправлено '+p.u);SND.buy();stat('mailsSent');return}
   const cl=t.closest('[data-mlclaim]');if(cl){const m=mlBox().find(x=>x.id===cl.dataset.mlclaim);if(m)mlClaim(m);return}
   const rp=t.closest('[data-mlreply]');if(rp){const m=mlBox().find(x=>x.id===rp.dataset.mlreply);if(m){mlSub();mlCompose(m.fromU,(m.subj.startsWith('Re: ')?'':'Re: ')+m.subj)}return}
   const bl=t.closest('[data-mlblock]');if(bl){const m=mlBox().find(x=>x.id===bl.dataset.mlblock);if(m&&m.fromGid&&confirm('Больше не получать письма от '+m.fromU+'?')){S.mailBlock=S.mailBlock||[];S.mailBlock.push(m.fromGid);S.mail=S.mail.filter(x=>x.fromGid!==m.fromGid);persist();mlRender();toast('🚫 '+m.fromU+' заблокирован')}return}
   const dl=t.closest('[data-mldel]');if(dl){const m=mlBox().find(x=>x.id===dl.dataset.mldel);if(m&&m.gift&&!m.claimed&&!confirm('В письме есть подарок. Удалить, не забрав?'))return;S.mail=S.mail.filter(x=>x.id!==dl.dataset.mldel);persist();mlRender();return}
   const row=t.closest('[data-mlid]');if(row&&!t.closest('.mb')){const m=mlBox().find(x=>x.id===row.dataset.mlid);mlOpen=mlOpen===row.dataset.mlid?null:row.dataset.mlid;if(m&&!m.read){m.read=true;persist()}mlRender()}});
+$('#mlClosed').onchange=e=>{S.mailClosed=e.target.checked;persist();try{publishPresence()}catch(_){}toast(S.mailClosed?'🔒 Почта от игроков закрыта':'🔓 Почта от игроков открыта');SND.click()};
 setInterval(()=>{if(S&&user&&user!=='__guest'){mlSub();mlCheckUpdates();mlBadge()}},5000);
 let codeBuf='',admBoostUntil=+(lsGet('kz_boost')||0);
 const funFx={snow:0,love:0,boom:0,ghost:0,notes:0,cloud:0};
@@ -2975,7 +2978,7 @@ function netProfile(gid,payload){if(!payload.length){delete netPlayers[gid]}else
   if(cur==='set'&&$('#stTop').style.display!=='none'){clearTimeout(netTopT);netTopT=setTimeout(()=>renderTop(),400)}}
 function lvlOf(x,per,max){return Math.min(max,Math.floor(x/per))}
 function devPlat(){return window.KZ_MODE==='android'||window.KZAndroid||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)?'phone':'pc'}
-function profOf(u,nk,sv,last){return{t:'prof',gid:sv.gid,u,nick:nk,coins:sv.coins,best:sv.best,bp:lvlOf(sv.bpXp,BP_XP,BP_LV),ev:lvlOf(sv.evXp,EV_XP,EV_LV),pet:sv.pet&&PETS[sv.pet]?PETS[sv.pet].n:null,skin:sv.eq.skin,plat:devPlat(),dev:DEV_ID,last,v:window.KZ_VER,games:(sv.stats&&sv.stats.games)||0}}
+function profOf(u,nk,sv,last){return{t:'prof',gid:sv.gid,u,nick:nk,coins:sv.coins,best:sv.best,bp:lvlOf(sv.bpXp,BP_XP,BP_LV),ev:lvlOf(sv.evXp,EV_XP,EV_LV),pet:sv.pet&&PETS[sv.pet]?PETS[sv.pet].n:null,skin:sv.eq.skin,plat:devPlat(),dev:DEV_ID,last,v:window.KZ_VER,mc:sv.mailClosed?1:0,games:(sv.stats&&sv.stats.games)||0}}
 let pubAllDone=false;
 function publishPresence(){NET.start();if(!NET.ok())return;if(S&&S.set&&S.set.hideTop){pubAllDone=true;return}
   // all accounts of this device, once per connection (not online, just listed)
