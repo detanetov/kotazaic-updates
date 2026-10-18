@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=34;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=35;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -2376,6 +2376,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:35,l:'1.3.9',items:['📂 На ПК у фонов своя папка: Изображения → Kotazaic and Stars → Фоны','🔄 Картинки, скопированные в эту папку, сами появляются в игре']},
  {v:34,l:'1.3.9',items:['🖼 Фоны в кастомизации: 10 классических фонов','📁 Свои фоны — загрузи любое фото, и оно будет на заднем плане','🌗 Регулятор затемнения фона']},
  {v:33,l:'1.3.8',items:['🎁 Исправлено: подарки из почты от администратора теперь всегда можно забрать']},
  {v:32,l:'1.3.8',items:['✉ В ADM появилась почта с подарками — монеты, вещи, питомцы и яйца конкретному игроку или всем']},
@@ -2730,9 +2731,12 @@ const bgCache={};let bgUser=[],bgImg=null,bgImgId=null;
 function bgCanvas(id){if(bgCache[id])return bgCache[id];const c=document.createElement('canvas');c.width=1280;c.height=720;BG_CLASSIC[id].d(c.getContext('2d'),1280,720);return bgCache[id]=c}
 function bgThumb(id){const k='t_'+id;if(bgCache[k])return bgCache[k];const c=document.createElement('canvas');c.width=192;c.height=108;c.getContext('2d').drawImage(bgCanvas(id),0,0,192,108);return bgCache[k]=c.toDataURL('image/jpeg',.8)}
 function bgDB(){return new Promise((res,rej)=>{try{const r=indexedDB.open('kz_bg',1);r.onupgradeneeded=()=>r.result.createObjectStore('bg',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
-async function bgList(){try{const db=await bgDB();return await new Promise(res=>{const out=[];const cur=db.transaction('bg').objectStore('bg').openCursor();cur.onsuccess=()=>{const c=cur.result;if(c){if(c.value.owner===user)out.push(c.value);c.continue()}else res(out.sort((a,b)=>a.t-b.t))};cur.onerror=()=>res(out)})}catch(e){try{return JSON.parse(lsGet('kz_bgfb_'+user)||'[]')}catch(_){return[]}}}
+async function bgList(){let disk=[];bgDiskDir=null;if(window.KZ_MODE==='exe'){try{const r=await fetch('/bg/list',{cache:'no-store'});if(r.ok){const j=await r.json();bgDiskDir=j.dir;disk=(j.files||[]).sort((a,b)=>a.t-b.t).map(f=>{const u='/bg/file?name='+encodeURIComponent(f.name)+'&t='+f.t;return{id:'f:'+f.name,disk:true,name:f.name.replace(/\.[^.]+$/,'').slice(0,24),data:u,thumb:u,t:f.t}})}}catch(e){}}
+  return disk.concat(await bgListIdb())}
+let bgDiskDir=null;
+async function bgListIdb(){try{const db=await bgDB();return await new Promise(res=>{const out=[];const cur=db.transaction('bg').objectStore('bg').openCursor();cur.onsuccess=()=>{const c=cur.result;if(c){if(c.value.owner===user)out.push(c.value);c.continue()}else res(out.sort((a,b)=>a.t-b.t))};cur.onerror=()=>res(out)})}catch(e){try{return JSON.parse(lsGet('kz_bgfb_'+user)||'[]')}catch(_){return[]}}}
 async function bgPut(rec){try{const db=await bgDB();await new Promise((res,rej)=>{const tx=db.transaction('bg','readwrite');tx.objectStore('bg').put(rec);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}catch(e){const l=JSON.parse(lsGet('kz_bgfb_'+user)||'[]');l.push(rec);lsSet('kz_bgfb_'+user,JSON.stringify(l))}}
-async function bgDel(id){try{const db=await bgDB();await new Promise(res=>{const tx=db.transaction('bg','readwrite');tx.objectStore('bg').delete(id);tx.oncomplete=res;tx.onerror=res})}catch(e){const l=JSON.parse(lsGet('kz_bgfb_'+user)||'[]').filter(x=>x.id!==id);lsSet('kz_bgfb_'+user,JSON.stringify(l))}}
+async function bgDel(id){if(id.startsWith('f:')){try{await fetch('/bg/delete?name='+encodeURIComponent(id.slice(2)))}catch(e){}return}try{const db=await bgDB();await new Promise(res=>{const tx=db.transaction('bg','readwrite');tx.objectStore('bg').delete(id);tx.oncomplete=res;tx.onerror=res})}catch(e){const l=JSON.parse(lsGet('kz_bgfb_'+user)||'[]').filter(x=>x.id!==id);lsSet('kz_bgfb_'+user,JSON.stringify(l))}}
 function bgDraw(t){const b=S.set.bg;let src=null;
   if(b.startsWith('c:')){const id=b.slice(2);if(!BG_CLASSIC[id])return false;src=bgCanvas(id)}
   else if(b.startsWith('u:')){if(bgImgId!==b){bgImgId=b;bgImg=null;const rec=bgUser.find(x=>'u:'+x.id===b);if(rec){const im=new Image();im.onload=()=>{if(bgImgId===b)bgImg=im};im.src=rec.data}else bgList().then(l=>{bgUser=l;bgImgId=null})}if(!bgImg)return false;src=bgImg}else return false;
@@ -2740,20 +2744,24 @@ function bgDraw(t){const b=S.set.bg;let src=null;
 async function renderBg(){if(!S||!$('#bgGrid'))return;bgUser=await bgList();const cur=S.set.bg||'none';
   let h=`<div class="bgtile add" data-bgfolder="1">📁<span>+ Мои фоны (${bgUser.length})</span></div><div class="bgtile ${cur==='none'?'cur':''}" data-bg="none" style="background:linear-gradient(180deg,#0c0a2a,#4a3290)"><b>Обычное небо</b></div>`;
   for(const[id,b]of Object.entries(BG_CLASSIC))h+=`<div class="bgtile ${cur==='c:'+id?'cur':''}" data-bg="c:${id}" style="background-image:url(${bgThumb(id)})"><b>${esc(b.n)}</b></div>`;
-  for(const r of bgUser)h+=`<div class="bgtile ${cur==='u:'+r.id?'cur':''}" data-bg="u:${r.id}" style="background-image:url(${r.thumb||r.data})"><b>🖼 ${esc(r.name||'Моё фото')}</b></div>`;
+  for(const r of bgUser)h+=`<div class="bgtile ${cur==='u:'+r.id?'cur':''}" data-bg="u:${esc(r.id)}" style="background-image:url('${esc(r.thumb||r.data)}')"><b>🖼 ${esc(r.name||'Моё фото')}</b></div>`;
   $('#bgGrid').innerHTML=h;$('#cBgDim').value=S.set.bgDim??15;$('#vBgDim').textContent=(S.set.bgDim??15)+'%';$('#bgDimRow').style.display=cur==='none'?'none':'';if($('#bgFolder').style.display!=='none')renderBgFolder()}
-function renderBgFolder(){const f=$('#bgFolder');let h=`<div class="row" style="justify-content:space-between"><h3>📁 Мои фоны</h3><div class="row" style="gap:6px"><button class="btn sm mint" id="bgUp">📤 Загрузить фото</button><button class="btn sm ghost" id="bgFClose">✕</button></div></div>`;
-  if(!bgUser.length)h+='<p class="hint">Здесь пока пусто. Нажми «Загрузить фото» и выбери картинку с компьютера или телефона.</p>';
-  else{h+='<div class="thgrid">';for(const r of bgUser)h+=`<div class="bgtile ${S.set.bg==='u:'+r.id?'cur':''}" data-bg="u:${r.id}" style="background-image:url(${r.thumb||r.data})"><b>🖼 ${esc(r.name||'Моё фото')}</b><span class="del" data-bgdel="${r.id}">✕</span></div>`;h+='</div>'}
-  h+=`<p class="hint">До 8 фонов. Фото хранятся только на этом устройстве.</p>`;f.innerHTML=h}
-function bgLoadFile(file){if(!file)return;if(!/^image\//.test(file.type)){toast('Это не картинка');return}if(bgUser.length>=8){toast('Максимум 8 своих фонов — удали какой-нибудь');return}
+function renderBgFolder(){const f=$('#bgFolder');let h=`<div class="row" style="justify-content:space-between"><h3>📁 Мои фоны</h3><div class="row" style="gap:6px">${bgDiskDir?'<button class="btn sm" id="bgOpenDir">📂 Открыть папку</button><button class="btn sm ghost" id="bgRefresh">🔄</button>':''}<button class="btn sm mint" id="bgUp">📤 Загрузить фото</button><button class="btn sm ghost" id="bgFClose">✕</button></div></div>`;
+  if(bgDiskDir)h+=`<p class="hint">📂 Папка с фонами на компьютере: <b>${esc(bgDiskDir)}</b><br>Можно просто скопировать туда свои картинки (JPG, PNG, WEBP) и нажать 🔄 — они появятся здесь.</p>`;
+  if(!bgUser.length)h+='<p class="hint">Здесь пока пусто. Нажми «Загрузить фото»'+(bgDiskDir?' или скопируй картинки в папку выше':'')+'.</p>';
+  else{h+='<div class="thgrid">';for(const r of bgUser)h+=`<div class="bgtile ${S.set.bg==='u:'+r.id?'cur':''}" data-bg="u:${esc(r.id)}" style="background-image:url('${esc(r.thumb||r.data)}')"><b>🖼 ${esc(r.name||'Моё фото')}</b><span class="del" data-bgdel="${esc(r.id)}">✕</span></div>`;h+='</div>'}
+  h+=bgDiskDir?'':`<p class="hint">До 8 фонов. Фото хранятся только на этом устройстве.</p>`;f.innerHTML=h}
+function bgLoadFile(file){if(!file)return;if(!/^image\//.test(file.type)){toast('Это не картинка');return}if(!bgDiskDir&&bgUser.length>=8){toast('Максимум 8 своих фонов — удали какой-нибудь');return}
   const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=async()=>{const sc=Math.min(1,1920/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
       const data=c.toDataURL('image/jpeg',.85),t=document.createElement('canvas');t.width=192;t.height=108;const tc=t.getContext('2d'),ts=Math.max(192/c.width,108/c.height);tc.drawImage(c,(192-c.width*ts)/2,(108-c.height*ts)/2,c.width*ts,c.height*ts);
+      if(bgDiskDir){const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.9));const nm=(String(file.name||'фото').replace(/\.[^.]+$/,'').replace(/[\\/:*?"<>|]/g,'').slice(0,40)||'фото')+'.jpg';try{const r=await fetch('/bg/upload?name='+encodeURIComponent(nm),{method:'POST',body:blob});const j=await r.json();S.set.bg='u:f:'+j.name;bgImgId=null;persist();toast('🖼 Фото сохранено в папку фонов и включено!');SND.win();renderBg();return}catch(e){}}
       const rec={id:Date.now().toString(36),owner:user,name:String(file.name||'фото').replace(/\.[^.]+$/,'').slice(0,24),data,thumb:t.toDataURL('image/jpeg',.75),t:Date.now()};await bgPut(rec);S.set.bg='u:'+rec.id;bgImgId=null;persist();toast('🖼 Фон загружен и включён!');SND.win();renderBg()};im.onerror=()=>toast('Не удалось открыть картинку');im.src=fr.result};fr.readAsDataURL(file)}
 document.addEventListener('click',async e=>{if(!S)return;const t=e.target;
   const dl=t.closest('[data-bgdel]');if(dl){e.stopPropagation();if(!confirm('Удалить этот фон?'))return;await bgDel(dl.dataset.bgdel);if(S.set.bg==='u:'+dl.dataset.bgdel){S.set.bg='none';persist()}bgImgId=null;renderBg();return}
   if(t.closest('[data-bgfolder]')){const f=$('#bgFolder');f.style.display=f.style.display==='none'?'block':'none';renderBgFolder();SND.click();return}
   if(t.closest('#bgFClose')){$('#bgFolder').style.display='none';return}
+  if(t.closest('#bgOpenDir')){fetch('/bg/open').catch(()=>{});toast('📂 Открываю папку с фонами…');return}
+  if(t.closest('#bgRefresh')){await renderBg();renderBgFolder();toast('🔄 Список фонов обновлён');return}
   if(t.closest('#bgUp')){$('#bgFile').value='';$('#bgFile').click();return}
   const b=t.closest('[data-bg]');if(b&&b.closest('#stCus')){S.set.bg=b.dataset.bg;bgImgId=null;persist();SND.click();renderBg()}});
 $('#bgFile').addEventListener('change',e=>bgLoadFile(e.target.files&&e.target.files[0]));

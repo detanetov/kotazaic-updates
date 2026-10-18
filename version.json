@@ -1,13 +1,13 @@
 {
- "version": 34,
+ "version": 35,
  "label": "1.3.9",
- "name": "Версия 1.3.9: фоны в кастомизации и свои фото",
+ "name": "Версия 1.3.9: папка для фонов на ПК",
  "file": "game.html",
- "sha256": "d97c8b3e40d2b889bd455477a4aa0d813dbb8987ff016b57ced7856ee50aad72",
+ "sha256": "fc2585d0262c33954fbd6e69f1903eaace7f2ae5d3a01bbf6ad8cc86ef907b90",
  "date": "2026-10-18",
  "exe": {
-  "version": 3,
+  "version": 4,
   "file": "KotazaicAndStars.exe",
-  "sha256": "865e1576ba9d4e15cbdb05e23971e3f0a38b9613b365e0b623fbe2f9d48b99bb"
+  "sha256": "8b4a5fdb67c3648b057de3e5fd85b6ca8e1d22e9879bae5dfd84467928b22a11"
  }
 }
