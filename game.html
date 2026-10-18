@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=45;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=46;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -138,6 +138,7 @@ html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
 .ptl{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ptc{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:10px;text-align:center;cursor:pointer;color:var(--ink)}.ptc img{width:100%;max-width:120px;aspect-ratio:1;border-radius:12px;background:#2a2050;display:block;margin:0 auto 6px}.ptc b{display:block}.ptc small{opacity:.65;font-weight:700}
 .rdy{margin-top:6px;font-weight:900;font-size:12px;background:#f3efe6;border:2px solid var(--ink);border-radius:10px;padding:2px 8px;display:table;margin:6px auto 0}.rdy.on{background:#c9f7d8}
 .ptc.empty{border-style:dashed;opacity:.6;cursor:default}.ptplus{width:100%;max-width:120px;aspect-ratio:1;margin:0 auto 6px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:900;background:#f3efe6}
+.optbox{background:rgba(94,230,193,.12);border:3px dashed var(--ink);border-radius:16px;padding:6px 10px 2px;margin:8px 0}
 .slots{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:14px}.slot span{font-size:10px!important;line-height:1.2;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:normal;overflow-wrap:normal}
 .slot{padding:6px 1px!important}.slot b{font-size:10.5px!important}
 .slot span{font-size:12px}
@@ -460,6 +461,16 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
     <div class="opt tg"><label>💬 Котозаяц разговаривает</label><input type="checkbox" id="sTalk"></div>
     <div class="opt tg"><label>🔢 Цифры «+🪙» над пойманными звёздами</label><input type="checkbox" id="sFloats"></div>
     <div class="opt tg"><label>📳 Вибрация при ударе (телефон)</label><input type="checkbox" id="sVib"></div>
+    <div class="optbox"><h4 style="margin:4px 0 6px">⚡ Оптимизация</h4>
+    <div class="opt tg"><label>🎚 Режим графики</label><select class="inp" id="sPerf"><option value="auto">🤖 Авто — сам подстраивается под компьютер</option><option value="quality">💎 Качество — всё на максимум</option><option value="balance">⚖ Баланс</option><option value="perf">🚀 Производительность</option><option value="ultra">🥔 Максимальная скорость (слабые устройства)</option><option value="custom">🛠 Свой</option></select></div>
+    <div class="opt"><label>🖼 Разрешение отрисовки <b id="vRes"></b></label><input type="range" min="50" max="100" step="5" id="sRes"></div>
+    <div class="opt tg"><label>🎞 Ограничение FPS</label><select class="inp" id="sFpsCap"><option value="0">Без ограничения</option><option value="60">60 FPS</option><option value="45">45 FPS</option><option value="30">30 FPS — экономия батареи</option></select></div>
+    <div class="opt tg"><label>🌟 Свечение и тени</label><input type="checkbox" id="sGlow"></div>
+    <div class="opt tg"><label>🌌 Эффекты неба (туманности, сияние, облака)</label><input type="checkbox" id="sSkyFx"></div>
+    <div class="opt tg"><label>⭐ Падающие звёзды в меню</label><input type="checkbox" id="sMenuFx"></div>
+    <div class="opt"><label>✨ Количество частиц <b id="vPmax"></b></label><input type="range" min="50" max="800" step="50" id="sPmax"></div>
+    <div class="opt tg"><label id="vPerfNow">📊 Сейчас: —</label><button class="btn sm mint" id="sPerfTest">🔍 Автоподбор</button></div>
+    </div>
     <div class="opt tg"><label>📈 Показывать FPS</label><input type="checkbox" id="sFps"></div>
     <div class="opt tg"><label>🙈 Скрыть меня из общего топа</label><input type="checkbox" id="sHide"></div>
     <div class="opt tg"><label>🔄 Версия игры: <b id="vVer"></b></label><button class="btn sm ghost" id="sUpd">Проверить обновления</button></div>
@@ -781,7 +792,7 @@ const $=s=>document.querySelector(s);
 const INK='#1d1838';
 const cv=$('#c'),ctx=cv.getContext('2d');
 let W=0,H=0,DPR=1;
-function resize(){DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);makeSky()}
+function resize(){DPR=Math.max(.4,Math.min(2,window.devicePixelRatio||1)*(optEff().res/100));W=innerWidth;H=innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);makeSky()}
 addEventListener('resize',resize);
 const rnd=(a,b)=>a+Math.random()*(b-a);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -881,7 +892,7 @@ function persist(){if(!user)return;if(S)S.last=Date.now();clearTimeout(window._p
 function login(u){
   if(u==='__guest'){user=u;nick='Гость';try{S=fixSave(JSON.parse(lsGet('kz_guest')))}catch(e){S=newSave()}}
   else{const db=loadDB();if(!db[u])return false;user=u;nick=db[u].nick;S=fixSave(db[u].save)}
-  applyShader();applyFlip();try{mlCheckUpdates();mlBadge();mlSub();socSub();chBadge();applyLook();applyGui();makeSky();if(S.set.music)musicKick()}catch(e){}if(u!=='__guest')persist();lsSet('kz_session',u);addKnown(u);backUser=null;$('#aBack').style.display='none';refreshTop();show('menu');return true}
+  applyShader();applyFlip();try{optApply()}catch(e){}try{mlCheckUpdates();mlBadge();mlSub();socSub();chBadge();applyLook();applyGui();makeSky();if(S.set.music)musicKick()}catch(e){}if(u!=='__guest')persist();lsSet('kz_session',u);addKnown(u);backUser=null;$('#aBack').style.display='none';refreshTop();show('menu');return true}
 let backUser=null;
 function getKnown(){try{const k=JSON.parse(lsGet('kz_known'));return Array.isArray(k)?k:[]}catch(e){return[]}}
 function addKnown(u){const k=getKnown().filter(x=>x!==u);k.unshift(u);lsSet('kz_known',JSON.stringify(k.slice(0,20)))}
@@ -1900,6 +1911,7 @@ function drawSky(t,hw){
   const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,th.top);g.addColorStop(.6,th.mid);g.addColorStop(1,th.bot);
   ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
   if(!hw&&S&&S.set.bg&&S.set.bg!=='none'&&bgDraw(t))th=Object.assign({},th,{starA:0,nebula:false,aurora:false,clouds:false});
+  if(!optEff().skyFx)th=Object.assign({},th,{nebula:false,aurora:false,clouds:false});
   if(S&&S.fun&&S.fun.disco)drawDisco(t);
   if(th.nebula){for(const[nx,ny,nr,col]of[[.25,.3,.45,'rgba(180,70,255,.28)'],[.7,.45,.4,'rgba(255,90,170,.22)'],[.5,.15,.35,'rgba(80,140,255,.22)']]){const x=W*nx+Math.sin(t*.1+nx*9)*30,y=H*ny,r=Math.max(W,H)*nr;const gg=ctx.createRadialGradient(x,y,0,x,y,r);gg.addColorStop(0,col);gg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gg;ctx.fillRect(0,0,W,H)}}
   if(th.starA>0){for(const s of skyStars){ctx.globalAlpha=th.starA*(.35+.65*Math.abs(Math.sin(t*1.3+s.p)));ctx.fillStyle='#fff';ctx.fillRect(s.x,s.y,s.r,s.r)}ctx.globalAlpha=1}
@@ -2003,7 +2015,7 @@ function drawPart(c,p,t){const k=1-p.life/p.max;c.globalAlpha=k;if(drawPart2(c,p
 }
 function stepParts(dt,t){
   for(const p of parts){p.life+=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=p.kind==='bat'?-20*dt:40*dt}
-  parts=parts.filter(p=>p.life<p.max);if(parts.length>500)parts.splice(0,parts.length-500);
+  parts=parts.filter(p=>p.life<p.max);{const pm=optEff().pmax;if(parts.length>pm)parts.splice(0,parts.length-pm)}
   for(const p of parts)drawPart(ctx,p,t);
   ctx.globalAlpha=1;
 }
@@ -2312,7 +2324,7 @@ function previewTrail(kind,t){
 let menuItems=[],menuT=0,menuSpawn=0;
 function drawMenuScene(t,dt){
   drawSky(t,cur==='ev');
-  menuSpawn-=dt;if(menuSpawn<=0){menuSpawn=.45;const k=cur==='ev'?(Math.random()<.5?'candy':'pumpkin'):(Math.random()<.25?'pink':'star');menuItems.push({k,x:rnd(20,W-20),y:-30,vx:0,vy:rnd(40,80),r:k==='pink'?14:12,rot:0,spin:rnd(-1,1)})}
+  menuSpawn-=dt;if(menuSpawn<=0&&optEff().menuFx){menuSpawn=.45;const k=cur==='ev'?(Math.random()<.5?'candy':'pumpkin'):(Math.random()<.25?'pink':'star');menuItems.push({k,x:rnd(20,W-20),y:-30,vx:0,vy:rnd(40,80),r:k==='pink'?14:12,rot:0,spin:rnd(-1,1)})}
   for(const it of menuItems){it.y+=it.vy*dt;it.rot+=it.spin*dt;drawItem(ctx,it)}menuItems=menuItems.filter(i=>i.y<H+40);
   if(!S)return;
   const narrow=W<760,x=narrow?W/2:W*.68,s=narrow?Math.min(1.3,H/600):Math.min(2.2,H/380);
@@ -2671,6 +2683,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:46,l:'1.3.9',items:['⚡ Settings → Основное: новый блок «Оптимизация» — режимы графики (Авто, Качество, Баланс, Производительность, Максимальная скорость), разрешение, ограничение FPS, свечение, эффекты неба, количество частиц','🔍 Кнопка «Автоподбор» сама меряет FPS и выбирает лучший режим; в режиме Авто игра сама снижает графику, если начинает тормозить']},
  {v:45,l:'1.3.9',items:['🤖 ADM: TAS v2 — новый автопилот: точная симуляция движения на 2 секунды вперёд, двухшаговые манёвры, учёт неуязвимости, ветра и замедления. В тестах — 0 попаданий метеоритов за 30 минут игры']},
  {v:44,l:'1.3.9',items:['🤝 В топе игроков новая вкладка «Совместные» — лучший счёт в совместных играх и с кем он набран','👤 В профиле видно совместный рекорд и количество совместных игр']},
  {v:43,l:'1.3.9',items:['🎮 Совместная игра: у всех в пати теперь один и тот же мир — те же звёзды, метеориты, боссы и события','🤝 Общий счёт, жизни, монеты и рекорд на всех','🚪 Если один выходит — игра заканчивается у всех; пауза тоже общая']},
@@ -2822,6 +2835,7 @@ addEventListener('keydown',e=>{
 
 let last=performance.now(),T=0,fpsN=0,fpsAcc=0,fpsLast=0;
 function loop(now){
+  {const cap=optEff().fpsCap;if(cap&&now-last<1000/cap-2){requestAnimationFrame(loop);return}}
   const dt=Math.min(.05,(now-last)/1000);last=now;T+=dt;animateGrain(dt);netStat.fN++;netStat.fT+=dt;if(netStat.fT>=.5){netStat.fps=Math.round(netStat.fN/netStat.fT);netStat.cpu=clamp(Math.round(netStat.work/(netStat.fT*1000)*100),1,100);netStat.work=0;netStat.fN=0;netStat.fT=0}const _w0=performance.now();
   if(S&&S.set.fps){fpsN++;fpsAcc+=now-(fpsLast||now);fpsLast=now;if(fpsAcc>500){$('#fps').textContent=Math.round(fpsN*1000/fpsAcc)+' FPS';fpsN=0;fpsAcc=0}}
   if(G){if(!G.paused&&!G.over){const sp=isAdm()&&S.adm.speed?+S.adm.speed:1;if(sp===1)update(dt);else{const n=Math.ceil(sp);for(let i=0;i<n&&G&&!G.over;i++)update(dt*sp/n)}}if(G)drawGame(T,dt)}else drawMenuScene(T,dt);
@@ -2964,7 +2978,33 @@ $('#aGuest').onclick=()=>login('__guest');
 if(location.protocol.startsWith('http'))setInterval(()=>{fetch('/ping',{cache:'no-store'}).catch(()=>{})},4000);
 
 /* ---------------- settings ---------------- */
-function renderSet(){const t=S.set;$('#sDiff').value=t.diff;$('#sZen').checked=t.zen;$('#sMusic').checked=t.music;$('#sMvol').value=t.mvol;$('#vMvol').textContent=t.mvol+'%';$('#sTalk').checked=t.talk;$('#sFloats').checked=t.floats;$('#sVib').checked=t.vib;$('#sFps').checked=t.fps;$('#sHide').checked=t.hideTop;$('#sVol').value=t.vol;$('#vVol').textContent=t.vol+'%';$('#sSpd').value=t.spd;$('#vSpd').textContent=t.spd+'%';
+
+/* ---------------- Optimization ---------------- */
+const PERF={quality:{n:'💎 Качество',res:100,fpsCap:0,glow:true,skyFx:true,menuFx:true,pmax:800},balance:{n:'⚖ Баланс',res:85,fpsCap:0,glow:true,skyFx:true,menuFx:true,pmax:400},perf:{n:'🚀 Производительность',res:70,fpsCap:0,glow:false,skyFx:false,menuFx:true,pmax:200},ultra:{n:'🥔 Максимальная скорость',res:50,fpsCap:30,glow:false,skyFx:false,menuFx:false,pmax:80}};
+const PERF_L=['quality','balance','perf','ultra'];let autoL=0,autoLow=0,autoHigh=0,autoLastDown=0;
+try{autoL=clamp(+(localStorage.getItem('kz_autoL')||0),0,3)}catch(e){}
+const OPT_DEF={res:100,fpsCap:0,glow:true,skyFx:true,menuFx:true,pmax:800};
+function optEff(){const t=typeof S!=='undefined'&&S&&S.set;if(!t||typeof PERF_L==='undefined')return OPT_DEF;const m=t.perf||'auto';if(m==='auto')return PERF[PERF_L[autoL]];if(PERF[m])return PERF[m];
+  return{res:t.res??100,fpsCap:t.fpsCap||0,glow:t.glow!==false,skyFx:t.skyFx!==false,menuFx:t.menuFx!==false,pmax:t.pmax||500}}
+{const d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'shadowBlur');if(d&&d.set)Object.defineProperty(CanvasRenderingContext2D.prototype,'shadowBlur',{get(){return d.get.call(this)},set(v){d.set.call(this,optEff().glow?v:0)},configurable:true})}
+let optResKey='';function optApply(){const e=optEff(),k=e.res;if(k!==optResKey){optResKey=k;try{resize()}catch(er){}}}
+function optRender(){if(!S)return;const t=S.set,e=optEff();$('#sPerf').value=t.perf||'auto';$('#sRes').value=e.res;$('#vRes').textContent=e.res+'%';$('#sFpsCap').value=String(e.fpsCap||0);$('#sGlow').checked=e.glow;$('#sSkyFx').checked=e.skyFx;$('#sMenuFx').checked=e.menuFx;$('#sPmax').value=e.pmax;$('#vPmax').textContent=e.pmax;
+  $('#vPerfNow').textContent='📊 Сейчас: '+(netStat.fps||'—')+' FPS'+((t.perf||'auto')==='auto'?' · авто: '+PERF[PERF_L[autoL]].n:'')}
+function optCustom(k,v){const e=optEff();Object.assign(S.set,{res:e.res,fpsCap:e.fpsCap,glow:e.glow,skyFx:e.skyFx,menuFx:e.menuFx,pmax:e.pmax});S.set[k]=v;S.set.perf='custom';persist();optApply();optRender()}
+$('#sPerf').onchange=e=>{S.set.perf=e.target.value;if(S.set.perf==='auto'){autoLow=autoHigh=0}persist();optApply();optRender();SND.click();toast('⚡ Режим графики: '+e.target.selectedOptions[0].textContent.split(' — ')[0])};
+$('#sRes').oninput=e=>{$('#vRes').textContent=e.target.value+'%'};$('#sRes').onchange=e=>optCustom('res',+e.target.value);
+$('#sFpsCap').onchange=e=>optCustom('fpsCap',+e.target.value);$('#sGlow').onchange=e=>optCustom('glow',e.target.checked);$('#sSkyFx').onchange=e=>optCustom('skyFx',e.target.checked);$('#sMenuFx').onchange=e=>optCustom('menuFx',e.target.checked);
+$('#sPmax').oninput=e=>{$('#vPmax').textContent=e.target.value};$('#sPmax').onchange=e=>optCustom('pmax',+e.target.value);
+$('#sPerfTest').onclick=()=>{if(!S)return;const b=$('#sPerfTest');b.disabled=true;b.textContent='⏳ Меряю…';S.set.perf='quality';optApply();let n=0,t0=performance.now();
+  const step=()=>{n++;if(performance.now()-t0<2500){requestAnimationFrame(step);return}const fps=n/((performance.now()-t0)/1000);const pick=fps>=55?'quality':fps>=45?'balance':fps>=32?'perf':'ultra';
+    S.set.perf=pick;persist();optApply();optRender();b.disabled=false;b.textContent='🔍 Автоподбор';toast(`🔍 ${Math.round(fps)} FPS — выбран режим ${PERF[pick].n}`);SND.win()};requestAnimationFrame(step)};
+setInterval(()=>{if(!S||document.hidden)return;if(cur==='set'&&$('#stMain').style.display!=='none')$('#vPerfNow').textContent='📊 Сейчас: '+(netStat.fps||'—')+' FPS'+((S.set.perf||'auto')==='auto'?' · авто: '+PERF[PERF_L[autoL]].n:'');
+  if((S.set.perf||'auto')!=='auto')return;const f=netStat.fps||60,cap=optEff().fpsCap||60;
+  if(f<Math.min(44,cap-8)){autoLow++;autoHigh=0}else if(f>=Math.min(57,cap-2)){autoHigh++;autoLow=0}else{autoLow=0;autoHigh=0}
+  if(autoLow>=4&&autoL<3){autoL++;autoLow=0;autoLastDown=Date.now();try{localStorage.setItem('kz_autoL',autoL)}catch(e){}optApply();toast('⚡ Авто-оптимизация: '+PERF[PERF_L[autoL]].n)}
+  else if(autoHigh>=30&&autoL>0&&Date.now()-autoLastDown>90000){autoL--;autoHigh=0;try{localStorage.setItem('kz_autoL',autoL)}catch(e){}optApply()}},1000);
+
+function renderSet(){const t=S.set;try{optRender()}catch(e){}$('#sDiff').value=t.diff;$('#sZen').checked=t.zen;$('#sMusic').checked=t.music;$('#sMvol').value=t.mvol;$('#vMvol').textContent=t.mvol+'%';$('#sTalk').checked=t.talk;$('#sFloats').checked=t.floats;$('#sVib').checked=t.vib;$('#sFps').checked=t.fps;$('#sHide').checked=t.hideTop;$('#sVol').value=t.vol;$('#vVol').textContent=t.vol+'%';$('#sSpd').value=t.spd;$('#vSpd').textContent=t.spd+'%';
   $('#sMouse').checked=t.mouse;$('#sParts').checked=t.parts;$('#sShake').checked=t.shake;$('#sAuto').checked=t.auto;$('#sNick').value=nick}
 $('#sVol').oninput=e=>{S.set.vol=+e.target.value;$('#vVol').textContent=S.set.vol+'%';persist()};
 $('#sVol').onchange=()=>SND.star();
@@ -2976,7 +3016,7 @@ $('#sMusic').onchange=e=>{S.set.music=e.target.checked;persist();musicKick()};
 $('#sMvol').oninput=e=>{S.set.mvol=+e.target.value;$('#vMvol').textContent=S.set.mvol+'%';persist()};
 for(const[id,k]of[['#sTalk','talk'],['#sFloats','floats'],['#sVib','vib'],['#sFps','fps']])$(id).onchange=e=>{S.set[k]=e.target.checked;persist();SND.click();applyLook()};
 $('#sHide').onchange=e=>{S.set.hideTop=e.target.checked;persist();if(S.set.hideTop&&S.gid){NET.pub(TP+'players/'+S.gid,null,true);toast('🙈 Тебя больше не видно в общем топе')}else{publishPresence();toast('Ты снова в общем топе')}};
-$('#sDefault').onclick=()=>{S.set=defSet();persist();renderSet();applyShader();applyLook();makeSky();toast('Настройки сброшены')};
+$('#sDefault').onclick=()=>{S.set=defSet();persist();optApply();renderSet();applyShader();applyLook();makeSky();toast('Настройки сброшены')};
 $('#sNickSave').onclick=()=>{const n=$('#sNick').value.trim();if(!n){toast('Ник не может быть пустым');return}
   if(user==='__guest'){toast('У гостя нельзя сменить ник');return}const db=loadDB();if(db[user]){db[user].nick=n;saveDB(db)}nick=n;refreshTop();toast('Ник: '+n)};
 $('#sWipe').onclick=()=>{if(!confirm('Точно удалить весь прогресс? Монеты, пассы и косметика пропадут.'))return;const keep=S.set;S=newSave();S.set=keep;persist();refreshTop();toast('Прогресс удалён')};
