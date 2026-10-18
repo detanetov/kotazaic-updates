@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=59;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=60;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -2646,6 +2646,7 @@ function renderCos(){
     const rr=rarity(def),trying=cosTab==='skin'?SKIN_ORDER[cosSkin]===id&&!on:tryOn[cosTab]===id&&!on;
     g+=`<div class="it ${on?'on':''} ${trying?'try':''}" ${cosTab==='skin'?`data-sk="${id}"`:`data-try="${cosTab}:${id}"`}><div class="ihead"><div class="itx"><b>${def.n}</b><span class="rar" style="background:${rr.c}">${rr.n}</span>${own&&!on?'<small>есть</small>':''}${(S.inv[cosTab+':'+id]||0)>1?`<span class="cntb">x${S.inv[cosTab+':'+id]}</span>`:''}${own&&def.price?`<button class="btn sm ghost" style="font-size:11px;padding:3px 8px" data-buy="${cosTab}:${id}" ${S.coins<def.price?'disabled':''}>＋ ещё 🪙${def.price}</button>`:''}</div><img class="thumb" alt="" ${thAttr(cosTab,id)}></div>${act}${def.perk?`<small class="perk">⚡ ${def.perk}</small>`:''}</div>`}
   $('#items').innerHTML=g||'<p class="hint">В этом разделе нет вещей с таким фильтром</p>';
+  try{thScan($('#items'))}catch(er){}
   renderSkinBar();refreshTop();
 }
 const thumbCache={};
@@ -3061,6 +3062,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:60,l:'1.3.9',items:['🖼 Исправлены пустые синие миниатюры в Cosmetics и других разделах — предпросмотр вещей снова виден']},
  {v:59,l:'1.3.9',items:['▶ Режимы игры: Обычный, ⏱ На время, 💀 Хардкор (×2 очки и монеты) и 🌟 Испытание дня с особыми правилами и наградой','🔧 Мастерская: 8 постоянных улучшений котозайца по 5 уровней (жизни, щит на старте, бонусы, комбо, монеты…)','⚡ С 4 волны — молнии: красная полоса предупреждает, куда ударит','📦 После каждого босса падает сундук с вещью и монетами','👋 Подсказки для новичков в первом забеге','🏆 Свой рекорд для каждого режима']},
  {v:58,l:'1.3.9',items:['🔥 Комбо: лови без ударов — множитель очков растёт до ×4','🎁 5 бонусов в забеге: 🧲 магнит, 🛡 щит, ⏱ замедление, ✖2 двойные очки, 🌠 звездопад','☄ Новый босс — Король Комет с метеоритным дождём','📋 Задания дня (3 в день) с наградами и бонусом за все','⭐ Уровень аккаунта: опыт за забеги и задания, монеты за каждый уровень и вещь каждые 5 уровней','📊 Полоска прогресса волны и больше статистики после забега']},
  {v:57,l:'1.3.9',items:['⌨ ADM: бинды для мини-игр']},
@@ -3648,6 +3650,7 @@ function thAttr(sl,id){const src=thLazy(sl,id);return src===TH_BLANK?`src="${TH_
 function thScan(root){if(!('IntersectionObserver'in window)){for(const im of(root||document).querySelectorAll('img[data-th]')){const[sl,...r]=im.dataset.th.split(':');im.src=thumb(sl,r.join(':'));im.removeAttribute('data-th')}return}
   if(!thObs)thObs=new IntersectionObserver(es=>{let n=0;for(const e of es){if(!e.isIntersecting)continue;const im=e.target;if(!im.dataset.th){thObs.unobserve(im);continue}const[sl,...r]=im.dataset.th.split(':');try{im.src=thumb(sl,r.join(':'))}catch(er){}im.removeAttribute('data-th');thObs.unobserve(im);n++}},{rootMargin:'200px'});
   for(const im of(root||document).querySelectorAll('img[data-th]'))thObs.observe(im)}
+let thMoQ=false;try{new MutationObserver(()=>{if(thMoQ)return;thMoQ=true;requestAnimationFrame(()=>{thMoQ=false;if(document.querySelector('img[data-th]'))thScan()})}).observe(document.body,{childList:true,subtree:true})}catch(er){}
 function kInfo(k){const[sl,id]=k.split(':');const d=itemDef(sl,id);return{sl,id,n:d.n,v:itemVal(sl,id),rc:rarity(d).c,get img(){return thumb(sl,id)}}}
 function kgInVal(){let v=0;for(const k in kgSel)v+=itemVal(...k.split(':'))*kgSel[k];return v+(kgCoins||0)}
 function kgSelCount(){let n=0;for(const k in kgSel)n+=kgSel[k];return n}
