@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=68;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=69;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3062,6 +3062,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:69,l:'1.4.0',items:['👔 Костюмов стало 50: 38 новых, собранных из обычных вещей Cosmetics (шапки, кепки, кофты, обувь, аксессуары, Gear, следы и ауры)','🗂 Вкладки костюмов: Профессии, Сказки и фэнтези, Спорт, Праздники, Времена года, Стиль','🆕 Новые вещи в Cosmetics: Плащ супергероя, Костюм супергероя, Защитные очки учёного','🏅 Достижение «Мастер перевоплощений» — 30 костюмов']},
  {v:68,l:'1.4.0',items:['👔 Полные костюмы в Cosmetics: 12 костюмов — Военный, Пасечник, Пожарный, Космонавт, Доктор, Повар, Пират, Ниндзя, Волшебник, Строитель, Водолаз, Король','🎽 В каждом костюме 5 вещей: голова, кофта, обувь, аксессуар и вещь в руки (с бонусом)','💸 Целый костюм — скидка 20%, кнопки «Надеть» и «Примерить»','🏅 3 новых достижения за костюмы']},
  {v:67,l:'1.4.0',items:['🔄 Автообновление теперь проверяется только при запуске игры и больше не мешает во время игры: если обновление скачалось позже, оно установится при следующем запуске','⚙ Кнопка «Проверить обновления» в Settings работает как раньше']},
  {v:66,l:'1.4.0',items:['🕹 5 новых мини-игр: 🧩 Котозаяц 2048, 🐍 Змейка-морковка, 🧠 Мемори, 💣 Сапёр, 🪽 Летающий котозаяц','🏆 У каждой свой рекорд, монеты за результат и шанс на трофей','📋 Новые задания мини-игр дня для аркады','🏅 9 новых достижений']},
@@ -5966,22 +5967,78 @@ function suGear(c,id,t){const stick=(h,col)=>{c.beginPath();c.roundRect(-2.5,-h,
 {const _f=drawAccFront2;drawAccFront2=function(c,a,t){_f.apply(this,arguments);try{suAccFront(c,a,t)}catch(e){}}}
 {const _f=drawGear;drawGear=function(c,id,t,sw){if(id&&id.slice(0,3)==='su_'&&GEAR[id]){c.save();c.translate(-41,-46);c.rotate(-.22+(sw||0)*.6);c.scale(1.35,1.35);try{suGear(c,id,t)}catch(e){}c.restore();return}return _f.apply(this,arguments)}}
 /* --- UI --- */
-function suitCost(k){let c=0;for(const[sl,p]of Object.entries(SUITS[k].parts))if(!(S.own[sl]||[]).includes(p[0]))c+=p[2];return Math.round(c*.8)}
-function suitOwned(k){return Object.entries(SUITS[k].parts).filter(([sl,p])=>(S.own[sl]||[]).includes(p[0])).length}
-function suitWorn(k){return Object.entries(SUITS[k].parts).every(([sl,p])=>S.eq[sl]===p[0])}
-const suitThumbC={};function suitThumb(k){const key=k+':'+S.eq.skin;if(suitThumbC[key])return suitThumbC[key];const c=document.createElement('canvas');c.width=200;c.height=230;const x=c.getContext('2d');x.fillStyle='#2a2050';x.beginPath();x.roundRect(0,0,200,230,20);x.fill();const eq={skin:S.eq.skin,face:S.eq.face||'none',caps:'none',trail:'none',aura:'none'};for(const[sl,p]of Object.entries(SUITS[k].parts))eq[sl]=p[0];drawKZ(x,100,212,.95,eq,1.3,0);return suitThumbC[key]=c.toDataURL()}
-function suitsOpen(){let h=xHead('👔 Полные костюмы')+'<p class="sub">Целый образ одной кнопкой: шапка, кофта, обувь, аксессуар и вещь в руки. Костюм целиком — скидка 20% на недостающие вещи. Вещи костюма можно носить и по отдельности.</p><div class="xgrid" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));max-height:62vh;overflow:auto">';
-  for(const[k,su]of Object.entries(SUITS)){const own=suitOwned(k),all=own===5,cost=suitCost(k),worn=suitWorn(k);
-    h+=`<div class="xshop" style="${worn?'background:#e3fbef':''}"><img src="${suitThumb(k)}" style="width:120px;height:138px;background:none" alt=""><b>${su.i} ${su.n}</b><small class="hint" style="margin:0">${su.d}</small><small style="font-weight:900">${own}/5 вещей</small>
+/* ---- suits v2: built from regular Cosmetics items ---- */
+Object.assign(ITEMS.acc,{su_herocape:{n:'Плащ супергероя',price:280}});Object.assign(ITEMS.top,{su_herosuit:{n:'Костюм супергероя',price:320}});Object.assign(ITEMS.head,{su_labgoggles:{n:'Защитные очки учёного',price:150}});
+TOP_COL.su_herosuit='#3d5bd9';
+{const _h=suHead;suHead=function(c,h,t){_h.apply(this,arguments);if(h==='su_labgoggles'){c.beginPath();c.ellipse(0,-116,38,9,0,Math.PI,0,true);c.lineWidth=5;c.strokeStyle='#3a3a48';c.stroke();for(const x of[-14,14]){ell(c,x,-122,11,9);c.fillStyle='rgba(120,255,170,.55)';c.fill();c.lineWidth=4;c.strokeStyle='#3a3a48';c.stroke();ell(c,x-3,-125,3,2,-.4);c.fillStyle='#fff';c.fill()}}}}
+{const _t=suTop;suTop=function(c,id,t){_t.apply(this,arguments);if(id==='su_herosuit'){c.beginPath();c.moveTo(0,-74);c.lineTo(20,-56);c.lineTo(0,-36);c.lineTo(-20,-56);c.closePath();fs(c,'#ffd21f',2.5);starPath(c,0,-55,9,0);c.fillStyle='#e8283c';c.fill();c.fillStyle='#e8283c';c.fillRect(-40,-26,80,7);c.beginPath();c.roundRect(-6,-28,12,11,2);fs(c,'#ffd21f',2)}}}
+{const _b=suAccBack;suAccBack=function(c,a,t){_b.apply(this,arguments);if(a==='su_herocape'){const sw=Math.sin(t*3)*7;c.beginPath();c.moveTo(-26,-76);c.quadraticCurveTo(-60-sw,-30,-58-sw,8);c.quadraticCurveTo(0,0,58+sw*.6,8);c.quadraticCurveTo(60+sw*.6,-30,26,-76);c.closePath();fs(c,'#e8283c');c.beginPath();c.moveTo(-20,-70);c.quadraticCurveTo(-40-sw,-30,-38-sw,4);c.lineWidth=3;c.strokeStyle='rgba(0,0,0,.18)';c.stroke()}}}
+{const _f=suAccFront;suAccFront=function(c,a,t){_f.apply(this,arguments);if(a==='su_herocape')for(const g of[-1,1]){ell(c,g*22,-72,5,5);fs(c,'#ffd21f',2.5)}}}
+const SUIT_G={all:'Все',prof:'👷 Профессии',fant:'🐉 Сказки и фэнтези',sport:'⚽ Спорт',fest:'🎉 Праздники',season:'🍂 Времена года',style:'🕶 Стиль'};
+for(const k in SUITS){SUITS[k].g='prof';const P={};for(const[sl,p]of Object.entries(SUITS[k].parts))P[sl]=Array.isArray(p)?p[0]:p;SUITS[k].parts=P}
+SUITS.wizard.g='fant';SUITS.pirate.g='fant';SUITS.ninja.g='fant';SUITS.king.g='fant';
+const S2=(n,i,g,d,parts)=>({n,i,g,d,parts});
+Object.assign(SUITS,{
+ cowboy:S2('Ковбой','🤠','prof','Шляпа, клетчатая рубашка, сапоги, звезда шерифа и фонарь',{head:'cowboyhat',top:'checker',shoes:'cowboy',acc:'medal',gear:'lantern'}),
+ fisher:S2('Рыбак','🎣','prof','Камуфляжная кепка, клетчатая рубашка, резиновые сапоги, удочка и сачок',{caps:'camo',top:'checker',shoes:'rubber',acc:'rod',gear:'net',trail:'drops'}),
+ detective:S2('Сыщик','🕵','prof','Цилиндр, клетчатая рубашка, ботинки, лупа и будильник',{head:'tophat',top:'checker',shoes:'hiking',acc:'magnifier',gear:'clock',trail:'smoke'}),
+ spacepilot:S2('Космический пилот','🛸','prof','Звёздная кепка, космический свитер, реактивные кроссовки, ранец и ручная ракета',{caps:'star',top:'galaxy',shoes:'rocket',acc:'jetpack',gear:'booster',trail:'comet',aura:'stars'}),
+ scientist:S2('Учёный','🧪','prof','Защитные очки, белый халат, сабо, очки, песочные часы и токсичная аура',{head:'su_labgoggles',top:'su_doccoat',shoes:'su_docclogs',acc:'glasses',gear:'hourglass',trail:'bubbles',aura:'toxic'}),
+ sailor:S2('Моряк','⚓','prof','Синяя кепка, тельняшка, кеды, бинокль и фонарик',{caps:'blue',top:'sailor',shoes:'kedy',acc:'binoculars',gear:'lantern',trail:'bubbles'}),
+ pirate2:S2('Капитан пиратов','🦜','fant','Пиратская шляпа, тельняшка, сапоги, карта сокровищ и звёздный меч',{head:'pirate',top:'sailor',shoes:'cowboy',acc:'map',gear:'sword'}),
+ mage:S2('Звёздный маг','🔮','fant','Колпак волшебника, космический свитер, тапочки, волшебная палочка и песочные часы',{head:'wizard',top:'galaxy',shoes:'slippers',acc:'wand',gear:'hourglass',trail:'magic',aura:'stars'}),
+ viking:S2('Викинг','🪓','fant','Шлем викинга, вязаный свитер, горные ботинки, щит и меч',{head:'viking',top:'knit',shoes:'hiking',acc:'shield',gear:'sword'}),
+ hero:S2('Супергерой','🦸','fant','Костюм с эмблемой, плащ, реактивные кроссовки, щит, молнии и электрическая аура',{top:'su_herosuit',acc:'su_herocape',shoes:'rocket',gear:'shield',trail:'lightning',aura:'electric'}),
+ fairy:S2('Фея','🧚','fant','Бантик, свитер с сердечком, балетки, крылья феи и палочка удачи',{head:'bow',top:'heart',shoes:'ballet',acc:'fairy',gear:'wand',trail:'petals',aura:'butterflies'}),
+ angel:S2('Ангел','😇','fant','Лавровый венок, ледяной свитер, крылатые сандалии, крылья ангела и сердечный посох',{head:'laurel',top:'icy',shoes:'winged',acc:'angel',gear:'heartstaff',trail:'feathers',aura:'glow'}),
+ dragon:S2('Повелитель драконов','🐲','fant','Рожки, лавовый свитер, ботинки-пружины, крылья дракона и морковный меч',{head:'horns',top:'lava',shoes:'springs',acc:'dragon',gear:'carrotsword',trail:'fire',aura:'fire'}),
+ unicorn:S2('Единорог','🦄','fant','Рог единорога, радужный свитер и шарф, крылатые сандалии, радуга',{head:'unicorn',top:'rainbow',shoes:'winged',acc:'rbscarf',trail:'rainbow',aura:'rainbow'}),
+ monarch:S2('Монарх','💰','fant','Корона, золотой свитер и кроссовки, жемчуг, кубок и алмазы',{head:'crown',top:'gold',shoes:'golden',acc:'necklace',gear:'trophy',trail:'gems',aura:'glow'}),
+ storm:S2('Повелитель бурь','⚡','fant','Неоновая кепка и свитер, ботинки-пружины, тёмные очки, магнит и гроза',{caps:'neon',top:'neon',shoes:'springs',acc:'sunglasses',gear:'magnet',trail:'lightning',aura:'storm'}),
+ ski:S2('Лыжник','⛷','sport','Шапка с помпоном, вязаный свитер, лыжи, шарф и снежинки',{head:'beanie',top:'knit',shoes:'skis',acc:'scarf',trail:'snow',aura:'ice'}),
+ figure:S2('Фигурист','⛸','sport','Ледяная корона, ледяной свитер, коньки, ожерелье и кристаллы',{head:'icecrown',top:'icy',shoes:'skates',acc:'necklace',trail:'snow',aura:'crystal'}),
+ football:S2('Футболист','⚽','sport','Кепка задом наперёд, футболка №10, бутсы, медаль и кубок',{caps:'back',top:'jersey',shoes:'cleats',acc:'medal',gear:'trophy',trail:'confetti'}),
+ skater:S2('Скейтер','🛹','sport','Кепка задом наперёд, толстовка, кеды, скейтборд и искры',{caps:'back',top:'hoodie',shoes:'kedy',acc:'skate',trail:'sparks'}),
+ santa:S2('Дед Мороз','🎅','fest','Шапка Деда Мороза, новогодний свитер, ботинки, шарф, фонарик и снег',{head:'santa',top:'xmas',shoes:'hiking',acc:'scarf',gear:'lantern',trail:'snow',aura:'ice'}),
+ deer:S2('Новогодний олень','🦌','fest','Оленьи рога, новогодний свитер, тапочки, колокольчик и звёзды',{head:'antlers',top:'xmas',shoes:'slippers',acc:'bell',trail:'snow',aura:'stars'}),
+ grad:S2('Выпускник','🎓','fest','Шапочка выпускника, смокинг, кеды, книжка, кубок и конфетти',{head:'gradcap',top:'tuxedo',shoes:'kedy',acc:'book',gear:'trophy',trail:'confetti'}),
+ party:S2('Тусовщик','🥳','fest','Праздничный колпачок, кофта в горошек, кеды, шарик, леденец и конфетти',{head:'party',top:'polka',shoes:'kedy',acc:'balloon',gear:'lollipop',trail:'confetti',aura:'music'}),
+ clown:S2('Клоун','🤡','fest','Кепка с пропеллером, кофта в горошек, клоунские ботинки, жвачка и леденец',{caps:'propeller',top:'polka',shoes:'clown',acc:'gum',gear:'lollipop',trail:'confetti'}),
+ beach:S2('Пляжник','🏖','season','Бандана, тельняшка, шлёпанцы, тёмные очки, веер и солнце',{head:'bandana',top:'sailor',shoes:'flipflops',acc:'sunglasses',gear:'fan',trail:'bubbles',aura:'sun'}),
+ spring:S2('Весна','🌸','season','Цветочный венок, свитер с сердечком, балетки, букет и сакура',{head:'flowers',top:'heart',shoes:'ballet',acc:'bouquet',trail:'petals',aura:'sakura'}),
+ autumn:S2('Осень','🍂','season','Шапка с помпоном, вязаный свитер, резиновые сапоги, зонтик и листопад',{head:'beanie',top:'knit',shoes:'rubber',acc:'umbrella',trail:'leaves',aura:'leaves'}),
+ rain:S2('Дождливый день','🌧','season','Синяя кепка, толстовка, резиновые сапоги, зонтик и капельки',{caps:'blue',top:'hoodie',shoes:'rubber',acc:'umbrella',trail:'drops',aura:'bubbles'}),
+ tourist:S2('Турист','📸','season','Кепка-тракер, клетчатая рубашка, горные ботинки, фотоаппарат и веер',{caps:'trucker',top:'checker',shoes:'hiking',acc:'camera',gear:'fan'}),
+ rock:S2('Рок-звезда','🎸','style','Наушники, неоновый свитер, кеды, гитара, ноты и музыка',{head:'phones',top:'neon',shoes:'kedy',acc:'guitar',trail:'notes',aura:'music'}),
+ gent:S2('Джентльмен','🎩','style','Цилиндр, смокинг, монокль, мешок монет и монетки',{head:'tophat',top:'tuxedo',acc:'monocle',gear:'coinbag',trail:'coins'}),
+ fashion:S2('Модник','🕶','style','Чёрная кепка, неоновый свитер, золотые кроссовки, тёмные очки и алмазы',{caps:'black',top:'neon',shoes:'golden',acc:'sunglasses',gear:'coinbag',trail:'gems',aura:'coins'}),
+ school:S2('Школьник','🎒','style','Синяя кепка, толстовка, кроссовки, школьный ранец и будильник',{caps:'blue',top:'hoodie',shoes:'sneakers',acc:'schoolbag',gear:'clock',trail:'notes'}),
+ burger:S2('Любитель бургеров','🍔','style','Красная кепка, полосатый свитер, кроссовки, бургер и монетки',{caps:'red',top:'stripes',shoes:'sneakers',acc:'burger',gear:'coinbag',trail:'coins'}),
+ teddy:S2('Плюшевый друг','🧸','style','Шапка-ушанка, кофта-коровка, тапочки-зайчики, плюшевый мишка и сердечки',{head:'ushanka',top:'cow',shoes:'slippers',acc:'teddy',trail:'hearts',aura:'hearts'}),
+ beekid:S2('Пчёлка','🐝','style','Цветочный венок, полосатый свитер, кеды, пчелиные крылышки и цветочки',{head:'flowers',top:'stripes',shoes:'kedy',acc:'bee',trail:'flowers',aura:'butterflies'}),
+ carrotfan:S2('Морковный фанат','🥕','style','Зелёная кепка, свитшот с морковкой, морковка в лапе, морковный меч и морковки',{caps:'green',top:'carrot',shoes:'sneakers',acc:'carrot',gear:'carrotsword',trail:'carrots',aura:'carrots'})});
+for(const k in SUITS){const P=SUITS[k].parts;for(const sl in P)if(!itemDef(sl,P[sl]))delete P[sl]}
+const SUIT_SLOTS=['head','caps','top','shoes','acc','gear'];let suitG='all';
+function suitList(k){return Object.entries(SUITS[k].parts)}
+function suitCost(k){let c=0;for(const[sl,id]of suitList(k))if(!(S.own[sl]||[]).includes(id))c+=itemVal(sl,id);return Math.round(c*.8)}
+function suitOwned(k){return suitList(k).filter(([sl,id])=>(S.own[sl]||[]).includes(id)).length}
+function suitWorn(k){return suitList(k).every(([sl,id])=>S.eq[sl]===id)}
+function suitEqOf(k,base){const eq=Object.assign({},base);for(const sl of SUIT_SLOTS)eq[sl]='none';for(const[sl,id]of suitList(k))eq[sl]=id;return eq}
+const suitThumbC={};function suitThumb(k){const key=k+':'+S.eq.skin+':'+(S.eq.face||'');if(suitThumbC[key])return suitThumbC[key];const c=document.createElement('canvas');c.width=200;c.height=230;const x=c.getContext('2d');x.fillStyle='#2a2050';x.beginPath();x.roundRect(0,0,200,230,20);x.fill();drawKZ(x,100,212,.95,suitEqOf(k,{skin:S.eq.skin,face:S.eq.face||'none',trail:'none',aura:'none'}),1.3,0);return suitThumbC[key]=c.toDataURL()}
+function suitsOpen(){const ks=Object.keys(SUITS).filter(k=>suitG==='all'||SUITS[k].g===suitG),done=Object.keys(SUITS).filter(k=>suitOwned(k)===suitList(k).length).length;
+  let h=xHead('👔 Полные костюмы')+`<p class="sub" style="margin:4px 0">Костюмы собраны из вещей Cosmetics. Купить целиком — скидка 20% на недостающие вещи. Собрано ${done} из ${Object.keys(SUITS).length}.</p><div class="tabs" style="margin:6px 0">${Object.entries(SUIT_G).map(([g,n])=>`<button class="btn sm ${suitG===g?'cur':''}" data-suitg="${g}">${n}</button>`).join('')}</div><div class="xgrid" style="grid-template-columns:repeat(auto-fill,minmax(165px,1fr));max-height:58vh;overflow:auto">`;
+  for(const k of ks){const su=SUITS[k],L=suitList(k),own=suitOwned(k),all=own===L.length,cost=suitCost(k),worn=suitWorn(k);
+    h+=`<div class="xshop" style="${worn?'background:#e3fbef':''}"><img src="${suitThumb(k)}" style="width:120px;height:138px;background:none" alt="" loading="lazy"><b>${su.i} ${su.n}</b><small class="hint" style="margin:0">${su.d}</small><small style="font-weight:900">${own}/${L.length} вещей · ${L.map(([sl])=>SLOT_ICON[sl]).join('')}</small>
     ${all?(worn?'<b>✓ Надето</b>':`<button class="btn sm mint" data-suit="wear:${k}">👔 Надеть</button>`):`<button class="btn sm" data-suit="buy:${k}" ${S.coins<cost?'disabled':''}>Купить 🪙 ${cost.toLocaleString('ru')}</button>`}<button class="btn sm ghost" data-suit="try:${k}">👀 Примерить</button></div>`}
-  xOv(h+'</div>');const b=document.querySelector('#xOv .pfbox');if(b)b.style.maxWidth='860px'}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-suit],[data-suitsopen]');if(!b||!S||b.disabled)return;if(b.hasAttribute('data-suitsopen')){SND.click();suitsOpen();return}const[a,k]=b.dataset.suit.split(':'),su=SUITS[k];if(!su)return;
-  if(a==='buy'){const c=suitCost(k);if(S.coins<c){toast('Не хватает монет');return}S.coins-=c;for(const[sl,p]of Object.entries(su.parts))if(!(S.own[sl]||[]).includes(p[0]))addItem(sl,p[0]);for(const[sl,p]of Object.entries(su.parts))setEq(S,sl,p[0]);tryOn={};stat('suits');persist();refreshTop();SND.buy();confetti(70);toast('👔 Костюм «'+su.n+'» куплен и надет!');suitsOpen();if(cur==='cos')renderCos()}
-  if(a==='wear'){for(const[sl,p]of Object.entries(su.parts))setEq(S,sl,p[0]);tryOn={};persist();SND.click();toast('👔 Надет костюм «'+su.n+'»');suitsOpen();if(cur==='cos')renderCos()}
-  if(a==='try'){tryOn={caps:'none'};for(const[sl,p]of Object.entries(su.parts))tryOn[sl]=p[0];xOvClose();if(cur!=='cos')show('cos');renderCos();toast('👀 Примерка: '+su.n+' — нажми «Снять примерку», чтобы вернуть свой образ')}});
+  xOv(h+'</div>');const b=document.querySelector('#xOv .pfbox');if(b)b.style.maxWidth='900px'}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-suit],[data-suitsopen],[data-suitg]');if(!b||!S||b.disabled)return;if(b.hasAttribute('data-suitsopen')){SND.click();suitsOpen();return}if(b.dataset.suitg){suitG=b.dataset.suitg;SND.click();suitsOpen();return}const[a,k]=b.dataset.suit.split(':'),su=SUITS[k];if(!su)return;
+  const wearAll=()=>{for(const sl of SUIT_SLOTS)S.eq[sl]='none';for(const[sl,id]of suitList(k))if((S.own[sl]||[]).includes(id))S.eq[sl]=id;tryOn={}};
+  if(a==='buy'){const c=suitCost(k);if(S.coins<c){toast('Не хватает монет');return}S.coins-=c;for(const[sl,id]of suitList(k))if(!(S.own[sl]||[]).includes(id))addItem(sl,id);wearAll();stat('suits');persist();refreshTop();SND.buy();confetti(70);toast('👔 Костюм «'+su.n+'» куплен и надет!');suitsOpen();if(cur==='cos')renderCos()}
+  if(a==='wear'){wearAll();persist();SND.click();toast('👔 Надет костюм «'+su.n+'»');suitsOpen();if(cur==='cos')renderCos()}
+  if(a==='try'){tryOn={};const eq=suitEqOf(k,{});for(const sl of SUIT_SLOTS)tryOn[sl]=eq[sl];for(const[sl,id]of suitList(k))tryOn[sl]=id;xOvClose();if(cur!=='cos')show('cos');renderCos();toast('👀 Примерка: '+su.n+' — «Снять примерку» вернёт твой образ')}});
 {const _cx=cosXRender;cosXRender=function(){_cx.apply(this,arguments);const bar=$('#cosX');if(bar&&!bar.querySelector('[data-suitsopen]'))bar.insertAdjacentHTML('afterbegin','<button class="btn sm" data-suitsopen style="background:#ffd6a0">👔 Полные костюмы</button>')}}
 {const _cp=cosPost;cosPost=function(){_cp.apply(this,arguments);for(const c of document.querySelectorAll('#items .it')){const k=cosKeyOf(c),sk=SUIT_OF[k];if(!sk||c.querySelector('.suittag'))continue;const itx=c.querySelector('.itx');if(itx)itx.insertAdjacentHTML('beforeend',`<small class="suittag" style="font-weight:900;color:#b0743e">👔 из костюма «${SUITS[sk].n}»</small>`)}}}
-ACH.push({id:'s_suit1',n:'При параде',d:'Купить полный костюм',k:'suits',goal:1,r:150,i:'👔'},{id:'s_suit6',n:'Гардероб профессий',d:'Купить 6 полных костюмов',k:'suits',goal:6,r:800,i:'🧥'},{id:'s_suit12',n:'Человек-оркестр',d:'Собрать все 12 костюмов',k:'suits',goal:12,r:2500,i:'🎭'});
+ACH.push({id:'s_suit1',n:'При параде',d:'Купить полный костюм',k:'suits',goal:1,r:150,i:'👔'},{id:'s_suit6',n:'Гардероб профессий',d:'Купить 6 полных костюмов',k:'suits',goal:6,r:800,i:'🧥'},{id:'s_suit12',n:'Человек-оркестр',d:'Купить 12 полных костюмов',k:'suits',goal:12,r:2500,i:'🎭'},{id:'s_suit30',n:'Мастер перевоплощений',d:'Купить 30 полных костюмов',k:'suits',goal:30,r:6000,i:'🎪'});
 
 resize();
 const sess=lsGet('kz_session');
