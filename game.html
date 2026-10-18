@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=56;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=57;window.KZ_VNAME='1.3.9';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -147,7 +147,7 @@ html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
 .outfits{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.outf{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:8px;text-align:center;color:var(--ink)}.outf canvas{width:100%;max-width:120px;aspect-ratio:1;border-radius:10px;background:#2a2050;display:block;margin:0 auto 6px}.outf .row{justify-content:center;gap:4px;flex-wrap:wrap}
 .fup{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:10px}.fupc{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:6px;color:var(--ink)}.fbar{display:flex;gap:3px}.fbar i{flex:1;height:8px;border-radius:4px;background:#e0dcd0;border:1.5px solid var(--ink)}.fbar i.on{background:var(--mint)}
 .fjr{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}.fjc{background:#fff;border:3px solid var(--ink);border-radius:12px;padding:6px;text-align:center;color:var(--ink)}.fjc canvas{width:100%;background:#1f6fae;border-radius:8px}.fjc b{display:block;font-size:13px}.fjc small{opacity:.7;font-size:11px}.fjc.lock{opacity:.75}
-.bindl{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:6px}.bindr{display:flex;align-items:center;gap:6px;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:5px 8px;font-weight:800;font-size:13px;color:var(--ink)}.bindr>span:first-child{flex:1;min-width:0}.bindr.wait{background:#ffe9f3}.kbd{background:#24203a;color:#fff;border-radius:7px;padding:3px 9px;font-family:monospace;font-size:12px;min-width:44px;text-align:center;white-space:nowrap}
+.bindl{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:6px}.bindh{grid-column:1/-1;font-weight:900;font-size:15px;margin:10px 0 2px;color:var(--ink)}.bindr{display:flex;align-items:center;gap:6px;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:5px 8px;font-weight:800;font-size:13px;color:var(--ink)}.bindr>span:first-child{flex:1;min-width:0}.bindr.wait{background:#ffe9f3}.kbd{background:#24203a;color:#fff;border-radius:7px;padding:3px 9px;font-family:monospace;font-size:12px;min-width:44px;text-align:center;white-space:nowrap}
 @media(max-width:560px){.bindl{grid-template-columns:1fr}}
 .admc{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:6px 8px;margin-bottom:6px;font-size:13px;color:var(--ink)}
 .perk{display:block;font-size:11px;font-weight:800;color:#2a8a6a;background:#e3f8ef;border:2px solid #9fdcc6;border-radius:8px;padding:3px 7px;line-height:1.25}
@@ -4672,6 +4672,50 @@ const ADM_BIND_ACTS=[
  ['fps','📈 Показ FPS вкл/выкл',()=>{S.set.fps=!S.set.fps;persist();applyLook();toast('📈 FPS '+(S.set.fps?'вкл':'выкл'))}],
  ['shot','📸 Скриншот игры в файл',()=>{try{const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='kotazaic_'+Date.now()+'.png';a.click();toast('📸 Скриншот сохранён')}catch(e){toast('Не получилось')}}],
  ['banner','📣 Повторить последний баннер всем',()=>{const t=($('#axBan')||{}).value||S.adm.lastBan;if(!t)return toast('Сначала введи текст баннера во вкладке «Мир»');S.adm.lastBan=t;netBroadcast('banner',{text:t.slice(0,80),col:($('#axBanCol')||{}).value||'#ffc93c'},'баннер');toast('📣 Баннер отправлен')}]];
+ADM_BIND_ACTS.unshift(['#','⚙ Основное']);
+{const needMG=()=>{if(cur!=='mg'||!MG_ENG[mgGame]){toast('Сначала открой настольную мини-игру');return false}return true};
+ const needF=()=>{if(cur!=='fishing'||!FG){toast('Сначала открой Рыбалку');return false}return true};
+ const rare=()=>{const L=FSP.filter(s=>!s.danger&&(s.r<1||s.v>=60));return L[Math.floor(Math.random()*L.length)]};
+ ADM_BIND_ACTS.push(
+ ['#','♟ Настольные мини-игры'],
+ ['mg_ttt','❌⭕ Открыть Крестики-нолики',()=>{if(!G)openMG('ttt')}],
+ ['mg_durak','🃏 Открыть Дурака',()=>{if(!G)openMG('durak')}],
+ ['mg_chess','♟ Открыть Шахматы',()=>{if(!G)openMG('chess')}],
+ ['mg_ck','⛀ Открыть Шашки',()=>{if(!G)openMG('ck')}],
+ ['mg_hard','🤖 Новая партия с ботом (сложно)',()=>{if(!needMG())return;mgPend=mgPend||{};mgStartBot('hard')}],
+ ['mg_easy','🙂 Новая партия с ботом (легко)',()=>{if(!needMG())return;mgPend=mgPend||{};mgStartBot('easy')}],
+ ['mg_best','🧠 Лучший ход за меня',()=>{if(!mg||!mg.st||mg.st.winner!==null)return toast('Начни партию');const E=MG_ENG[mg.game];if(E.actor(mg.st)!==mg.me)return toast('Сейчас не твой ход');const mv=E.smart(mg.st,mg.me);if(mv)mgDo(mv)}],
+ ['mg_win','🏆 Мгновенная победа над ботом',()=>{if(!mg||!mg.st||mg.st.winner!==null||mg.vs!=='bot')return toast('Только в игре с ботом');mg.st=Object.assign({},mg.st,{winner:mg.me,reason:'Админская победа 😎'});renderMG();mgFinish()}],
+ ['mg_auto','♾ Автоигра (бот ходит за меня) вкл/выкл',()=>admTog('mgAuto','Автоигра в настольных мини-играх')],
+ ['#','🎣 Рыбалка'],
+ ['f_open','🎣 Открыть Рыбалку',()=>{if(!G)openFishing()}],
+ ['f_cast','🎯 Заброс на полную силу',()=>{if(!needF())return;if(FG.ph!=='idle'||FG.clean)return toast('Удочка уже заброшена');FG.ph='charge';FG.pow=1;FG.hold=true;fInput(false)}],
+ ['f_rare','💎 Поймать редкую рыбу прямо сейчас',()=>{if(!needF())return;if(FG.ph!=='sink')return toast('Сначала забрось удочку');const sp=rare();FG.hooked.push({sp,w:sp.w*rnd(.9,1.3),f:{}});fMsg('🛠 На крючке: '+sp.n+'!','#ffe066');SND.win()}],
+ ['f_up','⏫ Мгновенно вытащить леску',()=>{if(!needF())return;if(FG.ph==='sink'){FG.lure.y=FWS;FG.ph='ret'}}],
+ ['f_sell','💰 Продать всё из ведра',()=>{if(!S)return;const d=fData();let v=0,n=d.bucket.length;while(d.bucket.length)v+=fSell(0);persist();refreshTop();toast('💰 Продано '+n+' рыб за '+v+' 🪙');if(cur==='fishing')fRender()}],
+ ['f_clean','🔪 Почистить всю рыбу в ведре',()=>{const d=fData();let n=0;for(const f of d.bucket)if(!f.clean){f.clean=true;n++}stat('fishCleaned',n);persist();toast('🔪 Почищено: '+n);if(cur==='fishing')fRender()}],
+ ['f_max','⏫ Все снасти на максимум',()=>{const d=fData();for(const q in FUP)d.up[q]=FUP[q].v.length-1;d.rodSkin=6;persist();toast('🎣 Снасти на максимум');if(cur==='fishing')fRender()}],
+ ['f_onlyrare','💎 Только редкие рыбы вкл/выкл',()=>admTog('fRare','Только редкие рыбы')],
+ ['f_mag','🧲 Супер-приманка вкл/выкл',()=>admTog('fMag','Супер-приманка')],
+ ['#','🚀 Ракета'],
+ ['rk_open','🚀 Открыть Ракету',()=>{if(!G)openRocket()}],
+ ['rk_max','💸 Поставить максимум',()=>{if(cur!=='rocket')return toast('Сначала открой Ракету');const i=$('#rkBet');i.value=Math.max(10,Math.min(S.coins,100000));$('#rkGo').click()}],
+ ['rk_cash','💰 Забрать выигрыш сейчас',()=>{if(RKT.ph!=='fly'||!RKT.inBet)return toast('Нет активной ставки');rkCash()}],
+ ['rk_see','🔮 Показать, где взорвётся',()=>{if(RKT.ph==='boom')return toast('Ракета уже взорвалась');toast('🛠 Взрыв на x'+(+RKT.crash).toFixed(2))}],
+ ['rk_seetog','👁 Подсказка взрыва каждый раунд вкл/выкл',()=>admTog('rkSee','Подсказка взрыва')],
+ ['#','🌻 Сад и 🤸 NoomiClone'],
+ ['g_open','🌻 Открыть Сад',()=>{if(!G)openGarden()}],
+ ['g_grow','🌱 Вырастить всё в саду',()=>$('#adGrow').click()],
+ ['g_seeds','🌰 Все семена ×10',()=>$('#adSeeds').click()],
+ ['g_lvl','⬆ +5 уровней сада',()=>$('#adGLvl').click()],
+ ['n_open','🤸 Открыть NoomiClone',()=>{if(!G)openNoomi()}],
+ ['n_grab','🧲 NoomiClone: всегда цепляться вкл/выкл',()=>admTog('nmGrab','Всегда цепляться')],
+ ['n_power','🚀 NoomiClone: супер-прыжок вкл/выкл',()=>admTog('nmPower','Супер-прыжок')],
+ ['n_slow','🐢 NoomiClone: замедление вкл/выкл',()=>admTog('nmSlow','Замедление в воздухе')],
+ ['n_nofall','🛡 NoomiClone: нельзя упасть вкл/выкл',()=>admTog('nmNoFall','Нельзя упасть')],
+ ['n_bot','🤖 NoomiClone: автоигра вкл/выкл',()=>admTog('nmBot','Автоигра NoomiClone')]);}
+setInterval(()=>{try{if(!S||!isAdm()||!S.adm.mgAuto||cur!=='mg'||!mg||!mg.st||mg.st.winner!==null)return;const E=MG_ENG[mg.game];if(E.actor(mg.st)!==mg.me)return;const mv=E.smart(mg.st,mg.me);if(mv)mgDo(mv)}catch(e){}},700);
+
 const ADM_BIND_DEF={boss:'KeyB',wave:'KeyN',life:'KeyH'};
 let admBindWait=null;
 function admTog(k,n){S.adm[k]=!S.adm[k];persist();toast((S.adm[k]?'✅ ':'⛔ ')+n+(S.adm[k]?' — вкл':' — выкл'));SND.click();if(cur==='adm')try{renderAdm()}catch(e){}}
@@ -4679,7 +4723,7 @@ function bindName(c){if(!c)return'—';return c.split('+').map(p=>p.replace(/^Ke
 function admBinds(){S.adm.binds=S.adm.binds||Object.assign({},ADM_BIND_DEF);return S.adm.binds}
 function bindCode(e){return(e.ctrlKey?'Ctrl+':'')+(e.altKey?'Alt+':'')+(e.shiftKey?'Shift+':'')+e.code}
 function renderBinds(){const el=$('#adBinds');if(!el||!S)return;const B=admBinds();
-  el.innerHTML=`<p class="hint" style="margin:0 0 8px">Нажми «Назначить», потом нужную клавишу (можно с Ctrl / Alt / Shift). Бинды работают везде, кроме полей ввода. Esc — отмена.</p><div class="bindl">`+ADM_BIND_ACTS.map(([id,n])=>{const k=B[id];const w=admBindWait===id;return `<div class="bindr ${w?'wait':''}"><span>${n}</span><span class="kbd">${w?'⌨ нажми клавишу…':esc(bindName(k))}</span><button class="btn sm ${w?'pink':'mint'}" data-bind="${id}">${w?'Отмена':'Назначить'}</button><button class="btn sm ghost" data-unbind="${id}" ${k?'':'disabled'}>✕</button></div>`}).join('')+`</div><div class="row" style="gap:6px;margin-top:8px"><button class="btn sm ghost" data-bindreset>↺ По умолчанию (B, N, H)</button><button class="btn sm ghost" data-bindclear>Очистить все</button></div>`}
+  el.innerHTML=`<p class="hint" style="margin:0 0 8px">Нажми «Назначить», потом нужную клавишу (можно с Ctrl / Alt / Shift). Бинды работают везде, кроме полей ввода. Esc — отмена.</p><div class="bindl">`+ADM_BIND_ACTS.map(([id,n])=>{if(id==='#')return `<div class="bindh">${n}</div>`;const k=B[id];const w=admBindWait===id;return `<div class="bindr ${w?'wait':''}"><span>${n}</span><span class="kbd">${w?'⌨ нажми клавишу…':esc(bindName(k))}</span><button class="btn sm ${w?'pink':'mint'}" data-bind="${id}">${w?'Отмена':'Назначить'}</button><button class="btn sm ghost" data-unbind="${id}" ${k?'':'disabled'}>✕</button></div>`}).join('')+`</div><div class="row" style="gap:6px;margin-top:8px"><button class="btn sm ghost" data-bindreset>↺ По умолчанию (B, N, H)</button><button class="btn sm ghost" data-bindclear>Очистить все</button></div>`}
 document.addEventListener('click',e=>{if(!S||!isAdm())return;const b=e.target.closest('[data-bind],[data-unbind],[data-bindreset],[data-bindclear]');if(!b)return;const B=admBinds();
   if(b.dataset.bind){admBindWait=admBindWait===b.dataset.bind?null:b.dataset.bind;renderBinds();return}
   if(b.dataset.unbind){delete B[b.dataset.unbind];persist();renderBinds();return}
@@ -4689,7 +4733,7 @@ window.addEventListener('keydown',e=>{if(!S||!isAdm())return;
   if(admBindWait){if(['ShiftLeft','ShiftRight','ControlLeft','ControlRight','AltLeft','AltRight','MetaLeft','MetaRight'].includes(e.code))return;e.preventDefault();e.stopImmediatePropagation();if(e.code==='Escape'){admBindWait=null;renderBinds();return}
     const B=admBinds(),code=bindCode(e);for(const k in B)if(B[k]===code&&k!==admBindWait){delete B[k];toast('Клавиша '+bindName(code)+' снята с другого действия')}B[admBindWait]=code;const n=(ADM_BIND_ACTS.find(a=>a[0]===admBindWait)||[])[1];admBindWait=null;persist();renderBinds();toast('⌨ '+bindName(code)+' → '+n);SND.click();return}
   const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.isContentEditable))return;if(e.repeat)return;
-  const B=admBinds(),code=bindCode(e);for(const[id,,fn]of ADM_BIND_ACTS)if(B[id]===code){e.preventDefault();e.stopImmediatePropagation();try{fn()}catch(er){console.error(er)}admLog('⌨ '+bindName(code)+': '+(ADM_BIND_ACTS.find(a=>a[0]===id)[1]));return}},true);
+  const B=admBinds(),code=bindCode(e);for(const[id,,fn]of ADM_BIND_ACTS)if(id!=='#'&&B[id]===code){e.preventDefault();e.stopImmediatePropagation();try{fn()}catch(er){console.error(er)}admLog('⌨ '+bindName(code)+': '+(ADM_BIND_ACTS.find(a=>a[0]===id)[1]));return}},true);
 
 let adFilter='all';
 document.addEventListener('click',e=>{const b=e.target.closest('[data-adf]');if(!b)return;adFilter=b.dataset.adf;for(const x of document.querySelectorAll('[data-adf]'))x.classList.toggle('mint',x===b);renderAccList()});
