@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=65;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=66;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3062,6 +3062,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:66,l:'1.4.0',items:['🕹 5 новых мини-игр: 🧩 Котозаяц 2048, 🐍 Змейка-морковка, 🧠 Мемори, 💣 Сапёр, 🪽 Летающий котозаяц','🏆 У каждой свой рекорд, монеты за результат и шанс на трофей','📋 Новые задания мини-игр дня для аркады','🏅 9 новых достижений']},
  {v:65,l:'1.4.0',items:['🐾 Прокачка питомцев дубликатами до 5 уровня (+20% к бонусу за уровень)','✉ Почта: прочитать всё, забрать все подарки, удалить прочитанные, поиск','🏆 Поиск игрока в топе','📈 История забегов и график, сравнение со средним результатом и лучший за сегодня','⏸ В паузе — статистика забега и задания Battle Pass','📜 Последние уведомления в центре наград','❓ Справочник по всем разделам и быстрые клавиши в меню']},
  {v:64,l:'1.4.0',items:['🌻 Сад 2.0: 29 новых растений (теперь 41) и уровни сада до 30','📋 Заказы от жителей леса за монеты, опыт и подарки','🐔 Ферма: курочки, пчёлы, коровы, овечки и свинки дают продукты даже без игры','🍳 Кухня: 23 блюда из урожая и продуктов фермы','📈 Рынок с ценами дня, ☀ погода в саду, 🦣 гигантский и 🌈 радужный урожай','🎨 Декор с бонусами, 📖 альбом растений, 🔧 8 улучшений сада, 🔁 автопосев','🎮 Задания мини-игр на каждый день, статистика на карточках, 🐟 рыба дня ×2','🏅 12 новых достижений сада']},
  {v:63,l:'1.4.0',items:['🎡 Колесо удачи: бесплатное вращение каждый день и ещё 5 за монеты','📅 Календарь входа: серия 7 дней с растущими наградами, на 7-й день трофей','🔔 Центр наград: всё, что можно забрать, в одном окне','🌈 Событие недели: каждую неделю новый бонус (монеты, трофеи, удача, рыбалка, опыт, конфеты)','🏅 25 новых достижений']},
@@ -5744,6 +5745,119 @@ addEventListener('keydown',e=>{if(cur!=='menu'||!S||e.ctrlKey||e.metaKey||e.altK
   const go=map[e.code];if(go&&!e.repeat){const b=document.querySelector(`#menu [data-go="${go}"]`);if(b){e.preventDefault();b.click()}}});
 ACH.push({id:'p_up',n:'Заботливый хозяин',d:'Прокачать питомца 3 раза',k:'petUps',goal:3,r:250,i:'🐾'});
 Object.assign(STAT_RU,{petUps:['🐾','Прокачек питомцев']});
+
+/* ================= Arcade: 5 new mini-games ================= */
+(function(){const d=document.createElement('div');d.className='screen';d.id='arc';d.innerHTML=`<div class="panel" style="max-width:600px;padding:14px"><div class="row" style="justify-content:space-between"><h2 id="arcT" style="margin:0"></h2><div class="row" style="gap:8px"><span class="chip" id="arcS"></span><button class="btn sm ghost" id="arcBack">← Мини-игры</button></div></div>
+<canvas id="arcCv" width="960" height="960" style="width:100%;max-width:520px;aspect-ratio:1;display:block;margin:8px auto;border:4px solid var(--ink);border-radius:16px;background:#1f1a3d;touch-action:none;cursor:pointer"></canvas>
+<div class="row" id="arcBtns" style="justify-content:center;gap:8px;flex-wrap:wrap"></div><p class="hint" id="arcHint" style="text-align:center"></p></div>`;document.body.appendChild(d);SCREENS.push('arc')})();
+const ARCX=$('#arcCv').getContext('2d');let AS=null,arcLast=0;
+function arcRec(g){const x=XS();x.arc=x.arc||{};return x.arc[g]=x.arc[g]||{best:0,n:0}}
+function arcFmtBest(g){const r=arcRec(g),A=ARC[g];return r.n?(A.low?(r.best?A.fmt(r.best):'—'):A.fmt(r.best)):'—'}
+function arcStart(g){AS={g,t:0,score:0,over:false,won:false,paid:false};ARC[g].init(AS);arcUi()}
+function arcOpen(g){if(!S)return;show('arc');$('#arcT').textContent=ARC[g].i+' '+ARC[g].n;$('#arcHint').textContent=ARC[g].hint;arcStart(g);arcLast=performance.now();requestAnimationFrame(arcLoop)}
+function arcUi(){const A=ARC[AS.g];$('#arcS').textContent='🏆 '+arcFmtBest(AS.g);$('#arcBtns').innerHTML=`<button class="btn sm mint" data-arcact="new">🔄 Заново</button>`+(A.btns?A.btns(AS):'')}
+function arcEnd(win){const st=AS;if(!st||st.paid)return;st.paid=true;st.over=true;st.overAt=st.t;st.won=!!win;const A=ARC[st.g],r=arcRec(st.g);r.n++;const val=A.val(st);let rec=false;
+  if(A.low){if(win&&(!r.best||val<r.best)){r.best=val;rec=true}}else if(val>r.best){r.best=val;rec=true}
+  const c=Math.max(0,Math.round(A.reward(st)));st.coins=c;st.rec=rec;S.coins+=c;stat('arc_'+st.g);stat('arcGames');if(A.after)A.after(st);if(c>=60)try{mgDrop(Math.min(.35,c/1200),A.n)}catch(e){}
+  persist();refreshTop();arcUi();(win||rec?SND.win:SND.hit)();if(rec)confetti(80);toast((rec?'🏆 Новый рекорд! ':'')+(c?'+'+c+' 🪙':''))}
+function arcLoop(now){if(cur!=='arc'||!AS)return;const dt=Math.min(.05,(now-arcLast)/1000);arcLast=now;AS.t+=dt;const A=ARC[AS.g];if(!AS.over&&A.step)A.step(AS,dt);
+  const c=ARCX;c.setTransform(2,0,0,2,0,0);c.clearRect(0,0,480,480);A.draw(c,AS,now/1000);
+  if(AS.over){c.fillStyle='rgba(10,6,30,.62)';c.fillRect(0,0,480,480);c.textAlign='center';c.textBaseline='middle';c.lineWidth=6;c.strokeStyle=INK;c.font='900 34px Trebuchet MS';const tt=AS.won?'🎉 Победа!':AS.rec?'🏆 Новый рекорд!':'Игра окончена';c.strokeText(tt,240,190);c.fillStyle='#ffe066';c.fillText(tt,240,190);
+    c.font='900 22px Trebuchet MS';const l2=A.sum(AS),l3=(AS.coins?'+'+AS.coins+' 🪙 · ':'')+'нажми, чтобы сыграть ещё';c.strokeText(l2,240,240);c.fillStyle='#fff';c.fillText(l2,240,240);c.font='800 17px Trebuchet MS';c.strokeText(l3,240,280);c.fillStyle='#5ee6c1';c.fillText(l3,240,280)}
+  requestAnimationFrame(arcLoop)}
+function arcPt(e){const r=$('#arcCv').getBoundingClientRect();return{x:(e.clientX-r.left)*480/r.width,y:(e.clientY-r.top)*480/r.height}}
+let arcDown=null;
+$('#arcCv').addEventListener('pointerdown',e=>{if(!AS)return;e.preventDefault();arcDown=Object.assign(arcPt(e),{t:performance.now(),b:e.button});if(AS.over){if(AS.t-AS.overAt>.7)arcStart(AS.g);arcDown=null;return}const A=ARC[AS.g];if(A.press)A.press(AS,arcDown.x,arcDown.y,e.button)});
+$('#arcCv').addEventListener('pointerup',e=>{if(!AS||!arcDown)return;const p=arcPt(e),d=arcDown;arcDown=null;const A=ARC[AS.g],dx=p.x-d.x,dy=p.y-d.y;if(AS.over)return;
+  if(Math.hypot(dx,dy)>30&&A.swipe){A.swipe(AS,Math.abs(dx)>Math.abs(dy)?(dx>0?'R':'L'):(dy>0?'D':'U'));return}if(A.tap)A.tap(AS,d.x,d.y,d.b,performance.now()-d.t)});
+$('#arcCv').addEventListener('contextmenu',e=>e.preventDefault());
+addEventListener('keydown',e=>{if(cur!=='arc'||!AS)return;const k={ArrowLeft:'L',KeyA:'L',ArrowRight:'R',KeyD:'R',ArrowUp:'U',KeyW:'U',ArrowDown:'D',KeyS:'D',Space:'SP',Enter:'SP',KeyR:'RS'}[e.code];if(!k)return;e.preventDefault();if(k==='RS'||(AS.over&&k==='SP'&&AS.t-AS.overAt>.7)){arcStart(AS.g);return}if(AS.over)return;const A=ARC[AS.g];if(A.key)A.key(AS,k,e.repeat)});
+$('#arcBack').onclick=()=>{AS=null;persist();show('set');setSetTab('mg')};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-arcact],[data-arc]');if(!b||!S)return;if(b.dataset.arc){SND.click();arcOpen(b.dataset.arc);return}if(!AS)return;const a=b.dataset.arcact;if(a==='new'){SND.click();arcStart(AS.g);return}const A=ARC[AS.g];if(A.act)A.act(AS,a)});
+const arcRR=(c,x,y,w,h,r)=>{c.beginPath();c.roundRect(x,y,w,h,r)};
+function arcTxt(c,s,x,y,sz,col,st){c.font=`900 ${sz}px Trebuchet MS`;c.textAlign='center';c.textBaseline='middle';if(st!==false){c.lineWidth=Math.max(3,sz/6);c.strokeStyle=INK;c.strokeText(s,x,y)}c.fillStyle=col||'#fff';c.fillText(s,x,y)}
+const ARC={};
+/* ---- 2048 ---- */
+const A2E=['','🥕','🍓','🌽','🥚','🐣','🐥','🐰','🐱','🦊','🐻','🦁','🐉','🌟','👑','💎','🪐'],A2C=['#3a3270','#ffe9b0','#ffd28a','#ffb870','#ff9a6a','#ff7e7e','#ff6aa8','#e08bff','#a88bff','#7fa8ff','#5ec8ff','#5ee6c1','#7cd46a','#ffe066','#ffc93c','#ff9cf0','#ffffff'];
+ARC['2048']={n:'Котозаяц 2048',i:'🧩',hint:'Стрелки / WASD или свайп. Соединяй одинаковые плитки: 🥕→🍓→🌽→🥚→🐣→🐥→🐰→… Дойди до 🦁 (2048)!',fmt:v=>v,
+  init(st){st.b=Array(16).fill(0);st.pop={};st.max=1;this.add(st);this.add(st)},
+  add(st){const e=st.b.map((v,i)=>v?-1:i).filter(i=>i>=0);if(!e.length)return;const i=pick(e);st.b[i]=Math.random()<.9?1:2;st.pop[i]=st.t},
+  move(st,d){const b=st.b,old=b.join();let gain=0;for(let L=0;L<4;L++){const idx=[0,1,2,3].map(k=>d==='L'?L*4+k:d==='R'?L*4+3-k:d==='U'?k*4+L:(3-k)*4+L);let row=idx.map(i=>b[i]).filter(v=>v),out=[];for(let k=0;k<row.length;k++){if(row[k]===row[k+1]){out.push(row[k]+1);gain+=Math.pow(2,row[k]+1);st.pop[idx[out.length-1]]=st.t;k++}else out.push(row[k])}while(out.length<4)out.push(0);idx.forEach((i,k)=>b[i]=out[k])}
+    if(b.join()===old)return;st.score+=gain;st.max=Math.max(st.max,...b);this.add(st);sfx(gain?520+st.max*40:300,.05,'triangle',.03);if(st.max>=11&&!st.w2048){st.w2048=1;toast('🦁 2048! Можно играть дальше');confetti(80)}
+    if(!this.can(st))arcEnd(false)},
+  can(st){const b=st.b;if(b.includes(0))return true;for(let i=0;i<16;i++){if(i%4<3&&b[i]===b[i+1])return true;if(i<12&&b[i]===b[i+4])return true}return false},
+  key(st,k){if('LRUD'.includes(k))this.move(st,k)},swipe(st,d){this.move(st,d)},
+  step(){},draw(c,st,t){c.fillStyle='#2a2450';arcRR(c,0,0,480,480,0);c.fill();for(let i=0;i<16;i++){const x=20+(i%4)*112,y=12+Math.floor(i/4)*112,v=st.b[i];let s=1;if(v&&st.pop[i]!=null){const k=(st.t-st.pop[i])/.18;if(k<1)s=.6+.4*Math.min(1,k)+Math.sin(Math.min(1,k)*Math.PI)*.12}
+    c.save();c.translate(x+50,y+50);c.scale(s,s);arcRR(c,-50,-50,100,100,16);c.fillStyle=A2C[Math.min(v,16)];c.fill();c.lineWidth=3;c.strokeStyle=v?INK:'#3a3270';c.stroke();if(v){c.font='46px serif';c.textAlign='center';c.textBaseline='middle';c.fillText(A2E[Math.min(v,16)]||'✨',0,-8);arcTxt(c,String(Math.pow(2,v)),0,34,16,'#fff')}c.restore()}
+    arcTxt(c,'Очки: '+st.score+' · лучшая '+A2E[st.max],240,466,15,'#fff')},
+  val:st=>st.score,reward:st=>Math.min(500,st.score/40),sum:st=>`Очки: ${st.score} · лучшая плитка: ${A2E[st.max]} ${Math.pow(2,st.max)}`,after(st){S.stats.a2048=Math.max(S.stats.a2048||0,st.max);checkAch()}};
+/* ---- Snake ---- */
+ARC.snake={n:'Змейка-морковка',i:'🐍',hint:'Стрелки / WASD, свайп или кнопки. Ешь 🥕, лови 🌟 (+5), не врезайся в стены и в себя.',fmt:v=>v,
+  init(st){st.body=[[10,10],[9,10],[8,10]];st.dir='R';st.nd='R';st.acc=0;st.spd=.15;st.food=this.free(st);st.gold=null;st.goldT=8;st.started=false},
+  free(st){let p;do p=[Math.floor(Math.random()*20),Math.floor(Math.random()*20)];while(st.body.some(b=>b[0]===p[0]&&b[1]===p[1]));return p},
+  turn(st,k){const opp={L:'R',R:'L',U:'D',D:'U'};if('LRUD'.includes(k)&&k!==opp[st.dir])st.nd=k;st.started=true},
+  key(st,k){this.turn(st,k)},swipe(st,d){this.turn(st,d)},act(st,a){this.turn(st,a)},tap(st,x,y){const h=st.body[0],hx=h[0]*24+12,hy=h[1]*24+12,dx=x-hx,dy=y-hy;this.turn(st,'LR'.includes(st.dir)?(dy<0?'U':'D'):(dx<0?'L':'R'))},
+  btns:()=>['L','U','D','R'].map(k=>`<button class="btn sm" data-arcact="${k}" style="min-width:56px;font-size:20px">${{L:'⬅',U:'⬆',D:'⬇',R:'➡'}[k]}</button>`).join(''),
+  step(st,dt){if(!st.started)return;st.acc+=dt;st.goldT-=dt;if(st.goldT<=0){if(st.gold){st.gold=null;st.goldT=rnd(6,12)}else{st.gold=this.free(st);st.goldT=6}}
+    while(st.acc>=st.spd){st.acc-=st.spd;st.dir=st.nd;const h=st.body[0],v={L:[-1,0],R:[1,0],U:[0,-1],D:[0,1]}[st.dir],n=[h[0]+v[0],h[1]+v[1]];
+      if(n[0]<0||n[1]<0||n[0]>19||n[1]>19||st.body.slice(0,-1).some(b=>b[0]===n[0]&&b[1]===n[1])){arcEnd(false);return}st.body.unshift(n);
+      if(n[0]===st.food[0]&&n[1]===st.food[1]){st.score++;st.food=this.free(st);st.spd=Math.max(.065,st.spd-.004);sfx(700,.05,'triangle',.04,200)}
+      else if(st.gold&&n[0]===st.gold[0]&&n[1]===st.gold[1]){st.score+=5;st.gold=null;st.goldT=rnd(8,14);st.body.push(st.body[st.body.length-1]);sfx(1000,.1,'triangle',.05,400)}else st.body.pop()}},
+  draw(c,st,t){c.fillStyle='#4fae4a';c.fillRect(0,0,480,480);for(let i=0;i<20;i++)for(let j=0;j<20;j++)if((i+j)%2){c.fillStyle='#5abb52';c.fillRect(i*24,j*24,24,24)}
+    c.font='20px serif';c.textAlign='center';c.textBaseline='middle';c.fillText('🥕',st.food[0]*24+12,st.food[1]*24+13);if(st.gold){c.save();c.globalAlpha=.6+.4*Math.sin(t*8);c.fillText('🌟',st.gold[0]*24+12,st.gold[1]*24+13);c.restore()}
+    st.body.slice().reverse().forEach((b,ri)=>{const i=st.body.length-1-ri;arcRR(c,b[0]*24+2,b[1]*24+2,20,20,i?6:9);c.fillStyle=i?(i%2?'#c8c0ff':'#b0a6f0'):'#ffffff';c.fill();c.lineWidth=2;c.strokeStyle=INK;c.stroke()});
+    const h=st.body[0];c.font='18px serif';c.fillText('🐰',h[0]*24+12,h[1]*24+13);arcTxt(c,'🥕 '+st.score,440,18,16,'#fff');if(!st.started)arcTxt(c,'Нажми стрелку, чтобы начать',240,300,20,'#ffe066')},
+  val:st=>st.score,reward:st=>Math.min(400,st.score*2),sum:st=>`Съедено: ${st.score} · длина ${st.body.length}`,after(st){S.stats.snakeBest=Math.max(S.stats.snakeBest||0,st.score);checkAch()}};
+/* ---- Memory ---- */
+const MEM_POOL='🥕🍓🌽🐰🐱🦊🐻🦁🐉🌟👑💎🎃👻🚀🌙☀️🍄🌸🍒🍉🍩🎁🎈🐢🐸🦉🐝🦋🐙'.match(/\p{Extended_Pictographic}️?/gu);
+ARC.memory={n:'Мемори',i:'🧠',hint:'Открывай по две карточки и ищи пары. Чем меньше ходов — тем больше монет. Рекорд — наименьшее число ходов.',low:true,fmt:v=>v+' ходов',
+  init(st){const p=MEM_POOL.slice().sort(()=>Math.random()-.5).slice(0,10),d=p.concat(p).sort(()=>Math.random()-.5);st.cards=d.map(e=>({e,o:0,m:0,f:0}));st.sel=[];st.moves=0;st.lock=0;st.pairs=0;st.tm=0},
+  tap(st,x,y){if(st.lock>0)return;const col=Math.floor((x-10)/92),row=Math.floor((y-20)/112);if(col<0||col>4||row<0||row>3)return;const i=row*5+col,cd=st.cards[i];if(!cd||cd.o||cd.m)return;cd.o=1;cd.f=st.t;st.sel.push(i);sfx(600,.04,'triangle',.03);
+    if(st.sel.length===2){st.moves++;const[a,b]=st.sel.map(k=>st.cards[k]);if(a.e===b.e){a.m=b.m=1;st.pairs++;st.sel=[];sfx(900,.08,'triangle',.04,300);if(st.pairs===10)arcEnd(true)}else{st.lock=.75}}},
+  step(st,dt){st.tm+=dt;if(st.lock>0){st.lock-=dt;if(st.lock<=0){for(const k of st.sel){st.cards[k].o=0;st.cards[k].f=st.t}st.sel=[]}}},
+  draw(c,st,t){c.fillStyle='#2a2450';c.fillRect(0,0,480,480);st.cards.forEach((cd,i)=>{const x=10+(i%5)*92,y=20+Math.floor(i/5)*112,k=Math.min(1,(st.t-cd.f)/.2),face=cd.o||cd.m,sx=Math.abs(Math.cos((face?1-k:k)*Math.PI/2*(cd.f?1:0)))||1;
+    c.save();c.translate(x+42,y+50);c.scale(cd.f&&k<1?Math.abs(1-2*k)||.05:1,1);arcRR(c,-42,-50,84,100,14);c.fillStyle=(cd.f&&k<.5?!face:face)?(cd.m?'#c9f7d8':'#fff8ec'):'#8b6cff';c.fill();c.lineWidth=3;c.strokeStyle=INK;c.stroke();
+    if(cd.f&&k<.5?!face:face){c.font='46px serif';c.textAlign='center';c.textBaseline='middle';c.fillText(cd.e,0,2)}else arcTxt(c,'?',0,0,40,'#fff');c.restore()});
+    arcTxt(c,`Ходы: ${st.moves} · пары ${st.pairs}/10 · ${Math.floor(st.tm)} с`,240,470,15,'#fff')},
+  val:st=>st.moves,reward:st=>st.won?Math.max(30,200-st.moves*5):0,sum:st=>`Ходов: ${st.moves} · время ${Math.floor(st.tm)} с`,after(st){if(st.won&&st.moves<=20)stat('memGood')}};
+/* ---- Minesweeper ---- */
+ARC.mines={n:'Сапёр',i:'💣',hint:'Открывай клетки, цифры показывают, сколько мин рядом. Правая кнопка / долгое нажатие / режим 🚩 — поставить флажок. Рекорд — самое быстрое время.',low:true,fmt:v=>v+' с',
+  init(st){st.N=10;st.M=15;st.c=Array.from({length:100},()=>({m:0,o:0,f:0,n:0}));st.first=true;st.flag=false;st.tm=0;st.run=false},
+  btns:st=>`<button class="btn sm ${st.flag?'pink':'ghost'}" data-arcact="flag">🚩 Режим флажков: ${st.flag?'вкл':'выкл'}</button>`,
+  act(st,a){if(a==='flag'){st.flag=!st.flag;arcUi()}},
+  plant(st,safe){const ban=new Set([safe]);for(const j of this.nb(safe))ban.add(j);let k=0;while(k<st.M){const i=Math.floor(Math.random()*100);if(st.c[i].m||ban.has(i))continue;st.c[i].m=1;k++}for(let i=0;i<100;i++)st.c[i].n=this.nb(i).filter(j=>st.c[j].m).length},
+  nb(i){const x=i%10,y=Math.floor(i/10),o=[];for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dy)continue;const X=x+dx,Y=y+dy;if(X>=0&&Y>=0&&X<10&&Y<10)o.push(Y*10+X)}return o},
+  open(st,i){const q=[i];while(q.length){const k=q.pop(),c=st.c[k];if(c.o||c.f)continue;c.o=1;if(!c.n&&!c.m)for(const j of this.nb(k))if(!st.c[j].o)q.push(j)}},
+  tap(st,x,y,btn,dur){const col=Math.floor((x-15)/45),row=Math.floor((y-15)/45);if(col<0||col>9||row<0||row>9)return;const i=row*10+col,c=st.c[i];if(c.o)return;
+    if(btn===2||st.flag||dur>450){c.f=!c.f;sfx(400,.04,'square',.02);return}if(c.f)return;if(st.first){st.first=false;this.plant(st,i);st.run=true}
+    if(c.m){c.o=1;st.boom=i;for(const z of st.c)if(z.m)z.o=1;sfx(120,.4,'sawtooth',.06,-60);arcEnd(false);return}this.open(st,i);sfx(700,.03,'triangle',.02);if(st.c.every(z=>z.m||z.o)){st.score=Math.ceil(st.tm);arcEnd(true)}},
+  step(st,dt){if(st.run)st.tm+=dt},
+  draw(c,st,t){c.fillStyle='#2a2450';c.fillRect(0,0,480,480);const NC=['','#3d8bff','#2b8a3e','#e8355d','#6a3db8','#b8462b','#1a9e9e','#333','#888'];
+    st.c.forEach((z,i)=>{const x=15+(i%10)*45,y=15+Math.floor(i/10)*45;arcRR(c,x+1,y+1,43,43,8);c.fillStyle=z.o?(z.m?(st.boom===i?'#ff5e5e':'#ffd0d0'):'#fff8ec'):'#8b6cff';c.fill();c.lineWidth=2;c.strokeStyle=INK;c.stroke();
+      c.font='24px serif';c.textAlign='center';c.textBaseline='middle';if(z.o&&z.m)c.fillText('💣',x+23,y+24);else if(z.o&&z.n)arcTxt(c,String(z.n),x+23,y+24,22,NC[z.n],false);else if(!z.o&&z.f)c.fillText('🚩',x+23,y+24)});
+    const fl=st.c.filter(z=>z.f).length;arcTxt(c,`💣 ${st.M-fl} · ⏱ ${Math.floor(st.tm)} с`,240,470,15,'#fff')},
+  val:st=>Math.ceil(st.tm),reward:st=>st.won?Math.max(60,220-Math.ceil(st.tm)):0,sum:st=>st.won?`Время: ${Math.ceil(st.tm)} с`:'Бабах! 💥 Попробуй ещё',after(st){if(st.won)stat('minesWin')}};
+/* ---- Flappy ---- */
+ARC.flappy={n:'Летающий котозаяц',i:'🪽',hint:'Пробел / клик / тап — взмах ушами. Пролетай между морковными столбами. Каждый столб +1 очко.',fmt:v=>v,
+  init(st){st.y=220;st.vy=0;st.pipes=[];st.spawn=1.2;st.ready=true;st.sp=170},
+  flap(st){if(st.ready){st.ready=false}st.vy=-390;sfx(560,.05,'triangle',.03,300)},
+  key(st,k,rep){if(k==='SP'||k==='U'){if(!rep)this.flap(st)}},press(st){this.flap(st)},
+  step(st,dt){if(st.ready){st.y=220+Math.sin(st.t*3)*8;return}st.vy+=1250*dt;st.y+=st.vy*dt;st.spawn-=dt;if(st.spawn<=0){st.spawn=Math.max(1.05,1.55-st.score*.015);const gap=Math.max(118,160-st.score*1.5);st.pipes.push({x:500,gy:rnd(70,410-gap),gap,pass:false})}
+    st.sp=170+st.score*3;for(const p of st.pipes){p.x-=st.sp*dt;if(!p.pass&&p.x+56<120){p.pass=true;st.score++;sfx(880,.05,'triangle',.04,200)}if(120+16>p.x&&120-16<p.x+56&&(st.y-24<p.gy||st.y+4>p.gy+p.gap)){arcEnd(false);return}}st.pipes=st.pipes.filter(p=>p.x>-80);if(st.y>440||st.y<-20){arcEnd(false)}},
+  draw(c,st,t){const g=c.createLinearGradient(0,0,0,480);g.addColorStop(0,'#7fd0ff');g.addColorStop(1,'#d8f3ff');c.fillStyle=g;c.fillRect(0,0,480,480);for(let i=0;i<4;i++){const cx=((-st.t*20+i*160)%640+640)%640-80;c.fillStyle='rgba(255,255,255,.9)';ell(c,cx,60+i*30,30,14);c.fill();ell(c,cx+24,54+i*30,20,12);c.fill()}
+    for(const p of st.pipes){for(const[y0,h,top]of[[0,p.gy,true],[p.gy+p.gap,480-p.gy-p.gap,false]]){arcRR(c,p.x,y0,56,h,8);c.fillStyle='#ff9a3d';c.fill();c.lineWidth=3;c.strokeStyle=INK;c.stroke();c.strokeStyle='rgba(0,0,0,.18)';for(let yy=y0+14;yy<y0+h;yy+=22){c.beginPath();c.moveTo(p.x+8,yy);c.lineTo(p.x+48,yy+4);c.stroke()}c.strokeStyle=INK;
+      const ly=top?p.gy:p.gy+p.gap;c.fillStyle='#3fae6a';arcRR(c,p.x-6,top?ly-14:ly,68,14,6);c.fill();c.stroke()}}
+    c.fillStyle='#7cc46a';c.fillRect(0,448,480,32);c.fillStyle='#5eae4a';for(let x=(-st.t*st.sp)%24;x<480;x+=24)c.fillRect(x,448,12,6);
+    drawKZ(c,120,st.y+14,.3,S.eq,st.t*3,clamp(st.vy/900,-.5,.6));arcTxt(c,String(st.score),240,40,34,'#fff');if(st.ready)arcTxt(c,'Нажми, чтобы взлететь!',240,300,22,'#ffe066')},
+  val:st=>st.score,reward:st=>Math.min(400,st.score*4),sum:st=>`Столбов: ${st.score}`,after(st){S.stats.flapBest=Math.max(S.stats.flapBest||0,st.score);checkAch()}};
+/* ---- hub cards, tasks, achievements ---- */
+(function(){const L=document.querySelector('#stMg .mglist');if(!L)return;const h=Object.entries(ARC).map(([k,A])=>`<div class="mgcard"><div class="mgic">${A.i}</div><div class="mgtx"><b>${A.n} <span style="display:inline-block;font-size:10px;padding:1px 6px;background:#ff9cf0;border:2px solid var(--ink);border-radius:8px;vertical-align:middle;margin-left:4px">НОВОЕ</span></b><small>${A.hint}</small><small class="mgst arcst" data-arcst="${k}" style="display:block;font-weight:900;color:#2b8a6a;margin-top:2px"></small></div><button class="btn sm mint" data-arc="${k}">Играть</button></div>`).join('');L.insertAdjacentHTML('afterbegin',h)})();
+{const _mq=mqRender;mqRender=function(){_mq.apply(this,arguments);for(const el of document.querySelectorAll('[data-arcst]')){const k=el.dataset.arcst,r=arcRec(k);el.textContent=`📊 Сыграно: ${r.n} · 🏆 рекорд: ${arcFmtBest(k)}`}}}
+MQ_POOL.push(['arc_2048',[1,2],'Сыграй в Котозаяц 2048: {g}'],['arc_snake',[2,3],'Сыграй в Змейку-морковку: {g}'],['arc_memory',[1,2],'Сыграй в Мемори: {g}'],['arc_mines',[1,2],'Сыграй в Сапёра: {g}'],['arc_flappy',[3,5],'Полетай котозайцем: {g}']);
+ACH.push({id:'a_2048',n:'Царь зверей',d:'Собрать 🦁 (2048) в Котозаяц 2048',k:'a2048',goal:11,r:800,i:'🦁'},{id:'a_512',n:'Лисий хвост',d:'Собрать 🦊 (512) в Котозаяц 2048',k:'a2048',goal:9,r:200,i:'🦊'},{id:'a_snake30',n:'Длинный хвост',d:'Съесть 30 морковок в Змейке',k:'snakeBest',goal:30,r:300,i:'🐍'},{id:'a_snake60',n:'Анаконда',d:'Съесть 60 морковок в Змейке',k:'snakeBest',goal:60,r:800,i:'🐉'},
+ {id:'a_mem',n:'Слоновья память',d:'Пройти Мемори за 20 ходов или меньше',k:'memGood',goal:1,r:250,i:'🧠'},{id:'a_mines',n:'Сапёр',d:'Разминировать поле 3 раза',k:'minesWin',goal:3,r:300,i:'💣'},{id:'a_flap20',n:'Пилот',d:'Пролететь 20 столбов',k:'flapBest',goal:20,r:300,i:'🪽'},{id:'a_flap50',n:'Ас неба',d:'Пролететь 50 столбов',k:'flapBest',goal:50,r:1000,i:'✈'},{id:'a_arc50',n:'Завсегдатай аркады',d:'Сыграть 50 аркадных игр',k:'arcGames',goal:50,r:500,i:'🕹'});
+Object.assign(STAT_RU,{arcGames:['🕹','Аркадных игр'],a2048:['🧩','Лучшая плитка 2048 (степень)'],snakeBest:['🐍','Рекорд Змейки'],flapBest:['🪽','Рекорд полёта'],minesWin:['💣','Побед в Сапёре'],memGood:['🧠','Отличных Мемори']});
+HELP.splice(8,0,['🕹 Аркада','5 новых мини-игр в Settings → Мини-игры: Котозаяц 2048, Змейка-морковка, Мемори, Сапёр и Летающий котозаяц. Рекорды, монеты и трофеи.']);
 
 resize();
 const sess=lsGet('kz_session');
