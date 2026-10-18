@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=71;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=72;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3062,6 +3062,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:72,l:'1.4.0',items:['😂 Кнопка «Приколы» в меню: 18 быстрых приколов с котозайцем (желе, гигант, мини, вверх ногами, невидимка, RGB, полёт, дожди из морковок, котиков и уток, пирог в лицо, хаос…)','🔊 16 смешных звуков котозайца','🤫 33 новых секретных кода с подсказками (всего 66)','😜 Подшути над другом из его профиля: пирог, утки, конфетти, перевёрнутый экран, фейковые лаги (можно выключить в настройках чата)','🐰 Котозаяц в меню сам иногда прикалывается, новые анекдоты, комплименты и «почти научные» факты','🏅 5 новых достижений']},
  {v:71,l:'1.4.0',items:['👔 Ещё 100 костюмов — теперь их 250, и у каждого нового свои 5 вещей (ещё 500 вещей в Cosmetics)','⚽ Новая вкладка «Спорт» пополнилась: баскетбол, теннис, бокс, хоккей, плавание, велоспорт, карате, гольф, бейсбол, шахматы','⬇ Костюмы показываются по 40 — кнопка «Показать ещё»','🏅 Достижения «Тысяча лиц» и «Легенда моды»']},
  {v:70,l:'1.4.0',items:['👔 Ещё 100 костюмов — теперь их 150','🆕 500 новых вещей в Cosmetics: у каждого нового костюма свои 5 вещей (голова, кофта, обувь, аксессуар, Gear), которые больше нигде не повторяются','🗂 Новые вкладки костюмов: Животные, Еда, Техно, Стихии','🔎 Фильтр «Из костюмов» в Cosmetics','🏅 Достижения «Костюмер» и «Повелитель гардероба»']},
  {v:69,l:'1.4.0',items:['👔 Костюмов стало 50: 38 новых, собранных из обычных вещей Cosmetics (шапки, кепки, кофты, обувь, аксессуары, Gear, следы и ауры)','🗂 Вкладки костюмов: Профессии, Сказки и фэнтези, Спорт, Праздники, Времена года, Стиль','🆕 Новые вещи в Cosmetics: Плащ супергероя, Костюм супергероя, Защитные очки учёного','🏅 Достижение «Мастер перевоплощений» — 30 костюмов']},
@@ -6155,6 +6156,103 @@ T4.forEach(([k,n,e,c1,c2,g],j)=>{const i=j+100,st={head:(j*3+5)%8,top:(j*5+3)%6,
   TOP_COL['s4_'+k+'_top']=c1;SUITS['s4'+k]={n,i:e,g,d:'Свой уникальный набор: '+['head','top','shoes','acc','gear'].map(sl=>T3N[sl][st[sl]].toLowerCase()).join(', '),parts}});
 {const _cp=cosPost;cosPost=function(){_cp.apply(this,arguments);for(const c of document.querySelectorAll('#items .it')){const id=(cosKeyOf(c).split(':')[1])||'',d=T3I[id];if(!d||!d.sk||c.querySelector('.suittag'))continue;const sk=SUITS[d.sk],itx=c.querySelector('.itx');if(itx&&sk)itx.insertAdjacentHTML('beforeend',`<small class="suittag" style="font-weight:900;color:#b0743e">👔 из костюма «${sk.n}»</small>`)}}}
 ACH.push({id:'s_suit150',n:'Тысяча лиц',d:'Купить 150 полных костюмов',k:'suits',goal:150,r:30000,i:'🌟'},{id:'s_suit250',n:'Легенда моды',d:'Купить все 250 полных костюмов',k:'suits',goal:250,r:60000,i:'👑'});
+
+/* ================= Приколы pack ================= */
+(function(){const st=document.createElement('style');st.textContent=`
+.erain{position:fixed;top:-60px;z-index:80;pointer-events:none;animation:erainF linear forwards;will-change:transform}
+@keyframes erainF{to{transform:translateY(calc(100vh + 120px)) rotate(var(--r))}}
+.esplat{position:fixed;left:50%;top:45%;z-index:81;pointer-events:none;font-size:180px;transform:translate(-50%,-50%) scale(.2);animation:esplatA 2.4s ease-out forwards}
+@keyframes esplatA{10%{transform:translate(-50%,-50%) scale(1.25)}20%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-30%) scale(1)}}
+.efly{position:fixed;z-index:80;pointer-events:none;font-size:56px;animation:eflyA 3.2s linear forwards}
+@keyframes eflyA{from{left:-80px}to{left:calc(100vw + 80px)}}
+body.glitch canvas,body.glitch .screen.on .panel{animation:glitchA .12s steps(2) infinite}
+@keyframes glitchA{0%{transform:translate(2px,-1px);filter:hue-rotate(40deg)}50%{transform:translate(-3px,2px);filter:hue-rotate(-60deg) saturate(2)}100%{transform:translate(1px,1px)}}
+.fungrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px}
+.fungrid .btn{white-space:normal;line-height:1.15;min-height:40px;font-size:13px}`;document.head.appendChild(st)})();
+function emojiRain(list,n=40,dur=4){if(optEff&&optEff().menuFx===false)n=Math.min(n,15);for(let i=0;i<n;i++){const s=document.createElement('span');s.className='erain';s.textContent=Array.isArray(list)?pick(list):list;s.style.left=(Math.random()*100)+'vw';s.style.fontSize=(22+Math.random()*30)+'px';s.style.setProperty('--r',(Math.random()*720-360)+'deg');s.style.animationDuration=(dur*.6+Math.random()*dur*.6)+'s';s.style.animationDelay=(Math.random()*dur*.5)+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),(dur*1.8+1)*1000)}}
+function emojiSplat(e){const s=document.createElement('div');s.className='esplat';s.textContent=e;document.body.appendChild(s);setTimeout(()=>s.remove(),2600)}
+function emojiFly(e,y){const s=document.createElement('div');s.className='efly';s.textContent=e;s.style.top=(y??(20+Math.random()*50))+'vh';document.body.appendChild(s);setTimeout(()=>s.remove(),3400)}
+const funFx2={jelly:0,dizzy:0,tiny:0,giant:0,upside:0,invis:0,rgb:0,shiver:0,fly:0};
+{const _dk=drawKZ;drawKZ=function(c,x,y,s,eq,t,tilt){if(!(c===ctx&&!G&&cur==='menu'&&S&&eq===S.eq))return _dk.apply(this,arguments);let on=false;for(const k in funFx2)if(funFx2[k]>0){on=true;break}if(!on)return _dk.apply(this,arguments);
+  c.save();const T=performance.now()/1000;let sx=1,sy=1,rot=0,dy=0,dx=0;
+  if(funFx2.jelly>0){sx*=1+Math.sin(T*12)*.12;sy*=1-Math.sin(T*12)*.12}if(funFx2.tiny>0){sx*=.45;sy*=.45}if(funFx2.giant>0){sx*=1.7;sy*=1.7}if(funFx2.dizzy>0)rot+=Math.sin(T*5)*.35;if(funFx2.upside>0){sy*=-1;dy-=150*s}if(funFx2.shiver>0){dx+=Math.sin(T*70)*4;dy+=Math.cos(T*63)*2}if(funFx2.fly>0)dy-=Math.min(260,(8-funFx2.fly)*60)+Math.sin(T*3)*12;
+  if(funFx2.invis>0)c.globalAlpha=.12;if(funFx2.rgb>0)c.filter='hue-rotate('+((T*240)%360|0)+'deg) saturate(1.6)';
+  c.translate(x+dx,y+dy);c.rotate(rot);c.scale(sx,sy);c.translate(-x,-y);const r=_dk.call(this,c,x,y,s,eq,t,tilt);c.restore();return r}}
+setInterval(()=>{for(const k in funFx2)if(funFx2[k]>0)funFx2[k]=Math.max(0,funFx2[k]-.1)},100);
+const COMPLIMENTS=['Ты сегодня просто звезда! ⭐','У тебя отличный вкус в костюмах 👔','Ты ловишь звёзды лучше всех 🌟','С тобой котозайцу весело! 🐰','Твоя улыбка ярче луны 🌙','Ты — легенда этой игры 🏆','Ты умнее, чем три котозайца вместе 🧠','Котозаяц гордится тобой! 💖','Твои рекорды вдохновляют 🚀','Ты добрый, и это главное 🤗','Ты лучший садовник в лесу 🌻','Если бы звёзды выбирали — выбрали бы тебя ✨'];
+const FAKE_FACTS=['Котозайцы спят 18 часов в сутки, а остальные 6 — думают о морковке 🥕','Ушки котозайца ловят Wi-Fi лучше роутера 📶','Котозаяц однажды поймал 1000 звёзд и сказал «мало» ⭐','Учёные до сих пор спорят, мяукает он или фыркает 🤔','Если погладить котозайца, у тебя на 5% больше удачи 🍀 (не проверено)','Котозайцы любят смотреть на луну — там живут их дальние родственники 🌙','Хвост котозайца — самый пушистый во вселенной (по версии котозайца) ☁','Котозаяц умеет считать до 10, но стесняется 🔢','Любимый танец котозайца — «прыг-скок» 💃','Котозайцы никогда не опаздывают — они просто приходят вовремя по своему времени ⏰'];
+const ANEKDOTS=['Котозаяц спрашивает у луны: «Почему ты такая круглая?» — «Я много звёзд ем» 🌕','— Котозаяц, почему ты не спишь? — Считаю овец. — И сколько? — Одна. Она тоже не спит 🐑','Котозаяц пошёл на рыбалку, поймал звезду. Теперь рыбы боятся, что их сделают созвездием 🐟⭐','— Доктор, у меня уши висят! — Это не болезнь, это стиль 🐰','Котозаяц купил будильник. Теперь он опаздывает точно по расписанию ⏰','— Почему котозаяц перешёл дорогу? — Там была морковка. И Wi-Fi 📶','Котозаяц сел на диету: теперь он ест морковку только с морковкой 🥕','— Какой у тебя любимый спорт? — Ловля звёзд лёжа на диване 🛋','Котозаяц решил стать программистом. Теперь все баги у него — «фичи» 💻','— Котозаяц, ты кот или заяц? — Я сюрприз 🎁'];
+const MORE_POKE=['Эй, щекотно! 😆','Ещё раз — и я укушу морковку! 🥕','Я на работе, не мешай 😎','Ты кто такой? А, это ты 😄','Тык-тык — у меня кнопка «Ой»','Меня нельзя тыкать, я редкий! 💎','Пиу-пиу! 🔫… шучу, это морковка','Ай! Это был мой хвост!','Я тоже тебя тыкну! 👉','Ммм, массажик 😌'];
+try{POKE_LINES.push(...MORE_POKE);JOKES.push(...ANEKDOTS);FORTUNES.push('Сегодня морковка будет особенно вкусной 🥕','Тебя ждёт рекорд — или пицца 🍕','Звёзды говорят: улыбнись 😊','Сегодня удачный день для костюма пирата 🏴‍☠️','Котозаяц видит в твоём будущем много монеток 🪙');PREDICTIONS.push('Сегодня день смешных костюмов 👔','Сегодня день приколов 😂','Сегодня день котиков 🐱','Сегодня день морковного дождя 🥕')}catch(e){}
+const SOUNDS={boing:['🌀 Боинг',()=>SND.boing()],quack:['🦆 Кря',()=>{sfx(520,.12,'sawtooth',.05,-200);setTimeout(()=>sfx(480,.12,'sawtooth',.05,-200),160)}],meow:['🐱 Мяу',()=>sfx(700,.35,'sawtooth',.04,-350)],woof:['🐶 Гав',()=>{sfx(220,.12,'square',.06,-80);setTimeout(()=>sfx(200,.14,'square',.06,-80),170)}],sneeze:['🤧 Апчхи',()=>{sfx(900,.12,'triangle',.04,400);setTimeout(()=>sfx(160,.3,'sawtooth',.06,-60),250)}],hic:['😮 Ик',()=>sfx(900,.06,'square',.04,600)],
+  robot:['🤖 Бип-буп',()=>{for(let i=0;i<5;i++)setTimeout(()=>sfx(300+Math.random()*900,.06,'square',.04),i*90)}],drum:['🥁 Барабан',()=>{for(let i=0;i<10;i++)setTimeout(()=>sfx(120,.04,'square',.05,-20),i*55);setTimeout(()=>sfx(220,.35,'triangle',.06,400),650)}],fanfare:['🎺 Фанфары',()=>playTune([523,659,784,1046],140)],oops:['😳 Ой',()=>sfx(300,.25,'triangle',.05,-200)],whistle:['😗 Свист',()=>sfx(1400,.4,'sine',.04,600)],clap:['👏 Хлопки',()=>{for(let i=0;i<6;i++)setTimeout(()=>sfx(1800+Math.random()*400,.03,'square',.05),i*120+Math.random()*40)}],
+  laser:['🔫 Пиу',()=>sfx(1600,.18,'sawtooth',.04,-1400)],spring:['🪀 Пружинка',()=>sfx(200,.4,'sine',.05,900)],snore:['😴 Храп',()=>{sfx(110,.6,'sawtooth',.04,40);setTimeout(()=>sfx(400,.3,'sine',.03,-200),700)}],tada:['🎉 Та-дам',()=>playTune([392,523,659,784,1046,784,1046],110)]};
+function soundPlay(k){const s=SOUNDS[k];if(!s)return;s[1]();stat('funSounds')}
+const FUNC={
+  'кря':()=>{emojiRain('🦆',30);SOUNDS.quack[1]();setTimeout(()=>SOUNDS.quack[1](),500);say('Кря-кря! 🦆',2);return 'Утиный дождь!'},
+  'гав':()=>{SOUNDS.woof[1]();poke.vy=-500;say('Гав! Я котозаяц-пёс 🐶',2);return 'Котозаяц залаял'},
+  'желе':()=>{funFx2.jelly=10;sfx(300,.4,'sine',.04,200);say('Я желе-е-е-е 🍮',2);return 'Желейный котозаяц на 10 секунд'},
+  'кружится':()=>{funFx2.dizzy=8;say('Голова кружится… 😵‍💫',2.2);return 'У котозайца закружилась голова'},
+  'мини':()=>{funFx2.tiny=10;funFx2.giant=0;say('я мини-котозаяц…',2);return 'Мини-котозаяц на 10 секунд'},
+  'гигант':()=>{funFx2.giant=10;funFx2.tiny=0;SND.boss();say('Я ГИГАНТ! 🦖',2);return 'Гигантский котозаяц на 10 секунд'},
+  'вверхногами':()=>{funFx2.upside=8;say('Мир перевернулся?! 🙃',2);return 'Котозаяц вверх ногами'},
+  'невидимка':()=>{funFx2.invis=6;sfx(800,.4,'sine',.03,-600);say('Ты меня не видишь 🥷',2);return 'Котозаяц-невидимка'},
+  'ргб':()=>{funFx2.rgb=10;say('RGB-режим включён 🌈💻',2);return 'Геймерский RGB-котозаяц'},
+  'дрожь':()=>{funFx2.shiver=5;say('Бр-р-р, холодно! ❄',2);emojiRain('❄',25);return 'Котозаяц замёрз'},
+  'полёт':()=>{funFx2.fly=8;sfx(300,.8,'sine',.04,900);say('Я лечу-у-у! 🕊',2);return 'Котозаяц взлетел'},
+  'морковь':()=>{emojiRain('🥕',45);say('Морковный дождь! 🥕',2);return 'Морковный дождь'},
+  'пиццерия':()=>{emojiRain('🍕',40);say('Пицца с неба! 🍕',2);return 'Пиццапад'},
+  'деньги':()=>{emojiRain(['💸','💵','🪙'],45);say('Это не настоящие 😏',2.2);return 'Денежный дождь (бутафорский)'},
+  'котики':()=>{emojiRain(['🐱','😺','😸','😻'],40);for(let i=0;i<4;i++)setTimeout(()=>SOUNDS.meow[1](),i*300);return 'Котопад!'},
+  'бутерброд':()=>{emojiSplat('🍞');sfx(150,.3,'square',.05,-60);say('Упал маслом вниз… как всегда 🍞',2.4);return 'Закон бутерброда'},
+  'лаги':()=>{document.body.classList.add('glitch');setTimeout(()=>document.body.classList.remove('glitch'),2500);say('Это не баг, это фича 😎',2.4);return 'Лаги… или нет?'},
+  'котоматрица':()=>{emojiRain(['🟩','0️⃣','1️⃣'],50,5);say('Добро пожаловать в Котоматрицу 🕶',2.6);return 'Котоматрица'},
+  'аплодисменты':()=>{emojiRain('👏',35);SOUNDS.clap[1]();say('Спасибо, спасибо! 🙇',2);return 'Бурные аплодисменты'},
+  'барабан':()=>{SOUNDS.drum[1]();setTimeout(()=>say('Та-дам! 🥁',1.6),650);return 'Барабанная дробь'},
+  'апчхи':()=>{SOUNDS.sneeze[1]();poke.vy=-600;setTimeout(()=>say('Будь здоров! — Спасибо 🤧',2),300);stat('sneezes');return 'Апчхи!'},
+  'зевок':()=>{say('Ааа-ууу… 🥱',2);setTimeout(()=>{kzSleep=true;lastInput=performance.now()-30000},1500);return 'Котозаяц зевнул'},
+  'обнимашки':()=>{emojiRain(['🤗','💖','💕'],35);SND.heart();say('Обнимашки! 🤗',2);return 'Обнимашки'},
+  'комплимент':()=>{const c=pick(COMPLIMENTS);say(c,3.5);return c},
+  'анекдот':()=>{const a=pick(ANEKDOTS);say(a,5);return a},
+  'факт':()=>{const f=pick(FAKE_FACTS);say('Факт: '+f,5);return 'Почти научный факт: '+f},
+  'рыбапад':()=>{emojiRain(['🐟','🐠','🐡'],40);say('Рыбный дождь! 🐟',2);return 'Рыбы с неба'},
+  'самолётик':()=>{emojiFly('✈');sfx(600,1.2,'sine',.03,-300);return 'Бумажный самолётик'},
+  'тыквы':()=>{emojiRain('🎃',35);say('Тыквенный дождь! 🎃',2);return 'Тыквопад'},
+  'снежок':()=>{emojiSplat('❄');sfx(500,.12,'square',.05,-300);say('Попали снежком! ⛄',2);return 'Бац — снежок!'},
+  'пирог':()=>{emojiSplat('🥧');sfx(200,.25,'sawtooth',.05,-80);say('Пирог в лицо! 🥧',2);return 'Пирог прилетел'},
+  'эхо':()=>{['Эхо!','эхо…','эхо…','э…'].forEach((x,i)=>setTimeout(()=>{say(x,.6);sfx(600-i*100,.1,'sine',.03)},i*450));return 'Эхо… эхо… эхо…'},
+  'хаос':()=>{const ks=['желе','кружится','ргб','морковь','котики','дрожь','полёт','кря'];for(let i=0;i<3;i++)FUNC[pick(ks)]();return 'ХАОС! 🌀'},
+  'стоп':()=>{for(const k in funFx2)funFx2[k]=0;document.querySelectorAll('.erain,.esplat,.efly').forEach(x=>x.remove());return 'Все приколы остановлены'}};
+const FUNC_EN={quack:'кря',woof:'гав',jelly:'желе',dizzy:'кружится',mini:'мини',giant:'гигант',upside:'вверхногами',ninja:'невидимка',rgb:'ргб',shiver:'дрожь',fly:'полёт',carrots:'морковь',money:'деньги',cats:'котики',lag:'лаги',matrix:'котоматрица',clap:'аплодисменты',drum:'барабан',achoo:'апчхи',yawn:'зевок',hug:'обнимашки',nice:'комплимент',fact:'факт',plane:'самолётик',pie:'пирог',echo:'эхо',chaos:'хаос',stop:'стоп'};
+for(const k in FUNC)CODES[k]=FUNC[k];for(const[e,r]of Object.entries(FUNC_EN))CODES[e]=()=>FUNC[r]();
+{const _rc=runCode;runCode=function(c){return _rc.call(this,FUNC_EN[c]||c)}}
+const FUN_HINTS={'кря':'Как говорит утка?','гав':'Как говорит собака?','желе':'Десерт, который трясётся','кружится':'…голова','мини':'Очень маленький','гигант':'Очень большой','вверхногами':'Как висит летучая мышь (одним словом)','невидимка':'Тот, кого не видно','ргб':'Подсветка геймера (русскими буквами)','дрожь':'Когда очень холодно','полёт':'Птицы умеют, а котозайцы — с кодом','морковь':'Любимая еда (полное слово)','пиццерия':'Где делают пиццу','деньги':'Их всегда мало','котики':'Мяу во множественном числе','бутерброд':'Всегда падает маслом вниз','лаги':'Когда игра тормозит','котоматрица':'Матрица, но с котами','аплодисменты':'Хлопают в ладоши','барабан':'Бум-бум-бум','апчхи':'Звук чиха','зевок':'Когда хочется спать','обнимашки':'Тёплые и с объятиями','комплимент':'Приятные слова','анекдот':'Смешная история','факт':'Почти научный…','рыбапад':'Рыбы падают с неба','самолётик':'Из бумаги и летает','тыквы':'Оранжевые и на Хэллоуин','снежок':'Им кидаются зимой','пирог':'Им можно попасть в лицо в кино','эхо':'Повторяет за тобой в горах','хаос':'Всё сразу и беспорядок','стоп':'Остановить всё'};
+function funOpen(){const found=S.stats.codes||[];const CAN={'шутка':'joke','кубик':'dice','монетка':'coin','гадание':'fortune','снег':'snow','любовь':'love','салют':'boom','призрак':'ghost','песня':'sing','торт':'cake','икота':'hiccup','упс':'oops','крутись':'spin','мяу':'meow','диско':'disco','усы':'moustache','пицца':'pizza','банан':'banana','привет':'hello','танец':'dance','радуга':'colors'};
+  const quick=['желе','кружится','мини','гигант','вверхногами','невидимка','ргб','полёт','морковь','котики','кря','аплодисменты','комплимент','анекдот','факт','пирог','хаос','стоп'];
+  const total=new Set(Object.keys(CODES).map(k=>CAN[k]||FUNC_EN[k]||k)).size,fc=new Set(found).size;
+  let h=xHead('😂 Приколы')+`<p class="sub" style="margin:4px 0">Тыкай кнопки — котозаяц в меню сразу отреагирует. Секретные коды вводятся в Settings → «Секретный код».</p><h4 style="margin:6px 0">🎭 Быстрые приколы</h4><div class="fungrid">${quick.map(k=>`<button class="btn sm" data-funq="${k}">${{'желе':'🍮 Желе','кружится':'😵‍💫 Кружится','мини':'🐭 Мини','гигант':'🦖 Гигант','вверхногами':'🙃 Вверх ногами','невидимка':'🥷 Невидимка','ргб':'🌈 RGB','полёт':'🕊 Полёт','морковь':'🥕 Морковопад','котики':'🐱 Котопад','кря':'🦆 Утки','аплодисменты':'👏 Овации','комплимент':'💖 Комплимент','анекдот':'🤣 Анекдот','факт':'🤓 Факт','пирог':'🥧 Пирог в лицо','хаос':'🌀 Хаос','стоп':'⏹ Стоп'}[k]}</button>`).join('')}</div>
+  <h4 style="margin:10px 0 6px">🔊 Звуки котозайца</h4><div class="fungrid">${Object.entries(SOUNDS).map(([k,[n]])=>`<button class="btn sm ghost" data-funs="${k}">${n}</button>`).join('')}</div>
+  <div class="xbox"><b>🤫 Секретные коды: найдено ${fc} из ${total}</b><div style="max-height:150px;overflow:auto;margin-top:6px">${Object.entries(FUN_HINTS).map(([k,hint])=>`<div style="font-size:13px;font-weight:700">${found.includes(k)?'✅ <b>'+k+'</b>':'❔ '+hint}</div>`).join('')}</div></div>`;xOv(h)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-funq],[data-funs],[data-funopen]');if(!b||!S)return;if(b.hasAttribute('data-funopen')){SND.click();funOpen();return}if(b.dataset.funs){soundPlay(b.dataset.funs);return}if(b.dataset.funq){xOvClose();if(cur!=='menu')show('menu');const r=FUNC[b.dataset.funq]();stat('funUsed');if(b.dataset.funq==='комплимент'||b.dataset.funq==='анекдот'||b.dataset.funq==='факт')toast(r)}});
+{const _xm=xMenuRender;xMenuRender=function(){_xm.apply(this,arguments);const r=$('#xMenu2');if(r&&!r.querySelector('[data-funopen]'))r.insertAdjacentHTML('afterbegin','<button class="btn sm" data-funopen style="background:#fff0a8">😂 Приколы</button>')}}
+/* --- random menu antics --- */
+let anticT=40;setInterval(()=>{if(!S||cur!=='menu'||G||document.hidden||kzSleep)return;anticT-=5;if(anticT>0)return;anticT=rnd(45,90);const a=pick(['jelly','dizzy','fly','say','say','fact','sound']);
+  if(a==='jelly'){funFx2.jelly=3;say('Бульк! 🍮',1.4)}else if(a==='dizzy'){funFx2.dizzy=3;say('Ой, голова закружилась…',1.6)}else if(a==='fly'){funFx2.fly=4;say('Хочу на луну! 🌙',1.6)}else if(a==='fact')say(pick(FAKE_FACTS),4.5);else if(a==='sound'){const k=pick(['hic','whistle','snore','quack']);SOUNDS[k][1]();say({hic:'Ик!',whistle:'Фью-фью 🎵',snore:'Хррр… 😴',quack:'Кря? Откуда тут утка?'}[k],1.6)}else say(pick(MORE_POKE.concat(['Мне скучно, поиграй со мной 🥺','Может, наденем костюм пирата? 🏴‍☠️','Давай поймаем рекорд! ⭐','Ты знал, что я умею жонглировать? Я тоже нет 🤹'])),2.2)},5000);
+/* --- pranks for friends --- */
+const PRANKS={pie:['🥧 Пирог в лицо',()=>emojiSplat('🥧')],carrot:['🥕 Морковный дождь',()=>emojiRain('🥕',35)],duck:['🦆 Утки',()=>{emojiRain('🦆',30);SOUNDS.quack[1]()}],confetti:['🎉 Конфетти',()=>confetti(120)],flip:['🙃 Перевернуть экран на 3 с',()=>{cv.style.transform='scaleY(-1)';setTimeout(()=>applyFlip(),3000)}],sneeze:['🤧 Чих',()=>SOUNDS.sneeze[1]()],lag:['👾 Фейковые лаги',()=>{document.body.classList.add('glitch');setTimeout(()=>document.body.classList.remove('glitch'),2000)}],hearts:['💖 Сердечки',()=>emojiRain(['💖','💕','💗'],35)]};
+const prankSeen=new Set();let prankLast=0,prankSubbed=null;
+function prankSub(){if(S&&S.gid&&prankSubbed!==S.gid&&user!=='__guest'){prankSubbed=S.gid;NET.start();NET.sub(TP+'pk/'+S.gid)}}
+setInterval(prankSub,6000);
+function prankSend(g,k){const fr=soc().fr[g];if(!fr){toast('Подшутить можно только над другом');return}if(!isOnline(g)){toast('Друг сейчас не в сети');return}if(Date.now()-prankLast<10000){toast('Не так часто 😄 подожди пару секунд');return}prankLast=Date.now();
+  NET.pub(TP+'pk/'+g,{t:'prank',k,from:S.gid,nick,id:Math.random().toString(36).slice(2)+Date.now().toString(36)});stat('pranks');toast('😜 Прикол «'+PRANKS[k][0]+'» отправлен!');SND.boing()}
+{const _mr=mmRecv;mmRecv=function(m){if(m&&m.t==='prank'){try{if(!S||prankSeen.has(m.id))return;prankSeen.add(m.id);if(XS().prankOff||!soc().fr[m.from]||!PRANKS[m.k])return;PRANKS[m.k][1]();toast('😜 '+String(m.nick||'Друг').slice(0,24)+' подшутил(а) над тобой: '+PRANKS[m.k][0]);stat('pranked')}catch(e){}return}return _mr.apply(this,arguments)}}
+{const _pf=profRender;profRender=function(){_pf.apply(this,arguments);try{const g=SOC.prof;if(!g||!S||g===S.gid||!soc().fr[g])return;const box=document.querySelector('#pfOv .pfbox');if(!box||box.querySelector('.prankrow'))return;box.insertAdjacentHTML('beforeend',`<div class="prankrow xbox"><b>😜 Подшутить над другом</b>${isOnline(g)?'':' <small class="hint">(сработает, когда друг в сети)</small>'}<div class="fungrid" style="margin-top:6px">${Object.entries(PRANKS).map(([k,[n]])=>`<button class="btn sm ghost" data-prank="${k}" data-pg="${esc(g)}">${n}</button>`).join('')}</div></div>`)}catch(e){}}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-prank]');if(!b||!S)return;prankSend(b.dataset.pg,b.dataset.prank)});
+{const _cx=chXPost;chXPost=function(){_cx.apply(this,arguments);if(SOC.tab==='o'){const box=document.querySelector('#chBody .xbox');if(box&&!box.querySelector('[data-prankoff]'))box.insertAdjacentHTML('beforeend',`<div class="opt tg"><label>😜 Разрешить друзьям подшучивать надо мной (пирог, утки, конфетти…)</label><input type="checkbox" data-prankoff ${XS().prankOff?'':'checked'}></div>`)}}}
+document.addEventListener('change',e=>{if(e.target.matches&&e.target.matches('[data-prankoff]')){XS().prankOff=!e.target.checked;persist();toast(XS().prankOff?'Приколы от друзей выключены':'Друзья снова могут подшучивать 😜')}});
+ACH.push({id:'f_codes40',n:'Король приколов',d:'Найти 40 разных секретных кодов',k:'codes',goal:40,r:1500,i:'🤡'},{id:'f_sound50',n:'Звукорежиссёр',d:'Нажать 50 звуков котозайца',k:'funSounds',goal:50,r:200,i:'🔊'},{id:'f_fun30',n:'Весельчак',d:'Использовать 30 быстрых приколов',k:'funUsed',goal:30,r:250,i:'😂'},{id:'f_prank10',n:'Шутник',d:'Подшутить над друзьями 10 раз',k:'pranks',goal:10,r:400,i:'😜'},{id:'f_pranked',n:'Жертва приколов',d:'Над тобой подшутили 5 раз',k:'pranked',goal:5,r:200,i:'🥧'});
+Object.assign(STAT_RU,{funSounds:['🔊','Звуков котозайца'],funUsed:['😂','Быстрых приколов'],pranks:['😜','Приколов над друзьями'],pranked:['🥧','Приколов над тобой']});
+HELP.push(['😂 Приколы','Кнопка в меню: быстрые приколы с котозайцем, звуки, подсказки к секретным кодам. В профиле друга — «Подшутить» (пирог, утки, конфетти). Выключить приколы от друзей: Chat → ⚙ Настройки чата.']);
 
 resize();
 const sess=lsGet('kz_session');
