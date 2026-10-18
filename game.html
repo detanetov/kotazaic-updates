@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=28;window.KZ_VNAME='1.3.7';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=29;window.KZ_VNAME='1.3.8';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -108,6 +108,9 @@ html.gui2 #top .gc{display:none}html.gui2 .gpill{display:flex}
 .trit{position:relative;background:#fff8ec;border:2px solid var(--ink);border-radius:12px;padding:4px;text-align:center;font-size:11px;font-weight:700;cursor:pointer}.trit img{width:64px;height:64px;display:block;margin:0 auto}.trit .cnt{position:absolute;top:2px;right:4px;background:var(--ink);color:#fff;border-radius:8px;padding:0 5px;font-size:11px}
 .trit.dis{opacity:.4;cursor:default}.trpl{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;margin-top:6px}
 .trpop{position:fixed;right:16px;bottom:16px;z-index:65;background:var(--paper);border:4px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink);padding:12px 14px;max-width:320px}
+.mbadge{background:#e8355d;color:#fff;border-radius:10px;padding:0 6px;font-size:11px;margin-left:2px}
+.mlrow{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;margin-top:6px;cursor:pointer}.mlrow.new{border-color:#e8355d;background:#fff4f6}.mlrow .mh{display:flex;gap:10px;align-items:center}.mlrow .mh .ic{font-size:22px}.mlrow .mh .tx{flex:1;min-width:0}.mlrow .mh .tx b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mlrow .mh small{opacity:.7}
+.mlrow .mb{display:none;border-top:2px dashed #d8c8a8;margin-top:8px;padding-top:8px;white-space:pre-wrap;cursor:default}.mlrow.open .mb{display:block}.mlrow .mb ul{margin:4px 0 0 18px;padding:0}
 .slots{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:14px}.slot span{font-size:10px!important;line-height:1.2;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:normal;overflow-wrap:normal}
 .slot{padding:6px 1px!important}.slot b{font-size:10.5px!important}
 .slot span{font-size:12px}
@@ -357,7 +360,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
     <button class="btn pink" data-go="cos">✿ Cosmetics <small>образ</small></button>
     <button class="btn kgbtn" data-go="kg">⬆ Kotograde <small>апгрейд</small></button>
     <button class="btn" data-go="trade" id="mTrade" style="background:#8fe3ff">🤝 Trades <small id="mTradeN">обмен</small></button>
-    <button class="btn ghost" data-go="set">⚙ Settings <small>настройки</small></button>
+    <button class="btn ghost" data-go="set">⚙ Settings <small id="mSetN">настройки</small></button>
     <button class="btn vio" data-go="adm" id="mAdm" style="display:none">🛠 ADM <small>админ</small></button>
     <div class="row" style="gap:8px"><div class="chip">🏆 Рекорд: <span id="mBest">0</span></div><button class="btn sm mint giftbtn" id="mGift">🎁 Подарок дня</button></div>
     <div class="chip pred" id="mPred">🔮</div>
@@ -413,7 +416,7 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
 <div class="screen" id="set">
   <div class="panel" style="max-width:720px">
     <div class="row" style="justify-content:space-between"><h2>⚙ Settings</h2><button class="btn sm ghost" data-go="menu">← Меню</button></div>
-    <div class="tabs" id="setTabs"><button class="btn sm cur" data-st="main">⚙ Основное</button><button class="btn sm" data-st="acc">👤 Аккаунты</button><button class="btn sm" data-st="top">🏆 Топ игроков</button><button class="btn sm" data-st="cus">🎨 Кастомизация</button><button class="btn sm" data-st="ach">🏅 Достижения</button><button class="btn sm" data-st="mg">🎮 Мини-игры</button><button class="btn sm" data-st="eggs">🥚 Eggs</button><button class="btn sm" data-st="gui">🖥 GUI</button></div>
+    <div class="tabs" id="setTabs"><button class="btn sm cur" data-st="main">⚙ Основное</button><button class="btn sm" data-st="acc">👤 Аккаунты</button><button class="btn sm" data-st="top">🏆 Топ игроков</button><button class="btn sm" data-st="cus">🎨 Кастомизация</button><button class="btn sm" data-st="ach">🏅 Достижения</button><button class="btn sm" data-st="mg">🎮 Мини-игры</button><button class="btn sm" data-st="eggs">🥚 Eggs</button><button class="btn sm" data-st="gui">🖥 GUI</button><button class="btn sm" data-st="mail">✉ Почта <b id="mailBadge" class="mbadge" style="display:none"></b></button></div>
     <div id="stMain">
     <p class="sub">Настройки сохраняются в твоём аккаунте. Кстати, в меню есть секретные коды… 🤫</p>
     <div class="opt"><label>🔊 Громкость звуков <b id="vVol"></b></label><input type="range" min="0" max="100" step="5" id="sVol"></div>
@@ -460,6 +463,11 @@ canvas#c.hue{animation:hue 2.5s linear infinite}
         <div class="mgcard"><div class="mgic">🤸</div><div class="mgtx"><b>NoomiClone</b><small>Котозаяц-гимнаст: раскачайся на перекладине, отпусти, сделай сальто и поймай следующую</small></div><button class="btn sm mint" data-noomi="1">Открыть</button></div>
         <div class="mgcard"><div class="mgic">♟️</div><div class="mgtx"><b>Шахматы</b><small>Классические шахматы, рокировка, взятие на проходе</small></div><button class="btn sm mint" data-mgopen="chess">Открыть</button></div>
       </div>
+    </div>
+    <div id="stMail" style="display:none">
+      <div class="row" style="justify-content:space-between"><p class="sub" style="margin:0">Письма об обновлениях, подарки от администратора и письма от игроков.</p><div class="row" style="gap:6px"><button class="btn sm mint" id="mlNew">✏ Написать письмо</button><button class="btn sm ghost" id="mlReadAll">Прочитать все</button></div></div>
+      <div id="mlCompose" class="box" style="display:none;margin-top:8px"></div>
+      <div id="mlList" style="margin-top:8px"></div>
     </div>
     <div id="stGui" style="display:none">
       <p class="sub">Выбери вид интерфейса. Справа — предпросмотр.</p>
@@ -805,7 +813,7 @@ function persist(){if(!user)return;if(S)S.last=Date.now();clearTimeout(window._p
 function login(u){
   if(u==='__guest'){user=u;nick='Гость';try{S=fixSave(JSON.parse(lsGet('kz_guest')))}catch(e){S=newSave()}}
   else{const db=loadDB();if(!db[u])return false;user=u;nick=db[u].nick;S=fixSave(db[u].save)}
-  applyShader();applyFlip();try{applyLook();applyGui();makeSky();if(S.set.music)musicKick()}catch(e){}if(u!=='__guest')persist();lsSet('kz_session',u);addKnown(u);backUser=null;$('#aBack').style.display='none';refreshTop();show('menu');return true}
+  applyShader();applyFlip();try{mlCheckUpdates();mlBadge();mlSub();applyLook();applyGui();makeSky();if(S.set.music)musicKick()}catch(e){}if(u!=='__guest')persist();lsSet('kz_session',u);addKnown(u);backUser=null;$('#aBack').style.display='none';refreshTop();show('menu');return true}
 let backUser=null;
 function getKnown(){try{const k=JSON.parse(lsGet('kz_known'));return Array.isArray(k)?k:[]}catch(e){return[]}}
 function addKnown(u){const k=getKnown().filter(x=>x!==u);k.unshift(u);lsSet('kz_known',JSON.stringify(k.slice(0,20)))}
@@ -2348,6 +2356,72 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trReady'){st.myReady=!st.myReady;if(!st.myReady)st.myConf=st.theirConf=false;trSend(st.peer,{t:'tready',tid:st.tid,on:st.myReady});trRender();return}
   if(g.id==='trConf'){if(!trCanGive(st.my)){toast('⚠ Не хватает вещей или монет');return}st.myConf=true;trSend(st.peer,{t:'tconf',tid:st.tid,h:trHash(st.my,st.their)});if(st.theirConf)trApply();else trRender();return}
   if(g.id==='trCancel'){trCancel();return}});
+/* ---------------- Mail ---------------- */
+const CHANGELOG=[
+ {v:29,l:'1.3.8',items:['✉ Почта в настройках: письма об обновлениях с тем, что добавлено','🎁 Подарки от администратора приходят письмом, даже если ты был не в сети','📨 Письма игрокам — онлайн и оффлайн, ответ и блокировка']},
+ {v:28,l:'1.3.7',items:['🤝 Trades — обмен вещами, питомцами и монетами с другими игроками','📜 История обменов','🏅 Достижения «Торговец» и «Барыга»']},
+ {v:27,l:'1.3.6',items:['🖥 GUI 3 «Полоса» с надписью gs','📊 FPS · PING · CPU · LOSS','🔘 Кнопки справа в той же теме']},
+ {v:23,l:'1.3.9',items:['🖥 GUI 2: кнопки «Звук» и «Выйти» в стиле панели']},
+ {v:20,l:'1.3.6',items:['🖥 Новый раздел GUI в настройках с предпросмотром']},
+ {v:19,l:'1.3.5',items:['🤸 NoomiClone: читы в ADM — всегда цепляться, автоигра, супер-прыжок','♾ Бесконечные перекладины']},
+ {v:18,l:'1.3.4',items:['🛠 ADM: профиль игрока, смена ника, статистика, журнал','🛠 Техработы, разыграть всех']},
+ {v:16,l:'2.0',items:['🌻 Сад котозайца — сажай, поливай, продавай урожай']},
+ {v:15,l:'1.9',items:['🤸 Мини-игра NoomiClone']},
+ {v:14,l:'1.8',items:['🛠 ADM: выдача любой суммы монет и новые функции']},
+ {v:13,l:'1.7',items:['⚙ Новые настройки: сложность, дзен, музыка, FPS','🎨 Пейзажи, погода, небесные тела, курсоры']},
+ {v:12,l:'1.6',items:['😜 6 новых событий в игре и 13 секретных кодов']},
+ {v:11,l:'1.5',items:['🏆 Общий топ игроков со всех устройств']},
+ {v:10,l:'1.4',items:['💎 80 эксклюзивных брендовых вещей']},
+ {v:9,l:'1.3',items:['⬆ 80 вещей Kotograde','🤖 TAS в ADM']}];
+function mlBox(){if(!S.mail)S.mail=[];return S.mail}
+function mlAdd(m){const box=mlBox();if(box.some(x=>x.id===m.id))return false;box.unshift(Object.assign({read:false,ts:Date.now()},m));box.length=Math.min(box.length,80);persist();mlBadge();if(cur==='set'&&setTab==='mail')mlRender();return true}
+function mlUnread(){return S&&S.mail?S.mail.filter(m=>!m.read).length:0}
+function mlBadge(){const n=mlUnread();try{const b=$('#mailBadge');b.textContent=n;b.style.display=n?'inline':'none';$('#mSetN').textContent=n?'✉ '+n+' новых':'настройки'}catch(e){}}
+function mlCheckUpdates(){if(!S)return;const seen=S.mailVer||0;if(seen>=window.KZ_VER)return;const fresh=CHANGELOG.filter(c=>c.v>seen&&c.v<=window.KZ_VER).slice(0,seen?5:1);
+  for(const c of fresh.reverse())mlAdd({id:'upd'+c.v,kind:'upd',from:'Kotazaic and Stars',subj:'🎉 Вышло обновление '+c.l+'!',body:'Что добавлено:',list:c.items,ts:Date.now()});
+  if(!fresh.length&&seen)mlAdd({id:'upd'+window.KZ_VER,kind:'upd',from:'Kotazaic and Stars',subj:'🎉 Вышло обновление '+(window.KZ_VNAME||window.KZ_VER)+'!',body:'Игра обновилась до новой версии.',ts:Date.now()});
+  S.mailVer=window.KZ_VER;persist()}
+let mlSubbed=null;const mlSeenNet=new Set();
+function mlSub(){if(!S||!S.gid||user==='__guest')return;NET.start();if(mlSubbed!==S.gid){mlSubbed=S.gid;NET.sub(TP+'mail/'+S.gid+'/+');NET.sub(TP+'players/+')}}
+async function mlVerify(m){if(!m.sig)return false;for(let i=0;i<40&&!admK;i++)await new Promise(r=>setTimeout(r,150));if(!admK)return false;try{return await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},admK.sig,b64u8(m.sig),mqEnc.encode(m.signed))}catch(e){return false}}
+async function mlNetRecv(topic,payload){if(!S||!payload.length)return;const gid=topic.slice((TP+'mail/').length).split('/')[0];if(gid!==S.gid)return;let m;try{m=JSON.parse(mqDec.decode(payload))}catch(e){return}if(!m||m.t!=='mail'||!m.id)return;
+  if(!mlSeenNet.has(m.id)){mlSeenNet.add(m.id);
+    let adm=false,gift=null;if(m.sig){adm=await mlVerify(m);if(adm){try{const sd=JSON.parse(m.signed);if(sd.to!==S.gid||sd.id!==m.id)adm=false;else{m.subj=sd.subj;m.body=sd.body;gift=sd.gift||null}}catch(e){adm=false}}}
+    const blocked=(S.mailBlock||[]).includes(m.fromGid);
+    if(!blocked&&!(m.kind==='gift'&&!adm)){if(mlAdd({id:m.id,kind:adm?(gift?'gift':'adm'):'mail',from:adm?'👑 Администратор':(m.fromNick||'?')+' @'+(m.fromU||'?'),fromGid:m.fromGid,fromU:m.fromU,subj:String(m.subj||'(без темы)').slice(0,80),body:String(m.body||'').slice(0,1000),gift,ts:m.ts||Date.now()})){toast('✉ Новое письмо: '+String(m.subj||'').slice(0,40));sfx(1046,.12,'triangle',.05,300)}}}
+  NET.pub(topic,null,true)}
+function mlResolve(u){u=String(u||'').trim().toLowerCase().replace(/^@/,'');let best=null;for(const p of Object.values(netPlayers))if(String(p.u).toLowerCase()===u&&(!best||p.last>best.last))best=p;return best}
+function mlSendTo(p,subj,body,extra){const id='m'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);const m=Object.assign({t:'mail',id,fromGid:S.gid,fromU:user,fromNick:nick,subj,body,ts:Date.now()},extra||{});NET.pub(TP+'mail/'+p.gid+'/'+id,m,true);return id}
+async function mlAdmSend(p,subj,body,gift){if(!SIGK_G){toast('🔑 Сначала введи пароль ADM');return false}const id='a'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);const signed=JSON.stringify({id,to:p.gid,subj,body,gift:gift||null,ts:Date.now()});
+  const sig=u8b64(await crypto.subtle.sign({name:'ECDSA',hash:'SHA-256'},SIGK_G,mqEnc.encode(signed)));NET.pub(TP+'mail/'+p.gid+'/'+id,{t:'mail',id,kind:gift?'gift':'adm',fromGid:S.gid,fromU:user,fromNick:'Администратор',subj,body,ts:Date.now(),signed,sig},true);return true}
+function mlGiftText(g){if(!g)return'';const a=g.a||{};if(g.op==='give'){const d=itemDef(a.sl,a.id);return '🎁 '+(d?d.n:'вещь')+(a.n>1?' ×'+a.n:'')}if(g.op==='coins')return '🪙 '+(a.d>0?'+':'')+a.d+' монет';if(g.op==='pe'){const L=a.key==='pets'?PETS:EGGS;return (a.key==='pets'?'🐰 ':'🥚 ')+(a.ids||[]).map(i=>L[i]?L[i].n:i).join(', ')+(a.n>1?' ×'+a.n:'')}if(g.op==='allitems')return '✨ Вся косметика';if(g.op==='setcoins')return '🪙 Монеты = '+a.v;if(g.op==='levels')return '★ Уровни BP '+a.bp+' / Event '+a.ev;return '🎁 Подарок'}
+function mlClaim(m){if(!m.gift||m.claimed)return;S.mailClaimed=S.mailClaimed||[];if(S.mailClaimed.includes(m.id)){m.claimed=true;persist();return}const g=m.gift,a=Object.assign({},g.a||{},{u:user});const r=admApply({op:g.op,a});if(r==='ok'){m.claimed=true;S.mailClaimed.push(m.id);persist();confetti(80);SND.win();toast('🎁 Подарок получен: '+mlGiftText(g))}else toast('⚠ '+r);mlRender()}
+let mlOpen=null,mlLastSend=0;
+function mlRender(){if(!S||!$('#mlList'))return;const box=mlBox();let h='';if(!box.length)h='<p class="hint">Писем пока нет.</p>';
+  for(const m of box){const ic={upd:'📰',gift:'🎁',adm:'👑',mail:'✉',sys:'📢'}[m.kind]||'✉',d=new Date(m.ts),dt=d.toLocaleDateString('ru-RU')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    h+=`<div class="mlrow ${m.read?'':'new'} ${mlOpen===m.id?'open':''}" data-mlid="${esc(m.id)}"><div class="mh"><span class="ic">${ic}</span><div class="tx"><b>${m.read?'':'● '}${esc(m.subj)}</b><small>${esc(m.from)} · ${dt}</small></div>${m.gift?(m.claimed?'<small>✅ получено</small>':'<span class="chip" style="font-size:12px">🎁 подарок</span>'):''}</div>
+    <div class="mb">${esc(m.body)}${m.list?'<ul>'+m.list.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':''}${m.gift?`<div style="margin-top:8px"><b>${esc(mlGiftText(m.gift))}</b></div>`:''}
+      <div class="row" style="gap:6px;margin-top:8px">${m.gift&&!m.claimed?`<button class="btn sm mint" data-mlclaim="${esc(m.id)}">🎁 Забрать подарок</button>`:''}${m.kind==='mail'&&m.fromU?`<button class="btn sm" data-mlreply="${esc(m.id)}">↩ Ответить</button><button class="btn sm ghost" data-mlblock="${esc(m.id)}">🚫 Заблокировать</button>`:''}<button class="btn sm ghost" data-mldel="${esc(m.id)}">🗑 Удалить</button></div></div></div>`}
+  $('#mlList').innerHTML=h;mlBadge()}
+function mlCompose(to,subj){const c=$('#mlCompose');const known=[...new Set(Object.values(netPlayers).filter(p=>p.gid!==S.gid).map(p=>String(p.u)))].sort();
+  c.style.display='block';c.innerHTML=`<h3>✏ Новое письмо</h3><div class="row" style="gap:6px"><span>Кому:</span><input class="inp" id="mlTo" list="mlUsers" placeholder="юзернейм игрока" value="${esc(to||'')}" style="flex:1"><datalist id="mlUsers">${known.map(u=>`<option value="${esc(u)}">`).join('')}</datalist></div>
+   <div class="row" style="gap:6px;margin-top:6px"><span>Тема:</span><input class="inp" id="mlSubj" maxlength="80" value="${esc(subj||'')}" style="flex:1"></div>
+   <textarea class="inp" id="mlBody" maxlength="1000" rows="4" style="width:100%;margin-top:6px;resize:vertical" placeholder="Текст письма"></textarea>
+   <div class="row" style="gap:6px;margin-top:6px"><button class="btn sm mint" id="mlSend">📨 Отправить</button><button class="btn sm ghost" id="mlClose">Отмена</button><small>Письмо дойдёт, даже если игрок сейчас не в сети.</small></div>`;
+  $('#mlBody').focus()}
+document.addEventListener('click',e=>{if(!S)return;const t=e.target;
+  if(t.closest('#mlNew')){if(user==='__guest'){toast('Почта доступна только с аккаунтом');return}mlSub();mlCompose();return}
+  if(t.closest('#mlClose')){$('#mlCompose').style.display='none';return}
+  if(t.closest('#mlReadAll')){for(const m of mlBox())m.read=true;persist();mlRender();return}
+  if(t.closest('#mlSend')){if(Date.now()-mlLastSend<8000){toast('Подожди немного перед следующим письмом');return}const to=$('#mlTo').value,p=mlResolve(to),subj=$('#mlSubj').value.trim()||'(без темы)',body=$('#mlBody').value.trim();
+    if(!p){toast('Игрок «'+to+'» не найден — он должен хоть раз зайти в новую версию игры');return}if(p.gid===S.gid){toast('Нельзя писать самому себе 🙂');return}if(!body){toast('Напиши текст письма');return}if(!NET.ok()){toast('Нет связи с онлайн-сервером');return}
+    mlSendTo(p,subj,body);mlLastSend=Date.now();$('#mlCompose').style.display='none';toast('📨 Письмо отправлено '+p.u);SND.buy();stat('mailsSent');return}
+  const cl=t.closest('[data-mlclaim]');if(cl){const m=mlBox().find(x=>x.id===cl.dataset.mlclaim);if(m)mlClaim(m);return}
+  const rp=t.closest('[data-mlreply]');if(rp){const m=mlBox().find(x=>x.id===rp.dataset.mlreply);if(m){mlSub();mlCompose(m.fromU,(m.subj.startsWith('Re: ')?'':'Re: ')+m.subj)}return}
+  const bl=t.closest('[data-mlblock]');if(bl){const m=mlBox().find(x=>x.id===bl.dataset.mlblock);if(m&&m.fromGid&&confirm('Больше не получать письма от '+m.fromU+'?')){S.mailBlock=S.mailBlock||[];S.mailBlock.push(m.fromGid);S.mail=S.mail.filter(x=>x.fromGid!==m.fromGid);persist();mlRender();toast('🚫 '+m.fromU+' заблокирован')}return}
+  const dl=t.closest('[data-mldel]');if(dl){const m=mlBox().find(x=>x.id===dl.dataset.mldel);if(m&&m.gift&&!m.claimed&&!confirm('В письме есть подарок. Удалить, не забрав?'))return;S.mail=S.mail.filter(x=>x.id!==dl.dataset.mldel);persist();mlRender();return}
+  const row=t.closest('[data-mlid]');if(row&&!t.closest('.mb')){const m=mlBox().find(x=>x.id===row.dataset.mlid);mlOpen=mlOpen===row.dataset.mlid?null:row.dataset.mlid;if(m&&!m.read){m.read=true;persist()}mlRender()}});
+setInterval(()=>{if(S&&user&&user!=='__guest'){mlSub();mlCheckUpdates();mlBadge()}},5000);
 let codeBuf='',admBoostUntil=+(lsGet('kz_boost')||0);
 const funFx={snow:0,love:0,boom:0,ghost:0,notes:0,cloud:0};
 function playTune(notes,ms){notes.forEach((f,i)=>setTimeout(()=>sfx(f,ms/1000*.9,'triangle',.05),i*ms))}
@@ -2502,7 +2576,7 @@ $('#sWipe').onclick=()=>{if(!confirm('Точно удалить весь про�
 
 let setTab='main',topTab='best';
 function setSetTab(t){setTab=t;for(const b of document.querySelectorAll('#setTabs [data-st]'))b.classList.toggle('cur',b.dataset.st===t);
-  $('#stMain').style.display=t==='main'?'block':'none';$('#stGui').style.display=t==='gui'?'block':'none';if(t==='gui')renderGui();$('#stAcc').style.display=t==='acc'?'block':'none';$('#stTop').style.display=t==='top'?'block':'none';$('#stCus').style.display=t==='cus'?'block':'none';if(t==='cus')renderLook();$('#stAch').style.display=t==='ach'?'block':'none';$('#stMg').style.display=t==='mg'?'block':'none';$('#stEggs').style.display=t==='eggs'?'block':'none';if(t==='eggs')renderEggs();if(t==='ach')renderAch();if(t==='cus')renderCus();
+  $('#stMain').style.display=t==='main'?'block':'none';$('#stGui').style.display=t==='gui'?'block':'none';if(t==='gui')renderGui();$('#stMail').style.display=t==='mail'?'block':'none';if(t==='mail')mlRender();$('#stAcc').style.display=t==='acc'?'block':'none';$('#stTop').style.display=t==='top'?'block':'none';$('#stCus').style.display=t==='cus'?'block':'none';if(t==='cus')renderLook();$('#stAch').style.display=t==='ach'?'block':'none';$('#stMg').style.display=t==='mg'?'block':'none';$('#stEggs').style.display=t==='eggs'?'block':'none';if(t==='eggs')renderEggs();if(t==='ach')renderAch();if(t==='cus')renderCus();
   if(t==='acc')renderAccounts();if(t==='top'){NET.start();NET.sub(TP+'players/+');try{publishPresence()}catch(e){}renderTop()}}
 document.querySelector('#setTabs').addEventListener('click',e=>{const b=e.target.closest('[data-st]');if(b){SND.click();setSetTab(b.dataset.st)}});
 document.querySelector('#topTabs').addEventListener('click',e=>{const b=e.target.closest('[data-tt]');if(!b)return;topTab=b.dataset.tt;SND.click();for(const x of document.querySelectorAll('#topTabs [data-tt]'))x.classList.toggle('cur',x===b);renderTop()});
@@ -2881,6 +2955,7 @@ class MQ{
     else if(t===13){guiPong(this)}
     else if(t===3){const qos=(h>>1)&3,tl=(body[0]<<8)|body[1];const topic=mqDec.decode(body.subarray(2,2+tl));let o=2+tl;if(qos)o+=2;
       if(topic.startsWith(TP+'players/')){netProfile(topic.slice((TP+'players/').length),body.subarray(o));return}
+      if(topic.startsWith(TP+'mail/')){mlNetRecv(topic,body.subarray(o));return}
       let m;try{m=JSON.parse(mqDec.decode(body.subarray(o)))}catch(e){return}mmRecv(m)}}
   raw(pk){try{if(this.ws&&this.ws.readyState===1)this.ws.send(pk)}catch(e){}}
   sendSub(topic){this.pid=(this.pid%65535)+1;this.raw(mqPkt(0x82,[this.pid>>8,this.pid&255,...mqStr(topic),0]))}
@@ -3349,6 +3424,7 @@ async function admRecv(m){if(!admK||typeof m.c!=='string'||typeof m.s!=='string'
   if(c.to!=='*'&&c.to!==DEV_ID)return;if(Math.abs(Date.now()-c.ts)>15*60e3)return;if(!c.id||admSeen[c.id])return;
   admSeen[c.id]=c.ts;for(const k in admSeen)if(Date.now()-admSeen[k]>20*60e3)delete admSeen[k];lsSet('kz_admseen',JSON.stringify(admSeen));
   let res;try{res=admApply(c)}catch(e){res='ошибка: '+e.message}
+  try{if(res==='ok'&&['give','coins','pe','allitems','setcoins','levels'].includes(c.op)&&(c.a.u===user||c.a.u==='*'))mlAdd({id:'g'+c.id,kind:'adm',from:'👑 Администратор',subj:'🎁 Администратор подарил тебе подарок',body:mlGiftText({op:c.op,a:c.a}),ts:Date.now(),read:false});if(res==='ok'&&c.op==='msg'&&(!c.a.u||c.a.u==='*'||c.a.u===user))mlAdd({id:'n'+c.id,kind:'sys',from:'👑 Администратор',subj:'📢 '+String(c.a.text||'').slice(0,50),body:String(c.a.text||''),ts:Date.now()})}catch(e){}
   try{NET.pub(TP+'adm/rep',await admSeal(Object.assign({t:'rep',id:c.id,op:c.op,res},admInfo())))}catch(e){}}
 setTimeout(admInit,800);
 /* ---- in-game ADM: pick a player and give over the network ---- */
@@ -3371,7 +3447,7 @@ function renderPickBox(){const box=$('#adPickBox'),t=admTargetOf();if(!t){box.st
   <div class="row"><span>🪙</span><input class="inp" id="pkCoins" type="number" value="500" style="width:120px"><button class="btn sm" data-pk="add">➕ Выдать</button><button class="btn sm ghost" data-pk="take">➖ Забрать</button><button class="btn sm ghost" data-pk="set">= Установить</button></div>
   <div class="row" style="margin-top:6px"><span>BP</span><input class="inp" id="pkBp" type="number" min="0" max="${BP_LV}" value="0" style="width:70px"><span>Event</span><input class="inp" id="pkEv" type="number" min="0" max="${EV_LV}" value="0" style="width:70px"><button class="btn sm mint" data-pk="lv">Уровни</button><span>Рекорд</span><input class="inp" id="pkBest" type="number" min="0" value="0" style="width:100px"><button class="btn sm mint" data-pk="best">Установить</button></div>
   <div class="row" style="margin-top:6px"><button class="btn sm mint" data-go="give">🎁 Вещи</button><button class="btn sm mint" data-gpe="pets">🐰 Питомцы</button><button class="btn sm mint" data-gpe="eggs">🥚 Яйца</button><button class="btn sm pink" data-pk="all">✨ Вся косметика</button></div>
-  <div class="row" style="margin-top:6px"><input class="inp" id="pkMsg" maxlength="140" placeholder="Сообщение игроку" style="flex:1"><button class="btn sm vio" data-pk="msg">📢 Отправить</button></div>
+  <div class="row" style="margin-top:6px"><input class="inp" id="pkMsg" maxlength="140" placeholder="Сообщение игроку" style="flex:1"><button class="btn sm vio" data-pk="msg">📢 Отправить</button><button class="btn sm ghost" data-pk="mail">✉ Письмом</button></div>
   <div class="row" style="margin-top:6px"><input class="inp" id="pkNick" maxlength="16" placeholder="Новый ник" style="width:160px"><button class="btn sm ghost" data-pk="rename">✏ Сменить ник</button><button class="btn sm mint" data-pk="inspect">🔍 Профиль игрока</button></div>
   <div class="row" style="margin-top:6px"><span>🌻 Сад:</span><button class="btn sm ghost" data-pkg="grow">Вырастить всё</button><button class="btn sm ghost" data-pkg="seeds">Семена ×10</button><button class="btn sm ghost" data-pkg="lvl">+5 уровней</button><button class="btn sm ghost" data-pkg="plots">Все 16 грядок</button></div>
   <div class="row" style="margin-top:6px"><span>😜 Разыграть:</span><button class="btn sm ghost" data-pkf="sneeze">🤧 Чихнуть</button><button class="btn sm ghost" data-pkf="flip">🙃 Перевернуть</button><button class="btn sm ghost" data-pkf="disco">🪩 Диско</button><button class="btn sm ghost" data-pkf="giant">🦖 Великан</button><button class="btn sm ghost" data-pkf="tiny">🐭 Крошка</button><button class="btn sm ghost" data-pkf="rainbow">🌈 Радуга</button><button class="btn sm ghost" data-pkf="confetti">🎉 Конфетти</button></div>
@@ -3388,6 +3464,7 @@ $('#adPickBox').addEventListener('click',e=>{const b=e.target.closest('[data-pk]
   if(k==='best')admDo('setbest',{v:n('#pkBest')},'рекорд = '+n('#pkBest'));
   if(k==='all')admDo('allitems',{},'вся косметика');
   if(k==='msg'){const t=$('#pkMsg').value.trim();if(!t)return;admDo('msg',{text:t},'сообщение');$('#pkMsg').value=''}
+  if(k==='mail'){const t=$('#pkMsg').value.trim();if(!t)return;const tg=admTargetOf();if(!tg)return;let p=tg.local?null:tg.p;if(tg.local){const db=loadDB(),sv=db[tg.u]&&fixSave(db[tg.u].save);if(sv)p={gid:sv.gid,u:tg.u}}if(!p)return;mlAdmSend(p,'👑 Письмо от администратора',t).then(ok=>{if(ok){toast('✉ Письмо отправлено '+p.u);admLog('✉ письмо → '+p.u);$('#pkMsg').value=''}})}
   if(k==='kick')admDo('kick',{},'отправлен в меню');
   if(k==='rename'){const v=$('#pkNick').value.trim();if(!v)return;admDo('rename',{nick:v.slice(0,16)},'ник → '+v);$('#pkNick').value=''}
   if(k==='inspect')admDo('inspect',{},'профиль');
@@ -3416,6 +3493,7 @@ async function netSend(q){if(!SIGK_G||!NET.ok())return;q.sent=Date.now();const p
   const c=JSON.stringify({to:dev,op:q.op,a:q.a,ts:Date.now(),id:q.id});const sig=await crypto.subtle.sign({name:'ECDSA',hash:'SHA-256'},SIGK_G,mqEnc.encode(c));NET.pub(TP+'adm/cmd',{adm:1,c,s:u8b64(sig)});netQSave()}
 function netQFlush(gid){for(const q of netQ)if((!gid||q.gid===gid)&&Date.now()-(q.sent||0)>10000)netSend(q)}
 function netGive(p,op,a,label){if(!SIGK_G){toast('🔑 Сначала введи пароль ADM внизу');show('adm');setTimeout(()=>{try{$('#adKey').focus()}catch(e){}},200);return}
+  if(Date.now()-p.last>=150000&&['give','coins','pe','allitems','setcoins','levels'].includes(op)){mlAdmSend(p,'🎁 Подарок от администратора','Пока тебя не было, администратор приготовил тебе подарок. Нажми «Забрать подарок»!',{op,a:Object.assign({},a)}).then(ok=>{if(ok){toast('✉ '+p.u+' не в сети — подарок отправлен письмом');admLog('✉ подарок письмом → '+p.u+': '+label);SND.buy()}});return}
   const q={id:'q'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),gid:p.gid,dev:p.dev,u:p.u,op,a:Object.assign({u:p.u},a),label,t:Date.now()};netQ.push(q);netQSave();netSend(q);SND.buy();
   const on=Date.now()-p.last<150000;toast(on?`⏳ Отправляю: ${label} → ${p.u}`:`📬 ${p.u} не в сети — выдам, когда зайдёт в игру (${label})`)}
 async function admRepRecv(m){if(!ENCK_G)return;let d;try{const eph=await crypto.subtle.importKey('raw',b64u8(m.k),{name:'ECDH',namedCurve:'P-256'},false,[]);
