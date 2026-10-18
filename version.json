@@ -1,9 +1,9 @@
 {
- "version": 76,
+ "version": 77,
  "label": "1.4.0",
- "name": "1.4.0: эмоции и колесо эмоций",
+ "name": "1.4.0: эмоции-танцы",
  "file": "game.html",
- "sha256": "944158721f0f31e9d49b2a6bcf5dc82452aaed78b48f6162a495dcb0958e9f1e",
+ "sha256": "9975cb3e2410358954988fc1c56180ebe37f3e7078f520ec41120ddeb1238812",
  "date": "2026-10-18",
  "exe": {
   "version": 4,
