@@ -65,6 +65,18 @@ h2{margin:0;text-align:center;font-size:30px;letter-spacing:-.5px}
 #fps{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:4;font:800 12px monospace;color:#fff;text-shadow:0 1px 3px #000;display:none}
 .onl{text-align:center;color:var(--mut);font-size:13px;margin-top:8px}.off{color:var(--mut);font-size:13px;text-decoration:underline;cursor:pointer}
 #admBtn{top:136px!important}
+.skins{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))!important}
+.sk{position:relative;border-bottom:3px solid var(--rc,transparent)!important;padding:6px 4px 7px!important}.sk img{width:88px;height:88px;object-fit:contain;opacity:0;transform:scale(.85);transition:opacity .3s,transform .3s;filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}.sk img.ok{opacity:1;transform:none}
+.sk:hover img{transform:scale(1.08) rotate(-3deg)}.sk em{font-style:normal;font-size:10px;font-weight:900;color:var(--rc);letter-spacing:.3px}.sk .nn{width:88px;height:88px;display:grid;place-items:center;font-size:30px;opacity:.6}
+.sk.lock img{filter:grayscale(.75) brightness(.7)}.sk.lock{opacity:.7}.sk.lock:after{content:'🔒';position:absolute;right:6px;top:4px;font-size:15px}.sk.on:before{content:'✓';position:absolute;left:7px;top:4px;color:var(--mint);font-weight:900}
+.sk{background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--rc) 22%,transparent),rgba(255,255,255,.04) 70%)!important}
+.tabs b em{font-style:normal;font-size:10px;opacity:.7;margin-left:4px}.fil{display:flex;gap:6px;margin:-2px 0 10px}.fil b{font-size:12px;padding:5px 10px;border-radius:999px;cursor:pointer;background:rgba(255,255,255,.05);border:1px solid var(--line)}.fil b.on{border-color:var(--mint);color:var(--mint)}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}.three .btn{width:100%;font-size:13px;padding:10px 6px}
+#wDet{position:fixed;left:4vw;bottom:5vh;z-index:7;padding:14px 18px;min-width:280px;max-width:360px;display:none;pointer-events:none}#wDet.on{display:block;animation:fin .3s}
+#wDet small{color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:1px}#wDet b{display:block;font-size:24px;line-height:1.15;margin:2px 0 6px}
+#wDet .rc{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:900;color:#140e30;background:var(--rc)}#wDet .st{margin-top:8px;font-size:13px;color:var(--mut)}#wDet .st.on{color:var(--mint)}#wDet .st.no{color:#ff9cb0}#wDet .hint{margin-top:8px;font-size:11px;color:var(--mut);opacity:.75}
+#sSkin{cursor:grab}#sSkin .card{cursor:default}
+@media(max-width:900px){#wDet{display:none!important}}
 #err{position:fixed;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;background:#140e30;z-index:20;font-size:18px}
 @media(max-width:700px){#hBoard{display:none}#mini{width:120px;height:120px}.logo{font-size:52px}#hHint{display:none}}
 </style></head><body>
@@ -99,8 +111,9 @@ h2{margin:0;text-align:center;font-size:30px;letter-spacing:-.5px}
 <div class="scr" id="sSkin"><div class="card big">
  <h2>🎨 Скины и аксессуары</h2><div class="sub" id="wInfo"></div>
  <div class="tabs" id="wTabs"></div>
+ <div class="fil" id="wFil"><b data-wf="all">Все</b><b data-wf="own">✓ Мои</b><b data-wf="lock">🔒 Нет в аккаунте</b></div>
  <div class="skins" id="skGrid"></div>
- <div class="two"><button class="btn ghost" id="bKsOut">👕 Как в Kotazaic and Stars</button><button class="btn ghost" id="bNoOut">🚫 Снять всё</button></div>
+ <div class="three"><button class="btn ghost" id="bKsOut">👕 Как в K&amp;S</button><button class="btn ghost" id="bRndOut">🎲 Случайно</button><button class="btn ghost" id="bNoOut">🚫 Снять всё</button></div>
  <button class="btn wide" id="bSkinOk">✓ Готово</button>
 </div></div>
 <div class="scr" id="sOver"><div class="card">
@@ -123,6 +136,7 @@ h2{margin:0;text-align:center;font-size:30px;letter-spacing:-.5px}
  <small>F2 или ` — открыть/закрыть</small></div>
 <div id="fps"></div><button id="admBtn" class="btn ghost">🛠</button>
 <div id="conn" class="scr" style="font:900 26px Segoe UI,system-ui,sans-serif;text-shadow:0 2px 10px #000"></div>
+<div id="wDet" class="panel"></div>
 <div id="err"></div>
 <script>
 'use strict';
@@ -537,11 +551,11 @@ function setOutfit(p,o){p.out=o;p.oparts=outfitParts(o);p.shoe=SHOES[o.shoes]?LC
 function outfitFx(p,dt){if(p.trailC){p.tfx=(p.tfx||0)-dt;if(p.tfx<=0){p.tfx=.06;const c=p.trailC[Math.floor(Math.random()*p.trailC.length)];spark(p.x-Math.cos(p.ang)*.7+rnd(-.25,.25),p.z-Math.sin(p.ang)*.7+rnd(-.25,.25),hex(c),4)}}}
 const LEGS=[[.19,.12,.3,1],[-.19,.12,.3,-1],[.21,.14,-.3,-1],[-.21,.14,-.3,1]];
 function drawChar(p,u,depth){const s=1.4,bob=Math.abs(Math.sin(p.leg))*.07,yaw=Math.PI/2-p.ang,lean=clamp(-p.lean,-.35,.35);
- xform(TM,TN,p.x,bob,p.z,yaw,0,lean,s,s,s);const RT=M4();RT.set(TM);const RN=M4();RN.set(TN);
+ xform(TM,TN,p.x,bob+(p.hop||0),p.z,yaw,0,lean,s,s,s);const RT=M4();RT.set(TM);const RN=M4();RN.set(TN);
  const L=M4(),LN=M4(),MM=M4(),NN=M4();const cols=[p.fur[0],p.fur[1],p.fur[2],[.02,.02,.03],[1,1,1],LCOL('#ff8fb0')];
  const part=(sh,x,y,z,sx,sy,sz,rx,rz,col,spec,em,ry)=>{xform(L,LN,x,y,z,ry||0,rx,rz,sx,sy,sz);mul(MM,RT,L);gl.uniformMatrix4fv(u.uM,false,MM);
   if(!depth){mul(NN,RN,LN);gl.uniformMatrix3fv(u.uNM,false,nm3(NM3,NN));gl.uniform3fv(u.uC,col);gl.uniform1f(u.uSpec,spec);gl.uniform1f(u.uEm,em)}drawMesh(sh)};
- for(const b of BODY){let[x,y,z,sx,sy,sz,rx,rz,ci]=b;if((ci===0||ci===2)&&Math.abs(x)>.28){rz+=Math.sin(p.leg*2)*.12*Math.sign(x)}part(MS_SPH,x,y,z,sx,sy,sz,rx,rz,cols[ci],ci===3?1.2:ci===4?0:.12,ci===4?1.5:0)}
+ for(const b of BODY){let[x,y,z,sx,sy,sz,rx,rz,ci]=b;if((ci===0||ci===2)&&Math.abs(x)>.28){rz+=Math.sin(p.leg*2)*.12*Math.sign(x)}if((ci===3||ci===4)&&((T+(p.id||0)*1.37)%4.2)<.13){sy*=.12}part(MS_SPH,x,y,z,sx,sy,sz,rx,rz,cols[ci],ci===3?1.2:ci===4?0:.12,ci===4?1.5:0)}
  for(const[x,y,z,ph]of LEGS){const k=Math.sin(p.leg+(ph>0?0:Math.PI)),fl=p.out&&p.out.shoes==='flippers';part(MS_SPH,x,y+Math.max(0,k)*.1,z+k*.13+(fl?.08:0),.12,.1,fl?.3:.19,0,0,p.shoe||cols[1],p.shoe?.35:.12,p.out&&p.out.shoes==='rocket'?.4:0)}
  for(const q of p.oparts||[]){let rz=q[8],ry=0;if(q.wing)rz+=Math.sin(T*14)*.22*Math.sign(q[1]);if(q.spin)ry=T*18;part(SHAPE[q[0]],q[1],q[2],q[3],q[4],q[5],q[6],q[7],rz,LCOL(q[9]),.35,q[10],ry)}
  if(p.auraC&&!depth){const n=12;for(let i=0;i<n;i++){const a=T*1.6+i/n*Math.PI*2,y=.18+.12*Math.sin(T*3+i);xform(MM,NN,p.x+Math.cos(a)*1.05,y,p.z+Math.sin(a)*1.05,0,0,0,.07,.07,.07);
@@ -551,7 +565,7 @@ let lastFrame=performance.now();
 function render(){const W=cv.width,H=cv.height,asp=W/H;
  // камера
  const tgtX=cam.tx,tgtZ=cam.tz;cam.x+=(tgtX-cam.x)*.12;cam.z+=(tgtZ-cam.z)*.12;
- let ex,ey,ez,ty=0;if(mode==='menu'&&PV){PV.ang=Math.PI/2+Math.sin(T*.5)*1.2;PV.leg=0;cam.x=PV.x+1.25;cam.z=PV.z;ex=cam.x;ey=2.4;ez=PV.z+5.2;ty=.75}else if(mode==='menu'){const a=T*.05;ex=G/2+Math.sin(a)*70;ez=G/2+Math.cos(a)*70;ey=52;cam.x=G/2;cam.z=G/2}
+ let ex,ey,ez,ty=0;if(mode==='menu'&&PV){const auto=T-(PV.drag||-9)>3;if(auto)PV.yaw+=.004;PV.ang=Math.PI/2+PV.yaw;PV.leg=0;PV.hop=.1+Math.max(0,Math.sin(Math.min(Math.PI,(T-(PV.hopT||-9))*5)))*.45;const zz=PV.zoom||1;cam.x=PV.x+1.25*zz;cam.z=PV.z;ex=cam.x;ey=.9+1.5*zz;ez=PV.z+5.2*zz;ty=.8}else if(mode==='menu'){const a=T*.05;ex=G/2+Math.sin(a)*70;ez=G/2+Math.cos(a)*70;ey=52;cam.x=G/2;cam.z=G/2}
  else{const d=cam.dist*cam.zoom*(+SAVE.cam||1);ex=cam.x;ey=d*.92;ez=cam.z+d*.62}
  const sh=cam.shake>0?(Math.random()-.5)*cam.shake:0;
  cam.pos=[ex+sh,ey,ez+sh];persp(PR,(asp<1?62:46)*Math.PI/180,asp,.5,600);look(V,cam.pos,[cam.x+sh,ty,cam.z+sh],[0,1,0]);mul(VP,PR,V);inv(IVP,VP);
@@ -586,7 +600,7 @@ function render(){const W=cv.width,H=cv.height,asp=W/H;
  const u=P_LIT.u;gl.useProgram(P_LIT.p);setLight(u,shOn);gl.uniformMatrix4fv(u.uVP,false,VP);gl.uniform1f(u.uA,1);
  gl.uniformMatrix4fv(u.uM,false,ID);gl.uniformMatrix3fv(u.uNM,false,nm3(NM3,ID));gl.uniform3fv(u.uC,[1,1,1]);gl.uniform1f(u.uSpec,.05);gl.uniform1f(u.uEm,0);drawMesh(STATIC);
  gl.uniform1f(u.uSpec,.35);gl.uniform1f(u.uEm,.12);drawMesh(TRAILS);gl.uniform1f(u.uSpec,.2);gl.uniform1f(u.uEm,.08);drawMesh(PARTS);
- for(const p of players)if(p.alive)drawChar(p,u,false);if(PV&&mode==='menu')drawChar(PV,u,false);
+ for(const p of players)if(p.alive)drawChar(p,u,false);if(PV&&mode==='menu'){drawChar(PV,u,false);const M=M4(),N=M4();xform(M,N,PV.x,.04,PV.z,0,0,0,1.25,.06,1.25);gl.uniformMatrix4fv(u.uM,false,M);gl.uniformMatrix3fv(u.uNM,false,nm3(NM3,N));gl.uniform3fv(u.uC,LCOL('#e9e4ff'));gl.uniform1f(u.uSpec,.6);gl.uniform1f(u.uEm,.05);drawMesh(MS_CYL);xform(M,N,PV.x,.065,PV.z,0,0,0,1.285,.016,1.285);gl.uniformMatrix4fv(u.uM,false,M);gl.uniform3fv(u.uC,LCOL('#4ff0c8'));gl.uniform1f(u.uEm,1.5+Math.sin(T*3)*.4);drawMesh(MS_CYL)}
  gl.bindVertexArray(null)}
 
 /* ===================== HUD ===================== */
@@ -618,30 +632,79 @@ function buildMenu(){const k=curSkin();$('#mWho').innerHTML=skSvg(k,52)+`<div><b
  ADM_OK=isAdm();$('#mBack').innerHTML=(CFG.embedded?'<button class="btn ghost" id="bBack">← В лаунчер</button>':'')+(ADM_OK?'<button class="btn ghost" id="bAdm">🛠 ADM</button>':'');admSync()}
 function buildSet(){$('#iNick').value=SAVE.nick||CFG.nick||'';$('#iQ').value=String(QUAL);$('#iCam').value=String(+SAVE.cam||1);$('#iSnd').value=String(+SAVE.snd?1:0);$('#iNames').value=String(+SAVE.names?1:0);
  $('#iCol').innerHTML=COLS.map((c,i)=>`<i data-c="${i}" style="background:${c}" class="${i===selCol?'on':''}"></i>`).join('')}
-const WTABS=[['skin','🐰','Скин'],['head','👑','Голова'],['caps','🧢','Кепки'],['acc','🎀','Аксессуары'],['top','🧥','Кофты'],['shoes','👟','Обувь'],['trail','✨','След'],['aura','🔮','Аура']];
-let wTab='skin',PV=null;
-function itemColor(sl,id){if(sl==='top')return TOPS[id]&&TOPS[id][0];if(sl==='shoes')return SHOES[id];if(sl==='trail')return TRAILC[id]&&TRAILC[id][0];if(sl==='aura')return AURAC[id]&&AURAC[id][0];const d=OUT[sl]&&OUT[sl][id];return d&&d[0]&&d[0][9]}
-function openWardrobe(){PV={x:G/2,z:G/2,ang:0,leg:0,lean:0,alive:true};pvUpd();buildSkins();screen('#sSkin')}
-function pvUpd(){if(!PV)return;PV.fur=fur().map(lin);setOutfit(PV,myOutfit())}
+const WTABS=[['skin','🐰','Скины'],['head','👑','Голова'],['caps','🧢','Кепки'],['acc','🎀','Аксессуары'],['top','🧥','Кофты'],['shoes','👟','Обувь'],['trail','✨','След'],['aura','🔮','Аура']];
+let wTab='skin',PV=null,wFilter='all';
+function rar(sl,id){const it=KS_ITEMS[sl]&&KS_ITEMS[sl][id];if(!it)return{n:'Скин',c:'#4ff0c8',r:0};const p=it[1],src=it[2];
+ if(src==='secret')return{n:'Секрет 🤫',c:'#ff9cf0',r:6};if(src==='kg')return{n:'Kotograde',c:'#ff5e8a',r:7};if(src==='bp')return{n:'Battle Pass',c:'#5ee6c1',r:5};if(src==='ev')return{n:'Halloween',c:'#ff8a3d',r:5};
+ if(!p)return{n:'Бесплатно',c:'#d8d2c4',r:0};if(p<100)return{n:'Обычный',c:'#cfd6e6',r:1};if(p<200)return{n:'Редкий',c:'#8fc4ff',r:2};if(p<400)return{n:'Эпический',c:'#c39bff',r:3};return{n:'Легендарный',c:'#ffc93c',r:4}}
+function skinCols(k){return k==='acc'&&CFG.skin&&CFG.skin.length>=4?CFG.skin.slice(1,4):(SKS[k]||SKS.grey).slice(1,4)}
+function skinKey(){return CFG.skin&&(SAVE.skin==='acc'||!SAVE.skin)?'acc':(SKS[SAVE.skin]?SAVE.skin:'grey')}
+/* ---------- 3D-миниатюры вещей ---------- */
+const TH=176,thFB=gl.createFramebuffer(),thTex=gl.createTexture(),thDep=gl.createRenderbuffer();
+gl.bindTexture(gl.TEXTURE_2D,thTex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,TH,TH,0,gl.RGBA,gl.UNSIGNED_BYTE,null);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+gl.bindRenderbuffer(gl.RENDERBUFFER,thDep);gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT24,TH,TH);
+gl.bindFramebuffer(gl.FRAMEBUFFER,thFB);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,thTex,0);gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,thDep);gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+const thPix=new Uint8Array(TH*TH*4),thCv=document.createElement('canvas');thCv.width=thCv.height=TH;const thCx=thCv.getContext('2d'),thImg=thCx.createImageData(TH,TH);
+const thCache={},thQ=[];const thVP=M4(),thV=M4(),thP=M4();
+const THCAM={def:[[2.5,2.1,3.4],[0,1.0,.15]],head:[[1.7,2.75,3.0],[0,1.72,.45]],caps:[[1.6,2.65,2.8],[0,1.68,.45]],shoes:[[1.9,1.05,2.4],[0,.25,.15]],skin:[[2.2,1.9,3.0],[0,1.0,.2]],
+ acc:[[2.5,2.1,3.4],[0,1.0,.15]],trail:[[3.2,2.4,3.2],[-.4,.8,-.4]],aura:[[3.0,2.8,3.6],[0,.7,0]]};
+const BACK_ACC=new Set(['bfly','angel','cape','vamp','flag','backpack','schoolbag','bee','crystal','dragon','phoenix','jetpack','guitar','sword','balloon']);
+function renderThumb(kind,id){const d={x:0,z:0,ang:Math.PI/2-.6,leg:0,lean:0,alive:true};
+ if(kind==='skin'){d.fur=skinCols(id).map(lin);setOutfit(d,{})}else{d.fur=skinCols(skinKey()).map(lin);setOutfit(d,{[kind]:id})}
+ let cm=THCAM[kind]||THCAM.def;if(kind==='acc'&&BACK_ACC.has(id)){cm=[[-2.6,2.2,-3.2],[0,1.05,-.2]];d.ang=Math.PI/2+.5}if(kind==='acc'&&id==='balloon')cm=[[2.8,2.6,4.2],[0,1.6,0]];
+ persp(thP,32*Math.PI/180,1,.1,60);look(thV,cm[0],cm[1],[0,1,0]);mul(thVP,thP,thV);
+ gl.bindFramebuffer(gl.FRAMEBUFFER,thFB);gl.viewport(0,0,TH,TH);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);
+ const u=P_LIT.u;gl.useProgram(P_LIT.p);gl.uniform3fv(u.uSun,SUN);gl.uniform3fv(u.uSunC,SUNC);gl.uniform3fv(u.uSkyC,[.5,.6,.8]);gl.uniform3fv(u.uGndC,[.3,.27,.22]);gl.uniform3fv(u.uFog,FOG);gl.uniform3fv(u.uCam,cm[0]);gl.uniform1f(u.uFogD,0);
+ gl.uniformMatrix4fv(u.uL,false,ID);gl.uniform1f(u.uShOn,0);gl.uniform1f(u.uShT,1/SH_SIZE);gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,shTex);gl.uniform1i(u.uSh,1);gl.uniformMatrix4fv(u.uVP,false,thVP);gl.uniform1f(u.uA,1);
+ drawChar(d,u,false);
+ if(kind==='trail'&&TRAILC[id]){const M=M4(),N=M4();for(let i=0;i<14;i++){const a=i*.45,r=.45+i*.09;xform(M,N,-Math.cos(a)*r*.6-.5,.25+Math.sin(i*1.7)*.18+.15,-Math.sin(a)*r-.3,i,i,0,.07,.07,.07);gl.uniformMatrix4fv(u.uM,false,M);gl.uniformMatrix3fv(u.uNM,false,nm3(NM3,N));gl.uniform3fv(u.uC,LCOL(TRAILC[id][i%TRAILC[id].length]));gl.uniform1f(u.uEm,1.2);drawMesh(MS_BOX)}}
+ gl.readPixels(0,0,TH,TH,gl.RGBA,gl.UNSIGNED_BYTE,thPix);gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+ for(let y=0;y<TH;y++)thImg.data.set(thPix.subarray((TH-1-y)*TH*4,(TH-y)*TH*4),y*TH*4);thCx.putImageData(thImg,0,0);return thCv.toDataURL()}
+function thKey(kind,id){return kind+':'+id+(kind==='skin'?'':':'+skinKey())}
+function thumbTick(){let n=0;while(thQ.length&&n<4){const[key,kind,id]=thQ.shift();if(thCache[key])continue;try{thCache[key]=renderThumb(kind,id)}catch(e){thCache[key]='data:,'}n++;
+  document.querySelectorAll('img[data-th="'+key+'"]').forEach(im=>{im.src=thCache[key];im.classList.add('ok')})}}
+/* ---------- примерочная ---------- */
+function openWardrobe(){PV={x:G/2,z:G/2,ang:0,leg:0,lean:0,alive:true,yaw:0,zoom:1,drag:0,try:null};pvUpd();buildSkins();screen('#sSkin');$('#wDet').classList.add('on');wDet(null)}
+function pvUpd(){if(!PV)return;const o=myOutfit();let k=skinKey();if(PV.try){if(PV.try[0]==='skin')k=PV.try[1];else o[PV.try[0]]=PV.try[1]}PV.fur=skinCols(k).map(lin);setOutfit(PV,o)}
+function tryOn(kind,id){if(!PV)return;PV.try=kind?[kind,id]:null;pvUpd()}
+function curOf(kind){return kind==='skin'?skinKey():myOutfit()[kind]}
+function wDet(kind,id){const e=$('#wDet');if(!e)return;if(!kind){kind=wTab;id=curOf(wTab)}
+ const name=kind==='skin'?(id==='acc'?'Как в аккаунте':(SKS[id]||SKS.grey)[0]):KS_ITEMS[kind][id][0],r=kind==='skin'?{n:'Скин',c:'#4ff0c8'}:rar(kind,id),ok=kind==='skin'||owned(kind,id),on=curOf(kind)===id,tab=WTABS.find(x=>x[0]===kind);
+ e.innerHTML=`<small>${tab[1]} ${tab[2]}</small><b>${esc(name)}</b><span class="rc" style="--rc:${r.c}">${r.n}</span><div class="st ${on?'on':ok?'':'no'}">${on?'✓ Надето':ok?'Нажми, чтобы надеть':'🔒 Нет в аккаунте — получи в Kotazaic and Stars'}</div><div class="hint">🖱 Тяни, чтобы повернуть · колёсико — ближе/дальше</div>`}
 function buildSkins(){const sv=ksSave(),u=(()=>{try{return localStorage.getItem('kz_session')}catch(e){return null}})();
- $('#wInfo').innerHTML=ADM_OK?'🛠 ADM: открыты все вещи':sv?`Вещи из Kotazaic and Stars ${u&&u!=='__guest'?'(@'+esc(u)+')':'(гость)'} — бери то, что у тебя есть`:'Войди в аккаунт в лаунчере — тогда тут появятся твои вещи из Kotazaic and Stars';
- $('#wTabs').innerHTML=WTABS.map(([k,i,n])=>`<b data-wt="${k}" class="${k===wTab?'on':''}">${i} ${n}</b>`).join('');let h='';
- if(wTab==='skin'){const cur=CFG.skin&&(SAVE.skin==='acc'||!SAVE.skin)?'acc':(SKS[SAVE.skin]?SAVE.skin:'grey');
-  if(CFG.skin&&CFG.skin.length>=4)h+=`<div class="sk${cur==='acc'?' on':''}" data-sk="acc">${skSvg(CFG.skin)}<span>Как в аккаунте</span></div>`;
-  for(const k in SKS)h+=`<div class="sk${cur===k?' on':''}" data-sk="${k}">${skSvg(SKS[k])}<span>${esc(SKS[k][0])}</span></div>`}
- else{const icon=WTABS.find(x=>x[0]===wTab)[1],o=myOutfit();const ids=Object.keys(KS_ITEMS[wTab]).sort((a,b)=>(a==='none'?-1:b==='none'?1:(owned(wTab,b)?1:0)-(owned(wTab,a)?1:0)));
-  for(const id of ids){const it=KS_ITEMS[wTab][id],ok=owned(wTab,id),c=itemColor(wTab,id);
-   h+=`<div class="sk${o[wTab]===id?' on':''}${ok?'':' lock'}" data-it="${id}"><div class="ic">${id==='none'?'✖':icon}${c?`<i style="background:${c}"></i>`:''}</div><span>${esc(it[0])}</span>${ok?'':'<small>нет в аккаунте</small>'}</div>`}}
- $('#skGrid').innerHTML=h}
-$('#wTabs').addEventListener('click',e=>{const t=e.target.closest('[data-wt]');if(!t)return;wTab=t.dataset.wt;buildSkins();sfx('click')});
-$('#skGrid').addEventListener('click',e=>{const d=e.target.closest('[data-it]');if(!d)return;const id=d.dataset.it;if(!owned(wTab,id)){tone(220,.15,0,'square',.04);d.animate([{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'none'}],{duration:220});return}
- SAVE.out=Object.assign({},SAVE.out||{},{[wTab]:id});saveStats();pvUpd();buildSkins();sfx('click')});
-document.addEventListener('click',e=>{if(e.target.id==='bKsOut'){const sv=ksSave();if(!sv||!sv.eq){tone(220,.15,0,'square',.04);$('#wInfo').innerHTML='⚠ Нет аккаунта Kotazaic and Stars — войди в лаунчере';return}
-  const o={};for(const sl of OSLOTS)o[sl]=sv.eq[sl]&&KS_ITEMS[sl][sv.eq[sl]]?sv.eq[sl]:'none';SAVE.out=o;if(sv.eq.skin&&SKS[sv.eq.skin])SAVE.skin=sv.eq.skin;saveStats();pvUpd();buildSkins();sfx('cap',1)}
- if(e.target.id==='bNoOut'){SAVE.out={};saveStats();pvUpd();buildSkins();sfx('click')}});
-function screen(id){if(id!=='#sSkin')PV=null;for(const x of['#sMenu','#sSet','#sSkin'])$(x).classList.toggle('on',x===id)}
+ $('#wInfo').innerHTML=ADM_OK?'🛠 ADM: открыты все вещи':sv?`Вещи из Kotazaic and Stars ${u&&u!=='__guest'?'(@'+esc(u)+')':'(гость)'}`:'Войди в аккаунт в лаунчере — тогда тут появятся твои вещи из Kotazaic and Stars';
+ $('#wTabs').innerHTML=WTABS.map(([k,i,n])=>{const c=k==='skin'?'':`<em>${Object.keys(KS_ITEMS[k]).filter(id=>id!=='none'&&owned(k,id)).length}/${Object.keys(KS_ITEMS[k]).length-1}</em>`;return`<b data-wt="${k}" class="${k===wTab?'on':''}">${i} ${n}${c}</b>`}).join('');
+ $('#wFil').style.display=wTab==='skin'?'none':'';$('#wFil').querySelectorAll('[data-wf]').forEach(b=>b.classList.toggle('on',b.dataset.wf===wFilter));
+ let h='';const card=(kind,id,name,r,ok,on)=>{const key=thKey(kind,id);if(!thCache[key]&&id!=='none'&&!thQ.some(q=>q[0]===key))thQ.push([key,kind,id]);
+  return`<div class="sk${on?' on':''}${ok?'':' lock'}" data-k="${kind}" data-it="${id}" style="--rc:${r.c}">${id==='none'?'<div class="nn">✖</div>':`<img data-th="${key}" class="${thCache[key]?'ok':''}" src="${thCache[key]||'data:,'}" alt="">`}<span>${esc(name)}</span><em>${r.n}</em></div>`};
+ if(wTab==='skin'){const cur=skinKey();if(CFG.skin&&CFG.skin.length>=4)h+=card('skin','acc','Как в аккаунте',{n:'Из аккаунта',c:'#4ff0c8'},true,cur==='acc');
+  for(const k in SKS)h+=card('skin',k,SKS[k][0],{n:'Скин',c:'#a79fcf'},true,cur===k)}
+ else{const o=myOutfit();let ids=Object.keys(KS_ITEMS[wTab]).filter(id=>id==='none'||wFilter==='all'||(wFilter==='own')===owned(wTab,id));
+  ids.sort((a,b)=>a==='none'?-1:b==='none'?1:((owned(wTab,b)?1:0)-(owned(wTab,a)?1:0))||(rar(wTab,b).r-rar(wTab,a).r));
+  for(const id of ids)h+=card(wTab,id,KS_ITEMS[wTab][id][0],id==='none'?{n:'Снять',c:'#6a6294'}:rar(wTab,id),owned(wTab,id),o[wTab]===id)}
+ $('#skGrid').innerHTML=h||'<p class="sub">Тут пока пусто</p>'}
+function equip(kind,id){if(kind==='skin'){SAVE.skin=id}else{if(!owned(kind,id))return false;SAVE.out=Object.assign({},SAVE.out||{},{[kind]:id})}saveStats();return true}
+$('#wTabs').addEventListener('click',e=>{const t=e.target.closest('[data-wt]');if(!t)return;wTab=t.dataset.wt;tryOn(null);buildSkins();wDet(null);sfx('click')});
+$('#wFil').addEventListener('click',e=>{const t=e.target.closest('[data-wf]');if(!t)return;wFilter=t.dataset.wf;buildSkins();sfx('click')});
+$('#skGrid').addEventListener('mouseover',e=>{const d=e.target.closest('[data-it]');if(!d||d===wHover)return;wHover=d;tryOn(d.dataset.k,d.dataset.it);wDet(d.dataset.k,d.dataset.it)});
+let wHover=null,wLock=null;
+$('#skGrid').addEventListener('mouseleave',()=>{wHover=null;if(wLock){tryOn(wLock[0],wLock[1]);wDet(wLock[0],wLock[1])}else{tryOn(null);wDet(null)}});
+$('#skGrid').addEventListener('click',e=>{const d=e.target.closest('[data-it]');if(!d)return;const k=d.dataset.k,id=d.dataset.it;
+ if(!equip(k,id)){wLock=[k,id];tryOn(k,id);wDet(k,id);tone(220,.15,0,'square',.04);d.animate([{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'none'}],{duration:220});return}
+ wLock=null;tryOn(null);buildSkins();wDet(k,id);sfx('click');if(PV)PV.hopT=T;for(let i=0;i<14;i++)spark(PV.x+rnd(-.6,.6),PV.z+rnd(-.6,.6),[.31,.94,.78],1)});
+document.addEventListener('click',e=>{const id=e.target.id;
+ if(id==='bKsOut'){const sv=ksSave();if(!sv||!sv.eq){tone(220,.15,0,'square',.04);$('#wInfo').innerHTML='⚠ Нет аккаунта Kotazaic and Stars — войди в лаунчере';return}
+  const o={};for(const sl of OSLOTS)o[sl]=sv.eq[sl]&&KS_ITEMS[sl][sv.eq[sl]]?sv.eq[sl]:'none';SAVE.out=o;if(sv.eq.skin&&SKS[sv.eq.skin])SAVE.skin=sv.eq.skin;saveStats();wLock=null;tryOn(null);buildSkins();wDet(null);sfx('cap',1);if(PV)PV.hopT=T}
+ if(id==='bNoOut'){SAVE.out={};saveStats();wLock=null;tryOn(null);buildSkins();wDet(null);sfx('click')}
+ if(id==='bRndOut'){const o={};for(const sl of OSLOTS){const own=Object.keys(KS_ITEMS[sl]).filter(i=>i!=='none'&&owned(sl,i));o[sl]=own.length&&Math.random()<.65?own[Math.floor(Math.random()*own.length)]:'none'}SAVE.out=o;const sk=Object.keys(SKS);SAVE.skin=sk[Math.floor(Math.random()*sk.length)];saveStats();wLock=null;tryOn(null);buildSkins();wDet(null);sfx('cap',.6);if(PV)PV.hopT=T}});
+// вращение и зум мышкой
+let wDrag=null;
+$('#sSkin').addEventListener('pointerdown',e=>{if(e.target.closest('.card')||!PV)return;wDrag={x:e.clientX,y0:PV.yaw};PV.drag=T;e.target.setPointerCapture&&e.target.setPointerCapture(e.pointerId)});
+addEventListener('pointermove',e=>{if(!wDrag||!PV)return;PV.yaw=wDrag.y0+(e.clientX-wDrag.x)*.012;PV.drag=T});
+addEventListener('pointerup',()=>{wDrag=null});
+$('#sSkin').addEventListener('wheel',e=>{if(e.target.closest('.card')||!PV)return;PV.zoom=clamp(PV.zoom*(e.deltaY>0?1.1:.9),.55,1.5);e.preventDefault()},{passive:false});
+function screen(id){if(id!=='#sSkin'){PV=null;$('#wDet').classList.remove('on')}for(const x of['#sMenu','#sSet','#sSkin'])$(x).classList.toggle('on',x===id)}
 $('#iCol').addEventListener('click',e=>{const i=e.target.dataset.c;if(i==null)return;selCol=+i;SAVE.col=selCol;saveStats();buildSet();sfx('click')});
-$('#skGrid').addEventListener('click',e=>{const d=e.target.closest('[data-sk]');if(!d)return;SAVE.skin=d.dataset.sk;saveStats();pvUpd();buildSkins();sfx('click')});
 $('#iQ').addEventListener('change',e=>{QUAL=+e.target.value;SAVE.q=QUAL;saveStats();resize();initShadow(QUAL===2?2048:1024)});
 $('#iCam').addEventListener('change',e=>{SAVE.cam=+e.target.value;saveStats()});
 $('#iSnd').addEventListener('change',e=>{SAVE.snd=+e.target.value;saveStats();sfx('click')});
@@ -798,7 +861,7 @@ function step(dt){T+=dt;if(mode==='play')playT+=dt;
 let acc=0,hudAcc=0;
 function frame(now){requestAnimationFrame(frame);let dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;if(document.hidden)return;
  if(mode!=='pause'||NET.online){acc+=dt;while(acc>1/120){step(1/120);acc-=1/120}}
- try{render()}catch(e){console.error(e)}labels();hudAcc+=dt;if(hudAcc>.2){hudAcc=0;hud();drawMini()}}
+ try{render();if(PV&&thQ.length)thumbTick()}catch(e){console.error(e)}labels();hudAcc+=dt;if(hudAcc>.2){hudAcc=0;hud();drawMini()}}
 toMenu();requestAnimationFrame(frame);NET.start();
 window.KOTO_DEBUG={cam,NET,get players(){return players},get mode(){return mode},cnt,owner,trailOw,start,step,kill,G};
 </script></body></html>
