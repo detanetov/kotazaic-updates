@@ -49,6 +49,11 @@ h2{margin:0;text-align:center;font-size:30px;letter-spacing:-.5px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.two .btn{width:100%}
 .card.big{width:min(680px,94vw)}.skins{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;max-height:52vh;overflow-y:auto;padding:4px}
 .sk{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid var(--line);cursor:pointer;transition:transform .15s,background .15s;font-size:12px;text-align:center}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tabs b{padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--line);cursor:pointer;font-size:13px}.tabs b.on{background:linear-gradient(135deg,var(--mint),#5ab8ff);color:#06261f;border-color:transparent}
+.sk .ic{position:relative;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:26px;background:rgba(255,255,255,.07)}.sk .ic i{position:absolute;right:-3px;bottom:-3px;width:16px;height:16px;border-radius:6px;box-shadow:0 0 0 2px #1a1236}
+.sk.lock{opacity:.45}.sk.lock .ic:after{content:'🔒';position:absolute;left:-4px;top:-6px;font-size:16px}.sk small{color:var(--mut);font-size:10px}
+#sSkin{justify-content:flex-end;padding-right:4vw;background:linear-gradient(90deg,transparent 35%,rgba(10,6,30,.6))}#sSkin .card{width:min(560px,94vw)}
+@media(max-width:900px){#sSkin{justify-content:center;padding:0}}
 .sk:hover{transform:translateY(-3px);background:rgba(255,255,255,.12)}.sk.on{border-color:var(--mint);box-shadow:0 0 0 2px var(--mint),0 0 18px rgba(79,240,200,.35);background:rgba(79,240,200,.12)}
 #adm{position:fixed;right:16px;top:50%;transform:translateY(-50%);width:290px;max-height:92vh;overflow-y:auto;padding:14px 16px;z-index:9;display:none;font-size:13px}
 #adm.on{display:block}#adm .ah{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}#adm .ah b{color:var(--yel)}
@@ -73,7 +78,7 @@ h2{margin:0;text-align:center;font-size:30px;letter-spacing:-.5px}
  <div class="sub">Захватывай поле — не дай наступить на свой хвост!</div>
  <div class="me" id="mWho"></div>
  <button class="btn wide" id="bPlay">▶ Играть</button>
- <div class="two"><button class="btn ghost" id="bSkins">🎨 Скины</button><button class="btn ghost" id="bSet">⚙ Настройки</button></div>
+ <div class="two"><button class="btn ghost" id="bSkins">🎨 Скины и вещи</button><button class="btn ghost" id="bSet">⚙ Настройки</button></div>
  <div class="stats" id="mStats"></div>
  <div class="btns" id="mBack"></div>
 </div></div>
@@ -88,8 +93,10 @@ h2{margin:0;text-align:center;font-size:30px;letter-spacing:-.5px}
  <button class="btn wide" id="bSetOk">✓ Готово</button>
 </div></div>
 <div class="scr" id="sSkin"><div class="card big">
- <h2>🎨 Скины</h2><div class="sub">Выбери своего котозайца</div>
+ <h2>🎨 Скины и аксессуары</h2><div class="sub" id="wInfo"></div>
+ <div class="tabs" id="wTabs"></div>
  <div class="skins" id="skGrid"></div>
+ <div class="two"><button class="btn ghost" id="bKsOut">👕 Как в Kotazaic and Stars</button><button class="btn ghost" id="bNoOut">🚫 Снять всё</button></div>
  <button class="btn wide" id="bSkinOk">✓ Готово</button>
 </div></div>
 <div class="scr" id="sOver"><div class="card">
@@ -310,8 +317,8 @@ function mkPlayer(human,name,colI,fur){const id=freeId();const p={id,human,name,
 function botName(){const used=new Set(players.map(p=>p.name));const f=NAMES.filter(n=>!used.has(n));return f.length?f[Math.floor(Math.random()*f.length)]:'Котик'+Math.floor(rnd(1,99))}
 function botColor(){const used=new Set(players.map(p=>p.colI));const f=COLS.map((c,i)=>i).filter(i=>!used.has(i));return f.length?f[Math.floor(Math.random()*f.length)]:Math.floor(Math.random()*COLS.length)}
 function resetWorld(nBots,human){owner.fill(0);trailOw.fill(0);terrData.fill(0);terrDirty=true;cnt.fill(0);for(const p of players)if(p.lb)p.lb.remove();players=[];parts.length=0;me=null;
- if(human){me=mkPlayer(true,human.nick,human.col,human.fur);spawn(me)}
- for(let i=0;i<nBots;i++){const b=mkPlayer(false,botName(),botColor(),FURS[Math.floor(Math.random()*FURS.length)]);spawn(b);if(!human){b.trail=[];}}}
+ if(human){me=mkPlayer(true,human.nick,human.col,human.fur);setOutfit(me,myOutfit());spawn(me)}
+ for(let i=0;i<nBots;i++){const b=mkPlayer(false,botName(),botColor(),FURS[Math.floor(Math.random()*FURS.length)]);setOutfit(b,randOutfit());spawn(b);if(!human){b.trail=[];}}}
 function checkZero(by){for(const q of players)if(q.alive&&cnt[q.id]<=0&&T-(q.born||0)>.1)kill(q,by,'land')}
 
 /* ---------- движение и захват ---------- */
@@ -392,8 +399,8 @@ function botThink(p,dt){p.think=(p.think||0)-dt;
 
 /* ---------- частицы ---------- */
 const parts=[];
-function spark(x,z,rgb,kind){if(parts.length>700)return;parts.push({x,y:kind===3?.15:.3,z,vx:rnd(-1,1)*(kind===2?4:1.2),vy:kind===3?rnd(.6,1.4):rnd(2,kind===2?7:4.5),vz:rnd(-1,1)*(kind===2?4:1.2),r:rnd(0,6),vr:rnd(-8,8),s:kind===3?rnd(.025,.05):rnd(.05,.1),c:kind===3?rgb:rgb.map(v=>Math.pow(v,2.2)),life:kind===3?rnd(.35,.6):rnd(.9,1.6),t:0,k:kind})}
-function stepParts(dt){for(const q of parts){q.t+=dt;q.x+=q.vx*dt;q.z+=q.vz*dt;q.y+=q.vy*dt;q.vy-=(q.k===3?5:12)*dt;q.r+=q.vr*dt;if(q.y<.03){q.y=.03;q.vy*=-.3;q.vx*=.6;q.vz*=.6}if(q.k===3){q.s+=dt*.04}}
+function spark(x,z,rgb,kind){if(parts.length>700)return;if(kind===4){parts.push({x,y:rnd(.3,.7),z,vx:rnd(-.3,.3),vy:rnd(.2,.7),vz:rnd(-.3,.3),r:rnd(0,6),vr:rnd(-4,4),s:rnd(.05,.08),c:rgb.map(v=>Math.pow(v,2.2)*1.4),life:rnd(.6,1),t:0,k:4});return}parts.push({x,y:kind===3?.15:.3,z,vx:rnd(-1,1)*(kind===2?4:1.2),vy:kind===3?rnd(.6,1.4):rnd(2,kind===2?7:4.5),vz:rnd(-1,1)*(kind===2?4:1.2),r:rnd(0,6),vr:rnd(-8,8),s:kind===3?rnd(.025,.05):rnd(.05,.1),c:kind===3?rgb:rgb.map(v=>Math.pow(v,2.2)),life:kind===3?rnd(.35,.6):rnd(.9,1.6),t:0,k:kind})}
+function stepParts(dt){for(const q of parts){q.t+=dt;q.x+=q.vx*dt;q.z+=q.vz*dt;q.y+=q.vy*dt;q.vy-=(q.k===3?5:q.k===4?-.3:12)*dt;q.r+=q.vr*dt;if(q.y<.03){q.y=.03;q.vy*=-.3;q.vx*=.6;q.vz*=.6}if(q.k===3){q.s+=dt*.04}}
  for(let i=parts.length-1;i>=0;i--)if(parts[i].t>parts[i].life)parts.splice(i,1)}
 
 /* ===================== звук ===================== */
@@ -427,25 +434,123 @@ function setLight(u,shadow){gl.uniform3fv(u.uSun,SUN);gl.uniform3fv(u.uSunC,SUNC
 const BODY=[[0,.55,-.02,.42,.38,.56,0,0,0],[0,.46,.1,.31,.27,.4,0,0,1],[0,.98,.44,.36,.33,.34,0,0,0],[0,.9,.7,.17,.12,.1,0,0,1],[0,.96,.79,.055,.045,.04,0,0,5],
  [.15,1.05,.69,.07,.085,.05,0,0,3],[-.15,1.05,.69,.07,.085,.05,0,0,3],[.13,1.09,.735,.022,.022,.02,0,0,4],[-.17,1.09,.735,.022,.022,.02,0,0,4],
  [.34,.9,.38,.09,.33,.17,0,.28,0],[-.34,.9,.38,.09,.33,.17,0,-.28,0],[.32,.9,.46,.055,.26,.1,0,.28,2],[-.32,.9,.46,.055,.26,.1,0,-.28,2],[0,.66,-.56,.15,.15,.15,0,0,1]];
+const KS_ITEMS={"head":{"none":["Ничего",0,""],"bow":["Бантик",60,""],"beanie":["Шапка с помпоном",110,""],"wizard":["Колпак волшебника",120,""],"phones":["Наушники",140,""],"tophat":["Цилиндр",150,""],"horns":["Рожки",160,""],"flowers":["Цветочный венок",170,""],"crown":["Корона",200,""],"pirate":["Пиратская шляпа",220,""],"halo":["Звёздный нимб",0,"bp"],"helmet":["Космический шлем",0,"bp"],"witch":["Шляпа ведьмы",0,"ev"],"pkcrown":["Тыквенная корона",0,"ev"],"pizza":["Шляпа-пицца",0,"secret"],"bandana":["Бандана",100,""],"ninja":["Повязка ниндзя",130,""],"ushanka":["Шапка-ушанка",160,""],"antlers":["Оленьи рога",180,""],"viking":["Шлем викинга",260,""]},"caps":{"none":["Ничего",0,""],"blue":["Синяя кепка",90,""],"red":["Красная кепка",100,""],"back":["Кепка задом наперёд",130,""],"trucker":["Кепка-тракер",150,""],"star":["Звёздная кепка",180,""],"camo":["Камуфляжная кепка",200,""],"flame":["Огненная кепка",320,""],"gold":["Золотая кепка",450,""],"legend":["Легендарная кепка",0,"kg"],"duck":["Кепка-утёнок",160,""],"propeller":["Кепка с пропеллером",230,""]},"acc":{"none":["Ничего",0,""],"bowtie":["Бабочка",60,""],"tie":["Галстук",70,""],"glasses":["Очки",80,""],"necklace":["Жемчужное ожерелье",90,""],"scarf":["Шарф",100,""],"monocle":["Монокль",120,""],"medal":["Медаль-звезда",130,""],"backpack":["Сумочка-сердце",160,""],"bfly":["Крылья бабочки",260,""],"angel":["Крылья ангела",300,""],"cape":["Плащ героя",0,"bp"],"vamp":["Плащ вампира",0,"ev"],"pkbag":["Тыквенная сумка",0,"ev"],"flag":["Флажок",90,""],"pendant":["Кулон-звезда",90,""],"pizzaslice":["Кусок пиццы",100,""],"burger":["Бургер",110,""],"binoculars":["Бинокль",110,""],"map":["Карта сокровищ",120,""],"bouquet":["Букет цветов",130,""],"schoolbag":["Школьный ранец",140,""],"rbscarf":["Радужный шарф",150,""],"teddy":["Плюшевый мишка",170,""],"gum":["Жвачка-пузырь",90,""],"icecream":["Мороженое",100,""],"mask":["Маска супергероя",120,""],"bee":["Пчелиные крылышки",140,""],"rod":["Удочка",150,""],"wand":["Волшебная палочка",160,""],"umbrella":["Зонтик",180,""],"shield":["Щит",200,""],"skate":["Скейтборд",260,""],"crystal":["Кристальные крылья",0,"kg"],"bell":["Колокольчик",70,""],"lollipop":["Леденец",80,""],"sunglasses":["Тёмные очки",90,""],"heartglasses":["Очки-сердечки",110,""],"balloon":["Воздушный шарик",120,""],"camera":["Фотоаппарат",140,""],"guitar":["Гитара",200,""],"sword":["Меч героя",240,""],"dragon":["Крылья дракона",350,""],"jetpack":["Реактивный ранец",420,""],"phoenix":["Крылья феникса",0,"kg"],"moustache":["Усы",0,"secret"]},"top":{"none":["Без кофты",0,""],"hoodie":["Серая толстовка",90,""],"stripes":["Полосатый свитер",110,""],"carrot":["Свитшот с морковкой",130,""],"heart":["Свитер с сердечком",150,""],"knit":["Вязаный свитер с косами",180,""],"xmas":["Новогодний свитер",220,""],"rainbow":["Радужный свитер",260,""],"splash":["Синий свитшот с брызгами",0,"kg"],"black":["Чёрный свитшот с нашивкой",0,"kg"],"galaxy":["Космический свитер",420,""],"neon":["Неоновый свитер",480,""],"gold":["Золотой свитер",550,""]},"shoes":{"none":["Босиком",0,""],"sneakers":["Кроссовки",80,""],"slippers":["Тапочки-зайчики",110,""],"rubber":["Резиновые сапоги",140,""],"cowboy":["Ковбойские сапоги",180,""],"rollers":["Ролики",220,""],"rocket":["Реактивные кроссовки",350,""],"golden":["Золотые кроссовки",450,""],"valenki":["Дедовские войлочные валенки",0,"kg"],"flipflops":["Шлёпанцы",60,""],"kedy":["Кеды",100,""],"flippers":["Ласты",150,""]},"trail":{"none":["Ничего",0,""],"sparks":["Искры",90,""],"bubbles":["Пузыри",110,""],"hearts":["Сердечки",120,""],"notes":["Ноты",140,""],"snow":["Снежинки",160,""],"comet":["Комета",180,""],"fire":["Огонь",220,""],"rainbow":["Радуга",250,""],"dust":["Звёздная пыль",0,"bp"],"candies":["Конфетный след",0,"ev"],"bats":["Летучие мыши",0,"ev"],"bananas":["Бананы",0,"secret"],"leaves":["Листопад",130,""],"confetti":["Конфетти",150,""],"lightning":["Молнии",240,""]},"aura":{"none":["Ничего",0,""],"glow":["Сияние",120,""],"stars":["Звёздное кольцо",150,""],"hearts":["Сердечная",180,""],"ice":["Ледяная",260,""],"fire":["Огненная",280,""],"electric":["Электрическая",320,""],"rainbow":["Радужная",450,""],"galaxy":["Галактика",0,"bp"],"pkflame":["Тыквенное пламя",0,"ev"],"ghosts":["Призрачная",0,"ev"],"music":["Музыкальная",200,""],"sakura":["Сакура",300,""],"dark":["Тьма",340,""]}};
+/* ===================== аксессуары (как в Kotazaic and Stars) ===================== */
+const MS_CYL=mkMesh(gCyl(16,1,1)),MS_CONE=mkMesh(gCyl(16,0,1));
+const SHAPE={s:MS_SPH,b:MS_BOX,c:MS_CYL,k:MS_CONE};
+const LC={};const LCOL=h=>LC[h]||(LC[h]=lin(h));
+// [фигура,x,y,z,sx,sy,sz,rx,rz,цвет,свечение]  (локально: вперёд +z, верх +y, голова ~ (0,.98,.44))
+const P=(t,x,y,z,sx,sy,sz,col,rx,rz,em)=>[t,x,y,z,sx,sy,sz,rx||0,rz||0,col,em||0];
+const ring=(n,cx,cy,cz,r,sz,cols,em)=>Array.from({length:n},(_,i)=>{const a=i/n*Math.PI*2;return P('s',cx+Math.cos(a)*r,cy,cz+Math.sin(a)*r,sz,sz,sz,cols[i%cols.length],0,0,em)});
+const cap=(c,v,back,extra)=>[P('s',0,1.17,.42,.355,.2,.335,c),P('b',0,1.2,back?.08:.76,.22,.018,.13,v),...(extra||[])];
+const wings=(c1,c2,big,em)=>{const k=big||1;return[P('s',.32,.92,-.28,.035,.3*k,.22*k,c1,0,.7,em),P('s',-.32,.92,-.28,.035,.3*k,.22*k,c1,0,-.7,em),P('s',.27,.78,-.3,.03,.18*k,.13*k,c2,0,1.1,em),P('s',-.27,.78,-.3,.03,.18*k,.13*k,c2,0,-1.1,em)].map(x=>(x.wing=1,x))};
+const hand=(...a)=>a; // вещи в правой лапке: около (.4,.55,.5)
+const OUT={
+ head:{bow:[P('s',.17,1.3,.4,.1,.07,.06,'#ff6fb5'),P('s',.33,1.27,.4,.1,.07,.06,'#ff6fb5'),P('s',.25,1.29,.42,.045,.045,.045,'#ff3d8a')],
+  beanie:[P('s',0,1.17,.42,.375,.24,.355,'#e8556e'),P('c',0,1.08,.42,.37,.05,.35,'#fff1f1'),P('s',0,1.43,.42,.09,.09,.09,'#ffffff')],
+  wizard:[P('c',0,1.25,.42,.38,.02,.38,'#4a3aa8'),P('k',0,1.58,.42,.22,.33,.22,'#6a55d8'),P('s',.08,1.6,.6,.04,.04,.04,'#ffe066',0,0,1)],
+  phones:[P('b',0,1.34,.44,.36,.03,.05,'#2a2a33'),P('s',.37,1.0,.44,.07,.12,.12,'#ff5e7a'),P('s',-.37,1.0,.44,.07,.12,.12,'#ff5e7a')],
+  tophat:[P('c',0,1.28,.42,.34,.018,.34,'#1d1d24'),P('c',0,1.5,.42,.21,.22,.21,'#1d1d24'),P('c',0,1.33,.42,.215,.04,.215,'#e8556e')],
+  horns:[P('k',.14,1.38,.42,.06,.12,.06,'#f2e6c8',0,-.35),P('k',-.14,1.38,.42,.06,.12,.06,'#f2e6c8',0,.35)],
+  flowers:ring(9,0,1.24,.44,.27,.06,['#ff6fb5','#ffd34d','#ffffff','#c084fc']),
+  crown:[P('c',0,1.36,.42,.21,.08,.21,'#f2c94c',0,0,.15),...ring(5,0,1.48,.42,.18,.05,['#f2c94c']).map(x=>(x[0]='k',x[5]=.08,x)),P('s',0,1.37,.63,.04,.04,.03,'#ff5e7a',0,0,.5)],
+  pirate:[P('s',0,1.29,.42,.44,.08,.32,'#1d1d24'),P('s',0,1.36,.42,.26,.13,.22,'#1d1d24'),P('s',0,1.38,.63,.05,.05,.02,'#ffffff')],
+  halo:ring(12,0,1.58,.42,.24,.04,['#ffe066'],1.4),
+  helmet:[P('s',0,.98,.46,.47,.44,.45,'#cfe8ff',0,0,.15),P('c',0,.66,.4,.3,.04,.3,'#9aa0a8')],
+  witch:[P('c',0,1.27,.42,.44,.018,.44,'#2a2238'),P('k',0,1.62,.4,.2,.36,.2,'#2a2238',-.2),P('c',0,1.31,.42,.2,.04,.2,'#ff8a3d')],
+  pkcrown:[P('c',0,1.36,.42,.21,.08,.21,'#ff8a3d'),...ring(5,0,1.48,.42,.18,.05,['#ff8a3d']).map(x=>(x[0]='k',x[5]=.08,x)),P('s',0,1.48,.42,.05,.08,.05,'#2ecc71')],
+  pizza:[P('b',0,1.33,.42,.3,.03,.3,'#ffcf6b'),P('s',.12,1.36,.5,.06,.02,.06,'#c0392b'),P('s',-.1,1.36,.35,.06,.02,.06,'#c0392b'),P('s',.05,1.36,.28,.05,.02,.05,'#c0392b')],
+  bandana:[P('s',0,1.13,.42,.375,.13,.355,'#e8556e'),P('s',0,1.1,.08,.07,.06,.06,'#e8556e')],
+  ninja:[P('s',0,1.1,.44,.375,.07,.355,'#1d1d24'),P('b',.06,1.05,.06,.03,.1,.02,'#1d1d24',.3),P('b',-.06,1.05,.06,.03,.1,.02,'#1d1d24',.3)],
+  ushanka:[P('s',0,1.2,.42,.4,.22,.38,'#7a5a3c'),P('s',0,1.3,.7,.3,.09,.06,'#c9a786')],
+  antlers:[P('c',.15,1.44,.42,.025,.15,.025,'#8a5a3c',0,-.4),P('c',-.15,1.44,.42,.025,.15,.025,'#8a5a3c',0,.4),P('c',.25,1.5,.42,.02,.08,.02,'#8a5a3c',0,-1.1),P('c',-.25,1.5,.42,.02,.08,.02,'#8a5a3c',0,1.1)],
+  viking:[P('s',0,1.17,.42,.375,.23,.355,'#9aa0a8'),P('c',0,1.05,.42,.375,.04,.355,'#8a5a3c'),P('k',.37,1.32,.42,.06,.15,.06,'#f2e6c8',0,-1),P('k',-.37,1.32,.42,.06,.15,.06,'#f2e6c8',0,1)]},
+ caps:{blue:cap('#3a7bd5','#2a5aa8'),red:cap('#e8556e','#b83a50'),back:cap('#5f9a5a','#4a7a45',true),trucker:cap('#ffffff','#3a7bd5',false,[P('s',0,1.24,.7,.12,.08,.03,'#3a7bd5')]),
+  star:cap('#1d1d24','#1d1d24',false,[P('s',0,1.26,.72,.06,.06,.02,'#ffe066',0,0,1)]),camo:cap('#5f7a3a','#4a5f2d',false,[P('s',.15,1.3,.5,.08,.04,.06,'#3a4a24'),P('s',-.12,1.28,.3,.08,.04,.06,'#8a8a5a')]),
+  flame:cap('#ff5e3a','#ffd34d',false,[P('k',0,1.38,.4,.08,.06,.08,'#ffd34d',0,0,.8)]),gold:cap('#f2c94c','#d4a92a',false,[]).map(x=>(x[10]=.15,x)),
+  legend:cap('#8b6cff','#5a3fd0',false,[P('s',0,1.27,.72,.05,.05,.03,'#4ff0c8',0,0,1.2),P('s',0,1.38,.42,.05,.05,.05,'#ff6fb5',0,0,1.2)]),
+  duck:cap('#ffd34d','#ff9f43',false,[P('s',.1,1.3,.62,.035,.035,.02,'#1d1d24'),P('s',-.1,1.3,.62,.035,.035,.02,'#1d1d24')]),
+  propeller:cap('#e8556e','#3a7bd5',false,[P('c',0,1.38,.42,.02,.05,.02,'#ffd34d'),P('b',0,1.43,.42,.3,.01,.04,'#5ab8ff')].map(x=>(x.spin=x[6]===.04,x)))},
+ acc:{bowtie:[P('s',.08,.74,.66,.07,.05,.03,'#e8556e'),P('s',-.08,.74,.66,.07,.05,.03,'#e8556e'),P('s',0,.74,.68,.03,.03,.03,'#b83a50')],
+  tie:[P('b',0,.6,.64,.05,.15,.02,'#3a7bd5',.25),P('s',0,.74,.66,.04,.03,.03,'#2a5aa8')],
+  glasses:[P('c',.15,1.05,.77,.085,.012,.085,'#1d1d24',Math.PI/2),P('c',-.15,1.05,.77,.085,.012,.085,'#1d1d24',Math.PI/2),P('c',.15,1.05,.78,.07,.012,.07,'#bfefff',Math.PI/2,0,.3),P('c',-.15,1.05,.78,.07,.012,.07,'#bfefff',Math.PI/2,0,.3),P('b',0,1.06,.79,.05,.01,.01,'#1d1d24')],
+  necklace:ring(14,0,.72,.44,.27,.035,['#fffaf0']),
+  scarf:[P('s',0,.72,.42,.35,.08,.33,'#e8556e'),P('b',.12,.56,.7,.06,.14,.03,'#e8556e',.2)],
+  monocle:[P('c',.15,1.05,.78,.08,.012,.08,'#f2c94c',Math.PI/2,0,.2),P('c',.15,1.05,.79,.065,.012,.065,'#bfefff',Math.PI/2,0,.3),P('c',.22,.9,.75,.006,.13,.006,'#f2c94c')],
+  medal:[P('b',0,.68,.66,.04,.07,.01,'#e8556e'),P('c',0,.56,.67,.07,.012,.07,'#f2c94c',Math.PI/2,0,.3)],
+  backpack:[P('s',.08,.75,-.45,.14,.14,.09,'#ff6fb5'),P('s',-.08,.75,-.45,.14,.14,.09,'#ff6fb5'),P('k',0,.62,-.45,.19,.1,.09,'#ff6fb5',Math.PI)],
+  bfly:wings('#ff9cf0','#c084fc'),angel:wings('#ffffff','#f3ecff',1.2,.25),cape:[P('b',0,.6,-.5,.36,.34,.02,'#e8556e',.35)],
+  vamp:[P('b',0,.6,-.5,.37,.35,.02,'#1d1d24',.35),P('b',0,.6,-.48,.33,.31,.02,'#b8182e',.35)],
+  pkbag:[P('s',.42,.42,0,.13,.12,.13,'#ff8a3d'),P('c',.42,.56,0,.02,.04,.02,'#2ecc71')],
+  flag:[P('c',-.2,1.0,-.42,.015,.55,.015,'#8a5a3c'),P('b',-.03,1.38,-.42,.17,.11,.01,'#4ff0c8')],
+  pendant:[P('c',0,.74,.42,.27,.01,.27,'#f2c94c'),P('s',0,.58,.66,.06,.06,.02,'#ffe066',0,0,.8)],
+  pizzaslice:hand(P('b',.42,.6,.55,.12,.015,.16,'#ffcf6b'),P('s',.42,.62,.6,.04,.01,.04,'#c0392b')),
+  burger:hand(P('s',.42,.68,.55,.13,.06,.13,'#c98a3a'),P('c',.42,.62,.55,.13,.02,.13,'#3a8a3a'),P('c',.42,.58,.55,.12,.03,.12,'#6b3a1a'),P('c',.42,.54,.55,.13,.02,.13,'#c98a3a')),
+  binoculars:hand(P('c',.08,.66,.7,.06,.08,.06,'#1d1d24',Math.PI/2),P('c',-.08,.66,.7,.06,.08,.06,'#1d1d24',Math.PI/2)),
+  map:hand(P('b',.42,.6,.55,.14,.01,.18,'#e8d5a3',.4),P('s',.44,.61,.58,.03,.01,.03,'#c0392b')),
+  bouquet:hand(P('c',.42,.5,.55,.02,.12,.02,'#2f6a2b'),...ring(6,.42,.66,.55,.07,.05,['#ff6fb5','#ffd34d','#ffffff'])),
+  schoolbag:[P('b',0,.72,-.48,.24,.24,.11,'#3a7bd5'),P('b',0,.85,-.6,.2,.08,.01,'#2a5aa8')],
+  rbscarf:[P('s',0,.72,.42,.35,.08,.33,'#ff6fb5'),P('b',.12,.62,.7,.06,.05,.03,'#ffd34d',.2),P('b',.12,.52,.72,.06,.05,.03,'#4ff0c8',.2)],
+  teddy:hand(P('s',.44,.55,.5,.1,.12,.09,'#8a5a3c'),P('s',.44,.72,.52,.08,.08,.08,'#8a5a3c'),P('s',.39,.79,.52,.03,.03,.03,'#8a5a3c'),P('s',.49,.79,.52,.03,.03,.03,'#8a5a3c')),
+  gum:[P('s',0,.88,.86,.13,.13,.13,'#ff9cc8',0,0,.15)],
+  icecream:hand(P('k',.42,.5,.55,.06,.1,.06,'#d9a35a',Math.PI),P('s',.42,.64,.55,.08,.08,.08,'#ff9cc8')),
+  mask:[P('b',0,1.06,.76,.3,.06,.04,'#1d1d24')],
+  bee:wings('#fffbe0','#ffe680',.6,.2),
+  rod:hand(P('c',.42,.95,.7,.015,.5,.015,'#8a5a3c',.7),P('c',.42,1.0,1.25,.004,.35,.004,'#ffffff')),
+  wand:hand(P('c',.42,.65,.6,.015,.15,.015,'#1d1d24',.5),P('s',.42,.8,.7,.06,.06,.06,'#ffe066',0,0,1.2)),
+  umbrella:hand(P('c',.42,1.0,.4,.015,.5,.015,'#5a5a66'),P('k',.42,1.6,.4,.6,.15,.6,'#e8556e')),
+  shield:[P('c',.47,.6,.15,.25,.03,.25,'#9aa0a8',0,Math.PI/2),P('c',.49,.6,.15,.12,.03,.12,'#3a7bd5',0,Math.PI/2)],
+  skate:[P('b',0,.03,0,.28,.025,.66,'#8a5a3c'),P('c',.16,.01,.4,.05,.04,.05,'#ffd34d',0,Math.PI/2),P('c',.16,.01,-.4,.05,.04,.05,'#ffd34d',0,Math.PI/2),P('c',-.16,.01,.4,.05,.04,.05,'#ffd34d',0,Math.PI/2),P('c',-.16,.01,-.4,.05,.04,.05,'#ffd34d',0,Math.PI/2)],
+  crystal:wings('#bfefff','#e3fff5',1.3,.7),bell:[P('s',0,.66,.66,.08,.08,.08,'#f2c94c',0,0,.25),P('c',0,.74,.42,.27,.01,.27,'#e8556e')],
+  lollipop:hand(P('c',.42,.55,.55,.012,.14,.012,'#ffffff'),P('c',.42,.72,.55,.1,.02,.1,'#ff6fb5',Math.PI/2)),
+  sunglasses:[P('c',.15,1.05,.77,.09,.012,.09,'#111116',Math.PI/2),P('c',-.15,1.05,.77,.09,.012,.09,'#111116',Math.PI/2),P('b',0,1.06,.79,.05,.01,.01,'#111116')],
+  heartglasses:[P('c',.15,1.05,.77,.09,.012,.09,'#ff3d8a',Math.PI/2,0,.3),P('c',-.15,1.05,.77,.09,.012,.09,'#ff3d8a',Math.PI/2,0,.3),P('b',0,1.06,.79,.05,.01,.01,'#ff3d8a')],
+  balloon:[P('c',.4,1.3,-.1,.005,.7,.005,'#ffffff'),P('s',.4,2.15,-.1,.25,.3,.25,'#ff5e7a',0,0,.1)],
+  camera:[P('b',0,.6,.66,.13,.08,.05,'#1d1d24'),P('c',0,.6,.72,.05,.04,.05,'#5a5a66',Math.PI/2)],
+  guitar:[P('s',0,.62,-.48,.2,.24,.06,'#c98a3a'),P('b',0,1.0,-.48,.03,.24,.02,'#6b3a1a')],
+  sword:[P('b',-.3,.85,-.4,.025,.4,.006,'#d6dbe2',0,.5),P('b',-.12,.55,-.4,.1,.02,.02,'#f2c94c',0,.5)],
+  dragon:wings('#2ecc71','#1f8a4c',1.5),jetpack:[P('c',.13,.7,-.5,.09,.2,.09,'#9aa0a8'),P('c',-.13,.7,-.5,.09,.2,.09,'#9aa0a8'),P('k',.13,.42,-.5,.07,.12,.07,'#ff8a3d',Math.PI,0,1.4),P('k',-.13,.42,-.5,.07,.12,.07,'#ff8a3d',Math.PI,0,1.4)],
+  phoenix:wings('#ff8a3d','#ffcf33',1.5,.8),moustache:[P('s',.08,.86,.79,.08,.03,.03,'#5a3a24',0,.3),P('s',-.08,.86,.79,.08,.03,.03,'#5a3a24',0,-.3)]},
+};
+// кофты: [цвет, второй цвет, узор]
+const TOPS={hoodie:['#8a8f99','#6f747d','hood'],stripes:['#e8556e','#ffffff','str'],carrot:['#ff9f43','#2ecc71','dot'],heart:['#e8556e','#ffb6d0','dot'],knit:['#d9c08f','#c4a874','str'],xmas:['#c0392b','#ffffff','str'],rainbow:['#ff6fb5','#ffd34d','rb'],splash:['#3a7bd5','#ffffff','spots'],black:['#1d1d24','#ff5e7a','dot'],galaxy:['#3e2a7a','#ffe066','spots'],neon:['#39e89f','#d8fff0','glow'],gold:['#f2c94c','#fff1b8','glow']};
+const SHOES={sneakers:'#ffffff',slippers:'#ffb6d0',rubber:'#ffd34d',cowboy:'#8a5a3c',rollers:'#5ab8ff',rocket:'#ff5e3a',golden:'#f2c94c',valenki:'#9aa0a8',flipflops:'#2ecc71',kedy:'#e8556e',flippers:'#3fa7c4'};
+const TRAILC={sparks:['#ffd34d'],bubbles:['#9fd8ff'],hearts:['#ff6fb5'],notes:['#c084fc'],snow:['#ffffff'],comet:['#5ab8ff','#ffffff'],fire:['#ff5e3a','#ffd34d'],rainbow:['#ff5e7a','#ffd34d','#4ff0c8','#5ab8ff','#c084fc'],dust:['#ffe9a8'],candies:['#ff9cc8','#ffffff'],bats:['#2a2238'],bananas:['#ffe066'],leaves:['#e17055','#ff9f43'],confetti:['#ff6fb5','#ffd34d','#4ff0c8','#5ab8ff'],lightning:['#ffe066','#ffffff']};
+const AURAC={glow:['#fff3b8'],stars:['#ffe066'],hearts:['#ff6fb5'],ice:['#bfefff'],fire:['#ff8a3d','#ffd34d'],electric:['#5ab8ff','#ffffff'],rainbow:['#ff5e7a','#ffd34d','#4ff0c8','#5ab8ff','#c084fc'],galaxy:['#8b6cff','#ff9be0'],pkflame:['#ff8a3d'],ghosts:['#e6e3ff'],music:['#c084fc'],sakura:['#ffb6d0'],dark:['#3e3858','#7a73a0']};
+function topParts(id){const t=TOPS[id];if(!t)return[];const[c,c2,k]=t,em=k==='glow'?.3:0;const o=[P('s',0,.6,-.02,.445,.37,.5,c,0,0,em),P('c',0,.74,.4,.27,.05,.25,c2,0,0,em)];
+ if(k==='hood')o.push(P('s',0,.86,-.02,.3,.14,.22,c2));if(k==='str'||k==='rb'){const cs=k==='rb'?['#ffd34d','#4ff0c8','#5ab8ff']:[c2,c2];o.push(P('s',0,.6,-.14,.45,.3,.06,cs[0]),P('s',0,.6,.12,.45,.3,.06,cs[1]));if(k==='rb')o.push(P('s',0,.6,-.32,.4,.28,.06,cs[2]))}
+ if(k==='dot')o.push(P('s',0,.8,-.1,.12,.04,.12,c2));if(k==='spots')for(let i=0;i<5;i++)o.push(P('s',Math.sin(i*2.4)*.3,.78+Math.cos(i*1.7)*.06,-.4+i*.17,.05,.03,.05,c2,0,0,k==='spots'&&c2==='#ffe066'?.8:0));return o}
+function outfitParts(o){const parts=[];if(!o)return parts;for(const sl of['head','caps','acc']){const d=OUT[sl][o[sl]];if(d)parts.push(...d)}parts.push(...topParts(o.top));return parts}
+// ---- владение: какие вещи есть в аккаунте Kotazaic and Stars ----
+function ksSave(){try{const u=localStorage.getItem('kz_session');if(!u)return null;if(u==='__guest')return JSON.parse(localStorage.getItem('kz_guest'))||null;const db=JSON.parse(localStorage.getItem('kz_accounts_v1'))||{};return db[u]&&db[u].save||null}catch(e){return null}}
+function owned(sl,id){if(id==='none'||ADM_OK)return true;const s=ksSave();return!!(s&&s.own&&Array.isArray(s.own[sl])&&s.own[sl].includes(id))}
+const OSLOTS=['head','caps','acc','top','shoes','trail','aura'];
+function myOutfit(){const o={};const c=SAVE.out||{};for(const sl of OSLOTS){const id=c[sl]||'none';o[sl]=KS_ITEMS[sl][id]&&owned(sl,id)?id:'none'}return o}
+function randOutfit(){const o={};for(const sl of OSLOTS){const ks=Object.keys(KS_ITEMS[sl]).filter(k=>k!=='none');o[sl]=Math.random()<(sl==='trail'||sl==='aura'?.15:.3)?ks[Math.floor(Math.random()*ks.length)]:'none'}return o}
+function setOutfit(p,o){p.out=o;p.oparts=outfitParts(o);p.shoe=SHOES[o.shoes]?LCOL(SHOES[o.shoes]):null;p.trailC=TRAILC[o.trail]||null;p.auraC=AURAC[o.aura]||null}
+function outfitFx(p,dt){if(p.trailC){p.tfx=(p.tfx||0)-dt;if(p.tfx<=0){p.tfx=.06;const c=p.trailC[Math.floor(Math.random()*p.trailC.length)];spark(p.x-Math.cos(p.ang)*.7+rnd(-.25,.25),p.z-Math.sin(p.ang)*.7+rnd(-.25,.25),hex(c),4)}}}
 const LEGS=[[.19,.12,.3,1],[-.19,.12,.3,-1],[.21,.14,-.3,-1],[-.21,.14,-.3,1]];
-function drawChar(p,u,depth,t){const s=1.4,bob=Math.abs(Math.sin(p.leg))*.07,yaw=Math.PI/2-p.ang,lean=clamp(-p.lean,-.35,.35);
- const R=xform(TM,TN,p.x,bob,p.z,yaw,0,lean,s,s,s);const RT=M4().fill(0);RT.set(TM);const RN=M4();RN.set(TN);
- const L=M4(),LN=M4(),MM=M4(),NN=M4();const cols=[p.fur[0],p.fur[1],p.fur[2],[.02,.02,.03],[1,1,1],lin('#ff8fb0')];
- const part=(x,y,z,sx,sy,sz,rx,rz,ci,spec)=>{xform(L,LN,x,y,z,0,rx,rz,sx,sy,sz);mul(MM,RT,L);if(depth){gl.uniformMatrix4fv(u.uM,false,MM);drawMesh(MS_SPH);return}
-  mul(NN,RN,LN);gl.uniformMatrix4fv(u.uM,false,MM);gl.uniformMatrix3fv(u.uNM,false,nm3(NM3,NN));gl.uniform3fv(u.uC,cols[ci]);gl.uniform1f(u.uSpec,ci===3?1.2:ci===4?0:.12);gl.uniform1f(u.uEm,ci===4?1.5:0);drawMesh(MS_SPH)};
- for(const b of BODY){let[x,y,z,sx,sy,sz,rx,rz,ci]=b;if((ci===0||ci===2)&&Math.abs(x)>.28){rz+=Math.sin(p.leg*2)*.12*Math.sign(x)}part(x,y,z,sx,sy,sz,rx,rz,ci)}
- for(const[x,y,z,ph]of LEGS){const k=Math.sin(p.leg+(ph>0?0:Math.PI));part(x,y+Math.max(0,k)*.1,z+k*.13,.11,.1,.19,0,0,ci1(p))}}
+function drawChar(p,u,depth){const s=1.4,bob=Math.abs(Math.sin(p.leg))*.07,yaw=Math.PI/2-p.ang,lean=clamp(-p.lean,-.35,.35);
+ xform(TM,TN,p.x,bob,p.z,yaw,0,lean,s,s,s);const RT=M4();RT.set(TM);const RN=M4();RN.set(TN);
+ const L=M4(),LN=M4(),MM=M4(),NN=M4();const cols=[p.fur[0],p.fur[1],p.fur[2],[.02,.02,.03],[1,1,1],LCOL('#ff8fb0')];
+ const part=(sh,x,y,z,sx,sy,sz,rx,rz,col,spec,em,ry)=>{xform(L,LN,x,y,z,ry||0,rx,rz,sx,sy,sz);mul(MM,RT,L);gl.uniformMatrix4fv(u.uM,false,MM);
+  if(!depth){mul(NN,RN,LN);gl.uniformMatrix3fv(u.uNM,false,nm3(NM3,NN));gl.uniform3fv(u.uC,col);gl.uniform1f(u.uSpec,spec);gl.uniform1f(u.uEm,em)}drawMesh(sh)};
+ for(const b of BODY){let[x,y,z,sx,sy,sz,rx,rz,ci]=b;if((ci===0||ci===2)&&Math.abs(x)>.28){rz+=Math.sin(p.leg*2)*.12*Math.sign(x)}part(MS_SPH,x,y,z,sx,sy,sz,rx,rz,cols[ci],ci===3?1.2:ci===4?0:.12,ci===4?1.5:0)}
+ for(const[x,y,z,ph]of LEGS){const k=Math.sin(p.leg+(ph>0?0:Math.PI)),fl=p.out&&p.out.shoes==='flippers';part(MS_SPH,x,y+Math.max(0,k)*.1,z+k*.13+(fl?.08:0),.12,.1,fl?.3:.19,0,0,p.shoe||cols[1],p.shoe?.35:.12,p.out&&p.out.shoes==='rocket'?.4:0)}
+ for(const q of p.oparts||[]){let rz=q[8],ry=0;if(q.wing)rz+=Math.sin(T*14)*.22*Math.sign(q[1]);if(q.spin)ry=T*18;part(SHAPE[q[0]],q[1],q[2],q[3],q[4],q[5],q[6],q[7],rz,LCOL(q[9]),.35,q[10],ry)}
+ if(p.auraC&&!depth){const n=12;for(let i=0;i<n;i++){const a=T*1.6+i/n*Math.PI*2,y=.18+.12*Math.sin(T*3+i);xform(MM,NN,p.x+Math.cos(a)*1.05,y,p.z+Math.sin(a)*1.05,0,0,0,.07,.07,.07);
+  gl.uniformMatrix4fv(u.uM,false,MM);gl.uniformMatrix3fv(u.uNM,false,nm3(NM3,NN));gl.uniform3fv(u.uC,LCOL(p.auraC[i%p.auraC.length]));gl.uniform1f(u.uSpec,0);gl.uniform1f(u.uEm,1.6);drawMesh(MS_SPH)}}}
 function ci1(){return 1}
 let lastFrame=performance.now();
 function render(){const W=cv.width,H=cv.height,asp=W/H;
  // камера
  const tgtX=cam.tx,tgtZ=cam.tz;cam.x+=(tgtX-cam.x)*.12;cam.z+=(tgtZ-cam.z)*.12;
- let ex,ey,ez;if(mode==='menu'){const a=T*.05;ex=G/2+Math.sin(a)*70;ez=G/2+Math.cos(a)*70;ey=52;cam.x=G/2;cam.z=G/2}
+ let ex,ey,ez,ty=0;if(mode==='menu'&&PV){PV.ang=Math.PI/2+Math.sin(T*.5)*1.2;PV.leg=0;cam.x=PV.x+1.25;cam.z=PV.z;ex=cam.x;ey=2.4;ez=PV.z+5.2;ty=.75}else if(mode==='menu'){const a=T*.05;ex=G/2+Math.sin(a)*70;ez=G/2+Math.cos(a)*70;ey=52;cam.x=G/2;cam.z=G/2}
  else{const d=cam.dist*cam.zoom*(+SAVE.cam||1);ex=cam.x;ey=d*.92;ez=cam.z+d*.62}
  const sh=cam.shake>0?(Math.random()-.5)*cam.shake:0;
- cam.pos=[ex+sh,ey,ez+sh];persp(PR,(asp<1?62:46)*Math.PI/180,asp,.5,600);look(V,cam.pos,[cam.x+sh,0,cam.z+sh],[0,1,0]);mul(VP,PR,V);inv(IVP,VP);
+ cam.pos=[ex+sh,ey,ez+sh];persp(PR,(asp<1?62:46)*Math.PI/180,asp,.5,600);look(V,cam.pos,[cam.x+sh,ty,cam.z+sh],[0,1,0]);mul(VP,PR,V);inv(IVP,VP);
  // солнце: орто-камера вокруг точки взгляда (с привязкой к текселю)
- const shOn=QUAL>0;const ext=mode==='menu'?80:34*cam.zoom;
+ const shOn=QUAL>0;const ext=PV&&mode==='menu'?7:mode==='menu'?80:34*cam.zoom;
  const lc=[cam.x,0,cam.z];look(LV,[lc[0]+SUN[0]*120,SUN[1]*120,lc[2]+SUN[2]*120],lc,[0,1,0]);ortho(LP,-ext,ext,-ext,ext,50,200);mul(LVP,LP,LV);
  LVP[12]=Math.round(LVP[12]/ (2/SH_SIZE))*(2/SH_SIZE);LVP[13]=Math.round(LVP[13]/(2/SH_SIZE))*(2/SH_SIZE);
  // хвосты
@@ -465,7 +570,7 @@ function render(){const W=cv.width,H=cv.height,asp=W/H;
  gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);
  // --- проход теней
  if(shOn){gl.bindFramebuffer(gl.FRAMEBUFFER,shFB);gl.viewport(0,0,SH_SIZE,SH_SIZE);gl.clear(gl.DEPTH_BUFFER_BIT);gl.useProgram(P_DEP.p);gl.uniformMatrix4fv(P_DEP.u.uL,false,LVP);
-  gl.uniformMatrix4fv(P_DEP.u.uM,false,ID);drawMesh(STATIC);for(const p of players)if(p.alive)drawChar(p,P_DEP.u,true);gl.bindFramebuffer(gl.FRAMEBUFFER,null)}
+  gl.uniformMatrix4fv(P_DEP.u.uM,false,ID);drawMesh(STATIC);for(const p of players)if(p.alive)drawChar(p,P_DEP.u,true);if(PV&&mode==='menu')drawChar(PV,P_DEP.u,true);gl.bindFramebuffer(gl.FRAMEBUFFER,null)}
  gl.viewport(0,0,W,H);gl.clearColor(FOG[0],FOG[1],FOG[2],1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
  // --- небо
  gl.disable(gl.DEPTH_TEST);gl.useProgram(P_SKY.p);gl.uniformMatrix4fv(P_SKY.u.uIVP,false,IVP);gl.uniform3fv(P_SKY.u.uSun,SUN);gl.uniform3fv(P_SKY.u.uZen,ZEN);gl.uniform3fv(P_SKY.u.uHor,HOR);gl.bindVertexArray(skyVAO);gl.drawArrays(gl.TRIANGLES,0,3);gl.enable(gl.DEPTH_TEST);
@@ -475,7 +580,7 @@ function render(){const W=cv.width,H=cv.height,asp=W/H;
  const u=P_LIT.u;gl.useProgram(P_LIT.p);setLight(u,shOn);gl.uniformMatrix4fv(u.uVP,false,VP);gl.uniform1f(u.uA,1);
  gl.uniformMatrix4fv(u.uM,false,ID);gl.uniformMatrix3fv(u.uNM,false,nm3(NM3,ID));gl.uniform3fv(u.uC,[1,1,1]);gl.uniform1f(u.uSpec,.05);gl.uniform1f(u.uEm,0);drawMesh(STATIC);
  gl.uniform1f(u.uSpec,.35);gl.uniform1f(u.uEm,.12);drawMesh(TRAILS);gl.uniform1f(u.uSpec,.2);gl.uniform1f(u.uEm,.08);drawMesh(PARTS);
- for(const p of players)if(p.alive)drawChar(p,u,false);
+ for(const p of players)if(p.alive)drawChar(p,u,false);if(PV&&mode==='menu')drawChar(PV,u,false);
  gl.bindVertexArray(null)}
 
 /* ===================== HUD ===================== */
@@ -507,12 +612,30 @@ function buildMenu(){const k=curSkin();$('#mWho').innerHTML=skSvg(k,52)+`<div><b
  ADM_OK=isAdm();$('#mBack').innerHTML=(CFG.embedded?'<button class="btn ghost" id="bBack">← В лаунчер</button>':'')+(ADM_OK?'<button class="btn ghost" id="bAdm">🛠 ADM</button>':'');admSync()}
 function buildSet(){$('#iNick').value=SAVE.nick||CFG.nick||'';$('#iQ').value=String(QUAL);$('#iCam').value=String(+SAVE.cam||1);$('#iSnd').value=String(+SAVE.snd?1:0);$('#iNames').value=String(+SAVE.names?1:0);
  $('#iCol').innerHTML=COLS.map((c,i)=>`<i data-c="${i}" style="background:${c}" class="${i===selCol?'on':''}"></i>`).join('')}
-function buildSkins(){const cur=CFG.skin&&(SAVE.skin==='acc'||!SAVE.skin)?'acc':(SKS[SAVE.skin]?SAVE.skin:'grey');let h='';
- if(CFG.skin&&CFG.skin.length>=4)h+=`<div class="sk${cur==='acc'?' on':''}" data-sk="acc">${skSvg(CFG.skin)}<span>Как в аккаунте</span></div>`;
- for(const k in SKS)h+=`<div class="sk${cur===k?' on':''}" data-sk="${k}">${skSvg(SKS[k])}<span>${esc(SKS[k][0])}</span></div>`;$('#skGrid').innerHTML=h}
-function screen(id){for(const x of['#sMenu','#sSet','#sSkin'])$(x).classList.toggle('on',x===id)}
+const WTABS=[['skin','🐰','Скин'],['head','👑','Голова'],['caps','🧢','Кепки'],['acc','🎀','Аксессуары'],['top','🧥','Кофты'],['shoes','👟','Обувь'],['trail','✨','След'],['aura','🔮','Аура']];
+let wTab='skin',PV=null;
+function itemColor(sl,id){if(sl==='top')return TOPS[id]&&TOPS[id][0];if(sl==='shoes')return SHOES[id];if(sl==='trail')return TRAILC[id]&&TRAILC[id][0];if(sl==='aura')return AURAC[id]&&AURAC[id][0];const d=OUT[sl]&&OUT[sl][id];return d&&d[0]&&d[0][9]}
+function openWardrobe(){PV={x:G/2,z:G/2,ang:0,leg:0,lean:0,alive:true};pvUpd();buildSkins();screen('#sSkin')}
+function pvUpd(){if(!PV)return;PV.fur=fur().map(lin);setOutfit(PV,myOutfit())}
+function buildSkins(){const sv=ksSave(),u=(()=>{try{return localStorage.getItem('kz_session')}catch(e){return null}})();
+ $('#wInfo').innerHTML=ADM_OK?'🛠 ADM: открыты все вещи':sv?`Вещи из Kotazaic and Stars ${u&&u!=='__guest'?'(@'+esc(u)+')':'(гость)'} — бери то, что у тебя есть`:'Войди в аккаунт в лаунчере — тогда тут появятся твои вещи из Kotazaic and Stars';
+ $('#wTabs').innerHTML=WTABS.map(([k,i,n])=>`<b data-wt="${k}" class="${k===wTab?'on':''}">${i} ${n}</b>`).join('');let h='';
+ if(wTab==='skin'){const cur=CFG.skin&&(SAVE.skin==='acc'||!SAVE.skin)?'acc':(SKS[SAVE.skin]?SAVE.skin:'grey');
+  if(CFG.skin&&CFG.skin.length>=4)h+=`<div class="sk${cur==='acc'?' on':''}" data-sk="acc">${skSvg(CFG.skin)}<span>Как в аккаунте</span></div>`;
+  for(const k in SKS)h+=`<div class="sk${cur===k?' on':''}" data-sk="${k}">${skSvg(SKS[k])}<span>${esc(SKS[k][0])}</span></div>`}
+ else{const icon=WTABS.find(x=>x[0]===wTab)[1],o=myOutfit();const ids=Object.keys(KS_ITEMS[wTab]).sort((a,b)=>(a==='none'?-1:b==='none'?1:(owned(wTab,b)?1:0)-(owned(wTab,a)?1:0)));
+  for(const id of ids){const it=KS_ITEMS[wTab][id],ok=owned(wTab,id),c=itemColor(wTab,id);
+   h+=`<div class="sk${o[wTab]===id?' on':''}${ok?'':' lock'}" data-it="${id}"><div class="ic">${id==='none'?'✖':icon}${c?`<i style="background:${c}"></i>`:''}</div><span>${esc(it[0])}</span>${ok?'':'<small>нет в аккаунте</small>'}</div>`}}
+ $('#skGrid').innerHTML=h}
+$('#wTabs').addEventListener('click',e=>{const t=e.target.closest('[data-wt]');if(!t)return;wTab=t.dataset.wt;buildSkins();sfx('click')});
+$('#skGrid').addEventListener('click',e=>{const d=e.target.closest('[data-it]');if(!d)return;const id=d.dataset.it;if(!owned(wTab,id)){tone(220,.15,0,'square',.04);d.animate([{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'none'}],{duration:220});return}
+ SAVE.out=Object.assign({},SAVE.out||{},{[wTab]:id});saveStats();pvUpd();buildSkins();sfx('click')});
+document.addEventListener('click',e=>{if(e.target.id==='bKsOut'){const sv=ksSave();if(!sv||!sv.eq){tone(220,.15,0,'square',.04);$('#wInfo').innerHTML='⚠ Нет аккаунта Kotazaic and Stars — войди в лаунчере';return}
+  const o={};for(const sl of OSLOTS)o[sl]=sv.eq[sl]&&KS_ITEMS[sl][sv.eq[sl]]?sv.eq[sl]:'none';SAVE.out=o;if(sv.eq.skin&&SKS[sv.eq.skin])SAVE.skin=sv.eq.skin;saveStats();pvUpd();buildSkins();sfx('cap',1)}
+ if(e.target.id==='bNoOut'){SAVE.out={};saveStats();pvUpd();buildSkins();sfx('click')}});
+function screen(id){if(id!=='#sSkin')PV=null;for(const x of['#sMenu','#sSet','#sSkin'])$(x).classList.toggle('on',x===id)}
 $('#iCol').addEventListener('click',e=>{const i=e.target.dataset.c;if(i==null)return;selCol=+i;SAVE.col=selCol;saveStats();buildSet();sfx('click')});
-$('#skGrid').addEventListener('click',e=>{const d=e.target.closest('[data-sk]');if(!d)return;SAVE.skin=d.dataset.sk;saveStats();buildSkins();sfx('click')});
+$('#skGrid').addEventListener('click',e=>{const d=e.target.closest('[data-sk]');if(!d)return;SAVE.skin=d.dataset.sk;saveStats();pvUpd();buildSkins();sfx('click')});
 $('#iQ').addEventListener('change',e=>{QUAL=+e.target.value;SAVE.q=QUAL;saveStats();resize();initShadow(QUAL===2?2048:1024)});
 $('#iCam').addEventListener('change',e=>{SAVE.cam=+e.target.value;saveStats()});
 $('#iSnd').addEventListener('change',e=>{SAVE.snd=+e.target.value;saveStats();sfx('click')});
@@ -520,7 +643,7 @@ $('#iNames').addEventListener('change',e=>{SAVE.names=+e.target.value;saveStats(
 $('#iNick').addEventListener('input',e=>{SAVE.nick=e.target.value.trim().slice(0,16);saveStats()});
 $('#iNick').addEventListener('keydown',e=>{if(e.key==='Enter'){buildMenu();screen('#sMenu')}e.stopPropagation()});
 document.addEventListener('click',e=>{const id=e.target.id;if(id==='bPlay'||id==='bAgain')start();if(id==='bMenu'||id==='bQuit')toMenu();if(id==='bRes')pause(false);if(id==='bBack')exitToLauncher();
- if(id==='bSet'){sfx('click');buildSet();screen('#sSet')}if(id==='bSkins'){sfx('click');buildSkins();screen('#sSkin')}if(id==='bSetOk'||id==='bSkinOk'){sfx('click');buildMenu();screen('#sMenu')}});
+ if(id==='bSet'){sfx('click');buildSet();screen('#sSet')}if(id==='bSkins'){sfx('click');openWardrobe()}if(id==='bSetOk'||id==='bSkinOk'){sfx('click');buildMenu();screen('#sMenu')}});
 addEventListener('keydown',e=>{if(e.code==='Escape'&&($('#sSet').classList.contains('on')||$('#sSkin').classList.contains('on'))){buildMenu();screen('#sMenu')}});
 /* ---------- ADM (только для аккаунта detanetov) ---------- */
 const ADM_USER='detanetov';
@@ -551,7 +674,7 @@ addEventListener('keydown',e=>{if(ADM_OK&&(e.code==='F2'||e.code==='Backquote'))
 let fpsN=0,fpsT=performance.now();(function fl(t){requestAnimationFrame(fl);fpsN++;if(t-fpsT>500){if(ADM_OK&&ADM.fps)$('#fps').textContent=Math.round(fpsN*1000/(t-fpsT))+' FPS · '+players.filter(p=>p.alive).length+' игроков';fpsN=0;fpsT=t}})(fpsT);
 function exitToLauncher(){try{parent.postMessage({koto:'exit'},'*')}catch(e){}}
 function fur(){const k=curSkin();return[k[1],k[2],k[3]]}
-function start(){ac();sfx('click');const nick=nickNow();
+function start(){ac();sfx('click');PV=null;const nick=nickNow();
  T=0;resetWorld(ADM_OK?Math.round(+ADM.bots):9,{nick,col:selCol,fur:fur()});if(ADM_OK)for(const b of players)if(!b.human)b.aggr*=+ADM.aggr||1;mode='play';playT=0;cam.x=me.x;cam.z=me.z;cam.zoom=1;mouse.use=false;touch=null;
  for(const s of['#sMenu','#sSet','#sSkin','#sOver','#sPause'])$(s).classList.remove('on');showHud(true);$('#hFeed').innerHTML='';admSync()}
 function toMenu(){mode='menu';for(const s of['#sOver','#sPause'])$(s).classList.remove('on');$('#sMenu').classList.add('on');showHud(false);resetWorld(10,null);buildMenu()}
@@ -566,9 +689,9 @@ function gameOver(why,by,won){if(mode!=='play')return;mode='over';$('#admBtn').s
 
 /* ===================== цикл ===================== */
 function step(dt){T+=dt;if(mode==='play')playT+=dt;
- for(const p of players){if(!p.alive){if(!p.human&&p.resp&&T>p.resp){p.resp=0;p.name=botName();p.colI=botColor();p.rgb=colRGB[p.colI];p.fur=FURS[Math.floor(Math.random()*FURS.length)].map(lin);p.aggr=rnd(.6,1.35);if(p.lb){p.lb.remove();p.lb=null}spawn(p)}continue}
+ for(const p of players){if(!p.alive){if(!p.human&&p.resp&&T>p.resp){p.resp=0;p.name=botName();p.colI=botColor();p.rgb=colRGB[p.colI];p.fur=FURS[Math.floor(Math.random()*FURS.length)].map(lin);setOutfit(p,randOutfit());p.aggr=rnd(.6,1.35);if(p.lb){p.lb.remove();p.lb=null}spawn(p)}continue}
   if(!p.human&&admOn('freeze'))continue;if(p.human)humanInput();else botThink(p,dt);moveP(p,dt);
-  if(p.alive){p.dust-=dt;if(p.dust<=0){p.dust=.07;const own=owner[p.cell]===p.id;spark(p.x-Math.cos(p.ang)*.55+rnd(-.2,.2),p.z-Math.sin(p.ang)*.55+rnd(-.2,.2),own?p.rgb.map(v=>Math.pow(v,2.2)*.35):[.17,.13,.07],3)}}}
+  if(p.alive){outfitFx(p,dt);p.dust-=dt;if(p.dust<=0){p.dust=.07;const own=owner[p.cell]===p.id;spark(p.x-Math.cos(p.ang)*.55+rnd(-.2,.2),p.z-Math.sin(p.ang)*.55+rnd(-.2,.2),own?p.rgb.map(v=>Math.pow(v,2.2)*.35):[.17,.13,.07],3)}}}
  stepParts(dt);if(cam.shake>0)cam.shake=Math.max(0,cam.shake-dt);
  if(me&&me.alive){cam.tx=me.x;cam.tz=me.z;const pct=cnt[me.id]/GG*100;me.maxPct=Math.max(me.maxPct||0,pct);cam.zoom+=((1+Math.min(.55,Math.sqrt(pct)*.11))-cam.zoom)*dt;if(mode==='play'&&pct>=WIN_PCT){sfx('win');for(let k=0;k<120;k++)spark(me.x+rnd(-4,4),me.z+rnd(-4,4),COLS.map(hex)[k%COLS.length],2);gameOver('win',null,true)}}}
 let acc=0,hudAcc=0;
