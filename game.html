@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=85;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=86;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3065,6 +3065,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:86,l:'1.4.0',items:['✝ Знамя «Спас Нерукотворный» теперь защищает от молний: если попадёшь под удар, Господь тебя спасёт — с неба сходит луч света, и сердечко не теряется']},
  {v:85,l:'1.4.0',items:['♾ Шахматы, шашки и «Дурак» стали бесконечными по времени: партия больше не обрывается, если свернуть вкладку или соперник долго думает','♟ Убраны ничьи по «правилу 50 ходов» и «15 ходов дамками» — играй сколько хочешь','📡 Если соперник молчит, показывается «ждём его», а через 2 минуты можно самому засчитать победу']},
  {v:84,l:'1.4.0',items:['⚔ Лимитированное знамя «Спас Нерукотворный» за спиной — 10 000 000 🪙, продаётся только 10 дней (до 29 октября)','🛡 С надетым знаменем в забеге появляются два рыцаря-котозайца: подбегают к метеоритам и рубят их мечом','🧑‍🌾 В саду садовники сами поливают и собирают урожай, на рыбалке рыбаки ловят рыбу в ведро','♟ В шахматах, шашках и «Дураке» по краям доски стоят два рыцаря: каждый раз в 5 минут отражает удар — сначала берегут короля, дамку или козырную атаку','🔍 В мини-играх можно выбрать размер экрана: S, M, L, XL или во весь экран','⚖ Экономика: большие растения и крупная рыба приносят в 4 раза меньше; монеты у игравших в сад пересчитаны']},
  {v:83,l:'1.4.0',items:['✝ Светлая коллекция: 100 лимитированных вещей — 10 скинов, нимбы и венки, крестики и чётки, крылья ангела и серафима, ризы и праздничные свитера, свечи, писанки, кулич, верба, посох, лампада, следы из перьев и голубей, ауры «Витраж», «Божественное сияние», «Ангелочки» и другие','👼 6 полных костюмов коллекции: Ангел, Пасха, Рождество, Пилигрим, Хорист, Серафим','⌛ Вещи дорогие и лимитированные: каждую можно купить только один раз и только до 7 декабря, потом — только через обмен. В Kotograde и подарках не выпадают','🔎 Фильтр «✝ Светлая коллекция» в Cosmetics и счётчик собранного']},
@@ -7587,6 +7588,21 @@ document.addEventListener('visibilitychange',()=>{try{if(document.visibilityStat
 setInterval(()=>{try{if(mg&&mg.vs==='online'&&!mg.host&&mg.st&&mg.st.winner===null&&Date.now()-(mg.seen||0)>8000)mmPost({t:'sync',room:mg.room})}catch(e){}},8000);
 (function(){const st=document.createElement('style');st.textContent=`#mgBoard .infwait{background:#fff6d6;border:2px solid var(--ink);border-radius:14px;padding:8px 12px;margin:0 0 10px;font-weight:800;font-size:14px;color:var(--ink);text-align:center;position:relative;z-index:4}#mgBoard .infwait .btn{margin-left:8px}`;document.head.appendChild(st)})();
 HELP.push(['♾ Партии без ограничения времени','Шахматы, шашки и «Дурак» не заканчиваются по времени: нет таймера хода, нет ничьей по «правилу 50 ходов» и «15 ходов дамками». В онлайне, если свернуть вкладку или соперник надолго задумался, партия просто ждёт. Если соперник молчит больше 2 минут, можно самому засчитать победу.']);
+/* ================= Знамя: Господь спасает от молний ================= */
+let BN_ZAP=false;
+{const _z=zapTick;zapTick=function(){BN_ZAP=true;try{return _z.apply(this,arguments)}finally{BN_ZAP=false}}}
+{const _c=catchItem;catchItem=function(it,cx,cy){if(BN_ZAP&&it&&it.k==='meteor'&&bnOn()){bnSaved(cx,cy);return}return _c.apply(this,arguments)}}
+function bnSaved(cx,cy){G.godT=1.6;G.godX=cx;G.inv=Math.max(G.inv||0,1.2);burst(cx,cy-40,'#fff3b0',26,'star',300);burst(cx,cy-40,'#ffffff',16,'dot',220);addFloat(cx,cy-120,'✝ Господь спас!','#ffe066');stat('godSaves');G.godN=(G.godN||0)+1;
+  try{sfx(523,.5,'sine',.05,0);setTimeout(()=>sfx(659,.5,'sine',.045,0),120);setTimeout(()=>sfx(784,.8,'sine',.04,0),240);setTimeout(()=>sfx(1047,1,'triangle',.03,0),380)}catch(e){}
+  if(!S.stats.godToast){S.stats.godToast=1;toast('✝ Молния ударила, но Господь тебя сохранил — знамя «Спас Нерукотворный» защищает от молний')}}
+{const _u=update;update=function(dt){const r=_u.apply(this,arguments);try{if(G&&G.godT>0&&!G.paused)G.godT-=dt}catch(e){}return r}}
+{const _dp=k3drawPlayer;k3drawPlayer=function(py,hopY,ks,tilt){const r=_dp.apply(this,arguments);try{if(G&&G.godT>0){const a=Math.min(1,G.godT/.6),x=G.px,c=ctx;c.save();
+  const bw=150,g=c.createLinearGradient(x-bw/2,0,x+bw/2,0);g.addColorStop(0,'rgba(255,240,180,0)');g.addColorStop(.5,`rgba(255,248,210,${.75*a})`);g.addColorStop(1,'rgba(255,240,180,0)');c.fillStyle=g;c.beginPath();c.moveTo(x-40,0);c.lineTo(x+40,0);c.lineTo(x+bw/2+20,py);c.lineTo(x-bw/2-20,py);c.closePath();c.fill();
+  c.globalCompositeOperation='lighter';const rg=c.createRadialGradient(x,py-70,10,x,py-70,150);rg.addColorStop(0,`rgba(255,240,170,${.38*a})`);rg.addColorStop(1,'rgba(255,240,170,0)');c.fillStyle=rg;c.fillRect(x-160,py-230,320,320);c.globalCompositeOperation='source-over';
+  c.globalAlpha=a;c.translate(x,py-175+Math.sin(G.t*3)*4);c.shadowColor='#ffe066';c.shadowBlur=24;c.fillStyle='#ffe28a';c.strokeStyle='#a8761e';c.lineWidth=2.5;c.beginPath();c.rect(-5,-30,10,60);c.rect(-20,-16,40,10);c.fill();c.stroke();c.beginPath();c.rect(-12,-26,24,6);c.fill();c.stroke();c.beginPath();c.moveTo(-14,10);c.lineTo(14,18);c.lineTo(14,24);c.lineTo(-14,16);c.closePath();c.fill();c.stroke();
+  c.shadowBlur=0;c.lineWidth=3;c.strokeStyle=`rgba(255,240,170,${.9*a})`;c.beginPath();c.ellipse(0,92,62,14,0,0,7);c.stroke();c.restore()}}catch(e){}return r}}
+ITEMS.acc[BN_ID].perk='Господь спасает от молний · рыцари-котозайцы рубят метеориты, помогают в саду и на рыбалке, защищают в шахматах, шашках и «Дураке»';
+{const h=HELP.find(x=>x[0]==='⚔ Знамя «Спас Нерукотворный»');if(h)h[1]=h[1].replace('Пока надето:','Пока надето: если попадёшь под молнию, Господь тебя спасёт — с неба сходит луч света, и удар не отнимает сердечко;')}
 
 resize();
 const sess=lsGet('kz_session');
