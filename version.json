@@ -17,11 +17,11 @@
   "sha256": "86f3ea7eda94cf62882f8e936b72e406d35ea7c6d41b688c8520bac2fcdb2738"
  },
  "kotoio": {
-  "version": 2,
-  "label": "1.1",
-  "name": "koto.io 1.1: настройки и скины",
+  "version": 3,
+  "label": "1.2",
+  "name": "koto.io 1.2: ADM-меню",
   "file": "kotoio.html",
-  "sha256": "83f9383ca43464159371464f4db23247e85b4a47b31505743c00211166b27b5e",
+  "sha256": "441df57330d6599ae638e838c4c94df66619e8caa8417631bcf4f3e6e547fc10",
   "date": "2026-10-19"
  }
 }

@@ -50,6 +50,14 @@ h2{margin:0;text-align:center;font-size:30px;letter-spacing:-.5px}
 .card.big{width:min(680px,94vw)}.skins{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;max-height:52vh;overflow-y:auto;padding:4px}
 .sk{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid var(--line);cursor:pointer;transition:transform .15s,background .15s;font-size:12px;text-align:center}
 .sk:hover{transform:translateY(-3px);background:rgba(255,255,255,.12)}.sk.on{border-color:var(--mint);box-shadow:0 0 0 2px var(--mint),0 0 18px rgba(79,240,200,.35);background:rgba(79,240,200,.12)}
+#adm{position:fixed;right:16px;top:50%;transform:translateY(-50%);width:290px;max-height:92vh;overflow-y:auto;padding:14px 16px;z-index:9;display:none;font-size:13px}
+#adm.on{display:block}#adm .ah{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}#adm .ah b{color:var(--yel)}
+#adm .ax{background:none;border:0;color:#fff;font-size:16px;cursor:pointer}#adm small{display:block;color:var(--mut);margin-top:8px;text-align:center}
+#adm .tg{display:flex;gap:8px;align-items:center;padding:5px 0;cursor:pointer}#adm .tg input{width:18px;height:18px;accent-color:#4ff0c8}
+#adm .sl{display:block;padding:6px 0}#adm .sl b{float:right;color:var(--mint)}#adm .sl input{width:100%;accent-color:#4ff0c8}
+#adm .ag{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}#adm .ag .btn{font-size:12px;padding:8px 6px;border-radius:12px}
+#admBtn{position:fixed;left:16px;top:96px;z-index:4;display:none;padding:8px 12px;font-size:16px}
+#fps{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:4;font:800 12px monospace;color:#fff;text-shadow:0 1px 3px #000;display:none}
 #err{position:fixed;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;background:#140e30;z-index:20;font-size:18px}
 @media(max-width:700px){#hBoard{display:none}#mini{width:120px;height:120px}.logo{font-size:52px}#hHint{display:none}}
 </style></head><body>
@@ -93,6 +101,16 @@ h2{margin:0;text-align:center;font-size:30px;letter-spacing:-.5px}
  <h2>Пауза</h2><div class="why">Боты тоже ждут 😺</div>
  <div class="btns"><button class="btn" id="bRes">▶ Продолжить</button><button class="btn ghost" id="bQuit">Выйти в меню</button></div>
 </div></div>
+<div id="adm" class="panel"><div class="ah"><b>🛠 ADM · koto.io</b><button class="ax" data-adm="close">✕</button></div>
+ <label class="tg"><input type="checkbox" data-admk="god"><span>🛡 Бессмертие</span></label>
+ <label class="tg"><input type="checkbox" data-admk="freeze"><span>🧊 Заморозить ботов</span></label>
+ <label class="tg"><input type="checkbox" data-admk="fps"><span>📈 Показывать FPS</span></label>
+ <label class="sl">⚡ Скорость <b id="aSpV"></b><input type="range" min="0.5" max="3" step="0.1" data-admr="speed"></label>
+ <label class="sl">🤖 Ботов в новой игре <b id="aBoV"></b><input type="range" min="0" max="20" step="1" data-admr="bots"></label>
+ <label class="sl">😈 Злость ботов <b id="aAgV"></b><input type="range" min="0.3" max="2.5" step="0.1" data-admr="aggr"></label>
+ <div class="ag"><button class="btn ghost" data-adm="grab">🟩 +5% земли</button><button class="btn ghost" data-adm="win">🏆 Победа</button><button class="btn ghost" data-adm="killall">💥 Убрать ботов</button><button class="btn ghost" data-adm="near">🎯 Поймать ближайшего</button><button class="btn ghost" data-adm="tp">📍 В центр</button><button class="btn ghost" data-adm="addbot">➕ Бот</button><button class="btn ghost" data-adm="reset">🗑 Сброс статистики</button></div>
+ <small>F2 или ` — открыть/закрыть</small></div>
+<div id="fps"></div><button id="admBtn" class="btn ghost">🛠</button>
 <div id="err"></div>
 <script>
 'use strict';
@@ -316,7 +334,7 @@ function capture(p){const id=p.id,before=cnt[id];let sx=0,sz=0,sn=0;
  const add=cnt[id]-before;for(let k=0;k<Math.min(36,gained.length);k++){const c=gained[Math.floor(Math.random()*gained.length)];spark(c%G+.5,(c/G|0)+.5,p.rgb,1)}
  if(p.human&&add>0){sfx('cap',Math.min(1,add/300));popText('+'+(add/GG*100).toFixed(add/GG*100<1?2:1)+'%',p)}
  checkZero(p)}
-function kill(q,by,why){if(!q.alive)return;q.alive=false;
+function kill(q,by,why){if(!q.alive)return;if(q.human&&admOn('god'))return;q.alive=false;
  for(const c of q.trail)if(trailOw[c]===q.id)trailOw[c]=0;q.trail=[];q.rib=[];
  for(let c=0;c<GG;c++)if(owner[c]===q.id)setOwner(c,0);
  for(let k=0;k<46;k++)spark(q.x,q.z,k%2?q.rgb:q.fur[0].map(v=>Math.pow(v,1/2.2)),2);
@@ -325,7 +343,7 @@ function kill(q,by,why){if(!q.alive)return;q.alive=false;
  if(q.human){sfx('die');gameOver(why,by)}else q.resp=T+rnd(2,4.5);
  if(me&&me.alive&&Math.hypot(q.x-me.x,q.z-me.z)<14)cam.shake=.35}
 function moveP(p,dt){const turn=p.human?7.5:5.2,d=angDiff(p.ang,p.tang),st=clamp(d,-turn*dt,turn*dt);p.ang+=st;p.lean+=(st/dt*.06-p.lean)*Math.min(1,dt*8);
- p.px=p.x;p.pz=p.z;let nx=p.x+Math.cos(p.ang)*p.sp*dt,nz=p.z+Math.sin(p.ang)*p.sp*dt;nx=clamp(nx,.25,G-.25);nz=clamp(nz,.25,G-.25);
+ p.px=p.x;p.pz=p.z;const spd=p.sp*(p.human&&ADM_OK?+ADM.speed||1:1);let nx=p.x+Math.cos(p.ang)*spd*dt,nz=p.z+Math.sin(p.ang)*spd*dt;nx=clamp(nx,.25,G-.25);nz=clamp(nz,.25,G-.25);
  // у забора — скользим вдоль
  p.x=nx;p.z=nz;p.leg+=dt*p.sp*2.6;
  let c=cellAt(p.x,p.z);if(c!==p.cell){const ox=p.cell%G,oz=(p.cell/G)|0,cx=c%G,cz=(c/G)|0;
@@ -486,7 +504,7 @@ function curSkin(){if((SAVE.skin==='acc'||!SAVE.skin)&&CFG.skin&&CFG.skin.length
 function nickNow(){return SAVE.nick||CFG.nick||'Котозаяц'}
 function menuStats(el){el.innerHTML=`<div><small>Рекорд</small><b>${(+SAVE.best||0).toFixed(1)}%</b></div><div><small>Поймано</small><b>${SAVE.kills||0}</b></div><div><small>Побед</small><b>${SAVE.wins||0}</b></div>`}
 function buildMenu(){const k=curSkin();$('#mWho').innerHTML=skSvg(k,52)+`<div><b>${esc(nickNow())}</b><small><span class="chip" style="background:${COLS[selCol]}"></span>${esc(k[0])}</small></div>`;menuStats($('#mStats'));
- $('#mBack').innerHTML=CFG.embedded?'<button class="btn ghost" id="bBack">← В лаунчер</button>':''}
+ ADM_OK=isAdm();$('#mBack').innerHTML=(CFG.embedded?'<button class="btn ghost" id="bBack">← В лаунчер</button>':'')+(ADM_OK?'<button class="btn ghost" id="bAdm">🛠 ADM</button>':'');admSync()}
 function buildSet(){$('#iNick').value=SAVE.nick||CFG.nick||'';$('#iQ').value=String(QUAL);$('#iCam').value=String(+SAVE.cam||1);$('#iSnd').value=String(+SAVE.snd?1:0);$('#iNames').value=String(+SAVE.names?1:0);
  $('#iCol').innerHTML=COLS.map((c,i)=>`<i data-c="${i}" style="background:${c}" class="${i===selCol?'on':''}"></i>`).join('')}
 function buildSkins(){const cur=CFG.skin&&(SAVE.skin==='acc'||!SAVE.skin)?'acc':(SKS[SAVE.skin]?SAVE.skin:'grey');let h='';
@@ -504,15 +522,42 @@ $('#iNick').addEventListener('keydown',e=>{if(e.key==='Enter'){buildMenu();scree
 document.addEventListener('click',e=>{const id=e.target.id;if(id==='bPlay'||id==='bAgain')start();if(id==='bMenu'||id==='bQuit')toMenu();if(id==='bRes')pause(false);if(id==='bBack')exitToLauncher();
  if(id==='bSet'){sfx('click');buildSet();screen('#sSet')}if(id==='bSkins'){sfx('click');buildSkins();screen('#sSkin')}if(id==='bSetOk'||id==='bSkinOk'){sfx('click');buildMenu();screen('#sMenu')}});
 addEventListener('keydown',e=>{if(e.code==='Escape'&&($('#sSet').classList.contains('on')||$('#sSkin').classList.contains('on'))){buildMenu();screen('#sMenu')}});
+/* ---------- ADM (только для аккаунта detanetov) ---------- */
+const ADM_USER='detanetov';
+function isAdm(){try{const u=localStorage.getItem('kz_session');if(u!==ADM_USER)return false;const db=JSON.parse(localStorage.getItem('kz_accounts_v1'))||{};return !!db[u]}catch(e){return false}}
+let ADM_OK=isAdm();const ADM=Object.assign({god:false,freeze:false,fps:false,speed:1,bots:9,aggr:1},ADM_OK&&SAVE.adm||{});
+const admOn=k=>ADM_OK&&ADM[k];
+function admSave(){SAVE.adm=ADM;saveStats()}
+function admSync(){const a=$('#adm');a.querySelectorAll('[data-admk]').forEach(i=>i.checked=!!ADM[i.dataset.admk]);a.querySelectorAll('[data-admr]').forEach(i=>i.value=ADM[i.dataset.admr]);
+ $('#aSpV').textContent='×'+(+ADM.speed).toFixed(1);$('#aBoV').textContent=ADM.bots;$('#aAgV').textContent='×'+(+ADM.aggr).toFixed(1);$('#fps').style.display=ADM_OK&&ADM.fps?'block':'none';$('#admBtn').style.display=ADM_OK&&mode==='play'?'block':'none'}
+function admToggle(on){if(!ADM_OK)return;$('#adm').classList.toggle('on',on==null?!$('#adm').classList.contains('on'):on);admSync()}
+function grabAround(p,pct){if(!p||!p.alive)return;const goal=cnt[p.id]+Math.round(GG*pct/100);for(let r=1;r<G&&cnt[p.id]<goal;r++){for(let dz=-r;dz<=r;dz++)for(let dx=-r;dx<=r;dx++){if(dx*dx+dz*dz>r*r)continue;const x=Math.floor(p.x)+dx,z=Math.floor(p.z)+dz;if(x<0||z<0||x>=G||z>=G)continue;const c=z*G+x;if(trailOw[c]&&trailOw[c]!==p.id)continue;if(trailOw[c]===p.id)trailOw[c]=0;setOwner(c,p.id);if(cnt[p.id]>=goal)break}}
+ p.trail=p.trail.filter(c=>trailOw[c]===p.id);if(!p.trail.length)p.rib=[];checkZero(p);for(let k=0;k<30;k++)spark(p.x+rnd(-4,4),p.z+rnd(-4,4),p.rgb,1)}
+function admAddBot(){const b=mkPlayer(false,botName(),botColor(),FURS[Math.floor(Math.random()*FURS.length)]);b.aggr*=+ADM.aggr||1;spawn(b)}
+function admAct(a){if(!ADM_OK)return;sfx('click');
+ if(a==='close')return admToggle(false);
+ if(a==='reset'){if(!confirm('Сбросить рекорд, победы и статистику koto.io?'))return;Object.assign(SAVE,{best:0,games:0,kills:0,wins:0,time:0});saveStats();buildMenu();return}
+ if(a==='addbot'){if(players.length<30)admAddBot();return}
+ if(a==='killall'){for(const b of players.filter(p=>!p.human)){if(b.alive)kill(b,null,'adm');if(b.lb)b.lb.remove()}players=players.filter(p=>p.human);return}
+ if(mode!=='play'||!me||!me.alive)return;
+ if(a==='grab')grabAround(me,5);
+ if(a==='win')grabAround(me,WIN_PCT+1-cnt[me.id]/GG*100);
+ if(a==='near'){let b=null,bd=1e9;for(const q of players)if(q!==me&&q.alive){const d=Math.hypot(q.x-me.x,q.z-me.z);if(d<bd){bd=d;b=q}}if(b)kill(b,me,'adm')}
+ if(a==='tp'){for(const c of me.trail)if(trailOw[c]===me.id)trailOw[c]=0;me.trail=[];me.rib=[];me.x=G/2;me.z=G/2;me.cell=cellAt(me.x,me.z);cam.x=me.x;cam.z=me.z;enterCell(me,me.cell)}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-adm]');if(b)admAct(b.dataset.adm);if(e.target.id==='admBtn'||e.target.id==='bAdm')admToggle()});
+document.addEventListener('change',e=>{const k=e.target.dataset.admk,r=e.target.dataset.admr;if(k){ADM[k]=e.target.checked;admSave();admSync()}if(r){ADM[r]=+e.target.value;admSave();admSync()}});
+document.addEventListener('input',e=>{const r=e.target.dataset&&e.target.dataset.admr;if(r){ADM[r]=+e.target.value;admSync()}});
+addEventListener('keydown',e=>{if(ADM_OK&&(e.code==='F2'||e.code==='Backquote')){e.preventDefault();admToggle()}});
+let fpsN=0,fpsT=performance.now();(function fl(t){requestAnimationFrame(fl);fpsN++;if(t-fpsT>500){if(ADM_OK&&ADM.fps)$('#fps').textContent=Math.round(fpsN*1000/(t-fpsT))+' FPS · '+players.filter(p=>p.alive).length+' игроков';fpsN=0;fpsT=t}})(fpsT);
 function exitToLauncher(){try{parent.postMessage({koto:'exit'},'*')}catch(e){}}
 function fur(){const k=curSkin();return[k[1],k[2],k[3]]}
 function start(){ac();sfx('click');const nick=nickNow();
- T=0;resetWorld(9,{nick,col:selCol,fur:fur()});mode='play';playT=0;cam.x=me.x;cam.z=me.z;cam.zoom=1;mouse.use=false;touch=null;
- for(const s of['#sMenu','#sSet','#sSkin','#sOver','#sPause'])$(s).classList.remove('on');showHud(true);$('#hFeed').innerHTML=''}
+ T=0;resetWorld(ADM_OK?Math.round(+ADM.bots):9,{nick,col:selCol,fur:fur()});if(ADM_OK)for(const b of players)if(!b.human)b.aggr*=+ADM.aggr||1;mode='play';playT=0;cam.x=me.x;cam.z=me.z;cam.zoom=1;mouse.use=false;touch=null;
+ for(const s of['#sMenu','#sSet','#sSkin','#sOver','#sPause'])$(s).classList.remove('on');showHud(true);$('#hFeed').innerHTML='';admSync()}
 function toMenu(){mode='menu';for(const s of['#sOver','#sPause'])$(s).classList.remove('on');$('#sMenu').classList.add('on');showHud(false);resetWorld(10,null);buildMenu()}
 function pause(on){if(on&&mode==='play'){mode='pause';$('#sPause').classList.add('on')}else if(!on&&mode==='pause'){mode='play';$('#sPause').classList.remove('on')}}
 const WHY={self:'Ты наступил на свой хвост 😿',land:'Твою землю захватили полностью',head:'Лобовое столкновение',trail:'Кто-то перебежал твой хвост'};
-function gameOver(why,by,won){if(mode!=='play')return;mode='over';const pct=won?cnt[me.id]/GG*100:(me.maxPct||0);
+function gameOver(why,by,won){if(mode!=='play')return;mode='over';$('#admBtn').style.display='none';const pct=won?cnt[me.id]/GG*100:(me.maxPct||0);
  SAVE.games=(SAVE.games||0)+1;SAVE.time=(SAVE.time||0)+playT;if(won)SAVE.wins=(SAVE.wins||0)+1;const rec=pct>(+SAVE.best||0)&&SAVE.games>1;if(rec)SAVE.best=+pct.toFixed(2);saveStats();
  setTimeout(()=>{$('#oT').textContent=won?'🏆 Победа!':rec?'🎉 Новый рекорд!':'Игра окончена';
   $('#oWhy').innerHTML=won?`Ты захватил ${WIN_PCT}% поля!`:by&&by!==me?`Тебя поймал <b style="color:${COLS[by.colI]}">${esc(by.name)}</b>`:WHY[why]||'';
@@ -522,7 +567,7 @@ function gameOver(why,by,won){if(mode!=='play')return;mode='over';const pct=won?
 /* ===================== цикл ===================== */
 function step(dt){T+=dt;if(mode==='play')playT+=dt;
  for(const p of players){if(!p.alive){if(!p.human&&p.resp&&T>p.resp){p.resp=0;p.name=botName();p.colI=botColor();p.rgb=colRGB[p.colI];p.fur=FURS[Math.floor(Math.random()*FURS.length)].map(lin);p.aggr=rnd(.6,1.35);if(p.lb){p.lb.remove();p.lb=null}spawn(p)}continue}
-  if(p.human)humanInput();else botThink(p,dt);moveP(p,dt);
+  if(!p.human&&admOn('freeze'))continue;if(p.human)humanInput();else botThink(p,dt);moveP(p,dt);
   if(p.alive){p.dust-=dt;if(p.dust<=0){p.dust=.07;const own=owner[p.cell]===p.id;spark(p.x-Math.cos(p.ang)*.55+rnd(-.2,.2),p.z-Math.sin(p.ang)*.55+rnd(-.2,.2),own?p.rgb.map(v=>Math.pow(v,2.2)*.35):[.17,.13,.07],3)}}}
  stepParts(dt);if(cam.shake>0)cam.shake=Math.max(0,cam.shake-dt);
  if(me&&me.alive){cam.tx=me.x;cam.tz=me.z;const pct=cnt[me.id]/GG*100;me.maxPct=Math.max(me.maxPct||0,pct);cam.zoom+=((1+Math.min(.55,Math.sqrt(pct)*.11))-cam.zoom)*dt;if(mode==='play'&&pct>=WIN_PCT){sfx('win');for(let k=0;k<120;k++)spark(me.x+rnd(-4,4),me.z+rnd(-4,4),COLS.map(hex)[k%COLS.length],2);gameOver('win',null,true)}}}
