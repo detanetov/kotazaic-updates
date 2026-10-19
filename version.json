@@ -1,9 +1,9 @@
 {
- "version": 82,
+ "version": 83,
  "label": "1.4.0",
- "name": "1.4.0: стеклянный интерфейс",
+ "name": "1.4.0: Светлая коллекция",
  "file": "game.html",
- "sha256": "303089c83100c724ae46cbfb8f8fb858d2f8a3871f55f8437c3593cf2ed942e4",
+ "sha256": "6210692bcbde358ddf9e66128e0da47ef1607a4f7b09e1401da8ccb89d221691",
  "date": "2026-10-19",
  "exe": {
   "version": 6,
