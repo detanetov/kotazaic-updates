@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>koto.io</title>
+<style>
+:root{--tx:#fff;--mut:#cfc7ef;--mint:#4ff0c8;--yel:#ffd34d;--pink:#ff6fb5;--vio:#8b6cff;--red:#ff5e7a;--glass:rgba(14,10,34,.55);--line:rgba(255,255,255,.14)}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#9ec7e8;font:700 15px/1.4 "Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;color:var(--tx);user-select:none;-webkit-user-select:none}
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#labels{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.lb{position:absolute;left:0;top:0;white-space:nowrap;font:800 13px "Segoe UI",system-ui,sans-serif;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8),0 0 2px rgba(0,0,0,.9);will-change:transform}
+.lb i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:0;box-shadow:0 0 0 1.5px rgba(0,0,0,.35)}
+.lb.me{font-size:14px}
+.pop{position:fixed;pointer-events:none;font:900 22px "Segoe UI",system-ui,sans-serif;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.7);animation:pop 1.3s ease-out forwards;z-index:5}
+@keyframes pop{0%{transform:translate(-50%,0) scale(.6);opacity:0}15%{transform:translate(-50%,-10px) scale(1.15);opacity:1}100%{transform:translate(-50%,-70px) scale(1);opacity:0}}
+.hud{position:fixed;pointer-events:none;z-index:3;transition:opacity .3s}
+.panel{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+#hTop{left:16px;top:14px;padding:10px 16px;display:flex;gap:18px;align-items:center}
+#hTop .big{font:900 30px/1 "Segoe UI",system-ui,sans-serif;letter-spacing:-.5px}
+#hTop small{display:block;color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:1px}
+#hBoard{right:16px;top:14px;padding:10px 14px;min-width:210px}
+#hBoard b{display:block;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.row{display:flex;align-items:center;gap:8px;font-size:13px;padding:2px 0}.row .n{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.row .c{width:10px;height:10px;border-radius:3px;flex:none}.row.me{color:var(--yel)}
+#hMini{right:16px;bottom:16px;padding:6px;border-radius:16px}
+#mini{display:block;width:168px;height:168px;border-radius:11px;image-rendering:auto}
+#hFeed{left:50%;top:14px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px}
+#hFeed div{padding:6px 14px;border-radius:999px;font-size:13px;animation:fin .3s ease-out}
+@keyframes fin{from{opacity:0;transform:translateY(-8px)}}
+#hHint{left:16px;bottom:16px;padding:8px 14px;font-size:12px;color:var(--mut)}
+#hBtn{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:3;display:none}
+.scr{position:fixed;inset:0;z-index:6;display:none;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(10,6,30,.35),rgba(10,6,30,.7))}
+.scr.on{display:flex}
+.card{width:min(460px,92vw);padding:26px 28px;border-radius:28px;background:rgba(18,12,42,.78);border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 30px 80px rgba(0,0,0,.45);animation:cin .45s cubic-bezier(.3,1.4,.5,1)}
+@keyframes cin{from{transform:translateY(24px) scale(.94);opacity:0}}
+.logo{font:900 64px/.9 "Segoe UI",system-ui,sans-serif;letter-spacing:-2px;text-align:center;background:linear-gradient(135deg,#ffd34d,#ff6fb5 45%,#8b6cff 75%,#4ff0c8);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 18px rgba(255,111,181,.35))}
+.logo span{font-size:.55em;letter-spacing:0}
+.sub{text-align:center;color:var(--mut);margin:8px 0 16px;font-weight:700}
+label.f{display:block;margin:12px 0 6px;color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:1px}
+input.inp,select{width:100%;font:800 16px "Segoe UI",system-ui,sans-serif;background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 14px;outline:none}
+select option{color:#1d1640}input.inp:focus,select:focus{border-color:var(--mint)}
+.sw{display:flex;gap:8px;flex-wrap:wrap}.sw i{width:30px;height:30px;border-radius:10px;cursor:pointer;box-shadow:inset 0 0 0 2px rgba(0,0,0,.2);transition:transform .15s}.sw i:hover{transform:scale(1.12)}.sw i.on{box-shadow:0 0 0 3px #fff,0 0 14px rgba(255,255,255,.5)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:900 18px "Segoe UI",system-ui,sans-serif;border:0;border-radius:999px;padding:14px 26px;cursor:pointer;background:linear-gradient(135deg,var(--mint),#5ab8ff);color:#06261f;box-shadow:0 8px 24px rgba(79,240,200,.35);transition:transform .12s,filter .12s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.07)}.btn:active{transform:scale(.97)}
+.btn.ghost{background:rgba(255,255,255,.09);color:#fff;border:1px solid var(--line);box-shadow:none;font-size:15px;padding:11px 18px}
+.btn.wide{width:100%;margin-top:18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}.stats div{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:14px;padding:8px 10px;text-align:center}.stats small{display:block;color:var(--mut);font-size:10px;text-transform:uppercase;letter-spacing:.8px}.stats b{font-size:20px}
+.btns{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+h2{margin:0;text-align:center;font-size:30px;letter-spacing:-.5px}
+.why{text-align:center;color:var(--mut);margin:6px 0 4px}
+#err{position:fixed;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;background:#140e30;z-index:20;font-size:18px}
+@media(max-width:700px){#hBoard{display:none}#mini{width:120px;height:120px}.logo{font-size:52px}#hHint{display:none}}
+</style></head><body>
+<canvas id="gl"></canvas>
+<div id="labels"></div>
+<div class="hud panel" id="hTop" style="opacity:0"><div><small>Территория</small><div class="big" id="hPct">0%</div></div><div><small>Поймано</small><div class="big" id="hKills">0</div></div><div><small>Место</small><div class="big" id="hRank">—</div></div></div>
+<div class="hud panel" id="hBoard" style="opacity:0"><b>🏆 Лидеры</b><div id="board"></div></div>
+<div class="hud panel" id="hMini" style="opacity:0"><canvas id="mini" width="240" height="240"></canvas></div>
+<div class="hud" id="hFeed"></div>
+<div class="hud panel" id="hHint" style="opacity:0">🖱 Веди мышкой · WASD / стрелки · Esc — пауза</div>
+<div class="scr on" id="sMenu"><div class="card">
+ <div class="logo">koto<span>.io</span></div>
+ <div class="sub">Захватывай поле — не дай наступить на свой хвост!</div>
+ <label class="f">Никнейм</label><input class="inp" id="iNick" maxlength="16">
+ <label class="f">Цвет территории</label><div class="sw" id="iCol"></div>
+ <label class="f">Графика</label><select id="iQ"><option value="2">Ультра (тени, сглаживание)</option><option value="1">Высокая</option><option value="0">Быстрая (для слабых ПК)</option></select>
+ <button class="btn wide" id="bPlay">▶ Играть</button>
+ <div class="stats" id="mStats"></div>
+ <div class="btns" id="mBack"></div>
+</div></div>
+<div class="scr" id="sOver"><div class="card">
+ <h2 id="oT">Игра окончена</h2><div class="why" id="oWhy"></div>
+ <div class="stats" id="oStats"></div>
+ <div class="btns"><button class="btn" id="bAgain">↻ Ещё раз</button><button class="btn ghost" id="bMenu">≡ В меню</button></div>
+</div></div>
+<div class="scr" id="sPause"><div class="card" style="text-align:center">
+ <h2>Пауза</h2><div class="why">Боты тоже ждут 😺</div>
+ <div class="btns"><button class="btn" id="bRes">▶ Продолжить</button><button class="btn ghost" id="bQuit">Выйти в меню</button></div>
+</div></div>
+<div id="err"></div>
+<script>
+'use strict';
+/* ===================== настройки и данные ===================== */
+const CFG=Object.assign({nick:'',skin:null,embedded:false},window.KOTO||{});
+const G=120,GG=G*G;               // поле G×G клеток
+const WIN_PCT=50;                 // победа при 50% поля
+const COLS=['#4ff0c8','#ff5e7a','#5ab8ff','#ffd34d','#8b6cff','#ff9f43','#2ecc71','#ff6fb5','#00cec9','#e17055','#a3e635','#c084fc'];
+const FURS=[['#a4a9b4','#ece8e2','#f3b7c8'],['#727786','#cdc9d4','#e9a3b8'],['#efe4d1','#fffaf0','#f6b9c6'],['#f0a35a','#ffe2bf','#ffb3a1'],['#8a5a3c','#dcb48e','#f0a3a3'],['#3e3858','#7a73a0','#b48cff'],['#d9c08f','#f6ecd6','#f3b0a0'],['#6b4a36','#c9a786','#e89c9c'],['#e6e3ff','#ffffff','#d6c9ff'],['#ffc2a1','#fff0e6','#ff9e9e']];
+const NAMES=['Пушок','Морковкин','Ушастик','Барсик','Снежок','Тыковка','Кексик','Мурзик','Плюша','Шустрик','Лапка','Хрум','Пончик','Зефирка','Бублик','Котлетка','Хвостик','Персик','Мармелад','Ватрушка','Тапок','Фунтик','Сухарик','Кнопка'];
+const ST_KEY='kz_kotoio';
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let SAVE=(()=>{try{return Object.assign({best:0,games:0,kills:0,wins:0,time:0,col:0,q:1,nick:''},JSON.parse(ls.get(ST_KEY))||{})}catch(e){return{best:0,games:0,kills:0,wins:0,time:0,col:0,q:1,nick:''}}})();
+function saveStats(){ls.set(ST_KEY,JSON.stringify(SAVE))}
+const $=s=>document.querySelector(s);
+const rnd=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const hex=(h)=>[parseInt(h.slice(1,3),16)/255,parseInt(h.slice(3,5),16)/255,parseInt(h.slice(5,7),16)/255];
+const lin=(h)=>hex(h).map(v=>Math.pow(v,2.2));
+function angDiff(a,b){let d=b-a;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;return d}
+
+/* ===================== WebGL ===================== */
+const cv=$('#gl');
+const gl=cv.getContext('webgl2',{antialias:true,powerPreference:'high-performance',alpha:false});
+function fatal(t){const e=$('#err');e.style.display='flex';e.innerHTML=t}
+if(!gl){fatal('😿 Твоя видеокарта или браузер не поддерживают WebGL 2.<br><small style="opacity:.7">Обнови драйверы видеокарты или браузер Edge/Chrome.</small>');throw new Error('no webgl2')}
+
+const TONE=`vec3 tone(vec3 x){x*=1.05;x=clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.);return pow(x,vec3(1./2.2));}`;
+const SHADOW=`uniform highp sampler2DShadow uSh;uniform float uShT,uShOn;
+float shadowF(vec4 l){if(uShOn<.5)return 1.;vec3 p=l.xyz/l.w*.5+.5;if(p.x<0.||p.x>1.||p.y<0.||p.y>1.||p.z>1.)return 1.;float s=0.;
+for(int x=-1;x<=1;x++)for(int y=-1;y<=1;y++)s+=texture(uSh,vec3(p.xy+vec2(x,y)*uShT,p.z-.0009));return s/9.;}`;
+const LIGHT=`uniform vec3 uSun,uSunC,uSkyC,uGndC,uFog,uCam;uniform float uFogD;`;
+const VS_LIT=`#version 300 es
+layout(location=0)in vec3 aP;layout(location=1)in vec3 aN;layout(location=2)in vec3 aC;
+uniform mat4 uM,uVP,uL;uniform mat3 uNM;out vec3 vN,vW,vC;out vec4 vL;
+void main(){vec4 w=uM*vec4(aP,1.);vW=w.xyz;vN=uNM*aN;vC=aC;vL=uL*w;gl_Position=uVP*w;}`;
+const FS_LIT=`#version 300 es
+precision highp float;in vec3 vN,vW,vC;in vec4 vL;${LIGHT}${SHADOW}
+uniform vec3 uC;uniform float uSpec,uEm,uA;out vec4 o;${TONE}
+void main(){vec3 n=normalize(vN);vec3 base=uC*vC;float d=max(dot(n,uSun),0.);float sh=shadowF(vL);
+vec3 v=normalize(uCam-vW),h=normalize(uSun+v);float sp=pow(max(dot(n,h),0.),48.)*uSpec*sh;
+vec3 amb=mix(uGndC,uSkyC,n.y*.5+.5);float rim=pow(1.-max(dot(n,v),0.),3.);
+vec3 c=base*(amb+uSunC*d*sh)+sp*uSunC+base*uEm+rim*uSkyC*.18;
+float f=1.-exp(-pow(length(uCam-vW)*uFogD,2.));c=mix(c,uFog,f);o=vec4(tone(c),uA);}`;
+const VS_GROUND=`#version 300 es
+layout(location=0)in vec3 aP;uniform mat4 uVP,uL;out vec3 vW;out vec4 vL;
+void main(){vW=aP;vL=uL*vec4(aP,1.);gl_Position=uVP*vec4(aP,1.);}`;
+const FS_GROUND=`#version 300 es
+precision highp float;in vec3 vW;in vec4 vL;${LIGHT}${SHADOW}uniform sampler2D uT;uniform float uG;out vec4 o;${TONE}
+float h2(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h2(i),h2(i+vec2(1,0)),f.x),mix(h2(i+vec2(0,1)),h2(i+1.),f.x),f.y);}
+float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<5;i++){s+=a*vn(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return s;}
+void main(){vec2 w=vW.xz;vec2 uv=w/uG;float dist=length(uCam-vW);
+float g1=fbm(w*.11),g2=fbm(w*.9),g3=vn(w*7.),g4=vn(w*23.);float lod=clamp(dist/90.,0.,1.);
+g3=mix(g3,.5,lod);g4=mix(g4,.5,lod*1.5);
+vec3 grass=mix(vec3(.022,.07,.012),vec3(.08,.165,.03),g1);grass=mix(grass,vec3(.2,.22,.06),smoothstep(.55,.78,fbm(w*.045+3.))*.55);
+grass*=.72+.5*g2;grass*=.8+.35*g3;grass*=.88+.24*g4;
+vec3 nn=normalize(vec3((g4-.5)*.5+(g3-.5)*.3,1.,(vn(w*23.+11.)-.5)*.5));
+bool inA=uv.x>0.&&uv.x<1.&&uv.y>0.&&uv.y<1.;vec3 col=grass;float spec=.04;
+if(inA){vec4 t=texture(uT,uv);float a=smoothstep(.4,.6,t.a);
+ if(t.a>.003){vec3 tc=pow(t.rgb/max(t.a,.001),vec3(2.2));
+  float stripe=.9+.1*sign(sin((w.x+w.y*.0)*1.5708));
+  vec3 lawn=mix(grass*1.6,tc*.5,.78)*(.7+.45*g2)*(.8+.35*g3)*(.72+.5*g4)*stripe;col=mix(col,lawn,a*.92);
+  float edge=a*(1.-a)*4.;col=mix(col,tc*.35,edge*.55);spec=mix(spec,.1,a);}
+ float bd=min(min(w.x,uG-w.x),min(w.y,uG-w.y));col*=mix(.82,1.,smoothstep(0.,1.6,bd));}
+else{float bd=max(max(-w.x,w.x-uG),max(-w.y,w.y-uG));col=mix(col,vec3(.23,.19,.11)*(.7+.5*g3),(1.-smoothstep(0.,1.8,bd))*.85);}
+float d=max(dot(nn,uSun),0.);float sh=shadowF(vL);vec3 v=normalize(uCam-vW),hh=normalize(uSun+v);
+vec3 c=col*(mix(uGndC,uSkyC,.85)+uSunC*d*sh)+uSunC*pow(max(dot(nn,hh),0.),20.)*spec*sh;
+float f=1.-exp(-pow(dist*uFogD,2.));c=mix(c,uFog,f);o=vec4(tone(c),1.);}`;
+const VS_SKY=`#version 300 es
+out vec2 vU;void main(){vec2 p=vec2(float((gl_VertexID<<1)&2),float(gl_VertexID&2));vU=p*2.-1.;gl_Position=vec4(vU,.99999,1.);}`;
+const FS_SKY=`#version 300 es
+precision highp float;in vec2 vU;uniform mat4 uIVP;uniform vec3 uSun,uZen,uHor;out vec4 o;${TONE}
+void main(){vec4 a=uIVP*vec4(vU,-1.,1.),b=uIVP*vec4(vU,1.,1.);vec3 d=normalize(b.xyz/b.w-a.xyz/a.w);float y=max(d.y,0.);
+vec3 c=mix(uHor,uZen,pow(y,.45));float s=max(dot(d,uSun),0.);c+=vec3(1.,.85,.6)*(pow(s,900.)*30.+pow(s,10.)*.35);if(d.y<0.)c=uHor;o=vec4(tone(c),1.);}`;
+const VS_DEPTH=`#version 300 es
+layout(location=0)in vec3 aP;uniform mat4 uL,uM;void main(){gl_Position=uL*uM*vec4(aP,1.);}`;
+const FS_DEPTH=`#version 300 es
+precision mediump float;void main(){}`;
+function mkSh(t,s){const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(o)+'\n'+s);return o}
+function mkProg(vs,fs){const p=gl.createProgram();gl.attachShader(p,mkSh(gl.VERTEX_SHADER,vs));gl.attachShader(p,mkSh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));const u={},n=gl.getProgramParameter(p,gl.ACTIVE_UNIFORMS);for(let i=0;i<n;i++){const a=gl.getActiveUniform(p,i);u[a.name.replace('[0]','')]=gl.getUniformLocation(p,a.name)}return{p,u}}
+const P_LIT=mkProg(VS_LIT,FS_LIT),P_GND=mkProg(VS_GROUND,FS_GROUND),P_SKY=mkProg(VS_SKY,FS_SKY),P_DEP=mkProg(VS_DEPTH,FS_DEPTH);
+const skyVAO=gl.createVertexArray();
+
+/* ---------- матрицы (column-major) ---------- */
+const M4=()=>{const m=new Float32Array(16);m[0]=m[5]=m[10]=m[15]=1;return m};
+function mul(o,a,b){const t=TMP16;for(let c=0;c<4;c++)for(let r=0;r<4;r++){t[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3]}o.set(t);return o}
+const TMP16=new Float32Array(16);
+function persp(o,fy,asp,n,f){const t=1/Math.tan(fy/2);o.fill(0);o[0]=t/asp;o[5]=t;o[10]=(f+n)/(n-f);o[11]=-1;o[14]=2*f*n/(n-f);return o}
+function ortho(o,l,r,b,t,n,f){o.fill(0);o[0]=2/(r-l);o[5]=2/(t-b);o[10]=-2/(f-n);o[12]=-(r+l)/(r-l);o[13]=-(t+b)/(t-b);o[14]=-(f+n)/(f-n);o[15]=1;return o}
+function look(o,e,c,u){let zx=e[0]-c[0],zy=e[1]-c[1],zz=e[2]-c[2],l=Math.hypot(zx,zy,zz);zx/=l;zy/=l;zz/=l;let xx=u[1]*zz-u[2]*zy,xy=u[2]*zx-u[0]*zz,xz=u[0]*zy-u[1]*zx;l=Math.hypot(xx,xy,xz);xx/=l;xy/=l;xz/=l;const yx=zy*xz-zz*xy,yy=zz*xx-zx*xz,yz=zx*xy-zy*xx;
+ o[0]=xx;o[1]=yx;o[2]=zx;o[3]=0;o[4]=xy;o[5]=yy;o[6]=zy;o[7]=0;o[8]=xz;o[9]=yz;o[10]=zz;o[11]=0;o[12]=-(xx*e[0]+xy*e[1]+xz*e[2]);o[13]=-(yx*e[0]+yy*e[1]+yz*e[2]);o[14]=-(zx*e[0]+zy*e[1]+zz*e[2]);o[15]=1;return o}
+function inv(o,m){const a00=m[0],a01=m[1],a02=m[2],a03=m[3],a10=m[4],a11=m[5],a12=m[6],a13=m[7],a20=m[8],a21=m[9],a22=m[10],a23=m[11],a30=m[12],a31=m[13],a32=m[14],a33=m[15];
+ const b00=a00*a11-a01*a10,b01=a00*a12-a02*a10,b02=a00*a13-a03*a10,b03=a01*a12-a02*a11,b04=a01*a13-a03*a11,b05=a02*a13-a03*a12,b06=a20*a31-a21*a30,b07=a20*a32-a22*a30,b08=a20*a33-a23*a30,b09=a21*a32-a22*a31,b10=a21*a33-a23*a31,b11=a22*a33-a23*a32;
+ let d=b00*b11-b01*b10+b02*b09+b03*b08-b04*b07+b05*b06;if(!d)return o;d=1/d;
+ o[0]=(a11*b11-a12*b10+a13*b09)*d;o[1]=(a02*b10-a01*b11-a03*b09)*d;o[2]=(a31*b05-a32*b04+a33*b03)*d;o[3]=(a22*b04-a21*b05-a23*b03)*d;o[4]=(a12*b08-a10*b11-a13*b07)*d;o[5]=(a00*b11-a02*b08+a03*b07)*d;o[6]=(a32*b02-a30*b05-a33*b01)*d;o[7]=(a20*b05-a22*b02+a23*b01)*d;o[8]=(a10*b10-a11*b08+a13*b06)*d;o[9]=(a01*b08-a00*b10-a03*b06)*d;o[10]=(a30*b04-a31*b02+a33*b00)*d;o[11]=(a21*b02-a20*b04-a23*b00)*d;o[12]=(a11*b07-a10*b09-a12*b06)*d;o[13]=(a00*b09-a01*b07+a02*b06)*d;o[14]=(a31*b01-a30*b03-a32*b00)*d;o[15]=(a20*b03-a21*b01+a22*b00)*d;return o}
+// T·Ry·Rx·Rz·S  и нормальная матрица R·S⁻¹
+function xform(o,n,x,y,z,ry,rx,rz,sx,sy,sz){const cy=Math.cos(ry),sy_=Math.sin(ry),cx=Math.cos(rx),sx_=Math.sin(rx),cz=Math.cos(rz),sz_=Math.sin(rz);
+ const r00=cy*cz+sy_*sx_*sz_,r01=-cy*sz_+sy_*sx_*cz,r02=sy_*cx,r10=cx*sz_,r11=cx*cz,r12=-sx_,r20=-sy_*cz+cy*sx_*sz_,r21=sy_*sz_+cy*sx_*cz,r22=cy*cx;
+ o[0]=r00*sx;o[1]=r10*sx;o[2]=r20*sx;o[3]=0;o[4]=r01*sy;o[5]=r11*sy;o[6]=r21*sy;o[7]=0;o[8]=r02*sz;o[9]=r12*sz;o[10]=r22*sz;o[11]=0;o[12]=x;o[13]=y;o[14]=z;o[15]=1;
+ if(n){n.fill(0);n[0]=r00/sx;n[1]=r10/sx;n[2]=r20/sx;n[4]=r01/sy;n[5]=r11/sy;n[6]=r21/sy;n[8]=r02/sz;n[9]=r12/sz;n[10]=r22/sz;n[15]=1}return o}
+function nm3(o,m){o[0]=m[0];o[1]=m[1];o[2]=m[2];o[3]=m[4];o[4]=m[5];o[5]=m[6];o[6]=m[8];o[7]=m[9];o[8]=m[10];return o}
+
+/* ---------- геометрия ---------- */
+function geo(){return{p:[],n:[],c:[],i:[]}}
+function gSphere(la,lo){const g=geo();for(let i=0;i<=la;i++){const t=i/la*Math.PI,st=Math.sin(t),ct=Math.cos(t);for(let j=0;j<=lo;j++){const f=j/lo*Math.PI*2,x=st*Math.cos(f),z=st*Math.sin(f);g.p.push(x,ct,z);g.n.push(x,ct,z);g.c.push(1,1,1)}}
+ for(let i=0;i<la;i++)for(let j=0;j<lo;j++){const a=i*(lo+1)+j,b=a+lo+1;g.i.push(a,a+1,b,b,a+1,b+1)}return g}
+function gBox(){const g=geo(),F=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];for(const n of F){const u=n[1]?[1,0,0]:[0,1,0],v=[n[1]*u[2]-n[2]*u[1],n[2]*u[0]-n[0]*u[2],n[0]*u[1]-n[1]*u[0]],b=g.p.length/3;
+ for(const[s,t]of[[-1,-1],[1,-1],[1,1],[-1,1]]){g.p.push(n[0]+u[0]*s+v[0]*t,n[1]+u[1]*s+v[1]*t,n[2]+u[2]*s+v[2]*t);g.n.push(...n);g.c.push(1,1,1)}g.i.push(b,b+1,b+2,b,b+2,b+3)}return g}
+function gCyl(seg,rt,rb){const g=geo(),sl=(rb-rt)/2;for(let j=0;j<=seg;j++){const f=j/seg*Math.PI*2,c=Math.cos(f),s=Math.sin(f),l=Math.hypot(1,sl);g.p.push(c*rt,1,s*rt,c*rb,-1,s*rb);g.n.push(c/l,sl/l,s/l,c/l,sl/l,s/l);g.c.push(1,1,1,1,1,1)}
+ for(let j=0;j<seg;j++){const a=j*2;g.i.push(a,a+1,a+2,a+2,a+1,a+3)}
+ for(const[y,r,ny]of[[1,rt,1],[-1,rb,-1]]){if(r<=0)continue;const b=g.p.length/3;g.p.push(0,y,0);g.n.push(0,ny,0);g.c.push(1,1,1);for(let j=0;j<=seg;j++){const f=j/seg*Math.PI*2;g.p.push(Math.cos(f)*r,y,Math.sin(f)*r);g.n.push(0,ny,0);g.c.push(1,1,1)}for(let j=0;j<seg;j++)g.i.push(b,b+1+j,b+2+j)}return g}
+function gRock(){const g=gSphere(7,10);for(let k=0;k<g.p.length;k+=3){const f=.75+Math.random()*.4;g.p[k]*=f;g.p[k+1]*=f;g.p[k+2]*=f}recalcN(g);return g}
+function recalcN(g){const n=new Array(g.p.length).fill(0);for(let k=0;k<g.i.length;k+=3){const a=g.i[k]*3,b=g.i[k+1]*3,c=g.i[k+2]*3;const ux=g.p[b]-g.p[a],uy=g.p[b+1]-g.p[a+1],uz=g.p[b+2]-g.p[a+2],vx=g.p[c]-g.p[a],vy=g.p[c+1]-g.p[a+1],vz=g.p[c+2]-g.p[a+2];const nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;for(const q of[a,b,c]){n[q]-=nx;n[q+1]-=ny;n[q+2]-=nz}}
+ for(let k=0;k<n.length;k+=3){const l=Math.hypot(n[k],n[k+1],n[k+2])||1;n[k]/=l;n[k+1]/=l;n[k+2]/=l}g.n=n}
+// запечь фигуру в общий буфер (статичные объекты одним вызовом отрисовки)
+function bake(dst,g,M,N,col){const b=dst.p.length/3;for(let k=0;k<g.p.length;k+=3){const x=g.p[k],y=g.p[k+1],z=g.p[k+2];dst.p.push(M[0]*x+M[4]*y+M[8]*z+M[12],M[1]*x+M[5]*y+M[9]*z+M[13],M[2]*x+M[6]*y+M[10]*z+M[14]);
+ const a=g.n[k],bb=g.n[k+1],c=g.n[k+2];let nx=N[0]*a+N[4]*bb+N[8]*c,ny=N[1]*a+N[5]*bb+N[9]*c,nz=N[2]*a+N[6]*bb+N[10]*c;const l=Math.hypot(nx,ny,nz)||1;dst.n.push(nx/l,ny/l,nz/l);dst.c.push(col[0],col[1],col[2])}for(const i of g.i)dst.i.push(i+b)}
+function mkMesh(g,dyn){const vao=gl.createVertexArray();gl.bindVertexArray(vao);const bufs=[];
+ for(const[i,arr]of[[0,g.p],[1,g.n],[2,g.c]]){const bf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,bf);gl.bufferData(gl.ARRAY_BUFFER,arr instanceof Float32Array?arr:new Float32Array(arr),dyn?gl.DYNAMIC_DRAW:gl.STATIC_DRAW);gl.enableVertexAttribArray(i);gl.vertexAttribPointer(i,3,gl.FLOAT,false,0,0);bufs.push(bf)}
+ let ib=null;if(g.i&&g.i.length){ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint32Array(g.i),gl.STATIC_DRAW)}
+ gl.bindVertexArray(null);return{vao,bufs,ib,n:ib?g.i.length:g.p.length/3}}
+function updMesh(m,p,n,c,count){gl.bindBuffer(gl.ARRAY_BUFFER,m.bufs[0]);gl.bufferData(gl.ARRAY_BUFFER,p.subarray(0,count*3),gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ARRAY_BUFFER,m.bufs[1]);gl.bufferData(gl.ARRAY_BUFFER,n.subarray(0,count*3),gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ARRAY_BUFFER,m.bufs[2]);gl.bufferData(gl.ARRAY_BUFFER,c.subarray(0,count*3),gl.DYNAMIC_DRAW);m.n=count}
+function drawMesh(m){gl.bindVertexArray(m.vao);if(m.ib)gl.drawElements(gl.TRIANGLES,m.n,gl.UNSIGNED_INT,0);else gl.drawArrays(gl.TRIANGLES,0,m.n)}
+
+const G_SPH=gSphere(14,22),G_BOX=gBox(),G_PEB=gSphere(3,5);
+const MS_SPH=mkMesh(G_SPH),MS_BOX=mkMesh(G_BOX);
+
+/* ---------- земля ---------- */
+const GROUND=(()=>{const g=geo(),E=260,S=64,o=G/2;for(let i=0;i<=S;i++)for(let j=0;j<=S;j++){g.p.push(o-E+2*E*j/S,0,o-E+2*E*i/S);g.n.push(0,1,0);g.c.push(1,1,1)}for(let i=0;i<S;i++)for(let j=0;j<S;j++){const a=i*(S+1)+j,b=a+S+1;g.i.push(a,b,a+1,a+1,b,b+1)}return mkMesh(g)})();
+const terrData=new Uint8Array(GG*4);
+const terrTex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,terrTex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,G,G,0,gl.RGBA,gl.UNSIGNED_BYTE,terrData);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+let terrDirty=true;
+
+/* ---------- декор: забор, деревья, камни, цветы (одним мешем) ---------- */
+const STATIC=(()=>{const d=geo(),M=M4(),N=M4();const wood=lin('#7a5636'),wood2=lin('#5e4128');
+ const G_CYL=gCyl(8,1,1),G_CONE=gCyl(9,0,1),G_LS=gSphere(7,10);
+ // забор
+ for(let s=0;s<4;s++){for(let k=0;k<=G;k+=2.5){const t=Math.min(k,G);let x,z;if(s===0){x=t;z=-.35}else if(s===1){x=t;z=G+.35}else if(s===2){x=-.35;z=t}else{x=G+.35;z=t}
+  xform(M,N,x,.55,z,Math.random()*.3,0,0,.09,.55,.09);bake(d,G_BOX,M,N,wood2)}
+  for(const y of[.35,.8]){let x,z,ry=0;if(s<2){x=G/2;z=s?G+.35:-.35}else{x=s===2?-.35:G+.35;z=G/2;ry=Math.PI/2}xform(M,N,x,y,z,ry,0,0,G/2+.1,.05,.035);bake(d,G_BOX,M,N,wood)}}
+ const free=(x,z)=>x<-4||x>G+4||z<-4||z>G+4;
+ // деревья
+ for(let k=0;k<260;k++){let x,z;do{x=rnd(-70,G+70);z=rnd(-70,G+70)}while(!free(x,z));const s=rnd(.8,1.6);
+  const pine=Math.random()<.45;xform(M,N,x,1.2*s,z,0,0,0,.18*s,1.2*s,.18*s);bake(d,G_CYL,M,N,lin(pine?'#4a3424':'#5c4330'));
+  if(pine){const gc=lin(['#1f4d2b','#24572f','#1b4426'][k%3]);for(let l=0;l<3;l++){xform(M,N,x,(2.2+l*1.05)*s,z,rnd(0,6),0,0,(1.5-l*.38)*s,.85*s,(1.5-l*.38)*s);bake(d,G_CONE,M,N,gc)}}
+  else{const gc=lin(['#3d7a2f','#4a8a35','#356b29','#5b8f2e'][k%4]);for(let l=0;l<4;l++){xform(M,N,x+rnd(-.7,.7)*s,(2.9+rnd(-.3,.6))*s,z+rnd(-.7,.7)*s,rnd(0,6),0,0,rnd(1,1.5)*s,rnd(.85,1.2)*s,rnd(1,1.5)*s);bake(d,G_LS,M,N,gc)}}}
+ // кусты
+ for(let k=0;k<160;k++){let x,z;do{x=rnd(-40,G+40);z=rnd(-40,G+40)}while(!free(x,z));const s=rnd(.4,.9),gc=lin(['#3f7d33','#4f8f3a','#2f6a2b'][k%3]);
+  for(let l=0;l<3;l++){xform(M,N,x+rnd(-.5,.5)*s,.35*s,z+rnd(-.5,.5)*s,0,0,0,rnd(.6,.9)*s,rnd(.45,.7)*s,rnd(.6,.9)*s);bake(d,G_LS,M,N,gc)}
+  if(Math.random()<.4)for(let l=0;l<5;l++){xform(M,N,x+rnd(-.7,.7)*s,.55*s+rnd(0,.2),z+rnd(-.7,.7)*s,0,0,0,.07,.07,.07);bake(d,G_LS,M,N,lin(['#ff6fb5','#ffd34d','#ffffff','#c084fc'][l%4]))}}
+ // камни
+ for(let k=0;k<90;k++){let x,z;do{x=rnd(-50,G+50);z=rnd(-50,G+50)}while(!free(x,z));const s=rnd(.3,1.3),g=gRock();const c=lin(['#8a8a86','#9b968c','#77756f'][k%3]);
+  xform(M,N,x,s*.25,z,rnd(0,6),rnd(-.2,.2),0,s*rnd(.9,1.4),s*rnd(.5,.8),s);bake(d,g,M,N,c)}
+ // цветы в лугах
+ for(let k=0;k<700;k++){let x,z;do{x=rnd(-35,G+35);z=rnd(-35,G+35)}while(!free(x,z));const c=lin(['#ff6fb5','#ffd34d','#ffffff','#c084fc','#ff8a3d','#5ab8ff'][k%6]);
+  xform(M,N,x,.2,z,0,0,0,.012,.2,.012);bake(d,G_BOX,M,N,lin('#2f6a2b'));xform(M,N,x,.42,z,0,0,0,.07,.05,.07);bake(d,G_LS,M,N,c)}
+ return mkMesh(d)})();
+
+/* ---------- тени ---------- */
+let SH_SIZE=2048;const shTex=gl.createTexture(),shFB=gl.createFramebuffer();
+function initShadow(sz){SH_SIZE=sz;gl.bindTexture(gl.TEXTURE_2D,shTex);gl.texImage2D(gl.TEXTURE_2D,0,gl.DEPTH_COMPONENT24,sz,sz,0,gl.DEPTH_COMPONENT,gl.UNSIGNED_INT,null);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_COMPARE_MODE,gl.COMPARE_REF_TO_TEXTURE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_COMPARE_FUNC,gl.LEQUAL);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+ gl.bindFramebuffer(gl.FRAMEBUFFER,shFB);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.TEXTURE_2D,shTex,0);gl.bindFramebuffer(gl.FRAMEBUFFER,null)}
+initShadow(2048);
+
+/* ---------- динамика: хвосты и частицы ---------- */
+const DYN_MAX=60000;const dP=new Float32Array(DYN_MAX*3),dN=new Float32Array(DYN_MAX*3),dC=new Float32Array(DYN_MAX*3);
+const TRAILS=mkMesh({p:new Float32Array(3),n:new Float32Array(3),c:new Float32Array(3),i:null},true);
+const PARTS=mkMesh({p:new Float32Array(3),n:new Float32Array(3),c:new Float32Array(3),i:null},true);
+
+/* ===================== свет и камера ===================== */
+const SUN=(()=>{const v=[-.48,.74,.47],l=Math.hypot(...v);return v.map(x=>x/l)})();
+const SUNC=[2.5,2.22,1.82],SKYC=[.33,.45,.66],GNDC=[.16,.14,.08],FOG=[.56,.68,.82],ZEN=[.16,.36,.72],HOR=[.66,.78,.9];
+const VP=M4(),V=M4(),PR=M4(),IVP=M4(),LV=M4(),LP=M4(),LVP=M4(),TM=M4(),TN=M4(),NM3=new Float32Array(9),ID=M4();
+const cam={x:G/2,z:G/2,tx:G/2,tz:G/2,dist:21,pos:[0,0,0],zoom:1,shake:0};
+let QUAL=+SAVE.q;if(!(QUAL>=0&&QUAL<=2))QUAL=1;let DPR=1;
+function resize(){DPR=QUAL===2?Math.min(devicePixelRatio||1,2):QUAL===1?Math.min(devicePixelRatio||1,1.25):Math.min(devicePixelRatio||1,1)*.8;cv.width=Math.round(innerWidth*DPR);cv.height=Math.round(innerHeight*DPR)}
+addEventListener('resize',resize);resize();
+
+/* ===================== игровой мир ===================== */
+const owner=new Uint8Array(GG),trailOw=new Uint8Array(GG);
+let players=[],cnt=new Int32Array(32),me=null,mode='menu',T=0,playT=0;
+const colRGB=COLS.map(hex);
+function setTex(c,id){const k=c*4;if(!id){terrData[k]=terrData[k+1]=terrData[k+2]=terrData[k+3]=0}else{const p=PL(id),col=p?p.rgb:[1,1,1];terrData[k]=col[0]*255;terrData[k+1]=col[1]*255;terrData[k+2]=col[2]*255;terrData[k+3]=255}terrDirty=true}
+function PL(id){return players.find(p=>p.id===id)}
+function setOwner(c,id){const pv=owner[c];if(pv===id)return;if(pv)cnt[pv]--;owner[c]=id;if(id)cnt[id]++;setTex(c,id)}
+function cellAt(x,z){return clamp(Math.floor(z),0,G-1)*G+clamp(Math.floor(x),0,G-1)}
+function freeId(){for(let i=1;i<31;i++)if(!players.some(p=>p.id===i))return i;return 31}
+function findSpot(){let best=null,bs=-1;for(let k=0;k<80;k++){const x=rnd(8,G-8),z=rnd(8,G-8);let s=0;for(let dz=-5;dz<=5;dz++)for(let dx=-5;dx<=5;dx++){const c=cellAt(x+dx,z+dz);if(!owner[c]&&!trailOw[c])s++}
+ for(const p of players)if(p.alive&&Math.hypot(p.x-x,p.z-z)<12)s-=40;if(s>bs){bs=s;best=[x,z]}if(s>=121)break}return best}
+function spawn(p){const[x,z]=findSpot();p.x=x;p.z=z;p.alive=true;p.trail=[];p.rib=[];p.cell=cellAt(x,z);p.ang=Math.random()*Math.PI*2;p.tang=p.ang;p.kills=0;p.maxPct=0;p.born=T;p.mode='out';p.plan=null;p.path=null;p.pathT=0;p.leg=0;p.lean=0;p.dust=0;p.sp=p.human?6.1:rnd(5.5,6.05);
+ for(let dz=-3;dz<=3;dz++)for(let dx=-3;dx<=3;dx++){if(dx*dx+dz*dz>7.5)continue;const cx=Math.floor(x)+dx,cz=Math.floor(z)+dz;if(cx<0||cz<0||cx>=G||cz>=G)continue;setOwner(cz*G+cx,p.id)}checkZero(p)}
+function mkPlayer(human,name,colI,fur){const id=freeId();const p={id,human,name,colI,rgb:colRGB[colI],fur:fur.map(lin),furHex:fur,alive:false,trail:[],rib:[],kills:0,resp:0,aggr:rnd(.6,1.35),lb:null};players.push(p);return p}
+function botName(){const used=new Set(players.map(p=>p.name));const f=NAMES.filter(n=>!used.has(n));return f.length?f[Math.floor(Math.random()*f.length)]:'Котик'+Math.floor(rnd(1,99))}
+function botColor(){const used=new Set(players.map(p=>p.colI));const f=COLS.map((c,i)=>i).filter(i=>!used.has(i));return f.length?f[Math.floor(Math.random()*f.length)]:Math.floor(Math.random()*COLS.length)}
+function resetWorld(nBots,human){owner.fill(0);trailOw.fill(0);terrData.fill(0);terrDirty=true;cnt.fill(0);for(const p of players)if(p.lb)p.lb.remove();players=[];parts.length=0;me=null;
+ if(human){me=mkPlayer(true,human.nick,human.col,human.fur);spawn(me)}
+ for(let i=0;i<nBots;i++){const b=mkPlayer(false,botName(),botColor(),FURS[Math.floor(Math.random()*FURS.length)]);spawn(b);if(!human){b.trail=[];}}}
+function checkZero(by){for(const q of players)if(q.alive&&cnt[q.id]<=0&&T-(q.born||0)>.1)kill(q,by,'land')}
+
+/* ---------- движение и захват ---------- */
+function enterCell(p,c){if(!p.alive)return;
+ for(const q of players){if(q===p||!q.alive||q.cell!==c)continue;// лоб в лоб
+  if(owner[c]===q.id){kill(p,q,'head');return}if(owner[c]===p.id){kill(q,p,'head');continue}if(cnt[p.id]<cnt[q.id]){kill(p,q,'head');return}kill(q,p,'head')}
+ const t=trailOw[c];if(t&&t!==p.id){const q=PL(t);if(q&&q.alive)kill(q,p,'trail')}
+ if(t===p.id){kill(p,null,'self');return}
+ if(owner[c]===p.id){if(p.trail.length)capture(p)}else{trailOw[c]=p.id;p.trail.push(c);if(p.trail.length===1)p.rib=[[p.px,p.pz]]}}
+const vis=new Uint8Array((G+2)*(G+2)),Q=new Int32Array((G+2)*(G+2));
+function capture(p){const id=p.id,before=cnt[id];let sx=0,sz=0,sn=0;
+ for(const c of p.trail){if(trailOw[c]===id)trailOw[c]=0;setOwner(c,id)}p.trail=[];p.rib=[];
+ let x0=G,x1=-1,z0=G,z1=-1;for(let c=0;c<GG;c++)if(owner[c]===id){const x=c%G,z=(c/G)|0;if(x<x0)x0=x;if(x>x1)x1=x;if(z<z0)z0=z;if(z>z1)z1=z}
+ x0=Math.max(-1,x0-1);z0=Math.max(-1,z0-1);x1=Math.min(G,x1+1);z1=Math.min(G,z1+1);const W=x1-x0+1,H=z1-z0+1;vis.fill(0,0,W*H);
+ let qh=0,qt=0;const pass=(x,z)=>x<0||z<0||x>=G||z>=G||owner[z*G+x]!==id;
+ const push=(x,z)=>{const k=(z-z0)*W+(x-x0);if(vis[k]||!pass(x,z))return;vis[k]=1;Q[qt++]=k};
+ for(let x=x0;x<=x1;x++){push(x,z0);push(x,z1)}for(let z=z0;z<=z1;z++){push(x0,z);push(x1,z)}
+ while(qh<qt){const k=Q[qh++],x=k%W+x0,z=((k/W)|0)+z0;if(x>x0)push(x-1,z);if(x<x1)push(x+1,z);if(z>z0)push(x,z-1);if(z<z1)push(x,z+1)}
+ const gained=[];for(let z=Math.max(0,z0);z<=Math.min(G-1,z1);z++)for(let x=Math.max(0,x0);x<=Math.min(G-1,x1);x++){const k=(z-z0)*W+(x-x0),c=z*G+x;if(!vis[k]&&owner[c]!==id){setOwner(c,id);gained.push(c)}}
+ const add=cnt[id]-before;for(let k=0;k<Math.min(36,gained.length);k++){const c=gained[Math.floor(Math.random()*gained.length)];spark(c%G+.5,(c/G|0)+.5,p.rgb,1)}
+ if(p.human&&add>0){sfx('cap',Math.min(1,add/300));popText('+'+(add/GG*100).toFixed(add/GG*100<1?2:1)+'%',p)}
+ checkZero(p)}
+function kill(q,by,why){if(!q.alive)return;q.alive=false;
+ for(const c of q.trail)if(trailOw[c]===q.id)trailOw[c]=0;q.trail=[];q.rib=[];
+ for(let c=0;c<GG;c++)if(owner[c]===q.id)setOwner(c,0);
+ for(let k=0;k<46;k++)spark(q.x,q.z,k%2?q.rgb:q.fur[0].map(v=>Math.pow(v,1/2.2)),2);
+ if(by&&by!==q){by.kills++;if(by.human){sfx('kill');SAVE.kills++;saveStats()}}
+ if(q.human||(by&&by.human))feed(by&&by!==q?`<b style="color:${COLS[by.colI]}">${esc(by.name)}</b> поймал <b style="color:${COLS[q.colI]}">${esc(q.name)}</b>`:`<b style="color:${COLS[q.colI]}">${esc(q.name)}</b> ${why==='self'?'наступил на свой хвост':'выбыл'}`);
+ if(q.human){sfx('die');gameOver(why,by)}else q.resp=T+rnd(2,4.5);
+ if(me&&me.alive&&Math.hypot(q.x-me.x,q.z-me.z)<14)cam.shake=.35}
+function moveP(p,dt){const turn=p.human?7.5:5.2,d=angDiff(p.ang,p.tang),st=clamp(d,-turn*dt,turn*dt);p.ang+=st;p.lean+=(st/dt*.06-p.lean)*Math.min(1,dt*8);
+ p.px=p.x;p.pz=p.z;let nx=p.x+Math.cos(p.ang)*p.sp*dt,nz=p.z+Math.sin(p.ang)*p.sp*dt;nx=clamp(nx,.25,G-.25);nz=clamp(nz,.25,G-.25);
+ // у забора — скользим вдоль
+ p.x=nx;p.z=nz;p.leg+=dt*p.sp*2.6;
+ let c=cellAt(p.x,p.z);if(c!==p.cell){const ox=p.cell%G,oz=(p.cell/G)|0,cx=c%G,cz=(c/G)|0;
+  if(ox!==cx&&oz!==cz){const mid=oz*G+cx;p.cell=mid;enterCell(p,mid);if(!p.alive)return}p.cell=c;enterCell(p,c)}
+ if(p.trail.length){const r=p.rib,l=r[r.length-1];if(!l||Math.hypot(l[0]-p.x,l[1]-p.z)>.32)r.push([p.x,p.z])}}
+
+/* ---------- боты ---------- */
+function bfsHome(p){// кратчайший путь до своей земли в обход своего хвоста
+ const id=p.id,start=p.cell;vis.fill(0,0,GG);const prev=PREV;let qh=0,qt=0;Q[qt++]=start;vis[start]=1;prev[start]=-1;let goal=-1;
+ while(qh<qt){const c=Q[qh++];if(owner[c]===id&&c!==start){goal=c;break}const x=c%G,z=(c/G)|0;
+  const nb=[x>0?c-1:-1,x<G-1?c+1:-1,z>0?c-G:-1,z<G-1?c+G:-1];for(const n of nb){if(n<0||vis[n]||trailOw[n]===id)continue;vis[n]=1;prev[n]=c;Q[qt++]=n}}
+ if(goal<0)return null;const path=[];for(let c=goal;c!==-1&&c!==start;c=prev[c])path.push(c);return path.reverse()}
+const PREV=new Int32Array(GG);
+function edgeOut(p,a){// сколько клеток до края своей земли в направлении a
+ let x=p.x,z=p.z;for(let i=0;i<40;i++){x+=Math.cos(a);z+=Math.sin(a);if(x<1||z<1||x>G-1||z>G-1)return i;if(owner[cellAt(x,z)]!==p.id)return i}return 40}
+function makePlan(p){const cx=G/2,cz=G/2;let best=null,bs=-1e9;
+ for(let k=0;k<8;k++){const a=Math.random()*Math.PI*2,e=edgeOut(p,a),L1=rnd(3,8)*p.aggr,L2=rnd(3,9)*p.aggr,s=Math.random()<.5?1:-1;
+  const x1=p.x+Math.cos(a)*(e+L1),z1=p.z+Math.sin(a)*(e+L1),x2=x1+Math.cos(a+s*Math.PI/2)*L2,z2=z1+Math.sin(a+s*Math.PI/2)*L2,x3=x2-Math.cos(a)*(L1+1.5),z3=z2-Math.sin(a)*(L1+1.5);
+  let sc=-e*.6;for(const[x,z]of[[x1,z1],[x2,z2]]){if(x<2||z<2||x>G-2||z>G-2)sc-=50;for(const q of players)if(q!==p&&q.alive){const d=Math.hypot(q.x-x,q.z-z);if(d<10)sc-=(10-d)*2}}
+  // предпочитаем чужую/пустую землю
+  const c2=cellAt(x2,z2);if(owner[c2]&&owner[c2]!==p.id)sc+=6*p.aggr;sc-=Math.hypot(x2-cx,z2-cz)*.05;sc+=Math.random()*4;
+  if(sc>bs){bs=sc;best=[[x1,z1],[x2,z2],[x3,z3]].map(([x,z])=>[clamp(x,1.5,G-1.5),clamp(z,1.5,G-1.5)])}}
+ p.plan=best;p.pi=0;p.mode='out'}
+function danger(p){let m=1e9;const pts=[];const tr=p.trail;for(let i=0;i<tr.length;i+=2)pts.push(tr[i]);pts.push(p.cell);
+ for(const q of players){if(q===p||!q.alive)continue;if(Math.abs(q.x-p.x)>40||Math.abs(q.z-p.z)>40)continue;for(const c of pts){const d=Math.hypot(q.x-(c%G+.5),q.z-((c/G|0)+.5));if(d<m)m=d}}return m}
+function botThink(p,dt){p.think=(p.think||0)-dt;
+ if(p.think<=0){p.think=.12;
+  if(p.trail.length){const home=p.path&&p.path.length?p.path.length:12;const dg=danger(p);
+   if(p.mode!=='home'&&(dg<home*.9+3||p.trail.length>55*p.aggr))p.mode='home';
+   if(p.mode==='home'||T>p.pathT){p.path=bfsHome(p);p.pathT=T+.35}
+   // охота: рядом чужой хвост
+   if(p.mode!=='home'&&p.trail.length<20){for(const q of players){if(q===p||!q.alive||!q.trail.length)continue;const c=q.trail[q.trail.length>>1],tx=c%G+.5,tz=(c/G|0)+.5,d=Math.hypot(tx-p.x,tz-p.z);if(d<7*p.aggr&&d<Math.hypot(q.x-tx,q.z-tz)+2){p.hunt=[tx,tz];p.mode='hunt';break}}}
+  }else{if(p.mode!=='out'||!p.plan)makePlan(p)}}
+ let tx,tz;
+ if(p.mode==='hunt'&&p.hunt){[tx,tz]=p.hunt;if(Math.hypot(tx-p.x,tz-p.z)<.7||!trailOw[cellAt(tx,tz)]){p.mode=p.trail.length?'home':'out';p.hunt=null}}
+ else if(p.mode==='home'||(p.mode==='out'&&p.plan&&p.pi>=p.plan.length)){p.mode='home';if(!p.path||!p.path.length){p.path=bfsHome(p);p.pathT=T+.35}
+  if(p.path&&p.path.length){while(p.path.length&&p.path[0]===p.cell)p.path.shift();const c=p.path[Math.min(2,p.path.length-1)];if(c!==undefined){tx=c%G+.5;tz=(c/G|0)+.5}}
+  if(!p.trail.length){p.mode='out';p.plan=null}}
+ else if(p.plan){const w=p.plan[p.pi];tx=w[0];tz=w[1];if(Math.hypot(tx-p.x,tz-p.z)<.9)p.pi++}
+ if(tx===undefined){tx=p.x+Math.cos(p.ang);tz=p.z+Math.sin(p.ang)}
+ let a=Math.atan2(tz-p.z,tx-p.x);
+ // не наступать на свой хвост и не врезаться в забор
+ const ok=b=>{for(const r of[.7,1.4]){const x=p.x+Math.cos(b)*r,z=p.z+Math.sin(b)*r;if(x<.6||z<.6||x>G-.6||z>G-.6)return false;const c=cellAt(x,z);if(c!==p.cell&&trailOw[c]===p.id)return false}return true};
+ if(!ok(a)){for(const o of[.5,-.5,1,-1,1.6,-1.6,2.3,-2.3,3]){if(ok(a+o)){a+=o;break}}}
+ p.tang=a}
+
+/* ---------- частицы ---------- */
+const parts=[];
+function spark(x,z,rgb,kind){if(parts.length>700)return;parts.push({x,y:kind===3?.15:.3,z,vx:rnd(-1,1)*(kind===2?4:1.2),vy:kind===3?rnd(.6,1.4):rnd(2,kind===2?7:4.5),vz:rnd(-1,1)*(kind===2?4:1.2),r:rnd(0,6),vr:rnd(-8,8),s:kind===3?rnd(.025,.05):rnd(.05,.1),c:kind===3?rgb:rgb.map(v=>Math.pow(v,2.2)),life:kind===3?rnd(.35,.6):rnd(.9,1.6),t:0,k:kind})}
+function stepParts(dt){for(const q of parts){q.t+=dt;q.x+=q.vx*dt;q.z+=q.vz*dt;q.y+=q.vy*dt;q.vy-=(q.k===3?5:12)*dt;q.r+=q.vr*dt;if(q.y<.03){q.y=.03;q.vy*=-.3;q.vx*=.6;q.vz*=.6}if(q.k===3){q.s+=dt*.04}}
+ for(let i=parts.length-1;i>=0;i--)if(parts[i].t>parts[i].life)parts.splice(i,1)}
+
+/* ===================== звук ===================== */
+let AC=null;function ac(){if(!AC)try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}if(AC&&AC.state==='suspended')AC.resume();return AC}
+function tone(f,d,t0,type,vol,f2){const a=ac();if(!a)return;const t=a.currentTime+(t0||0),o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol||.08,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05)}
+function sfx(k,v){if(k==='cap'){const n=[523,659,784,1047];n.slice(0,2+Math.round((v||0)*2)).forEach((f,i)=>tone(f,.18,i*.06,'triangle',.07))}
+ if(k==='kill'){tone(180,.25,0,'square',.05,60);tone(1320,.25,.05,'triangle',.07);tone(1760,.3,.12,'triangle',.06)}
+ if(k==='die'){tone(440,.5,0,'sawtooth',.05,90);tone(220,.6,.1,'triangle',.06,70)}
+ if(k==='win'){[523,659,784,1047,1319].forEach((f,i)=>tone(f,.35,i*.1,'triangle',.08))}
+ if(k==='click')tone(880,.08,0,'triangle',.05)}
+
+/* ===================== ввод ===================== */
+const mouse={x:innerWidth/2,y:innerHeight/2,use:false};const keys={};let touch=null;
+addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;mouse.use=true});
+addEventListener('keydown',e=>{keys[e.code]=true;if(/Arrow|Key[WASD]/.test(e.code))mouse.use=false;if(e.code==='Escape'){if(mode==='play')pause(true);else if(mode==='pause')pause(false)}if(e.code==='Space'&&mode==='over')start()});
+addEventListener('keyup',e=>{keys[e.code]=false});
+cv.addEventListener('touchstart',e=>{const t=e.touches[0];touch={x:t.clientX,y:t.clientY,a:null};e.preventDefault()},{passive:false});
+cv.addEventListener('touchmove',e=>{const t=e.touches[0];if(touch){const dx=t.clientX-touch.x,dy=t.clientY-touch.y;if(Math.hypot(dx,dy)>12){touch.a=Math.atan2(dy,dx);if(Math.hypot(dx,dy)>60){touch.x+=dx*.3;touch.y+=dy*.3}}}e.preventDefault()},{passive:false});
+addEventListener('blur',()=>{if(mode==='play')pause(true)});
+function groundPoint(sx,sy){const nx=sx/innerWidth*2-1,ny=1-sy/innerHeight*2;const a=tr4(IVP,nx,ny,-1),b=tr4(IVP,nx,ny,1);const t=a[1]/(a[1]-b[1]);return[a[0]+(b[0]-a[0])*t,a[2]+(b[2]-a[2])*t]}
+function tr4(m,x,y,z){const w=m[3]*x+m[7]*y+m[11]*z+m[15];return[(m[0]*x+m[4]*y+m[8]*z+m[12])/w,(m[1]*x+m[5]*y+m[9]*z+m[13])/w,(m[2]*x+m[6]*y+m[10]*z+m[14])/w]}
+function proj(x,y,z){const w=VP[3]*x+VP[7]*y+VP[11]*z+VP[15];if(w<=0)return null;return[((VP[0]*x+VP[4]*y+VP[8]*z+VP[12])/w*.5+.5)*innerWidth,(1-((VP[1]*x+VP[5]*y+VP[9]*z+VP[13])/w*.5+.5))*innerHeight]}
+function humanInput(){const p=me;let kx=0,kz=0;if(keys.KeyW||keys.ArrowUp)kz--;if(keys.KeyS||keys.ArrowDown)kz++;if(keys.KeyA||keys.ArrowLeft)kx--;if(keys.KeyD||keys.ArrowRight)kx++;
+ if(kx||kz){p.tang=Math.atan2(kz,kx);return}if(touch&&touch.a!==null){p.tang=touch.a;return}
+ if(mouse.use){const[gx,gz]=groundPoint(mouse.x,mouse.y);if(Math.hypot(gx-p.x,gz-p.z)>.4)p.tang=Math.atan2(gz-p.z,gx-p.x)}}
+
+/* ===================== отрисовка ===================== */
+function setLight(u,shadow){gl.uniform3fv(u.uSun,SUN);gl.uniform3fv(u.uSunC,SUNC);gl.uniform3fv(u.uSkyC,SKYC);gl.uniform3fv(u.uGndC,GNDC);gl.uniform3fv(u.uFog,FOG);gl.uniform3fv(u.uCam,cam.pos);gl.uniform1f(u.uFogD,mode==='menu'?.0042:.0036);
+ gl.uniformMatrix4fv(u.uL,false,LVP);gl.uniform1f(u.uShOn,shadow?1:0);gl.uniform1f(u.uShT,1/SH_SIZE);gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,shTex);gl.uniform1i(u.uSh,1)}
+// котозаяц из примитивов: [x,y,z, sx,sy,sz, rx,rz, цвет(0 мех,1 живот,2 ушки,3 глаза,4 блик,5 нос)]
+const BODY=[[0,.55,-.02,.42,.38,.56,0,0,0],[0,.46,.1,.31,.27,.4,0,0,1],[0,.98,.44,.36,.33,.34,0,0,0],[0,.9,.7,.17,.12,.1,0,0,1],[0,.96,.79,.055,.045,.04,0,0,5],
+ [.15,1.05,.69,.07,.085,.05,0,0,3],[-.15,1.05,.69,.07,.085,.05,0,0,3],[.13,1.09,.735,.022,.022,.02,0,0,4],[-.17,1.09,.735,.022,.022,.02,0,0,4],
+ [.34,.9,.38,.09,.33,.17,0,.28,0],[-.34,.9,.38,.09,.33,.17,0,-.28,0],[.32,.9,.46,.055,.26,.1,0,.28,2],[-.32,.9,.46,.055,.26,.1,0,-.28,2],[0,.66,-.56,.15,.15,.15,0,0,1]];
+const LEGS=[[.19,.12,.3,1],[-.19,.12,.3,-1],[.21,.14,-.3,-1],[-.21,.14,-.3,1]];
+function drawChar(p,u,depth,t){const s=1.4,bob=Math.abs(Math.sin(p.leg))*.07,yaw=Math.PI/2-p.ang,lean=clamp(-p.lean,-.35,.35);
+ const R=xform(TM,TN,p.x,bob,p.z,yaw,0,lean,s,s,s);const RT=M4().fill(0);RT.set(TM);const RN=M4();RN.set(TN);
+ const L=M4(),LN=M4(),MM=M4(),NN=M4();const cols=[p.fur[0],p.fur[1],p.fur[2],[.02,.02,.03],[1,1,1],lin('#ff8fb0')];
+ const part=(x,y,z,sx,sy,sz,rx,rz,ci,spec)=>{xform(L,LN,x,y,z,0,rx,rz,sx,sy,sz);mul(MM,RT,L);if(depth){gl.uniformMatrix4fv(u.uM,false,MM);drawMesh(MS_SPH);return}
+  mul(NN,RN,LN);gl.uniformMatrix4fv(u.uM,false,MM);gl.uniformMatrix3fv(u.uNM,false,nm3(NM3,NN));gl.uniform3fv(u.uC,cols[ci]);gl.uniform1f(u.uSpec,ci===3?1.2:ci===4?0:.12);gl.uniform1f(u.uEm,ci===4?1.5:0);drawMesh(MS_SPH)};
+ for(const b of BODY){let[x,y,z,sx,sy,sz,rx,rz,ci]=b;if((ci===0||ci===2)&&Math.abs(x)>.28){rz+=Math.sin(p.leg*2)*.12*Math.sign(x)}part(x,y,z,sx,sy,sz,rx,rz,ci)}
+ for(const[x,y,z,ph]of LEGS){const k=Math.sin(p.leg+(ph>0?0:Math.PI));part(x,y+Math.max(0,k)*.1,z+k*.13,.11,.1,.19,0,0,ci1(p))}}
+function ci1(){return 1}
+let lastFrame=performance.now();
+function render(){const W=cv.width,H=cv.height,asp=W/H;
+ // камера
+ const tgtX=cam.tx,tgtZ=cam.tz;cam.x+=(tgtX-cam.x)*.12;cam.z+=(tgtZ-cam.z)*.12;
+ let ex,ey,ez;if(mode==='menu'){const a=T*.05;ex=G/2+Math.sin(a)*70;ez=G/2+Math.cos(a)*70;ey=52;cam.x=G/2;cam.z=G/2}
+ else{const d=cam.dist*cam.zoom;ex=cam.x;ey=d*.92;ez=cam.z+d*.62}
+ const sh=cam.shake>0?(Math.random()-.5)*cam.shake:0;
+ cam.pos=[ex+sh,ey,ez+sh];persp(PR,(asp<1?62:46)*Math.PI/180,asp,.5,600);look(V,cam.pos,[cam.x+sh,0,cam.z+sh],[0,1,0]);mul(VP,PR,V);inv(IVP,VP);
+ // солнце: орто-камера вокруг точки взгляда (с привязкой к текселю)
+ const shOn=QUAL>0;const ext=mode==='menu'?80:34*cam.zoom;
+ const lc=[cam.x,0,cam.z];look(LV,[lc[0]+SUN[0]*120,SUN[1]*120,lc[2]+SUN[2]*120],lc,[0,1,0]);ortho(LP,-ext,ext,-ext,ext,50,200);mul(LVP,LP,LV);
+ LVP[12]=Math.round(LVP[12]/ (2/SH_SIZE))*(2/SH_SIZE);LVP[13]=Math.round(LVP[13]/(2/SH_SIZE))*(2/SH_SIZE);
+ // хвосты
+ let n=0;const put=(x,y,z,nx,ny,nz,c)=>{if(n>=DYN_MAX)return;dP[n*3]=x;dP[n*3+1]=y;dP[n*3+2]=z;dN[n*3]=nx;dN[n*3+1]=ny;dN[n*3+2]=nz;dC[n*3]=c[0];dC[n*3+1]=c[1];dC[n*3+2]=c[2];n++};
+ for(const p of players){if(!p.alive||!p.rib.length)continue;const pts=p.rib.concat([[p.x,p.z]]);const c=p.rgb.map(v=>Math.pow(v,2.2)*.72+.01);const cd=c.map(v=>v*.55);const w=.3,h=.1;
+  for(let i=0;i<pts.length-1;i++){const[ax,az]=pts[i],[bx,bz]=pts[i+1];let dx=bx-ax,dz=bz-az,l=Math.hypot(dx,dz)||1;const px=-dz/l*w,pz=dx/l*w;
+   // верх
+   put(ax+px,h,az+pz,0,1,0,c);put(bx+px,h,bz+pz,0,1,0,c);put(bx-px,h,bz-pz,0,1,0,c);put(ax+px,h,az+pz,0,1,0,c);put(bx-px,h,bz-pz,0,1,0,c);put(ax-px,h,az-pz,0,1,0,c);
+   // бока
+   for(const sgn of[1,-1]){const sx=px*sgn,sz=pz*sgn,nx=sx/w,nz=sz/w;put(ax+sx,0,az+sz,nx,0,nz,cd);put(bx+sx,0,bz+sz,nx,0,nz,cd);put(bx+sx,h,bz+sz,nx,0,nz,c);put(ax+sx,0,az+sz,nx,0,nz,cd);put(bx+sx,h,bz+sz,nx,0,nz,c);put(ax+sx,h,az+sz,nx,0,nz,c)}}}
+ updMesh(TRAILS,dP,dN,dC,n);
+ // частицы
+ n=0;for(const q of parts){const cube=q.k===3?G_PEB:G_BOX;const k=1-q.t/q.life,s=q.s*(q.k===3?1:Math.min(1,k*2));xform(TM,TN,q.x,q.y,q.z,q.r,q.r*.7,0,s,s,s);const c=q.k===3?q.c.map(v=>v*(.6+.4*k)):q.c;
+  for(const i of cube.i){const x=cube.p[i*3],y=cube.p[i*3+1],z=cube.p[i*3+2];const a=cube.n[i*3],b=cube.n[i*3+1],cc=cube.n[i*3+2];put(TM[0]*x+TM[4]*y+TM[8]*z+TM[12],TM[1]*x+TM[5]*y+TM[9]*z+TM[13],TM[2]*x+TM[6]*y+TM[10]*z+TM[14],TN[0]*a+TN[4]*b+TN[8]*cc,TN[1]*a+TN[5]*b+TN[9]*cc,TN[2]*a+TN[6]*b+TN[10]*cc,c)}}
+ updMesh(PARTS,dP,dN,dC,n);
+ if(terrDirty){gl.bindTexture(gl.TEXTURE_2D,terrTex);gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,G,G,gl.RGBA,gl.UNSIGNED_BYTE,terrData);terrDirty=false;miniDirty=true}
+ gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);
+ // --- проход теней
+ if(shOn){gl.bindFramebuffer(gl.FRAMEBUFFER,shFB);gl.viewport(0,0,SH_SIZE,SH_SIZE);gl.clear(gl.DEPTH_BUFFER_BIT);gl.useProgram(P_DEP.p);gl.uniformMatrix4fv(P_DEP.u.uL,false,LVP);
+  gl.uniformMatrix4fv(P_DEP.u.uM,false,ID);drawMesh(STATIC);for(const p of players)if(p.alive)drawChar(p,P_DEP.u,true);gl.bindFramebuffer(gl.FRAMEBUFFER,null)}
+ gl.viewport(0,0,W,H);gl.clearColor(FOG[0],FOG[1],FOG[2],1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+ // --- небо
+ gl.disable(gl.DEPTH_TEST);gl.useProgram(P_SKY.p);gl.uniformMatrix4fv(P_SKY.u.uIVP,false,IVP);gl.uniform3fv(P_SKY.u.uSun,SUN);gl.uniform3fv(P_SKY.u.uZen,ZEN);gl.uniform3fv(P_SKY.u.uHor,HOR);gl.bindVertexArray(skyVAO);gl.drawArrays(gl.TRIANGLES,0,3);gl.enable(gl.DEPTH_TEST);
+ // --- земля
+ const ug=P_GND.u;gl.useProgram(P_GND.p);setLight(ug,shOn);gl.uniformMatrix4fv(ug.uVP,false,VP);gl.uniform1f(ug.uG,G);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,terrTex);gl.uniform1i(ug.uT,0);drawMesh(GROUND);
+ // --- объекты
+ const u=P_LIT.u;gl.useProgram(P_LIT.p);setLight(u,shOn);gl.uniformMatrix4fv(u.uVP,false,VP);gl.uniform1f(u.uA,1);
+ gl.uniformMatrix4fv(u.uM,false,ID);gl.uniformMatrix3fv(u.uNM,false,nm3(NM3,ID));gl.uniform3fv(u.uC,[1,1,1]);gl.uniform1f(u.uSpec,.05);gl.uniform1f(u.uEm,0);drawMesh(STATIC);
+ gl.uniform1f(u.uSpec,.35);gl.uniform1f(u.uEm,.12);drawMesh(TRAILS);gl.uniform1f(u.uSpec,.2);gl.uniform1f(u.uEm,.08);drawMesh(PARTS);
+ for(const p of players)if(p.alive)drawChar(p,u,false);
+ gl.bindVertexArray(null)}
+
+/* ===================== HUD ===================== */
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mini=$('#mini'),mctx=mini.getContext('2d'),mimg=document.createElement('canvas');mimg.width=mimg.height=G;const mictx=mimg.getContext('2d'),mid=mictx.createImageData(G,G);let miniDirty=true;
+function drawMini(){const W=mini.width;if(miniDirty){mid.data.set(terrData);for(let k=3;k<mid.data.length;k+=4)if(mid.data[k])mid.data[k]=235;mictx.putImageData(mid,0,0);miniDirty=false}
+ mctx.clearRect(0,0,W,W);mctx.fillStyle='rgba(40,80,30,.85)';mctx.fillRect(0,0,W,W);mctx.imageSmoothingEnabled=true;mctx.drawImage(mimg,0,0,W,W);const k=W/G;
+ for(const p of players){if(!p.alive)continue;if(p.rib.length>1){mctx.strokeStyle=COLS[p.colI];mctx.globalAlpha=.8;mctx.lineWidth=1.5;mctx.beginPath();mctx.moveTo(p.rib[0][0]*k,p.rib[0][1]*k);for(const[x,z]of p.rib)mctx.lineTo(x*k,z*k);mctx.lineTo(p.x*k,p.z*k);mctx.stroke();mctx.globalAlpha=1}
+  mctx.fillStyle=p.human?'#fff':COLS[p.colI];mctx.strokeStyle='rgba(0,0,0,.6)';mctx.lineWidth=1;mctx.beginPath();mctx.arc(p.x*k,p.z*k,p.human?4.5:3,0,7);mctx.fill();mctx.stroke()}}
+function labels(){const box=$('#labels');for(const p of players){if(!p.lb){p.lb=document.createElement('div');p.lb.className='lb'+(p.human?' me':'');p.lb.innerHTML=`<i style="background:${COLS[p.colI]}"></i>${esc(p.name)}`;box.appendChild(p.lb)}
+ const s=p.alive&&proj(p.x,2.05,p.z);if(!s){p.lb.style.display='none';continue}p.lb.style.display='';p.lb.style.transform=`translate(${s[0]-p.lb.offsetWidth/2|0}px,${s[1]-22|0}px)`}}
+let hudT=0;
+function hud(){if(!me)return;const pct=cnt[me.id]/GG*100;if(me.alive)me.maxPct=Math.max(me.maxPct||0,pct);
+ $('#hPct').textContent=(pct<10?pct.toFixed(2):pct.toFixed(1))+'%';$('#hKills').textContent=me.kills;
+ const al=players.filter(p=>p.alive).sort((a,b)=>cnt[b.id]-cnt[a.id]);const rk=al.indexOf(me)+1;$('#hRank').textContent=me.alive?rk+'/'+al.length:'—';
+ let h='';al.slice(0,6).forEach((p,i)=>{h+=`<div class="row${p===me?' me':''}"><span style="width:16px;color:var(--mut)">${i+1}</span><span class="c" style="background:${COLS[p.colI]}"></span><span class="n">${esc(p.name)}</span><span>${(cnt[p.id]/GG*100).toFixed(1)}%</span></div>`});
+ if(rk>6)h+=`<div class="row me"><span style="width:16px">${rk}</span><span class="c" style="background:${COLS[me.colI]}"></span><span class="n">${esc(me.name)}</span><span>${pct.toFixed(1)}%</span></div>`;$('#board').innerHTML=h}
+function feed(html){const f=$('#hFeed'),d=document.createElement('div');d.className='panel';d.innerHTML=html;f.prepend(d);while(f.children.length>3)f.lastChild.remove();setTimeout(()=>{d.style.transition='opacity .5s';d.style.opacity=0;setTimeout(()=>d.remove(),500)},3500)}
+function popText(t,p){const s=proj(p.x,2.2,p.z);if(!s)return;const d=document.createElement('div');d.className='pop';d.style.left=s[0]+'px';d.style.top=s[1]+'px';d.style.color=COLS[p.colI];d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1400)}
+function showHud(on){for(const id of['hTop','hBoard','hMini','hHint'])$('#'+id).style.opacity=on?1:0;$('#labels').style.display=on||mode==='menu'?'':'none'}
+
+/* ===================== экраны ===================== */
+let selCol=clamp(+SAVE.col||0,0,COLS.length-1);
+function menuStats(el){el.innerHTML=`<div><small>Рекорд</small><b>${(+SAVE.best||0).toFixed(1)}%</b></div><div><small>Поймано</small><b>${SAVE.kills||0}</b></div><div><small>Побед</small><b>${SAVE.wins||0}</b></div>`}
+function buildMenu(){const nick=SAVE.nick||CFG.nick||'Котозаяц';$('#iNick').value=nick;$('#iQ').value=String(QUAL);
+ $('#iCol').innerHTML=COLS.map((c,i)=>`<i data-c="${i}" style="background:${c}" class="${i===selCol?'on':''}"></i>`).join('');menuStats($('#mStats'));
+ $('#mBack').innerHTML=CFG.embedded?'<button class="btn ghost" id="bBack">← В лаунчер</button>':''}
+$('#iCol').addEventListener('click',e=>{const i=e.target.dataset.c;if(i==null)return;selCol=+i;SAVE.col=selCol;saveStats();buildMenu();sfx('click')});
+$('#iQ').addEventListener('change',e=>{QUAL=+e.target.value;SAVE.q=QUAL;saveStats();resize();initShadow(QUAL===2?2048:1024)});
+document.addEventListener('click',e=>{const id=e.target.id;if(id==='bPlay'||id==='bAgain')start();if(id==='bMenu'||id==='bQuit')toMenu();if(id==='bRes')pause(false);if(id==='bBack')exitToLauncher()});
+$('#iNick').addEventListener('keydown',e=>{if(e.key==='Enter')start();e.stopPropagation()});
+function exitToLauncher(){try{parent.postMessage({koto:'exit'},'*')}catch(e){}}
+function fur(){const s=CFG.skin;return s&&s.length>=4?[s[1],s[2],s[3]]:FURS[0]}
+function start(){ac();sfx('click');const nick=($('#iNick').value||'').trim().slice(0,16)||'Котозаяц';SAVE.nick=nick;saveStats();
+ T=0;resetWorld(9,{nick,col:selCol,fur:fur()});mode='play';playT=0;cam.x=me.x;cam.z=me.z;cam.zoom=1;mouse.use=false;touch=null;
+ for(const s of['#sMenu','#sOver','#sPause'])$(s).classList.remove('on');showHud(true);$('#hFeed').innerHTML=''}
+function toMenu(){mode='menu';for(const s of['#sOver','#sPause'])$(s).classList.remove('on');$('#sMenu').classList.add('on');showHud(false);resetWorld(10,null);buildMenu()}
+function pause(on){if(on&&mode==='play'){mode='pause';$('#sPause').classList.add('on')}else if(!on&&mode==='pause'){mode='play';$('#sPause').classList.remove('on')}}
+const WHY={self:'Ты наступил на свой хвост 😿',land:'Твою землю захватили полностью',head:'Лобовое столкновение',trail:'Кто-то перебежал твой хвост'};
+function gameOver(why,by,won){if(mode!=='play')return;mode='over';const pct=won?cnt[me.id]/GG*100:(me.maxPct||0);
+ SAVE.games=(SAVE.games||0)+1;SAVE.time=(SAVE.time||0)+playT;if(won)SAVE.wins=(SAVE.wins||0)+1;const rec=pct>(+SAVE.best||0)&&SAVE.games>1;if(rec)SAVE.best=+pct.toFixed(2);saveStats();
+ setTimeout(()=>{$('#oT').textContent=won?'🏆 Победа!':rec?'🎉 Новый рекорд!':'Игра окончена';
+  $('#oWhy').innerHTML=won?`Ты захватил ${WIN_PCT}% поля!`:by&&by!==me?`Тебя поймал <b style="color:${COLS[by.colI]}">${esc(by.name)}</b>`:WHY[why]||'';
+  const m=Math.floor(playT/60),s=Math.floor(playT%60);$('#oStats').innerHTML=`<div><small>Макс. территория</small><b>${pct.toFixed(1)}%</b></div><div><small>Поймано</small><b>${me.kills}</b></div><div><small>Время</small><b>${m}:${String(s).padStart(2,'0')}</b></div>`;
+  $('#sOver').classList.add('on');showHud(false)},won?600:1300)}
+
+/* ===================== цикл ===================== */
+function step(dt){T+=dt;if(mode==='play')playT+=dt;
+ for(const p of players){if(!p.alive){if(!p.human&&p.resp&&T>p.resp){p.resp=0;p.name=botName();p.colI=botColor();p.rgb=colRGB[p.colI];p.fur=FURS[Math.floor(Math.random()*FURS.length)].map(lin);p.aggr=rnd(.6,1.35);if(p.lb){p.lb.remove();p.lb=null}spawn(p)}continue}
+  if(p.human)humanInput();else botThink(p,dt);moveP(p,dt);
+  if(p.alive){p.dust-=dt;if(p.dust<=0){p.dust=.07;const own=owner[p.cell]===p.id;spark(p.x-Math.cos(p.ang)*.55+rnd(-.2,.2),p.z-Math.sin(p.ang)*.55+rnd(-.2,.2),own?p.rgb.map(v=>Math.pow(v,2.2)*.35):[.17,.13,.07],3)}}}
+ stepParts(dt);if(cam.shake>0)cam.shake=Math.max(0,cam.shake-dt);
+ if(me&&me.alive){cam.tx=me.x;cam.tz=me.z;const pct=cnt[me.id]/GG*100;me.maxPct=Math.max(me.maxPct||0,pct);cam.zoom+=((1+Math.min(.55,Math.sqrt(pct)*.11))-cam.zoom)*dt;if(mode==='play'&&pct>=WIN_PCT){sfx('win');for(let k=0;k<120;k++)spark(me.x+rnd(-4,4),me.z+rnd(-4,4),COLS.map(hex)[k%COLS.length],2);gameOver('win',null,true)}}}
+let acc=0,hudAcc=0;
+function frame(now){requestAnimationFrame(frame);let dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;if(document.hidden)return;
+ if(mode!=='pause'){acc+=dt;while(acc>1/120){step(1/120);acc-=1/120}}
+ try{render()}catch(e){console.error(e)}labels();hudAcc+=dt;if(hudAcc>.2){hudAcc=0;hud();drawMini()}}
+toMenu();requestAnimationFrame(frame);
+window.KOTO_DEBUG={cam,get players(){return players},get mode(){return mode},cnt,owner,trailOw,start,step,kill,G};
+</script></body></html>
