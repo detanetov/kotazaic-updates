@@ -1,9 +1,9 @@
 {
- "version": 81,
+ "version": 82,
  "label": "1.4.0",
- "name": "1.4.0: новый интерфейс",
+ "name": "1.4.0: стеклянный интерфейс",
  "file": "game.html",
- "sha256": "806a62f771fc6dca01b54bff526313f433bc28dfedd7650ce66cf8dc5da96f89",
+ "sha256": "303089c83100c724ae46cbfb8f8fb858d2f8a3871f55f8437c3593cf2ed942e4",
  "date": "2026-10-19",
  "exe": {
   "version": 6,

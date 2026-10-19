@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=81;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=82;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3065,6 +3065,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:82,l:'1.4.0',items:['🫧 Стеклянный интерфейс: полупрозрачные окна с размытием, тонкие светящиеся рамки, стеклянные кнопки и плитки меню в цветах разделов','🧊 Два варианта: тёмное стекло и светлое стекло','🎨 Выбор стиля: Settings → Игровой процесс → «Стиль интерфейса» (мультяшный, тёмное стекло, светлое стекло, старый вид)']},
  {v:81,l:'1.4.0',items:['🎨 Новый интерфейс: свой мягкий округлый шрифт (одинаковый на ПК и телефоне), аккуратные «конфетные» кнопки, тонкие обводки и мягкие тени','🏠 Главное меню: большая кнопка Play и плитки разделов с иконками — всё помещается на экран без длинного списка','🗂 Окна: шапка с названием закреплена сверху при прокрутке, вкладки стали «таблетками», переключатели — настоящими тумблерами, ползунки — цветными','✿ Cosmetics: слоты вещей в два ряда — названия больше не обрезаются','🔔 Уведомления, режимы, пауза и конец забега — в том же стиле · исправлено: логотип вылезал за окно входа','↩ Старый вид можно вернуть: Settings → Игровой процесс → «Новый интерфейс»']},
  {v:80,l:'1.4.0',items:['🗺 Путешествие: каждые три волны — новое место. Ночная поляна, Морковные поля, Зимний лес, Конфетные холмы, Лунная станция и Северное сияние. Свой пейзаж с глубиной, погода и музыка','🎵 Новая живая музыка: спокойная в меню, разгоняется с волнами и комбо, свои темы для суперволны и боссов, глохнет на последней жизни. Звуки пойманных звёзд складываются в мелодию','⚡ Рывок сквозь метеориты: Shift, двойное нажатие стрелки, правый клик, касание двумя пальцами или A на геймпаде. Перезарядка — кольцо под котозайцем','😮 «Чуть-чуть!»: бонус и +1 к комбо, если метеорит пролетел совсем рядом','🃏 Благословения: после каждого босса выбираешь 1 из 3 улучшений на забег — 14 вариантов (помощник, второе дыхание, ангел-хранитель, удача и другие)','☄ Новые угрозы: метеориты-зигзаги, раскалывающиеся и огромные. Метеориты теперь разбиваются о землю','👾 Боссы: вторая фаза «ярость» со стеной метеоритов и проходом. Новые боссы — Чёрная Дыра (притягивает) и Звёздный Дракон (дышит огнём)','💎 Кристалл делает все звёзды розовыми, ❄ ледяная звезда замораживает метеориты, ✨ созвездие из 5 звёзд даёт бонус','💥 Ощущения: котозаяц сжимается при ловле, стоп-кадр и вспышка при ударе, пульс на последней жизни, плавный счёт очков, искры за звёздами','🏁 Новый экран конца забега: большой счёт, рекорд и итоги. R или Enter — сразу ещё раз','🎮 Геймпад: стик — бег, A — рывок, Start — пауза','🏅 8 новых достижений · всё новое можно выключить в Settings → Игровой процесс']},
  {v:79,l:'1.4.0',items:['🟩 Новая мини-игра Paper.io: Котозайцы — захватывай территорию, обводя её следом, выбивай соперников, пересекая их след','🌐 Онлайн: если в игре есть другие игроки — играешь с ними на одной карте; если никого нет — с 6 ботами','🗺 Мини-карта, таблица лидеров, монеты за территорию и выбитых соперников','🏅 4 новых достижения']},
@@ -7190,6 +7191,79 @@ function g2menu(){const col=$('#menu .col');if(!col)return;for(const b of col.qu
 g2apply();
 /* setting: GUI tab → toggle */
 {const _rs=renderSet;renderSet=function(){_rs.apply(this,arguments);const gt=$('#k3set');if(gt&&!$('#g2opt'))gt.insertAdjacentHTML('beforeend',`<div class="opt tg" id="g2opt"><label>🎨 Новый интерфейс (шрифт Nunito, плитки в меню, аккуратные кнопки)</label><input type="checkbox" id="g2chk"></div>`);const c=$('#g2chk');if(c){c.checked=g2on();c.onchange=()=>{S.set.g2=c.checked;persist();g2apply();applyLook();SND.click()}}}}
+/* ================= Glass interface (dark / light) ================= */
+(function(){const st=document.createElement('style');st.id='g3css';const W='rgba(255,255,255,';st.textContent=`
+html.gl{--ink:#f1eeff!important;--paper:rgba(22,16,52,.58)!important;--paper2:rgba(255,255,255,.07)!important;--gb:rgba(255,255,255,.16);--gb2:rgba(255,255,255,.28)}
+html.gl body{color:#f1eeff}
+html.gl .panel,html.gl .pfbox,html.gl #k3pk .k3card{background:rgba(22,16,52,.55)!important;background-image:linear-gradient(160deg,${W}.10),${W}.02) 60%)!important;border:1px solid var(--gb2)!important;box-shadow:0 20px 60px rgba(0,0,0,.45),inset 0 1px 0 ${W}.18)!important;backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);color:#f1eeff}
+html.gl .panel>.row:first-child:has(>h2),html.gl .pfbox>.row:first-child:has(>h3){background:${W}.05)!important;background-image:none!important;border-bottom:1px solid var(--gb)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+html.gl .btn{background:${W}.09)!important;color:#fff!important;border:1px solid var(--gb2)!important;box-shadow:0 6px 18px rgba(0,0,0,.25),inset 0 1px 0 ${W}.22)!important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);text-shadow:0 1px 2px rgba(0,0,0,.35)}
+html.gl .btn:hover{background:${W}.16)!important;transform:translateY(-1px)}
+html.gl .btn:active{transform:translateY(1px);box-shadow:0 2px 6px rgba(0,0,0,.3)!important}
+html.gl .btn:not(.ghost):not(.mint):not(.pink):not(.org):not(.vio):not(.sm){background:linear-gradient(135deg,rgba(255,201,60,.38),rgba(255,140,60,.22))!important;border-color:rgba(255,214,110,.6)!important}
+html.gl .btn.mint{background:linear-gradient(135deg,rgba(94,230,193,.36),rgba(60,170,255,.2))!important;border-color:rgba(120,240,210,.6)!important}
+html.gl .btn.pink{background:linear-gradient(135deg,rgba(255,126,182,.38),rgba(180,90,255,.2))!important;border-color:rgba(255,150,200,.6)!important}
+html.gl .btn.org{background:linear-gradient(135deg,rgba(255,138,61,.4),rgba(255,80,90,.2))!important;border-color:rgba(255,170,100,.6)!important}
+html.gl .btn.vio{background:linear-gradient(135deg,rgba(139,108,255,.42),rgba(80,140,255,.22))!important;border-color:rgba(170,150,255,.6)!important}
+html.gl .btn:disabled{opacity:.4}
+html.gl .tabs .btn.cur{background:${W}.9)!important;color:#1d1838!important;text-shadow:none}
+html.gl .chip,html.gl #top .chip.gc,html.gl #hud .chip,html.gl #top .btn.sm,html.gl #hud .tr .btn.sm{background:rgba(20,14,46,.45)!important;color:#fff!important;border:1px solid var(--gb2)!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+html.gl .opt.tg,html.gl .box,html.gl .it,html.gl .card,html.gl .stats div,html.gl .modec,html.gl .mgcard,html.gl .topr,html.gl .acc,html.gl .racc,html.gl .th,html.gl .eggc,html.gl .fjc,html.gl .outf,html.gl .bgtile,html.gl .trit,html.gl .ptc,html.gl .mlrow,html.gl .dq,html.gl .slot,html.gl .kgc,html.gl .lvbox,html.gl .optbox,html.gl .admc,html.gl .mgsteps,html.gl .trside,html.gl .chlog,html.gl .chm .chb,html.gl .xcal div,html.gl .cosx .prog,html.gl .k3chips span,html.gl #k3pp,html.gl #k3pp span,html.gl .fupc,html.gl .bindr,html.gl .kbd,html.gl .frl .fr,html.gl .stage{background:${W}.06)!important;border:1px solid var(--gb)!important;box-shadow:none!important;color:#f1eeff}
+html.gl .it.on,html.gl .card.got,html.gl .slot.cur,html.gl .th.cur,html.gl .racc.cur,html.gl .fr.cur{background:rgba(94,230,193,.16)!important;border-color:rgba(94,230,193,.55)!important}
+html.gl .card.special{background:rgba(255,201,60,.12)!important}html.gl .card.locked{opacity:.5}
+html.gl .modec{border-left:6px solid var(--mc)!important}
+html.gl .field input,html.gl .inp,html.gl select,html.gl textarea,html.gl .chin input{background:rgba(0,0,0,.25)!important;color:#fff!important;border:1px solid var(--gb2)!important}
+html.gl select option{background:#221a4a;color:#fff}
+html.gl input::placeholder,html.gl textarea::placeholder{color:rgba(255,255,255,.45)}
+html.gl .field input:focus,html.gl .inp:focus{box-shadow:0 0 0 3px rgba(139,108,255,.55)!important}
+html.gl .opt input[type=checkbox],html.gl .ck input[type=checkbox]{background:${W}.18)!important;border:1px solid var(--gb2)!important}
+html.gl .opt input[type=checkbox]::after,html.gl .ck input[type=checkbox]::after{border:0!important;top:3px;left:3px;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+html.gl .opt input[type=checkbox]:checked,html.gl .ck input[type=checkbox]:checked{background:linear-gradient(135deg,#5ee6c1,#5ab8ff)!important}
+html.gl .opt input[type=range]::-webkit-slider-runnable-track{border:1px solid var(--gb2)}html.gl .opt input[type=range]::-webkit-slider-thumb{border:0;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+html.gl .bar{background:${W}.1)!important;border:1px solid var(--gb2)!important}html.gl .bar i{border-right:0!important}
+html.gl #toast{background:rgba(20,14,46,.7)!important;color:#fff!important;border:1px solid var(--gb2)!important;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 12px 30px rgba(0,0,0,.4)!important}
+html.gl .pfov,html.gl #modeOv,html.gl #xOv,html.gl #k3pk{background:rgba(6,4,20,.35)!important}
+html.gl .panel p.sub,html.gl .hint,html.gl small{color:rgba(241,238,255,.72)}
+html.gl a{color:#9fe8ff}
+html.gl .rar{color:#1d1838;border:0!important}
+html.gl #menu .col>.btn{border-radius:22px}
+html.gl #menu .col>.btn .mi{background:${W}.14)!important;border:1px solid var(--gb2)!important;box-shadow:none}
+html.gl #menu .col>.btn[data-go=play]{background:linear-gradient(135deg,rgba(255,201,60,.5),rgba(255,120,80,.28))!important}
+html.gl #menu .col>.btn[data-go=bp]{background:linear-gradient(135deg,rgba(94,230,193,.34),rgba(94,230,193,.1))!important}
+html.gl #menu .col>.btn[data-go=ev]{background:linear-gradient(135deg,rgba(255,138,61,.36),rgba(255,138,61,.1))!important}
+html.gl #menu .col>.btn[data-go=cos]{background:linear-gradient(135deg,rgba(255,126,182,.36),rgba(255,126,182,.1))!important}
+html.gl #menu .col>.btn[data-go=kg]{background:linear-gradient(135deg,rgba(255,214,90,.34),rgba(255,214,90,.08))!important}
+html.gl #menu .col>.btn[data-go=trade]{background:linear-gradient(135deg,rgba(143,227,255,.34),rgba(143,227,255,.08))!important}
+html.gl #menu .col>.btn[data-go=chat]{background:linear-gradient(135deg,rgba(200,176,255,.36),rgba(200,176,255,.08))!important}
+html.gl #menu .col>.btn[data-go=play] .mi{background:${W}.92)!important;color:#1d1838}
+html.gl .logo .b{border:1px solid ${W}.4);box-shadow:0 8px 24px rgba(255,126,182,.35)}
+html.gl #k3pk .k3card{color:#f1eeff}html.gl #k3pk .k3card.sel{outline:2px solid #ffe066}
+html.gl .k3sc{-webkit-text-stroke:0;text-shadow:0 0 24px rgba(255,201,60,.55)}
+html.gl .card .lv,html.gl .cntb,html.gl .kbd{background:rgba(255,255,255,.92)!important;color:#1d1838!important}html.gl .cfav{color:#fff}html.gl .thumb{border-color:rgba(255,255,255,.35)!important}
+/* light glass */
+html.glL .panel,html.glL .pfbox{background:rgba(255,255,255,.52)!important;background-image:linear-gradient(160deg,rgba(255,255,255,.55),rgba(255,255,255,.15))!important;border:1px solid rgba(255,255,255,.75)!important;box-shadow:0 24px 60px rgba(10,6,40,.35),inset 0 1px 0 #fff!important;backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5)}
+html.glL .panel>.row:first-child:has(>h2),html.glL .pfbox>.row:first-child:has(>h3){background:rgba(255,255,255,.4)!important;background-image:none!important;border-bottom:1px solid rgba(255,255,255,.8)!important}
+html.glL .btn,html.glL .chip,html.glL .opt.tg,html.glL .box,html.glL .it,html.glL .card,html.glL .stats div,html.glL .modec,html.glL .slot,html.glL .field input,html.glL .inp,html.glL .topr,html.glL .mgcard{border:1px solid rgba(255,255,255,.85)!important;box-shadow:0 6px 18px rgba(20,10,60,.16)!important}
+html.glL .opt.tg,html.glL .box,html.glL .it,html.glL .card,html.glL .stats div,html.glL .slot,html.glL .topr,html.glL .mgcard{background:rgba(255,255,255,.55)!important}
+html.glL .btn{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+html.glL .chip,html.glL #top .chip.gc,html.glL #hud .chip,html.glL #top .btn.sm{background:rgba(255,255,255,.6)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+html.glL #toast{background:rgba(255,255,255,.75)!important;border:1px solid #fff!important;backdrop-filter:blur(16px)}
+html.glL .opt input[type=checkbox],html.glL .ck input[type=checkbox]{border:1px solid rgba(29,24,56,.25)}html.glL .opt input[type=checkbox]::after{border:0;top:3px;left:3px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+`;document.head.appendChild(st)})();
+{const _ga=g2apply;g2apply=function(){_ga.apply(this,arguments);const g=S&&S.set&&g2on()?S.set.glass||'':'';document.documentElement.classList.toggle('gl',g==='dark');document.documentElement.classList.toggle('glL',g==='light')}}
+{const _rs=renderSet;renderSet=function(){_rs.apply(this,arguments);const o=$('#g2opt');if(o&&!$('#g3sel')){o.outerHTML=`<div class="opt tg" id="g2opt"><label>🎨 Стиль интерфейса</label><select class="inp" id="g3sel"><option value="cartoon">🐰 Мультяшный</option><option value="dark">🫧 Стекло — тёмное</option><option value="light">🧊 Стекло — светлое</option><option value="old">📜 Старый вид</option></select></div>`}
+  const s=$('#g3sel');if(s){s.value=!g2on()?'old':(S.set.glass||'cartoon');s.onchange=()=>{const v=s.value;S.set.g2=v!=='old';S.set.glass=v==='dark'||v==='light'?v:'';persist();g2apply();applyLook();SND.click();toast(v==='dark'?'🫧 Тёмное стекло':v==='light'?'🧊 Светлое стекло':v==='old'?'Старый вид':'🐰 Мультяшный вид')}}}}
+g2apply();
+/* glass: convert remaining light boxes / dark texts from older screens */
+(function(){const st=document.createElement('style');st.textContent=`html.gl .glw{background-color:rgba(255,255,255,.07)!important;background-image:none!important;border-color:var(--gb)!important;box-shadow:none!important;color:#f1eeff!important}html.gl .glt{color:#f1eeff!important}html.gl .gld,html.gl .gld *{color:#1d1838!important}`;document.head.appendChild(st)})();
+function g3lum(c){const m=c&&c.match(/[\d.]+/g);if(!m)return null;const[r,g,b,a=1]=m.map(Number);return{l:(.2126*r+.7152*g+.0722*b)/255,a}}
+const G3SKIP='.btn,.rar,.lv,.xbdg,.mbadge,.cntb,.kbd,input,select,option,canvas,img,svg,.k3rec,.logo,.logo *,.pc,.pc *,.sq,.ckp,.ttt button,.dot,.unr';
+function g3fix(){if(!document.documentElement.classList.contains('gl'))return;const roots=[...document.querySelectorAll('.screen.on .panel,.pfov,#modeOv,#xOv,#k3pk')].filter(r=>r.offsetParent||getComputedStyle(r).display!=='none');
+  for(const R of roots)for(const el of R.querySelectorAll('*')){if(el.classList.contains('glw')||el.matches(G3SKIP)||!el.getClientRects().length)continue;const cs=getComputedStyle(el),b=g3lum(cs.backgroundColor);if(b&&b.a>.5&&b.l>.72)el.classList.add('glw');else if(b&&b.a>.5&&b.l>.5)el.classList.add('gld')}
+  for(const R of roots)for(const el of R.querySelectorAll('*')){if(el.classList.contains('glt')||el.matches(G3SKIP)||!el.getClientRects().length)continue;const f=g3lum(getComputedStyle(el).color);if(!f||f.l>.45)continue;if(![...el.childNodes].some(n=>n.nodeType===3&&n.textContent.trim()))continue;let p=el,bg=null;while(p&&p!==document.body){const b=g3lum(getComputedStyle(p).backgroundColor);if(b&&b.a>.5&&!p.classList.contains('glw')){bg=b;break}if(p.classList.contains('glw')||p.classList.contains('panel')||p.classList.contains('pfbox')){bg={l:.1};break}p=p.parentElement}if(bg&&bg.l<.4)el.classList.add('glt')}}
+let g3T=0;function g3soon(){clearTimeout(g3T);g3T=setTimeout(g3fix,120)}
+new MutationObserver(()=>{if(document.documentElement.classList.contains('gl'))g3soon()}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style']});
+{const _ga=g2apply;g2apply=function(){_ga.apply(this,arguments);if(!document.documentElement.classList.contains('gl'))document.querySelectorAll('.glw,.glt,.gld').forEach(e=>e.classList.remove('glw','glt','gld'));else g3soon()}}
 
 resize();
 const sess=lsGet('kz_session');
