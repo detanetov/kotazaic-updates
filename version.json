@@ -17,11 +17,11 @@
   "sha256": "86f3ea7eda94cf62882f8e936b72e406d35ea7c6d41b688c8520bac2fcdb2738"
  },
  "kotoio": {
-  "version": 6,
-  "label": "1.5",
-  "name": "koto.io 1.5: новая примерочная с 3D-предпросмотром",
+  "version": 7,
+  "label": "1.6",
+  "name": "koto.io 1.6: стили хвоста, особые скины, эффекты захвата",
   "file": "kotoio.html",
-  "sha256": "39278442ffdd5f4ec364d9e7653d7f3bb276517f5e732be0dc0300c25dc43c40",
+  "sha256": "e2d204eede64ae25b142334edc0269ddaf8187b484c473dfbb7ba50b8460557c",
   "date": "2026-10-19"
  }
 }
