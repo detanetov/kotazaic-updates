@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=83;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=84;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3065,6 +3065,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:84,l:'1.4.0',items:['⚔ Лимитированное знамя «Спас Нерукотворный» за спиной — 10 000 000 🪙, продаётся только 10 дней (до 29 октября)','🛡 С надетым знаменем в забеге появляются два рыцаря-котозайца: подбегают к метеоритам и рубят их мечом','🧑‍🌾 В саду садовники сами поливают и собирают урожай, на рыбалке рыбаки ловят рыбу в ведро','♟ В шахматах, шашках и «Дураке» по краям доски стоят два рыцаря: каждый раз в 5 минут отражает удар — сначала берегут короля, дамку или козырную атаку','🔍 В мини-играх можно выбрать размер экрана: S, M, L, XL или во весь экран','⚖ Экономика: большие растения и крупная рыба приносят в 4 раза меньше; монеты у игравших в сад пересчитаны']},
  {v:83,l:'1.4.0',items:['✝ Светлая коллекция: 100 лимитированных вещей — 10 скинов, нимбы и венки, крестики и чётки, крылья ангела и серафима, ризы и праздничные свитера, свечи, писанки, кулич, верба, посох, лампада, следы из перьев и голубей, ауры «Витраж», «Божественное сияние», «Ангелочки» и другие','👼 6 полных костюмов коллекции: Ангел, Пасха, Рождество, Пилигрим, Хорист, Серафим','⌛ Вещи дорогие и лимитированные: каждую можно купить только один раз и только до 7 декабря, потом — только через обмен. В Kotograde и подарках не выпадают','🔎 Фильтр «✝ Светлая коллекция» в Cosmetics и счётчик собранного']},
  {v:82,l:'1.4.0',items:['🫧 Стеклянный интерфейс: полупрозрачные окна с размытием, тонкие светящиеся рамки, стеклянные кнопки и плитки меню в цветах разделов','🧊 Два варианта: тёмное стекло и светлое стекло','🎨 Выбор стиля: Settings → Игровой процесс → «Стиль интерфейса» (мультяшный, тёмное стекло, светлое стекло, старый вид)']},
  {v:81,l:'1.4.0',items:['🎨 Новый интерфейс: свой мягкий округлый шрифт (одинаковый на ПК и телефоне), аккуратные «конфетные» кнопки, тонкие обводки и мягкие тени','🏠 Главное меню: большая кнопка Play и плитки разделов с иконками — всё помещается на экран без длинного списка','🗂 Окна: шапка с названием закреплена сверху при прокрутке, вкладки стали «таблетками», переключатели — настоящими тумблерами, ползунки — цветными','✿ Cosmetics: слоты вещей в два ряда — названия больше не обрезаются','🔔 Уведомления, режимы, пауза и конец забега — в том же стиле · исправлено: логотип вылезал за окно входа','↩ Старый вид можно вернуть: Settings → Игровой процесс → «Новый интерфейс»']},
@@ -7429,7 +7430,7 @@ function hlAura(c,k,t,layer){const back=layer==='back';
 /* ---------- shop rules: limited, once per account, not in Kotograde ---------- */
 {const _r=rarity;rarity=function(def){if(def&&def.lim)return{n:'✝ Лимитированное',c:'#e8c35a'};return _r.apply(this,arguments)}}
 {const _s=srcText;srcText=function(src,def){if(src==='lim')return'⌛ Светлая коллекция завершилась — теперь только через обмен';return _s.apply(this,arguments)}}
-{const _b=buy;buy=function(t,id){const d=itemDef(t,id);if(d&&d.lim){if(hlEnded()){toast('⌛ Светлая коллекция уже завершилась');return}if(S.own[t].includes(id)){toast('✝ Лимитированную вещь можно купить только один раз');return}}return _b.apply(this,arguments)}}
+{const _b=buy;buy=function(t,id){const d=itemDef(t,id);if(d&&d.lim){if(Date.now()>(d.limEnd||HOLY_END)){toast('⌛ Продажа этой лимитированной вещи уже завершилась');return}if(S.own[t].includes(id)){toast('✝ Лимитированную вещь можно купить только один раз');return}}return _b.apply(this,arguments)}}
 {const _a=allPaid;allPaid=function(){return _a.apply(this,arguments).filter(k=>{const[sl,id]=k.split(':');return!HL[id]})}}
 COS_F.holy='✝ Светлая коллекция';
 {const _p=cosPass;cosPass=function(def,own){if(cosFilt==='holy')return!!(def&&def.lim);return _p.apply(this,arguments)}}
@@ -7441,6 +7442,134 @@ function hlLeft(){const ms=HOLY_END-Date.now();if(ms<=0)return'завершил�
 (function(){const st=document.createElement('style');st.textContent=`#hlBanner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px;padding:10px 14px;border:2.5px solid var(--ink);border-radius:16px;background:linear-gradient(135deg,#fff6d6,#ffe9b0 60%,#fff3e0);box-shadow:0 3px 0 var(--ink);color:#3a2a10}#hlBanner b{font-size:16px}#hlBanner span{flex:1;min-width:220px;font-weight:700;font-size:13px;opacity:.85}html.gl #hlBanner{background:linear-gradient(135deg,rgba(255,220,120,.25),rgba(255,240,200,.08))!important;border:1px solid rgba(255,230,150,.55)!important;color:#fff3cf}`;document.head.appendChild(st)})();
 {const iv=setInterval(()=>{try{if(!S||user==='__guest')return;clearInterval(iv);if(!hlEnded()&&!S.stats.hlSeen){S.stats.hlSeen=1;persist();setTimeout(()=>toast('✝ В Cosmetics — Светлая коллекция: 100 лимитированных вещей до 7 декабря'),3500)}}catch(e){}},3000)}
 HELP.push(['✝ Светлая коллекция','100 лимитированных вещей: нимбы, венки, крестики, чётки, крылья ангела, свечи, писанки, ризы, ауры и следы, плюс 6 полных костюмов. Каждую вещь можно купить один раз и только до 7 декабря — потом их можно получить только обменом. В Kotograde не выпадают.']);
+
+
+/* ================= Знамя «Спас Нерукотворный» + рыцари-котозайцы ================= */
+const BN_ID='hl_banner',BN_END=new Date('2026-10-29T23:59:59+03:00').getTime(),BN_CD=5*60*1000;
+ITEMS.acc[BN_ID]={n:'Знамя «Спас Нерукотворный»',price:10000000,lim:1,limEnd:BN_END,perk:'Рыцари-котозайцы: рубят метеориты, помогают в саду и на рыбалке, защищают в шахматах, шашках и «Дураке»'};
+if(Date.now()>BN_END){ITEMS.acc[BN_ID].src='lim';EXCL_VAL['acc:'+BN_ID]=10000000}
+{const _a=allPaid;allPaid=function(){return _a.apply(this,arguments).filter(k=>k.split(':')[1]!==BN_ID)}}
+function bnOn(){return!!(S&&S.eq&&S.eq.acc===BN_ID)}
+/* ---------- flag texture (drawn once) ---------- */
+let BN_TEX=null;
+function bnTex(){if(BN_TEX)return BN_TEX;const W2=480,H2=320,cv=document.createElement('canvas');cv.width=W2;cv.height=H2;const c=cv.getContext('2d');
+  const red=c.createLinearGradient(0,0,W2,H2);red.addColorStop(0,'#e3202f');red.addColorStop(.55,'#d0142a');red.addColorStop(1,'#b80d22');c.fillStyle=red;c.fillRect(0,0,W2,H2);
+  c.fillStyle='#f4f1ea';c.fillRect(0,0,14,H2);c.fillStyle='rgba(0,0,0,.12)';c.fillRect(14,0,3,H2);
+  const cx=246,cy=160,R=118;
+  // golden disc
+  const gd=c.createRadialGradient(cx,cy-20,20,cx,cy,R);gd.addColorStop(0,'#f8e6b4');gd.addColorStop(1,'#ecd08c');c.fillStyle=gd;c.beginPath();c.arc(cx,cy,R,0,7);c.fill();c.lineWidth=2.5;c.strokeStyle='#a8761e';c.stroke();
+  // cross nimbus
+  c.save();c.beginPath();c.arc(cx,cy,R-2,0,7);c.clip();c.fillStyle='#f6f0e2';const bw=34;c.fillRect(cx-bw/2,cy-R,bw,R);c.fillRect(cx-R,cy-bw/2-6,R*2,bw);
+  c.strokeStyle='#b5202d';c.lineWidth=2;for(const o of[-bw/2,bw/2]){c.beginPath();c.moveTo(cx+o,cy-R);c.lineTo(cx+o,cy-40);c.stroke();c.beginPath();c.moveTo(cx-R,cy+o-6);c.lineTo(cx+R,cy+o-6);c.stroke()}
+  c.fillStyle='#b5202d';c.font='bold 22px Georgia,"Times New Roman",serif';c.textAlign='center';c.textBaseline='middle';c.fillText('О',cx,cy-R+20);c.font='bold 30px Georgia,"Times New Roman",serif';c.fillText('ω',cx-R+22,cy-9);c.font='bold 22px Georgia,"Times New Roman",serif';c.fillText('Н',cx+R-22,cy-6);c.restore();
+  // hair mass behind face
+  const hairC='#2a1d14';c.fillStyle=hairC;c.beginPath();c.moveTo(cx-48,cy-46);c.bezierCurveTo(cx-56,cy-98,cx+56,cy-98,cx+48,cy-46);c.bezierCurveTo(cx+62,cy-6,cx+60,cy+40,cx+66,cy+70);c.quadraticCurveTo(cx,cy+30,cx-66,cy+70);c.bezierCurveTo(cx-60,cy+40,cx-62,cy-6,cx-48,cy-46);c.closePath();c.fill();
+  // curls at the ends of hair
+  for(const s of[-1,1])for(let k=0;k<3;k++){const x=cx+s*(52+k*7),y=cy+62+k*10;c.beginPath();c.arc(x,y,7.5-k,0,7);c.fill();c.strokeStyle='#5a4030';c.lineWidth=1.5;c.beginPath();c.arc(x,y,4-k*.5,0,5);c.stroke()}
+  // face
+  const sk=c.createLinearGradient(cx-40,0,cx+40,0);sk.addColorStop(0,'#a8703c');sk.addColorStop(.35,'#d29a5c');sk.addColorStop(.65,'#d29a5c');sk.addColorStop(1,'#a8703c');c.fillStyle=sk;c.beginPath();c.moveTo(cx,cy-72);c.bezierCurveTo(cx+36,cy-72,cx+40,cy-30,cx+36,cy+6);c.bezierCurveTo(cx+32,cy+40,cx+16,cy+52,cx,cy+54);c.bezierCurveTo(cx-16,cy+52,cx-32,cy+40,cx-36,cy+6);c.bezierCurveTo(cx-40,cy-30,cx-36,cy-72,cx,cy-72);c.closePath();c.fill();
+  // hair parting lines on the forehead
+  c.fillStyle=hairC;c.beginPath();c.moveTo(cx-38,cy-40);c.bezierCurveTo(cx-34,cy-68,cx-10,cy-76,cx,cy-70);c.bezierCurveTo(cx+10,cy-76,cx+34,cy-68,cx+38,cy-40);c.bezierCurveTo(cx+30,cy-58,cx+12,cy-66,cx,cy-62);c.bezierCurveTo(cx-12,cy-66,cx-30,cy-58,cx-38,cy-40);c.closePath();c.fill();
+  c.strokeStyle='#6a4a34';c.lineWidth=1.2;for(let k=0;k<7;k++){c.beginPath();c.moveTo(cx-6-k*5,cy-66+k*2);c.quadraticCurveTo(cx-40-k*3,cy-30,cx-48-k*2,cy+50);c.stroke();c.beginPath();c.moveTo(cx+6+k*5,cy-66+k*2);c.quadraticCurveTo(cx+40+k*3,cy-30,cx+48+k*2,cy+50);c.stroke()}
+  // eyebrows
+  c.strokeStyle='#2a1a10';c.lineWidth=3;c.lineCap='round';c.beginPath();c.moveTo(cx-30,cy-28);c.quadraticCurveTo(cx-18,cy-38,cx-5,cy-30);c.moveTo(cx+30,cy-28);c.quadraticCurveTo(cx+18,cy-38,cx+5,cy-30);c.stroke();
+  // eyes (almond, gaze to the side)
+  for(const s of[-1,1]){const ex=cx+s*17,ey=cy-18;c.fillStyle='#efe4cc';c.beginPath();c.moveTo(ex-11,ey);c.quadraticCurveTo(ex,ey-8,ex+11,ey);c.quadraticCurveTo(ex,ey+6,ex-11,ey);c.closePath();c.fill();c.fillStyle='#2a1a10';c.beginPath();c.arc(ex-3,ey-.5,4.2,0,7);c.fill();c.strokeStyle='#2a1a10';c.lineWidth=1.8;c.beginPath();c.moveTo(ex-12,ey);c.quadraticCurveTo(ex,ey-9,ex+12,ey);c.stroke();c.strokeStyle='rgba(90,50,25,.6)';c.lineWidth=1.2;c.beginPath();c.moveTo(ex-10,ey+6);c.quadraticCurveTo(ex,ey+10,ex+9,ey+5);c.stroke()}
+  // nose
+  c.strokeStyle='#6a3e1c';c.lineWidth=2;c.beginPath();c.moveTo(cx-3,cy-24);c.lineTo(cx-4,cy+8);c.quadraticCurveTo(cx-10,cy+12,cx-7,cy+15);c.moveTo(cx+3,cy-24);c.lineTo(cx+4,cy+8);c.quadraticCurveTo(cx+10,cy+12,cx+7,cy+15);c.stroke();c.fillStyle='rgba(255,230,190,.35)';c.fillRect(cx-1.5,cy-22,3,26);
+  // cheeks shading
+  c.fillStyle='rgba(140,70,30,.18)';c.beginPath();c.ellipse(cx-24,cy+6,9,14,0,0,7);c.fill();c.beginPath();c.ellipse(cx+24,cy+6,9,14,0,0,7);c.fill();
+  // beard & moustache
+  const bd='#3a2618';c.fillStyle=bd;c.beginPath();c.moveTo(cx-34,cy+4);c.bezierCurveTo(cx-34,cy+40,cx-22,cy+66,cx-8,cy+82);c.quadraticCurveTo(cx-4,cy+92,cx-6,cy+100);c.quadraticCurveTo(cx,cy+90,cx,cy+82);c.quadraticCurveTo(cx,cy+90,cx+6,cy+100);c.quadraticCurveTo(cx+4,cy+92,cx+8,cy+82);c.bezierCurveTo(cx+22,cy+66,cx+34,cy+40,cx+34,cy+4);c.bezierCurveTo(cx+28,cy+24,cx+18,cy+32,cx+12,cy+30);c.quadraticCurveTo(cx,cy+26,cx-12,cy+30);c.bezierCurveTo(cx-18,cy+32,cx-28,cy+24,cx-34,cy+4);c.closePath();c.fill();
+  c.beginPath();c.moveTo(cx-16,cy+26);c.quadraticCurveTo(cx-6,cy+16,cx,cy+20);c.quadraticCurveTo(cx+6,cy+16,cx+16,cy+26);c.quadraticCurveTo(cx+6,cy+24,cx,cy+26);c.quadraticCurveTo(cx-6,cy+24,cx-16,cy+26);c.closePath();c.fill();
+  c.fillStyle='#8a4a30';c.beginPath();c.ellipse(cx,cy+31,5,2.2,0,0,7);c.fill();
+  c.strokeStyle='#6a4a34';c.lineWidth=1.1;for(let k=-3;k<=3;k++){c.beginPath();c.moveTo(cx+k*7,cy+36);c.quadraticCurveTo(cx+k*6,cy+60,cx+k*2.5,cy+84);c.stroke()}
+  // corner medallions with ІС ХС НИ КА
+  const med=(x,y,t1)=>{c.beginPath();c.arc(x,y,30,0,7);c.fillStyle='#c8102e';c.fill();c.lineWidth=3;c.strokeStyle='#f2dfb0';c.stroke();c.beginPath();c.arc(x,y,24,0,7);c.lineWidth=1.2;c.stroke();c.fillStyle='#f2dfb0';c.font='bold 24px Georgia,"Times New Roman",serif';c.textAlign='center';c.textBaseline='middle';c.fillText(t1,x,y+3);c.strokeStyle='#f2dfb0';c.lineWidth=1.8;c.beginPath();c.moveTo(x-12,y-13);c.lineTo(x+12,y-13);c.moveTo(x-12,y-13);c.lineTo(x-12,y-9);c.moveTo(x+12,y-13);c.lineTo(x+12,y-17);c.stroke()};
+  med(56,48,'ІС');med(W2-50,48,'ХС');med(56,H2-48,'НИ');med(W2-50,H2-48,'КА');
+  // cloth texture
+  c.globalAlpha=.06;c.fillStyle='#000';for(let y=0;y<H2;y+=3)c.fillRect(0,y,W2,1);c.globalAlpha=1;
+  return BN_TEX=cv}
+function bnDrawFlag(c,x0,y0,w,h,t,strips){const tex=bnTex(),n=strips||40,sw=w/n,tw=tex.width/n;for(let i=0;i<n;i++){const u=i/n,amp=h*.07*u,dy=Math.sin(u*7-t*4.5)*amp,sh=Math.cos(u*7-t*4.5)*u;c.drawImage(tex,i*tw,0,tw+1,tex.height,x0+i*sw,y0+dy,sw+.6,h);if(sh!==0){c.fillStyle=sh>0?`rgba(255,255,255,${sh*.12})`:`rgba(0,0,0,${-sh*.18})`;c.fillRect(x0+i*sw,y0+dy,sw+.6,h)}}}
+{const _f=drawAccBack2;drawAccBack2=function(c,a,t){_f.apply(this,arguments);if(a!==BN_ID)return;try{
+  const px=-44,top=-232;c.save();c.lineWidth=7;c.strokeStyle=INK;c.beginPath();c.moveTo(px,6);c.lineTo(px,top);c.stroke();const pg=c.createLinearGradient(px-3,0,px+3,0);pg.addColorStop(0,'#8e98a8');pg.addColorStop(.5,'#f1f4f8');pg.addColorStop(1,'#8e98a8');c.lineWidth=4.5;c.strokeStyle=pg;c.stroke();
+  ell(c,px,top-6,7,7);const bg=c.createRadialGradient(px-2,top-9,1,px,top-6,7);bg.addColorStop(0,'#ffffff');bg.addColorStop(1,'#8e98a8');c.fillStyle=bg;c.fill();c.lineWidth=2;c.strokeStyle=INK;c.stroke();
+  const fw=132,fh=88,fx=px+2,fy=top+4;c.save();c.shadowColor='rgba(0,0,0,.35)';c.shadowBlur=8;c.shadowOffsetY=3;bnDrawFlag(c,fx,fy,fw,fh,t,44);c.restore();
+  c.lineWidth=2.4;c.strokeStyle=INK;c.beginPath();c.moveTo(fx,fy);c.lineTo(fx,fy+fh);c.stroke();c.restore()}catch(e){}}}
+{const _t=thumb;thumb=function(slot,id){if(id!==BN_ID)return _t.apply(this,arguments);const key='bnthumb';if(thumbCache[key])return thumbCache[key];const c=document.createElement('canvas');c.width=c.height=144;const x=c.getContext('2d');x.fillStyle='#8fc8f2';x.fillRect(0,0,144,144);x.fillStyle='#fff';x.globalAlpha=.6;ell(x,30,120,40,14);x.fill();ell(x,120,30,30,10);x.fill();x.globalAlpha=1;x.fillStyle='#c9ced8';x.fillRect(10,10,5,130);ell(x,12.5,9,5,5);x.fillStyle='#e8ecf2';x.fill();bnDrawFlag(x,16,22,122,82,1.3,36);return thumbCache[key]=c.toDataURL()}}
+/* ---------- knight kotozayac ---------- */
+const KN_EQ={skin:'smoke',head:'none',caps:'none',acc:'cape',top:'none',shoes:'none',trail:'none',aura:'none',gear:'sword',face:'none'};
+function bnKnight(c,x,y,s,t,dir,slash){c.save();if(dir<0){c.translate(x,0);c.scale(-1,1);c.translate(-x,0)}drawKZ(c,x,y,s,KN_EQ,t,slash>0?-.15:0);
+  c.translate(x,y);c.scale(s,s);c.beginPath();c.arc(0,-112,36,Math.PI,0);c.lineTo(36,-100);c.lineTo(-36,-100);c.closePath();const hg=c.createLinearGradient(-36,-150,36,-100);hg.addColorStop(0,'#eef2f7');hg.addColorStop(1,'#8e98a8');c.fillStyle=hg;c.fill();c.lineWidth=4;c.strokeStyle=INK;c.stroke();
+  c.fillStyle='#2a2f3a';c.fillRect(-26,-114,52,6);c.fillRect(-2,-122,4,14);c.beginPath();c.moveTo(0,-148);c.quadraticCurveTo(22,-176,40,-160);c.quadraticCurveTo(24,-162,6,-146);c.closePath();c.fillStyle='#d8172b';c.fill();c.lineWidth=2.5;c.strokeStyle=INK;c.stroke();
+  c.save();c.translate(-30,-60);c.beginPath();c.moveTo(-14,-16);c.lineTo(14,-16);c.lineTo(14,4);c.quadraticCurveTo(0,22,-14,4);c.closePath();c.fillStyle='#f4f1ea';c.fill();c.lineWidth=3;c.strokeStyle=INK;c.stroke();c.fillStyle='#d8172b';c.fillRect(-3,-12,6,22);c.fillRect(-10,-5,20,6);c.restore();
+  if(slash>0){c.globalAlpha=Math.min(1,slash*4);c.strokeStyle='#fff6c8';c.lineWidth=7;c.beginPath();c.arc(-20,-70,70,-2.6+slash*3,-1.1+slash*3);c.stroke();c.globalAlpha=1}c.restore()}
+let KN_IMG=null;function bnKnightImg(){if(KN_IMG)return KN_IMG;const c=document.createElement('canvas');c.width=c.height=120;bnKnight(c.getContext('2d'),60,116,.6,1.3,1,0);return KN_IMG=c.toDataURL()}
+/* ---------- main game: knights chop meteors ---------- */
+{const _u=update;update=function(dt){const r=_u.apply(this,arguments);try{if(G&&!G.over&&!G.paused&&bnOn()&&!(G.coop&&!G.coop.host))bnKnTick(dt)}catch(e){}return r}}
+function bnKnTick(dt){if(!G.kn)G.kn=[{x:W*.15,cd:0,sl:0,dir:1,ph:0},{x:W*.85,cd:0,sl:0,dir:-1,ph:1.5}];const gy=groundY();
+  for(const k of G.kn){k.cd-=dt;k.sl=Math.max(0,k.sl-dt);let best=null,bs=1e9;
+    for(const it of G.items){if(it.k!=='meteor'||it.dead||it.fz||it.y<H*.2)continue;if(G.kn.some(o=>o!==k&&o.tgt===it))continue;const tl=Math.max(0,(gy-it.y)/Math.max(60,it.vy)),lx=it.x+(it.vx||0)*tl;const sc=Math.abs(lx-k.x)*.7+tl*240;if(sc<bs){bs=sc;best=it}}
+    k.tgt=best;let tx=best?best.x+(best.vx||0)*Math.min(.4,Math.max(0,(gy-best.y)/Math.max(60,best.vy))):(k===G.kn[0]?W*.15:W*.85);const dx=tx-k.x;k.x+=clamp(dx,-560*dt,560*dt);if(Math.abs(dx)>4)k.dir=Math.sign(dx);k.ph+=dt*(Math.abs(dx)>4?14:3);
+    if(best&&k.cd<=0&&Math.abs(best.x-k.x)<54&&best.y>gy-190){best.dead=true;k.cd=.55;k.sl=.25;burst(best.x,best.y,'#fff6c8',14,'star',260);burst(best.x,best.y,'#b08868',10,'dot',180);addFloat(best.x,best.y-20,'⚔','#ffffff');sfx(1300,.06,'square',.03,-900);setTimeout(()=>sfx(260,.12,'sawtooth',.03,-120),40);stat('knKills');G.knK=(G.knK||0)+1}}}
+{const _dp=k3drawPlayer;k3drawPlayer=function(py,hopY,ks,tilt){try{if(G&&G.kn&&bnOn())for(const k of G.kn)bnKnight(ctx,k.x,py+Math.abs(Math.sin(k.ph))*-5,.5,G.t+k.ph,k.dir,k.sl)}catch(e){}return _dp.apply(this,arguments)}}
+/* ---------- garden: gardeners ---------- */
+const BN_GD=[{x:120,y:430,cd:0,ph:0,dir:1},{x:840,y:430,cd:1,ph:2,dir:-1}];
+{const _gs=gardenStep;gardenStep=function(dt){const r=_gs.apply(this,arguments);try{if(bnOn()&&GV&&cur==='garden')bnGarden(dt)}catch(e){}return r}}
+function bnGarden(dt){const g=gData(),c=GV.c;for(const w of BN_GD){w.cd-=dt;if(w.tgt==null||!g.plots[w.tgt]){let bi=-1,bd=1e9;g.plots.forEach((pl,i)=>{if(BN_GD.some(o=>o!==w&&o.tgt===i))return;const st=gStage(pl),need=st===4||(pl.id&&!pl.w);if(!need)return;const R=gPlotRect(i),d=Math.hypot(R.x+R.w/2-w.x,R.y+R.h-w.y);if(d<bd){bd=d;bi=i}});w.tgt=bi>=0?bi:null}
+    if(w.tgt!=null){const R=gPlotRect(w.tgt),tx=R.x+R.w/2,ty=R.y+R.h+8,dx=tx-w.x,dy=ty-w.y,d=Math.hypot(dx,dy);if(d>6){w.x+=dx/d*Math.min(d,170*dt);w.y+=dy/d*Math.min(d,170*dt);w.dir=dx>=0?1:-1;w.ph+=dt*12}
+      else if(w.cd<=0){const pl=g.plots[w.tgt];const st=gStage(pl);if(st===4){gAct(w.tgt,pl,R);gTip('🧑‍🌾 Садовник-рыцарь собрал урожай','#bff7ff')}else if(pl.id&&!pl.w){pl.w=true;gTip('💧 Садовник полил грядку','#8fe3ff');persist()}w.cd=1.4;w.tgt=null}}
+    else w.ph+=dt*2;
+    c.save();c.translate(w.x,w.y);if(w.dir<0)c.scale(-1,1);drawKZ(c,0,0,.34,{skin:'milk',head:'none',caps:'none',acc:'none',top:'none',shoes:'none',trail:'none',aura:'none',gear:'none',face:'none'},performance.now()/1000+w.ph,Math.sin(w.ph)*.08);c.scale(.34,.34);c.beginPath();c.ellipse(0,-118,44,10,0,0,7);c.fillStyle='#e8c66a';c.fill();c.lineWidth=4;c.strokeStyle=INK;c.stroke();c.beginPath();c.arc(0,-120,24,Math.PI,0);c.fill();c.stroke();c.fillStyle='#d8172b';c.fillRect(-24,-126,48,6);c.restore()}}
+/* ---------- fishing: fishermen ---------- */
+const BN_FM=[{x:70,t:8},{x:FW-70,t:20}];
+{const _fs=fishStep;fishStep=function(dt){const r=_fs.apply(this,arguments);try{if(bnOn()&&FG&&cur==='fishing')bnFish(dt)}catch(e){}return r}}
+function bnFish(dt){const c=FG.c,y=FWS-(FG.camY||0);for(const m of BN_FM){m.t-=dt;if(m.t<=0){m.t=rnd(22,32);const d=fData(),pool=FSP.filter(s=>!s.danger&&s.v>0&&s.d[0]<=60),sp=pool[Math.floor(Math.random()*pool.length)];if(sp){const it={id:sp.id,w:+(sp.w*rnd(.6,1.3)).toFixed(2),clean:false};const j=d.j[sp.id]=d.j[sp.id]||{n:0,best:0};j.n++;if(it.w>j.best)j.best=it.w;let sold=0;if(d.bucket.length<fUp('bucket'))d.bucket.push(it);else{sold=fPrice(it);S.coins+=sold;refreshTop()}d.total++;stat('fishCaught');persist();try{fRender()}catch(e){}fMsg('🎣 Рыбак-рыцарь поймал: '+sp.n+' '+it.w.toFixed(1)+' кг'+(sold?' (продано +'+sold+' 🪙)':''),'#bff7ff');m.jig=1}}
+    if(y<-40||y>FH+40)continue;m.jig=Math.max(0,(m.jig||0)-dt);c.save();c.translate(m.x,y-6);if(m.x>FW/2)c.scale(-1,1);c.fillStyle='#6b4a2a';c.fillRect(-46,0,92,9);c.fillRect(-40,9,7,40);c.fillRect(33,9,7,40);c.strokeStyle=INK;c.lineWidth=2;c.strokeRect(-46,0,92,9);drawKZ(c,0,0,.36,KN_EQ.__fm||(KN_EQ.__fm={skin:'smoke',head:'none',caps:'none',acc:'none',top:'none',shoes:'none',trail:'none',aura:'none',gear:'none',face:'none'}),FG.t,0);c.scale(.36,.36);c.lineWidth=4;c.strokeStyle='#6b4a2a';c.beginPath();c.moveTo(30,-50);c.quadraticCurveTo(90,-150-m.jig*40,150,-120);c.stroke();c.lineWidth=1.5;c.strokeStyle='rgba(255,255,255,.8)';c.beginPath();c.moveTo(150,-120);c.lineTo(150+Math.sin(FG.t*2)*6,30);c.stroke();c.beginPath();c.arc(0,-112,36,Math.PI,0);c.closePath();c.fillStyle='#9aa4b4';c.fill();c.lineWidth=4;c.strokeStyle=INK;c.stroke();c.restore()}}
+/* ---------- board games: knights guard your pieces ---------- */
+function bnCd(){S.knCd=Array.isArray(S.knCd)?S.knCd:[0,0];return S.knCd}
+function bnSide(p){if(!mg)return null;if(p===mg.me)return bnOn()?{cd:bnCd(),me:true}:null;if(mg.vs==='online'&&mg.oppKn&&mg.oppKn.has){mg.oppKn.cd=mg.oppKn.cd||[0,0];return{cd:mg.oppKn.cd,me:false}}return null}
+function bnTry(p,king){const s=bnSide(p);if(!s)return null;const now=Date.now(),ready=[0,1].filter(i=>!(s.cd[i]>now));if(!ready.length)return null;if(!king&&ready.length<2)return null;const i=ready[0];s.cd[i]=now+BN_CD;if(s.me)persist();return{p,i,until:s.cd[i],king:!!king,id:Math.random().toString(36).slice(2,8)}}
+function bnCount(b,col){let n=0;for(const x of b)if(x&&(col==='w'?x===x.toUpperCase():x===x.toLowerCase()))n++;return n}
+{const _r=CH.reduce;CH.reduce=function(st,a,q){const ns=_r.apply(this,arguments);try{if(!ns||!mg||mg.st!==st||mg.game!=='chess')return ns;const v=1-q,vc=CH.color(st,v),lost=bnCount(st.b,vc)>bnCount(ns.b,vc),mate=ns.winner===q;if(!lost&&!mate)return ns;const ev=bnTry(v,mate);if(!ev)return ns;
+  const ps=JSON.parse(JSON.stringify(st));ps.turn=st.turn==='w'?'b':'w';ps.ep=-1;ps.last=null;ps.winner=null;ps.reason='';ps.moves=(st.moves||0)+1;ev.txt=mate?'⚔ Рыцарь спас короля от мата!':'⚔ Рыцарь защитил фигуру!';ps.kn=ev;return ps}catch(e){return ns}}}
+{const _r=CK.reduce;CK.reduce=function(st,a,q){const ns=_r.apply(this,arguments);try{if(!ns||!mg||mg.st!==st||mg.game!=='ck')return ns;const v=1-q,vc=CK.color(st,v),cnt=(b,f)=>b.filter(f).length,mine=x=>x&&x.toLowerCase()===vc,kg=x=>x===vc.toUpperCase(),lost=cnt(st.b,mine)>cnt(ns.b,mine),win=ns.winner===q;if(!lost&&!win)return ns;
+  const kingLost=cnt(st.b,kg)>cnt(ns.b,kg);
+  const ev=bnTry(v,win||kingLost);if(!ev)return ns;const ps=JSON.parse(JSON.stringify(st));ps.turn=st.turn==='w'?'b':'w';ps.last=null;ps.winner=null;ps.reason='';ev.txt=win?'⚔ Рыцарь спас партию!':kingLost?'⚔ Рыцарь защитил дамку!':'⚔ Рыцарь защитил шашку!';ps.kn=ev;return ps}catch(e){return ns}}}
+{const _r=DK.reduce;DK.reduce=function(st,a,q){try{if(a&&a.t==='take'&&mg&&mg.st===st&&mg.game==='durak'&&DK.legal(st,q).some(x=>x.t==='take')&&st.table.some(x=>!x.d)){const royal=st.table.some(x=>!x.d&&(x.a.s===st.ts||x.a.r===14));const ev=bnTry(q,royal);if(ev){const ns=JSON.parse(JSON.stringify(st));for(const x of ns.table)if(!x.d)x.d=Object.assign({},x.a,{kn:1});ns.taking=false;ns.msg='⚔ Рыцарь отбил атаку!';ev.txt=royal?'⚔ Рыцарь отбил козырную атаку!':'⚔ Рыцарь отбил атаку за тебя!';ns.kn=ev;return ns}}}catch(e){}return _r.apply(this,arguments)}}
+let bnLastEv='';
+{const _rm=renderMG;renderMG=function(){const r=_rm.apply(this,arguments);try{bnBoardUi()}catch(e){}return r}}
+function bnBoardUi(){const box=$('#mgBoard');if(!box||!mg||!['chess','ck','durak'].includes(mg.game))return;
+  if(mg.vs==='online'&&mg.room&&!mg.knSent){mg.knSent=1;mmPost({t:'kn',room:mg.room,has:bnOn(),cd:bnCd()})}
+  const ev=mg.st&&mg.st.kn;if(ev&&ev.id!==bnLastEv){bnLastEv=ev.id;if(ev.p===mg.me){if(bnOn()){const cd=bnCd();cd[ev.i]=Math.max(cd[ev.i]||0,ev.until);persist()}toast(ev.txt);SND.win();box.classList.remove('knflash');void box.offsetWidth;box.classList.add('knflash')}else toast('🛡 Рыцари соперника отразили твой удар!')}
+  if(mg.game==='durak'&&mg.st&&mg.st.table)box.querySelectorAll('.dktable .pair').forEach(el=>{const pr=mg.st.table[+el.dataset.pi];if(pr&&pr.d&&pr.d.kn&&el.children.length>1){const k=el.lastElementChild;k.outerHTML=`<div class="kncard" title="Отбито рыцарем"><img src="${bnKnightImg()}" alt=""><b>⚔</b></div>`}});
+  if(!bnOn()){box.querySelectorAll('.knside').forEach(e=>e.remove());return}
+  box.style.position='relative';box.classList.toggle('kndk',mg.game==='durak');for(const i of[0,1]){let el=box.querySelector('.knside.k'+i);if(!el){el=document.createElement('div');el.className='knside k'+i;el.innerHTML=`<img src="${bnKnightImg()}" alt=""><b></b>`;box.appendChild(el)}}bnTimers()}
+function bnTimers(){const cd=S?bnCd():[0,0],now=Date.now();document.querySelectorAll('#mgBoard .knside').forEach(el=>{const i=el.classList.contains('k1')?1:0,left=(cd[i]||0)-now;el.classList.toggle('cool',left>0);el.querySelector('b').textContent=left>0?'⏳ '+Math.floor(left/60000)+':'+String(Math.floor(left%60000/1000)).padStart(2,'0'):'⚔ Готов'})}
+setInterval(()=>{try{if(cur==='mg')bnTimers()}catch(e){}},1000);
+{const _mr=mmRecv;mmRecv=function(m){try{if(m&&m.t==='kn'&&m.from!==MM_ID&&mg&&m.room===mg.room){mg.oppKn={has:!!m.has,cd:Array.isArray(m.cd)?m.cd.slice(0,2):[0,0]};if(!mg.knSent&&mg.room){mg.knSent=1;mmPost({t:'kn',room:mg.room,has:bnOn(),cd:bnCd()})}return}}catch(e){}return _mr.apply(this,arguments)}}
+(function(){const st=document.createElement('style');st.textContent=`
+#mgBoard .knside{position:absolute;top:50%;transform:translateY(-50%);width:78px;text-align:center;pointer-events:none;z-index:3}#mgBoard .knside.k0{left:-6px}#mgBoard .knside.k1{right:-6px}#mgBoard .knside.k1 img{transform:scaleX(-1)}
+#mgBoard .knside img{width:78px;height:78px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.35));transition:filter .3s,opacity .3s}#mgBoard .knside b{display:inline-block;font-size:12px;background:#fff;border:2px solid var(--ink);border-radius:999px;padding:1px 8px;color:var(--ink);white-space:nowrap}
+#mgBoard.kndk .knside{top:auto;bottom:14px;transform:none}#mgBoard.kndk .knside.k0{left:10px}#mgBoard.kndk .knside.k1{right:10px}#mgBoard .kncard{width:56px;height:80px;border-radius:9px;border:3px solid var(--ink);background:linear-gradient(#ffe9a8,#ffcf4d);display:flex;flex-direction:column;align-items:center;justify-content:center;margin-left:-22px;margin-top:22px;box-shadow:0 3px 0 var(--ink);transform:rotate(12deg)}#mgBoard .kncard img{width:52px;height:52px}#mgBoard .kncard b{font-size:14px;line-height:1}#mgBoard .knside.cool img{filter:grayscale(1) brightness(.8);opacity:.6}#mgBoard.knflash{animation:knfl .7s}@keyframes knfl{30%{box-shadow:0 0 0 6px #ffe066,0 0 40px #ffe066}}
+@media(max-width:700px){#mgBoard .knside{width:54px}#mgBoard .knside img{width:54px;height:54px}}`;document.head.appendChild(st)})();
+/* ---------- mini-games: choose the screen size ---------- */
+const MGSZ={arc:[['S',.75],['M',1],['L',1.35],['XL',1.7],['⛶',0]],garden:[['S',.7],['M',.85],['L',1],['XL',1.3],['⛶',0]],fishing:[['S',.7],['M',.85],['L',1],['XL',1.3],['⛶',0]],mg:[['S',.8],['M',1],['L',1.2],['XL',1.45],['⛶',0]]};
+function mgszGet(k){try{return lsGet('kz_mgsz_'+k)||(k==='arc'||k==='mg'?'M':'L')}catch(e){return'M'}}
+function mgszApply(k){const scr=$('#'+k);if(!scr)return;const panel=scr.querySelector('.panel');if(!panel)return;const v=mgszGet(k),f=(MGSZ[k].find(x=>x[0]===v)||MGSZ[k][1])[1],full=f===0;
+  if(k==='arc'){const cv=$('#arcCv');const mx=Math.max(320,Math.min(innerWidth-60,innerHeight-110)),px=full?mx:Math.min(mx,Math.round(520*f));panel.style.maxWidth=(px+80)+'px';cv.style.maxWidth=px+'px'}
+  else if(k==='garden'||k==='fishing'){panel.style.maxWidth=full?'calc(100vw - 24px)':Math.round(1000*f)+'px';const cv=$(k==='garden'?'#gcv':'#fcv');if(full){cv.style.maxHeight='calc(100vh - 230px)';cv.style.width='auto';cv.style.maxWidth='100%';cv.style.margin='8px auto 0'}else{cv.style.maxHeight='';cv.style.width='100%';cv.style.maxWidth=''}}
+  else if(k==='mg'){const b=$('#mgBoard');if(b)b.style.zoom=full?String(Math.max(1,Math.min((innerHeight-260)/560,(innerWidth-80)/620))):String(f);panel.style.maxWidth=full?'calc(100vw - 24px)':''}
+  panel.querySelectorAll('.mgsz button').forEach(b=>b.classList.toggle('cur',b.dataset.sz===v))}
+function mgszInit(){for(const k in MGSZ){const scr=$('#'+k);if(!scr)continue;const row=scr.querySelector('.panel>.row');if(!row||row.querySelector('.mgsz'))continue;const d=document.createElement('div');d.className='mgsz';d.title='Размер экрана';d.innerHTML='<span>🔍</span>'+MGSZ[k].map(([n])=>`<button class="btn sm ghost" data-sz="${n}">${n}</button>`).join('');d.addEventListener('click',e=>{const b=e.target.closest('[data-sz]');if(!b)return;try{lsSet('kz_mgsz_'+k,b.dataset.sz)}catch(er){}mgszApply(k);SND.click()});const last=row.lastElementChild;row.insertBefore(d,last);mgszApply(k)}}
+(function(){const st=document.createElement('style');st.textContent=`.mgsz{display:flex;gap:4px;align-items:center;margin-left:auto;margin-right:8px}.mgsz span{font-size:14px}.mgsz .btn.sm{padding:4px 9px;font-size:12px;min-width:32px}.mgsz .btn.sm.cur{background:var(--ink)!important;color:#fff!important}@media(max-width:560px){.mgsz{display:none}}`;document.head.appendChild(st)})();
+setTimeout(mgszInit,0);setInterval(()=>{try{mgszInit();if(['arc','garden','fishing','mg'].includes(cur))mgszApply(cur)}catch(e){}},1500);addEventListener('resize',()=>{try{if(['arc','garden','fishing','mg'].includes(cur))mgszApply(cur)}catch(e){}});
+{const _s=show;show=function(id){const r=_s.apply(this,arguments);try{if(MGSZ[id]){mgszInit();mgszApply(id)}}catch(e){}return r}}
+/* ---------- economy: garden & fishing ---------- */
+for(const id in PLANTS){const P=PLANTS[id];if(P.sell>=150&&!P.__eco){P.__eco=1;const tree=P.cost>P.sell;P.sell=Math.max(1,Math.round(P.sell/4));if(!tree)P.cost=Math.max(1,Math.round(P.cost/4))}}
+for(const sp of FSP)if(sp.v>=20&&!sp.__eco){sp.__eco=1;sp.v=Math.round(sp.v/4)}
+{const iv=setInterval(()=>{try{if(!S||!user||user==='__guest')return;clearInterval(iv);S.stats=S.stats||{};if(S.stats.gDiv10)return;S.stats.gDiv10=1;const g=S.garden;if(user!=='deta'&&g&&((g.harvested||0)>0||(g.xp||0)>0)){const was=S.coins;S.coins=Math.floor(S.coins/10);setTimeout(()=>toast('⚖ Экономика сада исправлена: монеты, заработанные с ошибкой, пересчитаны ('+was.toLocaleString('ru')+' → '+S.coins.toLocaleString('ru')+')'),2000)}persist();refreshTop()}catch(e){}},1500)}
+HELP.push(['⚔ Знамя «Спас Нерукотворный»','Лимитированное знамя за спиной (10 000 000 🪙, продаётся 10 дней). Пока надето: в забеге два рыцаря-котозайца подбегают к метеоритам и рубят их мечом; в саду садовники сами поливают и собирают урожай; на рыбалке рыбаки ловят рыбу в ведро; в шахматах, шашках и «Дураке» по краям доски стоят два рыцаря — каждый раз в 5 минут отражает удар. Если готов один — он бережёт короля (мат), дамку или козырную атаку; если готовы оба — защищают и обычную фигуру.']);
 
 resize();
 const sess=lsGet('kz_session');
