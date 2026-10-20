@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=89;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=90;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3065,6 +3065,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:90,l:'1.4.0',items:['🎃 Хэллоуин: лимитированный аксессуар «Фонарь Джека» за спиной — 13 000 000 🪙, только до 31 октября','👻 В забеге два призрака-котозайца собирают звёзды, монеты и морковки, а тыква раз в 40 секунд поглощает удар','🌱 В саду всё растёт на 25% быстрее, призрак прогоняет ворон; 🎣 на рыбалке ведро на 3 места больше, рыба дороже на 25%','♟ В шахматах, шашках и «Дураке» два призрака: каждый раз в 5 минут делает за тебя лучший ход','⌛ В Cosmetics новый фильтр «Лимитированные» — там знамя и фонарь']},
  {v:89,l:'1.4.0',items:['🃏 «Дурак» с ботом: выбор «переводной» снова работает — раньше вместо игры запускался забег и показывалась обычная игра','🌐 «Дурак» онлайн: перед поиском выбираешь вид — обычный или переводной, соперник подбирается с тем же видом']},
  {v:88,l:'1.4.0',items:['⚔ Рыцари знамени: правый рыцарь теперь тоже отражает удары — каждый из двух защищает по разу, потом 5 минут отдыхает']},
  {v:87,l:'1.4.0',items:['🎀 400 новых аксессуаров в магазине: 20 видов в 20 расцветках — от Мяты и Клубники до Золота и Радуги','👔 На шею и грудь: бабочки, галстуки, шарфы, банданы, кулоны-сердца и звёзды, медали, бусы, значки, ошейники с колокольчиком, цветочные ожерелья, сумки через плечо','🎒 За спину: рюкзаки, крылья бабочки и дракона, накидки, воздушные шарики и змеи, гитары, колчаны со стрелами','🔎 Фильтр «🎀 Новые аксессуары» во вкладке «Аксессуар»']},
@@ -7681,6 +7682,71 @@ $('#mgFind').onclick=()=>{if(mgGame==='durak'){stopSearch();mg=null;mgPend={};mg
 function startSearch(){NET.start();if(!mmCh&&!NET.ok()){toast('Нет связи для поиска — сыграй с ботом');return}mg=null;mgStep=null;const g=mgGame==='durak'?'durak@'+dkOnMode:mgGame;srch={game:g,t0:Date.now(),pend:null};mmPost({t:'seek',game:g,id:MM_ID,nick});SND.click();renderMG();if(mgGame==='durak')toast('🔎 Ищем соперника: '+DK_MODE[dkOnMode])}
 {const _mr=mmRecv;mmRecv=function(m){const r=_mr.apply(this,arguments);try{if(m&&m.t==='seek'&&m.id&&typeof m.game==='string'&&m.game.startsWith('durak@')&&seekers[m.id]){seekers[m.id].game='durak'}}catch(e){}return r}}
 {const _so=startOnline;startOnline=function(host,room,opp){const md=mgGame==='durak'?dkOnMode:null;const r=_so.apply(this,arguments);try{if(md&&mg){mg.mode=md;if(host&&md!=='classic'){mg.st=DK.init(md);mgAfter()}}}catch(e){}return r}}
+
+
+/* ================= Хэллоуин: «Фонарь Джека» + призраки-котозайцы ================= */
+const LN_ID='hw_lantern',LN_END=new Date('2026-11-01T00:00:00+03:00').getTime(),LN_CD=5*60*1000;
+ITEMS.acc[LN_ID]={n:'Фонарь Джека',price:13000000,lim:1,hw:1,limEnd:LN_END,perk:'Призраки-котозайцы собирают звёзды и монеты, тыква раз в 40 с поглощает удар; сад растёт быстрее и без ворон; на рыбалке ведро больше и рыба дороже; в шахматах, шашках и «Дураке» призраки делают лучший ход'};
+if(Date.now()>LN_END){ITEMS.acc[LN_ID].src='limhw';EXCL_VAL['acc:'+LN_ID]=13000000}
+function lnOn(){return!!(S&&S.eq&&S.eq.acc===LN_ID)}
+{const _a=allPaid;allPaid=function(){return _a.apply(this,arguments).filter(k=>k.split(':')[1]!==LN_ID)}}
+{const _r=rarity;rarity=function(def){if(def&&def.hw)return{n:'🎃 Лимитированное',c:'#ff8a3d'};return _r.apply(this,arguments)}}
+{const _s=srcText;srcText=function(src,def){if(src==='limhw')return'⌛ Хэллоуин закончился — теперь только через обмен';return _s.apply(this,arguments)}}
+COS_F.limx='⌛ Лимитированные';
+{const _p=cosPass;cosPass=function(def,own){if(cosFilt==='holy'&&def&&def.hw)return false;if(cosFilt==='limx')return!!(def&&def.limEnd);return _p.apply(this,arguments)}}
+/* ---------- drawing ---------- */
+function lnPumpkin(c,x,y,r,t,glow){c.save();c.translate(x,y);if(glow){const g=c.createRadialGradient(0,0,r*.3,0,0,r*3.2);g.addColorStop(0,'rgba(255,190,70,.55)');g.addColorStop(1,'rgba(255,140,30,0)');c.fillStyle=g;c.fillRect(-r*3.2,-r*3.2,r*6.4,r*6.4)}
+  for(const[ox,rx,col]of[[-r*.55,r*.55,'#e8701e'],[r*.55,r*.55,'#e8701e'],[-r*.25,r*.5,'#ff8a2a'],[r*.25,r*.5,'#ff8a2a'],[0,r*.45,'#ff9a3c']]){ell(c,ox,0,rx,r*.88);fs(c,col,2)}
+  c.beginPath();c.moveTo(-2,-r*.86);c.quadraticCurveTo(0,-r*1.25,r*.3,-r*1.32);c.lineWidth=r*.18;c.strokeStyle='#3e6a2a';c.stroke();
+  const f=.75+.25*Math.sin(t*9)*Math.sin(t*5.3);c.fillStyle=`rgba(255,${200+f*40|0},90,${.85+f*.15})`;c.shadowColor='#ffd060';c.shadowBlur=glow?12:4;
+  for(const s of[-1,1]){c.beginPath();c.moveTo(s*r*.18,-r*.12);c.lineTo(s*r*.5,-r*.12);c.lineTo(s*r*.34,-r*.42);c.closePath();c.fill()}
+  c.beginPath();c.moveTo(-r*.13,r*.02);c.lineTo(r*.13,r*.02);c.lineTo(0,-r*.16);c.closePath();c.fill();
+  c.beginPath();c.moveTo(-r*.58,r*.2);for(let i=0;i<=6;i++)c.lineTo(-r*.58+i*r*.193,r*.2+(i%2?r*.16:0));c.quadraticCurveTo(0,r*.72,-r*.58,r*.2);c.closePath();c.fill();c.restore()}
+function lnBat(c,x,y,s,t){c.save();c.translate(x,y);c.scale(s,s);const f=Math.sin(t*18)*.6;c.fillStyle='#241a33';c.beginPath();c.moveTo(0,0);for(const d of[-1,1]){c.moveTo(0,0);c.quadraticCurveTo(d*6,-8-f*6,d*14,-4-f*8);c.quadraticCurveTo(d*11,0,d*13,3);c.quadraticCurveTo(d*8,1,d*6,5);c.quadraticCurveTo(d*3,2,0,4)}c.fill();ell(c,0,1,3.6,4.2);c.fill();c.fillStyle='#ffd060';ell(c,-1.3,0,.9,.9);c.fill();ell(c,1.3,0,.9,.9);c.fill();c.restore()}
+function lnGhost(c,x,y,s,t,dir,carry){c.save();c.translate(x,y+Math.sin(t*3)*4);c.scale(s*(dir<0?-1:1),s);c.globalAlpha=.92;
+  const b=new Path2D();b.moveTo(-30,-58);b.bezierCurveTo(-30,-100,30,-100,30,-58);b.lineTo(30,-6);for(let i=0;i<=5;i++){const xx=30-i*12;b.quadraticCurveTo(xx-6,6+Math.sin(t*6+i)*5,xx-12,-6)}b.closePath();
+  for(const sx of[-1,1]){c.save();c.translate(sx*14,-88);c.rotate(sx*.25+Math.sin(t*2+sx)*.08);ell(c,0,-20,8,22);fs(c,'#f6f7ff',3);ell(c,0,-18,4,15);c.fillStyle='#ffc2d6';c.fill();c.restore()}
+  c.fillStyle='#f6f7ff';c.fill(b);c.lineWidth=3;c.strokeStyle=INK;c.stroke(b);c.globalAlpha=1;
+  ell(c,-11,-62,5,7);c.fillStyle=INK;c.fill();ell(c,11,-62,5,7);c.fill();ell(c,-9.5,-64,1.8,2.2);c.fillStyle='#fff';c.fill();ell(c,12.5,-64,1.8,2.2);c.fill();
+  c.fillStyle='rgba(255,140,170,.55)';ell(c,-19,-50,5,3);c.fill();ell(c,19,-50,5,3);c.fill();c.lineWidth=2.4;c.strokeStyle=INK;c.beginPath();c.arc(0,-52,5,.2,Math.PI-.2);c.stroke();
+  if(carry)lnPumpkin(c,26,-24,10,t,true);c.restore()}
+{const _f=drawAccBack2;drawAccBack2=function(c,a,t){_f.apply(this,arguments);if(a!==LN_ID)return;try{const px=-46,top=-238;c.save();
+  c.lineCap='round';c.lineWidth=11;c.strokeStyle=INK;c.beginPath();c.moveTo(px,6);c.bezierCurveTo(px-6,-80,px+6,-160,px,top);c.quadraticCurveTo(px+4,top-26,px+30,top-22);c.stroke();c.lineWidth=7;c.strokeStyle='#5a3a22';c.stroke();
+  c.lineWidth=2;c.strokeStyle='#8a5e3a';for(let y=-20;y>top;y-=26){c.beginPath();c.moveTo(px-3,y);c.quadraticCurveTo(px+2,y-8,px+3,y-16);c.stroke()}
+  const sw=Math.sin(t*1.8)*.22,hx=px+30,hy=top-20;c.translate(hx,hy);c.rotate(sw);c.lineWidth=2;c.strokeStyle='#5b6478';for(let i=0;i<5;i++){ell(c,0,6+i*6,2.2,3.2);c.stroke()}lnPumpkin(c,0,52,20,t,true);c.restore();
+  for(let i=0;i<3;i++){const an=t*1.3+i*2.1;lnBat(c,Math.cos(an)*70,-150+Math.sin(an*1.4)*26,.9,t+i)}}catch(e){}}}
+{const _t=thumb;thumb=function(slot,id){if(id!==LN_ID)return _t.apply(this,arguments);if(thumbCache.lnthumb)return thumbCache.lnthumb;const c=document.createElement('canvas');c.width=c.height=144;const x=c.getContext('2d');const g=x.createLinearGradient(0,0,0,144);g.addColorStop(0,'#2a1d4a');g.addColorStop(1,'#5a2a5a');x.fillStyle=g;x.fillRect(0,0,144,144);x.fillStyle='#fff6d6';ell(x,112,28,14,14);x.fill();
+  x.lineCap='round';x.lineWidth=9;x.strokeStyle=INK;x.beginPath();x.moveTo(26,140);x.quadraticCurveTo(20,60,30,24);x.quadraticCurveTo(34,10,62,14);x.stroke();x.lineWidth=5;x.strokeStyle='#5a3a22';x.stroke();x.lineWidth=2;x.strokeStyle='#8fa0b8';x.beginPath();x.moveTo(62,14);x.lineTo(62,44);x.stroke();lnPumpkin(x,62,72,26,1.2,true);lnBat(x,104,64,1.4,1);lnBat(x,118,100,1,2);return thumbCache.lnthumb=c.toDataURL()}}
+/* ---------- main game: ghosts collect, pumpkin absorbs a hit ---------- */
+const LN_GRAB=['star','pink','gold','carrot','fish','candy'];
+{const _u=update;update=function(dt){const r=_u.apply(this,arguments);try{if(G&&!G.over&&!G.paused&&lnOn()&&!(G.coop&&!G.coop.host))lnTick(dt)}catch(e){}return r}}
+function lnTick(dt){const gy=groundY();if(!G.lnG)G.lnG=[{x:G.px-80,y:gy-170,cd:0,dir:1,ph:0},{x:G.px+80,y:gy-170,cd:.5,dir:-1,ph:2}];G.lnSh=Math.max(0,(G.lnSh||0)-dt);
+  for(const g of G.lnG){g.cd-=dt;g.ph+=dt;let best=null,bd=1e9;for(const it of G.items){if(it.dead||!LN_GRAB.includes(it.k)||it.y<H*.12)continue;if(G.lnG.some(o=>o!==g&&o.tgt===it))continue;const d=Math.hypot(it.x-g.x,it.y-g.y);if(d<bd){bd=d;best=it}}g.tgt=best;
+    const tx=best?best.x:G.px+(g===G.lnG[0]?-80:80),ty=best?best.y:gy-170,dx=tx-g.x,dy=ty-g.y,d=Math.hypot(dx,dy),sp=(best?430:300)*dt;if(d>2){g.x+=dx/d*Math.min(d,sp);g.y+=dy/d*Math.min(d,sp);if(Math.abs(dx)>3)g.dir=Math.sign(dx)}
+    if(best&&g.cd<=0&&d<34){best.dead=true;g.cd=.45;catchItem(best,best.x,best.y);burst(best.x,best.y,'#ffb347',8,'star',160);stat('ghostGrab')}}}
+{const _c=catchItem;catchItem=function(it,cx,cy){try{if(it&&it.k==='meteor'&&G&&!(G.inv>0)&&lnOn()&&!(G.lnSh>0)){G.lnSh=40;G.inv=1;burst(cx,cy-40,'#ff8a2a',24,'star',260);banner('🎃 Тыквенный фонарь поглотил удар!','#ff8a3d');sfx(330,.3,'triangle',.05,-120);stat('lnShield');return}}catch(e){}return _c.apply(this,arguments)}}
+{const _dp=k3drawPlayer;k3drawPlayer=function(py,hopY,ks,tilt){try{if(G&&G.lnG&&lnOn())for(const g of G.lnG)lnGhost(ctx,g.x,g.y,.42,G.t+g.ph,g.dir,false)}catch(e){}const r=_dp.apply(this,arguments);try{if(G&&lnOn()&&!(G.lnSh>0)){ctx.save();ctx.globalAlpha=.9;lnPumpkin(ctx,G.px+46,py-150,8,G.t,false);ctx.restore()}}catch(e){}return r}}
+/* ---------- garden: faster growth, no crows ---------- */
+{const _g=gDecB;gDecB=function(b){const v=_g.apply(this,arguments);return b==='grow'&&lnOn()?v+.25:v}}
+{const _gs=gardenStep;gardenStep=function(dt){const r=_gs.apply(this,arguments);try{if(lnOn()&&GV&&cur==='garden'){if(gCrow&&!gCrow.flee){gCrow.flee=true;gTip('👻 Призрак прогнал ворону!','#ffd8a8')}const t=performance.now()/1000;lnGhost(GV.c,480+Math.sin(t*.5)*360,96+Math.sin(t*1.3)*10,.4,t,Math.cos(t*.5)>0?1:-1,true)}}catch(e){}return r}}
+/* ---------- fishing: bigger bucket, pricier fish ---------- */
+{const _u=fUp;fUp=function(k){const v=_u.apply(this,arguments);return k==='bucket'&&lnOn()?v+3:v}}
+{const _p=fPrice;fPrice=function(f){const v=_p.apply(this,arguments);return lnOn()?Math.round(v*1.25):v}}
+{const _fs=fishStep;fishStep=function(dt){const r=_fs.apply(this,arguments);try{if(lnOn()&&FG&&cur==='fishing'){const y=FWS-(FG.camY||0);if(y>-60&&y<FH+60)lnGhost(FG.c,FW-150+Math.sin(FG.t*.7)*40,y-70,.42,FG.t,-1,true)}}catch(e){}return r}}
+/* ---------- board games: ghosts make the best move ---------- */
+function lnCd(){S.lnCd=Array.isArray(S.lnCd)?S.lnCd:[0,0];return S.lnCd}
+{const _rm=renderMG;renderMG=function(){const r=_rm.apply(this,arguments);try{lnBoardUi()}catch(e){}return r}}
+function lnBoardUi(){const box=$('#mgBoard');if(!box)return;let el=box.querySelector('.lnbar');const on=lnOn()&&mg&&mg.st&&mg.st.winner===null&&['chess','ck','durak'].includes(mg.game);
+  if(!on){if(el)el.remove();return}
+  if(!el){el=document.createElement('div');el.className='lnbar';el.innerHTML=`<span>🎃 Призраки-помощники:</span><button class="btn sm org" data-lng="0"></button><button class="btn sm org" data-lng="1"></button>`;el.addEventListener('click',e=>{const b=e.target.closest('[data-lng]');if(b)lnUse(+b.dataset.lng)})}
+  if(el.parentNode!==box||box.firstElementChild!==el&&!box.querySelector('.infwait'))box.prepend(el);lnTimers()}
+function lnTimers(){const cd=S?lnCd():[0,0],now=Date.now();document.querySelectorAll('#mgBoard .lnbar [data-lng]').forEach(b=>{const i=+b.dataset.lng,left=(cd[i]||0)-now;b.disabled=left>0;b.textContent=left>0?'👻 ⏳ '+Math.floor(left/60000)+':'+String(Math.floor(left%60000/1000)).padStart(2,'0'):'👻 Лучший ход'})}
+function lnUse(i){if(!mg||!mg.st||mg.st.winner!==null)return;const cd=lnCd();if(cd[i]>Date.now())return;const E=MG_ENG[mg.game];if(E.actor(mg.st)!==mg.me){toast('👻 Призрак подождёт твоего хода');return}const a=E.smart(mg.st,mg.me);if(!a){toast('👻 Призрак не нашёл хода');return}cd[i]=Date.now()+LN_CD;persist();toast('👻 Призрак сделал лучший ход!');stat('ghostMove');mgDo(a);lnTimers()}
+setInterval(()=>{try{if(cur==='mg')lnTimers()}catch(e){}},1000);
+(function(){const st=document.createElement('style');st.textContent=`#mgBoard .lnbar{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;background:#2a1d4a;color:#ffd8a8;border:2px solid var(--ink);border-radius:14px;padding:6px 10px;margin:0 0 10px;font-weight:800;font-size:14px;position:relative;z-index:4}#mgBoard .lnbar .btn[disabled]{opacity:.55;filter:grayscale(.6)}`;document.head.appendChild(st)})();
+/* ---------- info ---------- */
+HELP.push(['🎃 Фонарь Джека (Хэллоуин)','Лимитированный аксессуар за спиной — 13 000 000 🪙, продаётся до 31 октября включительно. Пока надет: в забеге два призрака-котозайца сами подлетают и собирают звёзды, монеты и морковки, а тыква раз в 40 секунд поглощает удар метеорита или молнии; в саду всё растёт на 25% быстрее и призрак прогоняет ворон; на рыбалке ведро на 3 места больше и рыба продаётся на 25% дороже; в шахматах, шашках и «Дураке» два призрака — каждый раз в 5 минут делает за тебя лучший ход.']);
+{const iv=setInterval(()=>{try{if(!S||!user||user==='__guest')return;clearInterval(iv);if(Date.now()<LN_END&&!S.stats.lnNews){S.stats.lnNews=1;persist();setTimeout(()=>toast('🎃 Хэллоуин: в Cosmetics → Аксессуар появился «Фонарь Джека» — только до 31 октября'),4500)}}catch(e){}},1500)}
 
 resize();
 const sess=lsGet('kz_session');

@@ -1,10 +1,10 @@
 {
- "version": 89,
+ "version": 90,
  "label": "1.4.0",
- "name": "1.4.0: выбор вида «Дурака» с ботом и онлайн",
+ "name": "1.4.0: Хэллоуин — лимитированный «Фонарь Джека» с призраками-помощниками",
  "file": "game.html",
- "sha256": "6a11b479dd657289d1973c45e17832574f6b0e1f4a8d77ded9a1baa332eae460",
- "date": "2026-10-19",
+ "sha256": "e12f5be871c11d5621ce5a48eed368d3efb2e4be691e763da87c190e177dc2ab",
+ "date": "2026-10-20",
  "exe": {
   "version": 6,
   "file": "KotazaicAndStars.exe",
