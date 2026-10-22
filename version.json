@@ -1,9 +1,9 @@
 {
- "version": 92,
+ "version": 93,
  "label": "1.4.0",
- "name": "1.4.0: приложение игры на телефоне обновляется до Kotazaic Launcher с переносом прогресса",
+ "name": "1.4.0: лимитированная коллекция Alien — 55 вещей пришельцев",
  "file": "game.html",
- "sha256": "7d3efbc748d381bf67ddfc821005b3ad14e96fa65a7734bc95c4cfe587ac8524",
+ "sha256": "a8b424844942ddc9f086af2ba33f4bbd8ff7b396f18bed0fb25d2d1dd1f5512d",
  "date": "2026-10-22",
  "exe": {
   "version": 6,
