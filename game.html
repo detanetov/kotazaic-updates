@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=93;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=94;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&KZAndroid.isLauncher)?'launcher':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3065,7 +3065,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
- {v:93,l:'1.4.0',items:['👽 Лимитированная коллекция Alien — 55 вещей пришельцев до 15 ноября: 7 скинов (зелёный пришелец, марсианин, неоновый, голограмма…), антенки, мозг под куполом, НЛО над головой, шапочка из фольги','🚀 Скафандр, худи «Меня похитили», лунные и антигравитационные ботинки, ранец пришельца, мини-НЛО, крылья жука, лучевой бластер и лазерный меч с бонусами','🛸 Следы (слизь, тарелки, радиоволны) и ауры (луч похищения, орбита НЛО, космический портал), плюс 4 полных костюма','🔎 В Cosmetics новая вкладка «👽 Alien»']},
+ {v:93,l:'1.4.0',items:['👽 Лимитированная коллекция Alien — 55 вещей пришельцев до 15 ноября: 7 скинов (зелёный пришелец, марсианин, неоновый, голограмма…), антенки, мозг под куполом, НЛО над головой, шапочка из фольги','🚀 Скафандр, худи «Меня похитили», лунные и антигравитационные ботинки, ранец пришельца, мини-НЛО, крылья жука, лучевой бластер и лазерный меч с бонусами','🛸 Следы (слизь, тарелки, радиоволны) и ауры (луч похищения, орбита НЛО, космический портал), плюс 4 полных костюма','🔎 В Cosmetics новая вкладка «👽 Alien»','💎 Вещи Alien стали в 5 раз дороже: от 17 500 до 130 000 🪙']},
  {v:92,l:'1.4.0',items:['🚀 Kotazaic Launcher для телефона теперь ставится поверх приложения Kotazaic and Stars — аккаунты, монеты и вещи переносятся сами, как в лаунчере на ПК']},
  {v:91,l:'1.4.0',items:['📲 Перенос аккаунта: в ⚙ Settings → 👤 Аккаунты появилась кнопка «Создать код переноса» — код переносит аккаунт со всем прогрессом на телефон, ПК или в Kotazaic Launcher','🔑 На экране входа — «📲 Перенести аккаунт с другого устройства»: вставь код, и ты сразу в своём аккаунте','🚀 В Kotazaic Launcher для телефона аккаунт и прогресс общие с лаунчером, игру обновляет сам лаунчер']},
  {v:90,l:'1.4.0',items:['🎃 Хэллоуин: лимитированный аксессуар «Фонарь Джека» за спиной — 13 000 000 🪙, только до 31 октября','👻 В забеге два призрака-котозайца собирают звёзды, монеты и морковки, а тыква раз в 40 секунд поглощает удар','🌱 В саду всё растёт на 25% быстрее, призрак прогоняет ворон; 🎣 на рыбалке ведро на 3 места больше, рыба дороже на 25%','♟ В шахматах, шашках и «Дураке» два призрака: каждый раз в 5 минут делает за тебя лучший ход','⌛ В Cosmetics новый фильтр «Лимитированные» — там знамя и фонарь']},
@@ -7823,7 +7823,8 @@ const AL_DEF={
  gear:[['g1','Лучевой бластер',9000,'+7% монет',{coin:.07}],['g2','Зонд',7000,'+6% очков',{score:.06}],['g3','Кристалл энергии',10000,'Метеориты на 6% медленнее',{met:.06}],['g4','Ручной телепорт',12000,'+8% очков',{score:.08}],['g5','Рация с Марса',6000,'+5% монет',{coin:.05}],['g6','Лазерный меч',14000,'+9% монет',{coin:.09}]],
  trail:[['tr1','Зелёная слизь',8000],['tr2','Летающие тарелки',11000],['tr3','Радиоволны',9000],['tr4','Космические кристаллы',10000],['tr5','Маленькие пришельцы',12000]],
  aura:[['au1','Луч похищения',22000],['au2','Орбита НЛО',18000],['au3','Зелёное свечение',12000],['au4','Радар',14000],['au5','Космический портал',24000]]};
-for(const[sl,list]of Object.entries(AL_DEF))for(const row of list){const[k,n,price]=row,id='al_'+k;AL[id]=sl;
+const AL_MUL=5;
+for(const[sl,list]of Object.entries(AL_DEF))for(const row of list){const[k,n,p0]=row,price=p0*AL_MUL,id='al_'+k;AL[id]=sl;
   if(sl==='skin')SKINS[id]=Object.assign({n,price,lim:1,al:1,limEnd:AL_END},row[3]);
   else{const d={n,price,lim:1,al:1,limEnd:AL_END};if(sl==='gear'){d.perk=row[3];d.p=row[4]}ITEMS[sl][id]=d;if(sl==='top')TOP_COL[id]=row[3]}}
 SKIN_ORDER.length=0;SKIN_ORDER.push(...Object.keys(SKINS));
