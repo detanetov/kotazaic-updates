@@ -33,17 +33,17 @@
   "date": "2026-10-22"
  },
  "mlauncher": {
-  "version": 2,
-  "label": "1.1",
-  "name": "Kotazaic Launcher для телефона 1.1: общий аккаунт и прогресс с играми, перенос аккаунта по коду",
+  "version": 3,
+  "label": "1.2",
+  "name": "Kotazaic Launcher 1.8: ставится поверх приложения Kotazaic and Stars и переносит весь прогресс",
   "file": "mlauncher.html",
-  "sha256": "20d1fbe4363770aa4ca324903b6faa6caa28ba81dbe8cf713db946b072d56ea5",
+  "sha256": "a214e3a110f5a3c4a2154564469a54a1e8f68a688a15116ede6093aae96d5af6",
   "date": "2026-10-22",
   "apk": {
-   "label": "1.1",
+   "label": "1.8",
    "file": "KotazaicLauncher.apk",
-   "sha256": "76736ee2175deee1b0d4e0f974719d3399811943d50470e0e976483bfb2a2a69",
-   "note": "Аккаунт и прогресс станут общими с Kotazaic and Stars — установи поверх"
+   "sha256": "730f46dd8fbfab58df588f079647c8d3865070a8377450fddb917f0a87d26e7f",
+   "note": "Ставится поверх приложения Kotazaic and Stars и переносит его прогресс. Это приложение после этого можно удалить"
   }
  }
 }
