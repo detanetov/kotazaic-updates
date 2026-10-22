@@ -11,10 +11,10 @@
   "sha256": "d80c084e0fd60188d5d50a7e6651d8ee907a67c53b0c454d94d969048026f25a"
  },
  "launcher": {
-  "version": 13,
-  "label": "1.1.7",
+  "version": 14,
+  "label": "1.1.8",
   "file": "KotazaicLauncher.exe",
-  "sha256": "11adf7b6eadc9400ec443afd5146aeee5a8ea3d7e4128b5d16f92666e205440f"
+  "sha256": "81304f72a23b217db47c6aff40cccb5f7a607f953066b11e701ba9eb48d7ce80"
  },
  "kotoio": {
   "version": 7,
@@ -25,11 +25,11 @@
   "date": "2026-10-19"
  },
  "lazy": {
-  "version": 1,
-  "label": "1.0",
-  "name": "Ленивая жизнь 1.0: свой ленивец, комнаты, мини-игра «Листопад», 6 костюмов и сюрприз-коробки",
+  "version": 2,
+  "label": "1.1",
+  "name": "Ленивая жизнь 1.1: 18 костюмов с редкостью, свой ленивец у каждого аккаунта, ADM для deta",
   "file": "lazy.html",
-  "sha256": "a31bb942591ece50b3050f200513188bc0a1fe7e456ebf0524152b33203f83e7",
+  "sha256": "829a0964c22cada7c7d12e2680a30ce7b74d0e3e831dbd7396d1bffc972b5cae",
   "date": "2026-10-22"
  }
 }
