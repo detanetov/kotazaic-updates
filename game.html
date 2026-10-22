@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=90;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
-window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
+window.KZ_VER=91;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&KZAndroid.isLauncher)?'launcher':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
   if(v>window.KZ_VER){var h=L.getItem('kz_upd_html');var tried=+L.getItem('kz_upd_try')||0,ok=+L.getItem('kz_upd_ok')||0;
@@ -3065,6 +3065,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:91,l:'1.4.0',items:['📲 Перенос аккаунта: в ⚙ Settings → 👤 Аккаунты появилась кнопка «Создать код переноса» — код переносит аккаунт со всем прогрессом на телефон, ПК или в Kotazaic Launcher','🔑 На экране входа — «📲 Перенести аккаунт с другого устройства»: вставь код, и ты сразу в своём аккаунте','🚀 В Kotazaic Launcher для телефона аккаунт и прогресс общие с лаунчером, игру обновляет сам лаунчер']},
  {v:90,l:'1.4.0',items:['🎃 Хэллоуин: лимитированный аксессуар «Фонарь Джека» за спиной — 13 000 000 🪙, только до 31 октября','👻 В забеге два призрака-котозайца собирают звёзды, монеты и морковки, а тыква раз в 40 секунд поглощает удар','🌱 В саду всё растёт на 25% быстрее, призрак прогоняет ворон; 🎣 на рыбалке ведро на 3 места больше, рыба дороже на 25%','♟ В шахматах, шашках и «Дураке» два призрака: каждый раз в 5 минут делает за тебя лучший ход','⌛ В Cosmetics новый фильтр «Лимитированные» — там знамя и фонарь']},
  {v:89,l:'1.4.0',items:['🃏 «Дурак» с ботом: выбор «переводной» снова работает — раньше вместо игры запускался забег и показывалась обычная игра','🌐 «Дурак» онлайн: перед поиском выбираешь вид — обычный или переводной, соперник подбирается с тем же видом']},
  {v:88,l:'1.4.0',items:['⚔ Рыцари знамени: правый рыцарь теперь тоже отражает удары — каждый из двух защищает по разу, потом 5 минут отдыхает']},
@@ -4949,7 +4950,7 @@ addEventListener('storage',e=>{
   refreshTop();if(cur==='menu')refreshMenu();if(cur==='bp'||cur==='ev')renderPass(cur);if(cur==='cos')renderCos();if(cur==='adm')renderAdm();
 });
 $('#mGift').onclick=()=>claimDaily();
-$('#vVer').textContent='v'+(window.KZ_VNAME||window.KZ_VER)+({exe:' · ПК',android:' · телефон',web:' · браузер'}[window.KZ_MODE]||'');$('#sUpd').onclick=()=>checkUpdate(true);
+$('#vVer').textContent='v'+(window.KZ_VNAME||window.KZ_VER)+({exe:' · ПК',android:' · телефон',launcher:' · лаунчер',web:' · браузер'}[window.KZ_MODE]||'');$('#sUpd').onclick=()=>checkUpdate(true);
 $('#mLogo').onclick=()=>{const L=$('#mLogo');logoClicks++;sfx(500+logoClicks*60,.08,'triangle',.04);if(logoClicks>=7){logoClicks=0;L.classList.toggle('flip');toast(L.classList.contains('flip')?'Логотип перевернулся 🙃 (нажми ещё 7 раз)':'Логотип на месте 😌');stat('logo');return}L.classList.remove('wob');void L.offsetWidth;L.classList.add('wob')};
 $('#sCodeGo').onclick=()=>{const c=$('#sCode').value.trim().toLowerCase();if(!c)return;if(CODES[c]){runCode(c);$('#sCode').value=''}else{toast('Такого кода нет 🤔');sfx(200,.15,'square',.03)}};
 $('#sCode').addEventListener('keydown',e=>{if(e.key==='Enter')$('#sCodeGo').click()});
@@ -7747,6 +7748,46 @@ setInterval(()=>{try{if(cur==='mg')lnTimers()}catch(e){}},1000);
 /* ---------- info ---------- */
 HELP.push(['🎃 Фонарь Джека (Хэллоуин)','Лимитированный аксессуар за спиной — 13 000 000 🪙, продаётся до 31 октября включительно. Пока надет: в забеге два призрака-котозайца сами подлетают и собирают звёзды, монеты и морковки, а тыква раз в 40 секунд поглощает удар метеорита или молнии; в саду всё растёт на 25% быстрее и призрак прогоняет ворон; на рыбалке ведро на 3 места больше и рыба продаётся на 25% дороже; в шахматах, шашках и «Дураке» два призрака — каждый раз в 5 минут делает за тебя лучший ход.']);
 {const iv=setInterval(()=>{try{if(!S||!user||user==='__guest')return;clearInterval(iv);if(Date.now()<LN_END&&!S.stats.lnNews){S.stats.lnNews=1;persist();setTimeout(()=>toast('🎃 Хэллоуин: в Cosmetics → Аксессуар появился «Фонарь Джека» — только до 31 октября'),4500)}}catch(e){}},1500)}
+
+
+/* ================= Перенос аккаунта между устройствами + вход с любым видом пароля ================= */
+function xfB64(u8){let s='';for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function xfUnB64(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+async function xfPipe(u8,T){const s=new Blob([u8]).stream().pipeThrough(new T('gzip'));return new Uint8Array(await new Response(s).arrayBuffer())}
+async function xfMake(u){const db=loadDB();if(!db[u])throw 0;const js=new TextEncoder().encode(JSON.stringify({v:1,u,a:db[u],t:Date.now()}));
+  if(typeof CompressionStream==='function'){try{return'KZA1.'+xfB64(await xfPipe(js,CompressionStream))}catch(e){}}return'KZA0.'+xfB64(js)}
+async function xfRead(code){code=String(code||'').replace(/\s+/g,'');const m=code.match(/KZA([01])\.([A-Za-z0-9_-]+)/);if(!m)throw new Error('code');let u8=xfUnB64(m[2]);
+  if(m[1]==='1'){if(typeof DecompressionStream!=='function')throw new Error('old');u8=await xfPipe(u8,DecompressionStream)}
+  const o=JSON.parse(new TextDecoder().decode(u8));if(!o||!/^[a-z0-9_]{3,16}$/.test(o.u||'')||!o.a||!o.a.pass||!o.a.nick)throw new Error('code');return o}
+function xfApply(o){const db=loadDB(),cur=db[o.u];if(cur&&cur.pass!==o.a.pass&&!confirm('На этом устройстве уже есть аккаунт @'+o.u+' с другим паролем. Заменить его перенесённым?'))return false;
+  if(cur&&cur.save&&o.a.save&&(cur.save.last||0)>(o.a.save.last||0)&&!confirm('Здесь прогресс @'+o.u+' новее, чем в коде. Всё равно заменить?'))return false;db[o.u]=o.a;saveDB(db);addKnown(o.u);return true}
+async function xfCopy(t){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);return true}}catch(e){}try{const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0;top:0';document.body.appendChild(ta);ta.focus();ta.select();const ok=document.execCommand('copy');ta.remove();return ok}catch(e){return false}}
+function xfOv(h){let el=$('#xfOv');if(!el){el=document.createElement('div');el.id='xfOv';el.addEventListener('click',e=>{if(e.target===el||e.target.closest('[data-xfc]'))el.style.display='none'});document.body.appendChild(el)}el.innerHTML=`<div class="xfbox">${h}</div>`;el.style.display='flex';return el}
+async function xfExport(){if(!user||user==='__guest'){toast('Войди в аккаунт — гостевой прогресс перенести нельзя');return}persist();let code;try{code=await xfMake(user)}catch(e){toast('Не получилось создать код');return}
+  const el=xfOv(`<h3>📲 Перенос аккаунта</h3><p class="sub">Скопируй код и вставь его на другом устройстве: в игре (вход → «📲 Перенести аккаунт») или в Kotazaic Launcher (Аккаунт → «📲 Перенос»). Внутри код — твой аккаунт <b>@${user}</b> со всем прогрессом. Никому его не отправляй.</p><textarea readonly id="xfCode">${code}</textarea><div class="mut">${Math.round(code.length/1024)||1} КБ</div><div class="row" style="justify-content:flex-end;gap:8px;margin-top:10px"><button class="btn sm ghost" data-xfc>Закрыть</button><button class="btn mint" id="xfCopy">📋 Скопировать код</button></div>`);
+  el.querySelector('#xfCopy').onclick=async()=>{const ok=await xfCopy(code);if(!ok){const t=el.querySelector('#xfCode');t.focus();t.select()}toast(ok?'📋 Код скопирован':'Выдели код и скопируй вручную')}}
+function xfImport(){const el=xfOv(`<h3>📲 Перенести аккаунт сюда</h3><p class="sub">На старом устройстве открой ⚙ Settings → 👤 Аккаунты → «📲 Создать код переноса», скопируй код и вставь его сюда.</p><textarea id="xfIn" placeholder="KZA1.…"></textarea><div class="err" id="xfErr"></div><div class="row" style="justify-content:flex-end;gap:8px;margin-top:10px"><button class="btn sm ghost" data-xfc>Отмена</button><button class="btn sm ghost" id="xfPaste">📋 Вставить</button><button class="btn mint" id="xfGo">Перенести</button></div>`);
+  el.querySelector('#xfPaste').onclick=async()=>{try{const t=await navigator.clipboard.readText();if(t)el.querySelector('#xfIn').value=t}catch(e){toast('Зажми поле и выбери «Вставить»')}};
+  el.querySelector('#xfGo').onclick=async()=>{const err=el.querySelector('#xfErr');let o;try{o=await xfRead(el.querySelector('#xfIn').value)}catch(e){err.textContent=e.message==='old'?'Этот телефон не может открыть код — создай код в лаунчере или обнови WebView':'Это не код переноса — скопируй его целиком';return}
+    if(!xfApply(o))return;el.style.display='none';try{if(user&&user!==o.u)persist()}catch(e){}login(o.u);toast('✅ Аккаунт '+o.a.nick+' перенесён')}}
+(function(){const st=document.createElement('style');st.textContent=`#xfOv{position:fixed;inset:0;z-index:9999;background:rgba(10,6,30,.6);display:none;align-items:center;justify-content:center;padding:16px}#xfOv .xfbox{background:var(--card,#fff7e8);color:var(--ink,#1d1838);border:3px solid var(--ink,#1d1838);border-radius:22px;padding:18px;width:100%;max-width:520px;box-shadow:0 6px 0 rgba(0,0,0,.3)}#xfOv h3{margin:0 0 6px}#xfOv textarea{width:100%;height:120px;border:2px solid var(--ink,#1d1838);border-radius:12px;padding:10px;font:12px/1.35 monospace;resize:vertical;word-break:break-all;background:#fff;color:#1d1838}#xfOv .mut{font-size:12px;opacity:.7;margin-top:4px}#xfOv .err{color:#d42a4a;font-weight:800;min-height:18px;margin-top:6px}`;document.head.appendChild(st)})();
+(function(){try{const row=$('#aGo').closest('.row');const b=document.createElement('button');b.className='btn sm ghost';b.id='aXfer';b.textContent='📲 Перенести аккаунт с другого устройства';b.style.cssText='width:100%;margin-top:10px';b.onclick=xfImport;row.after(b);
+  const box=$('#stAcc');const d=document.createElement('div');d.className='opt';d.innerHTML='<label>📲 Перенос аккаунта на другое устройство<small style="display:block;opacity:.7;font-weight:700">Телефон ↔ ПК ↔ Kotazaic Launcher: код переносит аккаунт со всем прогрессом</small></label><div class="row" style="gap:6px"><button class="btn sm mint" id="sXfOut">📲 Создать код переноса</button><button class="btn sm ghost" id="sXfIn">⬇ Ввести код</button></div>';box.appendChild(d);$('#sXfOut').onclick=xfExport;$('#sXfIn').onclick=xfImport;
+  const h=$('#auth .hint');if(h&&window.KZ_MODE==='launcher')h.textContent='Аккаунт общий для всех игр Kotazaic Launcher.'}catch(e){}})();
+/* login accepts both password hash kinds (devices with and without crypto.subtle) and upgrades the stored one */
+function xfDjb(u,p){const str='kz::'+u+'::'+p;let h=5381;for(let i=0;i<str.length;i++)h=((h<<5)+h+str.charCodeAt(i))|0;return'd'+(h>>>0).toString(16)}
+{const _da=doAuth;doAuth=async function(){try{if(!regMode){const u=$('#aUser').value.trim().toLowerCase(),p=$('#aPass').value,db=loadDB();if(db[u]&&p.length>=4){const h=await hashPw(u,p);if(db[u].pass!==h&&db[u].pass===xfDjb(u,p)){db[u].pass=h;saveDB(db)}}}}catch(e){}return _da.apply(this,arguments)};$('#aGo').onclick=()=>doAuth()}
+/* inside Kotazaic Launcher the launcher keeps the game up to date */
+if(window.KZ_MODE==='launcher'){const _cu=checkUpdate;checkUpdate=async function(manual){if(manual)toast('🚀 Игра обновляется через Kotazaic Launcher');return}}
+
+function sha256js(bytes){const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+ const l=bytes.length,n=((l+9+63)>>6)<<6,m=new Uint8Array(n);m.set(bytes);m[l]=0x80;const dv=new DataView(m.buffer);dv.setUint32(n-4,(l*8)>>>0);dv.setUint32(n-8,Math.floor(l/0x20000000));
+ let h=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];const w=new Uint32Array(64),r=(x,k)=>(x>>>k)|(x<<(32-k));
+ for(let o=0;o<n;o+=64){for(let i=0;i<16;i++)w[i]=dv.getUint32(o+i*4);for(let i=16;i<64;i++){const s0=r(w[i-15],7)^r(w[i-15],18)^(w[i-15]>>>3),s1=r(w[i-2],17)^r(w[i-2],19)^(w[i-2]>>>10);w[i]=(w[i-16]+s0+w[i-7]+s1)|0}
+  let[a,b,c,d,e,f,g,hh]=h;for(let i=0;i<64;i++){const S1=r(e,6)^r(e,11)^r(e,25),ch=(e&f)^(~e&g),t1=(hh+S1+ch+K[i]+w[i])|0,S0=r(a,2)^r(a,13)^r(a,22),mj=(a&b)^(a&c)^(b&c),t2=(S0+mj)|0;hh=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0}
+  h=[h[0]+a|0,h[1]+b|0,h[2]+c|0,h[3]+d|0,h[4]+e|0,h[5]+f|0,h[6]+g|0,h[7]+hh|0]}
+ return h.map(x=>(x>>>0).toString(16).padStart(8,'0')).join('')}
+{const _h=hashPw;hashPw=async function(u,p){if(window.crypto&&crypto.subtle)return _h.apply(this,arguments);return sha256js(new TextEncoder().encode('kz::'+u+'::'+p))}}
 
 resize();
 const sess=lsGet('kz_session');
