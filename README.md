@@ -7,3 +7,6 @@
 Игры в лаунчере: Kotazaic and Stars (`game.html`), koto.io (`kotoio.html`), Ленивая жизнь (`lazy.html`).
 
 Не удаляйте и не переименовывайте `game.html` и `version.json`.
+
+
+Лаунчер для телефона (Android): скачай `KotazaicLauncher.apk` и установи — он сам скачивает и обновляет все игры. Интерфейс лаунчера обновляется из `mlauncher.html`.

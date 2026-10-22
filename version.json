@@ -31,5 +31,18 @@
   "file": "lazy.html",
   "sha256": "6725ba2988bc28f49ec92473a3fa33de8af6eb52c672c03caef52dfe31138496",
   "date": "2026-10-22"
+ },
+ "mlauncher": {
+  "version": 1,
+  "label": "1.0",
+  "name": "Kotazaic Launcher для телефона 1.0: библиотека игр, аккаунт, новости, автообновление",
+  "file": "mlauncher.html",
+  "sha256": "2a198ee9b246840f814868863799bcc2b7f79c7536a0fb8508e14f5710cfa2b4",
+  "date": "2026-10-22",
+  "apk": {
+   "label": "1.0",
+   "file": "KotazaicLauncher.apk",
+   "sha256": "58f621128cb98d09a27a0c6dc50b7a1cc3744a1f3003b7963afc3ce38e884abd"
+  }
  }
 }
