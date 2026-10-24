@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=96;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=97;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&KZAndroid.isLauncher)?'launcher':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3065,6 +3065,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:97,l:'1.4.0',items:['🐰 Голос котозайца: фразы звучат мультяшным голосом самого котозайца — по слогам, как у зверят в мультиках, одинаково на ПК и телефоне. У друзей в пати голос чуть другой','🗣 В Settings → Фразы можно выбрать: голос котозайца, голос устройства или без голоса']},
  {v:96,l:'1.4.0',items:['💬 Фразы котозайца: колесо фраз на клавише C (или кнопка 💬 в углу) — котозаяц говорит фразу голосом и показывает облачко','🐷 Фраза «1 свинья» и 11 милых фраз: «Привет, я котозаяц!», «Обнимашки!», «Морковку будешь?», «Мур-мур~» и другие','⏳ Фразу можно сказать раз в 5 секунд — в меню, в забеге одному и вместе в пати: друзья видят облачко над твоим котозайцем','⚙ В Settings новая вкладка «💬 Фразы»: клавиша, голос, звук, какие фразы в колесе']},
  {v:95,l:'1.4.0',items:['🏆 Награды за место в топе рекордов: каждый день в тройке — 1 место +300 🪙, 2 место +200 🪙, 3 место +100 🪙','🥇 10 дней подряд на 1 месте — уникальная Золотая медаль чемпиона в профиле','🥈 10 дней на 2 месте — случайный аксессуар до 10 000 🪙 и Серебряная медаль; 🥉 10 дней на 3 месте — 5 000 🪙 и Бронзовая медаль','👤 Медали видны всем игрокам в твоём профиле, а прогресс — в ⚙ Settings → 🏆 Топ игроков']},
  {v:93,l:'1.4.0',items:['👽 Лимитированная коллекция Alien — 55 вещей пришельцев до 15 ноября: 7 скинов (зелёный пришелец, марсианин, неоновый, голограмма…), антенки, мозг под куполом, НЛО над головой, шапочка из фольги','🚀 Скафандр, худи «Меня похитили», лунные и антигравитационные ботинки, ранец пришельца, мини-НЛО, крылья жука, лучевой бластер и лазерный меч с бонусами','🛸 Следы (слизь, тарелки, радиоволны) и ауры (луч похищения, орбита НЛО, космический портал), плюс 4 полных костюма','🔎 В Cosmetics новая вкладка «👽 Alien»','💎 Вещи Alien стали в 5 раз дороже: от 17 500 до 130 000 🪙']},
@@ -7984,15 +7985,39 @@ const PHR={
  thanks:['🙏','Спасибо!','chirp'],yay:['🎉','Ура, получилось!','tada'],night:['🌙','Спокойной ночи!','purr']};
 const PHR_KEYS=Object.keys(PHR),PHR_CD=5000;
 const PHR_SND={oink:()=>{sfx(180,.12,'sawtooth',.05,-60);setTimeout(()=>sfx(150,.16,'sawtooth',.05,-50),150)},chirp:()=>{sfx(900,.06,'triangle',.04,500);setTimeout(()=>sfx(1200,.08,'triangle',.035,300),80)},love:()=>SND.heart(),purr:()=>sfx(90,.5,'sawtooth',.02,10),tada:()=>playTune([523,659,784],100)};
-function phrCfg(){const x=XS();x.phr=Object.assign({key:'KeyC',list:PHR_KEYS.slice(),voice:true,snd:true,party:true},x.phr||{});x.phr.list=x.phr.list.filter(k=>PHR[k]);if(!x.phr.list.length)x.phr.list=PHR_KEYS.slice();return x.phr}
+function phrCfg(){const x=XS();x.phr=Object.assign({key:'KeyC',list:PHR_KEYS.slice(),voice:true,vmode:'kz',snd:true,party:true},x.phr||{});if(x.phr.voice===false&&x.phr.vmode!=='off'){x.phr.vmode='off';x.phr.voice=true}x.phr.list=x.phr.list.filter(k=>PHR[k]);if(!x.phr.list.length)x.phr.list=PHR_KEYS.slice();return x.phr}
 let phrLast=0;const phrOthers={};
 function phrLeft(){return Math.max(0,PHR_CD-(Date.now()-phrLast))}
-let phrVoice=null;function phrSpeak(t){try{if(!phrCfg().voice||!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ru-RU';u.pitch=1.7;u.rate=1.05;u.volume=Math.min(1,((S.set&&S.set.vol!=null?S.set.vol:70)/100)+.1);
+/* «голос котозайца»: мультяшная речь по слогам (как у зверят в мультиках), одинаковая на всех устройствах */
+const KZV_F={'а':[900,1450],'о':[560,950],'у':[380,820],'ы':[430,1700],'э':[620,1900],'и':[330,2400],'е':[480,2150],'я':[900,1600],'ё':[560,1100],'ю':[380,1200]};
+const KZV_NUM={'0':'ноль','1':'адин','2':'два','3':'три','4':'читыри','5':'пять','6':'шесть','7':'семь','8':'восемь','9':'девять'};
+function kzVoice(text,pm){try{if(muted)return 0;AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended'&&AC.resume)try{const pr=AC.resume();pr&&pr.catch&&pr.catch(()=>{})}catch(e){}const vm=S?S.set.vol/100:.7;if(vm<=0)return 0;
+  const src=String(text).toLowerCase().replace(/[0-9]/g,d=>' '+KZV_NUM[d]+' ').replace(/[^а-яёa-z !?.,~—-]/g,'').replace(/\s+/g,' ').trim();
+  const out=AC.createGain();out.gain.value=vm*.55;out.connect(AC.destination);let t=AC.currentTime+.03;const end=/[!]/.test(text)?1.18:/[?]/.test(text)?1.25:/[~]/.test(text)?.92:1;
+  const vowels=[...src].filter(ch=>KZV_F[ch]).length||1;let vi=0;const base=(pm||1)*(560+Math.random()*30);
+  const noise=AC.createBuffer(1,AC.sampleRate*.12,AC.sampleRate);{const d=noise.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}
+  const burst=(dur,freq,q,vol)=>{const n=AC.createBufferSource();n.buffer=noise;const f=AC.createBiquadFilter();f.type='bandpass';f.frequency.value=freq;f.Q.value=q;const g=AC.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);n.connect(f).connect(g).connect(out);n.start(t);n.stop(t+dur+.01);t+=dur*.8};
+  for(const ch of src){
+    if(ch===' '){t+=.055;continue}if(/[!?.,—-]/.test(ch)){t+=.11;continue}if(ch==='~'){continue}
+    const F=KZV_F[ch]||({a:KZV_F['а'],o:KZV_F['о'],u:KZV_F['у'],i:KZV_F['и'],e:KZV_F['е'],y:KZV_F['ы']})[ch];
+    if(F){const k=vi++/Math.max(1,vowels-1),f0=base*(1+Math.sin(vi*2.3)*.07)*(vi===vowels&&end!==1?end:1)*(1-.06*k*(end===1?1:0)),dur=.085+Math.random()*.02;
+      const o=AC.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(f0*.94,t);o.frequency.linearRampToValueAtTime(f0,t+.02);o.frequency.linearRampToValueAtTime(f0*(vi===vowels?end:1.02),t+dur);
+      const vib=AC.createOscillator(),vg=AC.createGain();vib.frequency.value=9;vg.gain.value=f0*.025;vib.connect(vg).connect(o.frequency);
+      const mix=AC.createGain();mix.gain.value=1;for(const[fr,q,gv]of[[F[0]*1.3,6,1],[F[1]*1.3,9,.55]]){const bp=AC.createBiquadFilter();bp.type='bandpass';bp.frequency.value=fr;bp.Q.value=q;const g=AC.createGain();g.gain.value=gv;o.connect(bp).connect(g).connect(mix)}
+      const env=AC.createGain();env.gain.setValueAtTime(.0001,t);env.gain.exponentialRampToValueAtTime(1.1,t+.012);env.gain.setValueAtTime(1,t+dur*.6);env.gain.exponentialRampToValueAtTime(.0001,t+dur);mix.connect(env).connect(out);
+      o.start(t);vib.start(t);o.stop(t+dur+.02);vib.stop(t+dur+.02);t+=dur*.92}
+    else if('сшщжзчцфх'.includes(ch)||'szfhxc'.includes(ch))burst(.045,ch==='ш'||ch==='щ'||ch==='ж'?3200:5200,1.5,.35);
+    else if('птк'.includes(ch)||'ptk'.includes(ch))burst(.018,2200,1,.5);
+    else if('бдг'.includes(ch)||'bdg'.includes(ch))burst(.02,900,1,.5);
+    else{const o=AC.createOscillator();o.type='triangle';o.frequency.value=base*.8;const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=ch==='р'?1400:700;const g=AC.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.55,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+.04);o.connect(lp).connect(g).connect(out);o.start(t);o.stop(t+.05);t+=.032}}
+  return t-AC.currentTime}catch(e){return 0}}
+function phrSay(t,pm){const pc=phrCfg();if(pc.vmode==='kz')kzVoice(t,pm);else if(pc.vmode==='tts')phrSpeak(t)}
+let phrVoice=null;function phrSpeak(t){try{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ru-RU';u.pitch=1.7;u.rate=1.05;u.volume=Math.min(1,((S.set&&S.set.vol!=null?S.set.vol:70)/100)+.1);
   if(!phrVoice){const vs=speechSynthesis.getVoices();phrVoice=vs.find(v=>/^ru/i.test(v.lang))||null}if(phrVoice)u.voice=phrVoice;speechSynthesis.speak(u)}catch(e){}}
 function phrPlay(k,remote,who){const P=PHR[k];if(!P||!S)return;
   if(!remote){const left=phrLeft();if(left>0){toast('💬 Следующая фраза через '+Math.ceil(left/1000)+' с');return}phrLast=Date.now();stat('phrases');if(phrCfg().party&&PT.pid)try{ptAll({t:'phr',k})}catch(e){}
-    bubble={text:P[0]+' '+P[1],t:3,max:3};if(phrCfg().snd&&PHR_SND[P[2]])PHR_SND[P[2]]();phrSpeak(P[1]);if(!G&&cur==='menu'&&typeof poke!=='undefined')poke.vy=-380;return}
-  phrOthers[who]={k,t:3};if(phrCfg().snd&&PHR_SND[P[2]])PHR_SND[P[2]]();if(!G||!(PT.pos&&PT.pos[who]))toast('💬 '+socNick(who)+': '+P[0]+' '+P[1])}
+    bubble={text:P[0]+' '+P[1],t:3,max:3};if(phrCfg().snd&&PHR_SND[P[2]])PHR_SND[P[2]]();setTimeout(()=>phrSay(P[1]),PHR_SND[P[2]]&&phrCfg().snd?260:0);if(!G&&cur==='menu'&&typeof poke!=='undefined')poke.vy=-380;return}
+  phrOthers[who]={k,t:3};if(phrCfg().snd&&PHR_SND[P[2]])PHR_SND[P[2]]();{let hsh=0;for(const ch of String(who))hsh=(hsh*31+ch.charCodeAt(0))|0;setTimeout(()=>phrSay(P[1],.82+((hsh>>>0)%40)/100),260)}if(!G||!(PT.pos&&PT.pos[who]))toast('💬 '+socNick(who)+': '+P[0]+' '+P[1])}
 {const _pr=ptRecv;ptRecv=function(m){if(m&&m.t==='phr'){if(m.from!==S.gid&&PHR[m.k])phrPlay(m.k,true,m.from);return}return _pr.apply(this,arguments)}}
 /* other players' phrases above their kotozayac in a shared game */
 {const _hud=drawCoreHud;drawCoreHud=function(){_hud.apply(this,arguments);try{for(const g in phrOthers){const o=phrOthers[g];o.t-=1/60;if(o.t<=0){delete phrOthers[g];continue}const p=PT.pos&&PT.pos[g];if(!p)continue;const ks=kzScale(),x=(p.sx??p.x)*W,y=groundY()-165*ks,txt=PHR[o.k][0]+' '+PHR[o.k][1];
@@ -8034,7 +8059,7 @@ function phrSetInit(){const tabs=$('#setTabs');if(!tabs||$('#stPhr'))return;tabs
 function phrSetRender(){const el=$('#stPhr');if(!el||!S)return;const pc=phrCfg(),L=pc.list;
   let h=`<p class="sub">Колесо фраз: зажми клавишу, наведи мышку на фразу и отпусти — котозаяц скажет её вслух и над ним появится облачко. Или нажми кнопку 💬 в углу экрана. Фразу можно сказать раз в 5 секунд — в меню, в забеге одному и вместе с друзьями в пати.</p>
   <div class="opt"><label>⌨ Клавиша колеса фраз</label><div class="row" style="gap:6px"><span class="chip" style="min-width:70px;justify-content:center">${phrCapture?'нажми клавишу…':keyName(pc.key)}</span><button class="btn sm" data-phrkey>✏ Изменить</button><button class="btn sm ghost" data-phrkeydef>C по умолчанию</button></div></div>
-  <div class="opt tg"><label>🗣 Котозаяц говорит голосом</label><input type="checkbox" data-phrset="voice" ${pc.voice?'checked':''}></div>
+  <div class="opt"><label>🗣 Голос</label><div class="row" style="gap:6px;flex-wrap:wrap">${[['kz','🐰 Голос котозайца'],['tts','🗣 Голос устройства'],['off','🔇 Без голоса']].map(([v,n])=>`<button class="btn sm ${pc.vmode===v?'mint':'ghost'}" data-phrvm="${v}">${n}</button>`).join('')}</div></div>
   <div class="opt tg"><label>🔊 Звук фраз</label><input type="checkbox" data-phrset="snd" ${pc.snd?'checked':''}></div>
   <div class="opt tg"><label>🎉 Друзья в пати слышат мои фразы</label><input type="checkbox" data-phrset="party" ${pc.party?'checked':''}></div>
   <div class="row" style="justify-content:space-between;margin-top:10px"><h4 style="margin:0">💬 Мои фразы: ${L.length}</h4><div class="row" style="gap:6px"><button class="btn sm ghost" data-phrall>Все ${PHR_KEYS.length}</button><button class="btn sm mint" data-phrtest>▶ Открыть колесо</button></div></div>
@@ -8044,17 +8069,18 @@ function phrSetRender(){const el=$('#stPhr');if(!el||!S)return;const pc=phrCfg()
   el.innerHTML=h}
 {const _sst=setSetTab;setSetTab=function(t){_sst.apply(this,arguments);phrSetInit();const el=$('#stPhr');if(el){el.style.display=t==='phr'?'block':'none';if(t==='phr')phrSetRender()}}}
 phrSetInit();
-document.addEventListener('click',e=>{if(!S||cur!=='set')return;const b=e.target.closest('[data-phrkey],[data-phrkeydef],[data-phrall],[data-phrtest],[data-phrhear],[data-phrt]');if(!b)return;const pc=phrCfg();
+document.addEventListener('click',e=>{if(!S||cur!=='set')return;const b=e.target.closest('[data-phrkey],[data-phrkeydef],[data-phrall],[data-phrtest],[data-phrhear],[data-phrt],[data-phrvm]');if(!b)return;const pc=phrCfg();
+  if(b.dataset.phrvm){pc.vmode=b.dataset.phrvm;persist();phrSetRender();if(pc.vmode!=='off')phrSay('Привет, я котозаяц!');return}
   if(b.hasAttribute('data-phrkey')){phrCapture=true;phrSetRender();return}if(b.hasAttribute('data-phrkeydef')){pc.key='KeyC';persist();phrSetRender();return}
   if(b.hasAttribute('data-phrall')){pc.list=PHR_KEYS.slice();persist();phrSetRender();return}
   if(b.hasAttribute('data-phrtest')){phrWheelOpen();phrWheel.click=true;return}
-  if(b.dataset.phrhear){e.stopPropagation();const P=PHR[b.dataset.phrhear];if(pc.snd&&PHR_SND[P[2]])PHR_SND[P[2]]();phrSpeak(P[1]);return}
+  if(b.dataset.phrhear){e.stopPropagation();const P=PHR[b.dataset.phrhear];if(pc.snd&&PHR_SND[P[2]])PHR_SND[P[2]]();setTimeout(()=>phrSay(P[1]),pc.snd?260:0);return}
   if(b.dataset.phrt){const k=b.dataset.phrt,i=pc.list.indexOf(k);if(i>=0){if(pc.list.length<=1){toast('Оставь хотя бы одну фразу');return}pc.list.splice(i,1)}else pc.list.push(k);persist();SND.click();phrSetRender()}});
 document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.phrset;if(!k||!S)return;phrCfg()[k]=e.target.checked;persist()});
 (function(){const st=document.createElement('style');st.textContent=`.phrgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}.phrgrid .phc{display:flex;align-items:center;gap:6px;background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:6px 8px;font-weight:800;font-size:13px;cursor:pointer;position:relative}.phrgrid .phc b{font-size:22px}.phrgrid .phc span:not(.n){flex:1}.phrgrid .phc .btn{padding:2px 6px}.phrgrid .phc.off{opacity:.45}.phrgrid .phc .n{position:absolute;left:4px;top:-8px;font-size:10px;background:#2a2050;color:#fff;border-radius:6px;padding:0 4px}html.gl .phrgrid .phc{background:rgba(255,255,255,.1)}`;document.head.appendChild(st)})();
 ACH.push({id:'e_phr10',n:'Болтушка',d:'Сказать 10 фраз',k:'phrases',goal:10,r:100,i:'💬'},{id:'e_phr100',n:'Душа беседы',d:'Сказать 100 фраз',k:'phrases',goal:100,r:500,i:'🗣'});
 Object.assign(STAT_RU,{phrases:['💬','Фраз сказано']});
-HELP.push(['💬 Фразы котозайца','Колесо фраз: клавиша C (меняется в Settings → Фразы) или кнопка 💬 в углу. Котозаяц говорит фразу голосом и показывает облачко. Одна фраза раз в 5 секунд. Работает в меню, в забеге и в пати — друзья видят и слышат твои фразы.']);
+HELP.push(['💬 Фразы котозайца','Колесо фраз: клавиша C (меняется в Settings → Фразы) или кнопка 💬 в углу. Котозаяц говорит фразу своим мультяшным голосом (можно выбрать голос устройства) и показывает облачко. Одна фраза раз в 5 секунд. Работает в меню, в забеге и в пати — друзья видят и слышат твои фразы.']);
 
 resize();
 const sess=lsGet('kz_session');
