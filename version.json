@@ -1,10 +1,10 @@
 {
- "version": 94,
+ "version": 95,
  "label": "1.4.0",
- "name": "1.4.0: вещи коллекции Alien стали в 5 раз дороже",
+ "name": "1.4.0: награды и медали за место в топе рекордов",
  "file": "game.html",
- "sha256": "e496137553492040597d20e6fc1162d3badaec2d9cd79e3ba2961054c19a34dc",
- "date": "2026-10-22",
+ "sha256": "fd49403ada21329a78fb86fe7d002ee21a74fa1c2b5b600d459d58d44d198e73",
+ "date": "2026-10-24",
  "exe": {
   "version": 6,
   "file": "KotazaicAndStars.exe",

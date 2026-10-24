@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=94;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=95;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&KZAndroid.isLauncher)?'launcher':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3065,6 +3065,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:95,l:'1.4.0',items:['🏆 Награды за место в топе рекордов: каждый день в тройке — 1 место +300 🪙, 2 место +200 🪙, 3 место +100 🪙','🥇 10 дней подряд на 1 месте — уникальная Золотая медаль чемпиона в профиле','🥈 10 дней на 2 месте — случайный аксессуар до 10 000 🪙 и Серебряная медаль; 🥉 10 дней на 3 месте — 5 000 🪙 и Бронзовая медаль','👤 Медали видны всем игрокам в твоём профиле, а прогресс — в ⚙ Settings → 🏆 Топ игроков']},
  {v:93,l:'1.4.0',items:['👽 Лимитированная коллекция Alien — 55 вещей пришельцев до 15 ноября: 7 скинов (зелёный пришелец, марсианин, неоновый, голограмма…), антенки, мозг под куполом, НЛО над головой, шапочка из фольги','🚀 Скафандр, худи «Меня похитили», лунные и антигравитационные ботинки, ранец пришельца, мини-НЛО, крылья жука, лучевой бластер и лазерный меч с бонусами','🛸 Следы (слизь, тарелки, радиоволны) и ауры (луч похищения, орбита НЛО, космический портал), плюс 4 полных костюма','🔎 В Cosmetics новая вкладка «👽 Alien»','💎 Вещи Alien стали в 5 раз дороже: от 17 500 до 130 000 🪙']},
  {v:92,l:'1.4.0',items:['🚀 Kotazaic Launcher для телефона теперь ставится поверх приложения Kotazaic and Stars — аккаунты, монеты и вещи переносятся сами, как в лаунчере на ПК']},
  {v:91,l:'1.4.0',items:['📲 Перенос аккаунта: в ⚙ Settings → 👤 Аккаунты появилась кнопка «Создать код переноса» — код переносит аккаунт со всем прогрессом на телефон, ПК или в Kotazaic Launcher','🔑 На экране входа — «📲 Перенести аккаунт с другого устройства»: вставь код, и ты сразу в своём аккаунте','🚀 В Kotazaic Launcher для телефона аккаунт и прогресс общие с лаунчером, игру обновляет сам лаунчер']},
@@ -7927,6 +7928,52 @@ function alLeft(){const ms=AL_END-Date.now();if(ms<=0)return'завершила�
 (function(){const st=document.createElement('style');st.textContent=`#alBanner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px;padding:10px 14px;border:2.5px solid var(--ink);border-radius:16px;background:radial-gradient(120% 140% at 0% 0%,#3a2a8a,#141a3a 60%,#0d2a2a);box-shadow:0 3px 0 var(--ink);color:#d8ffe4;position:relative;overflow:hidden}#alBanner i{font-style:normal;font-size:26px;filter:drop-shadow(0 0 8px #39ff88)}#alBanner b{font-size:16px;color:#7dffaa;letter-spacing:.5px}#alBanner span{flex:1;min-width:220px;font-weight:700;font-size:13px;opacity:.9}#alBanner .btn{background:#39ff88!important;color:#0d0a1f!important}html.gl #alBanner{border:1px solid rgba(120,255,170,.5)!important}`;document.head.appendChild(st)})();
 {const iv=setInterval(()=>{try{if(!S||user==='__guest')return;clearInterval(iv);if(!alEnded()&&!S.stats.alSeen){S.stats.alSeen=1;persist();setTimeout(()=>toast('👽 В Cosmetics — коллекция Alien: '+Object.keys(AL).length+' лимитированных вещей пришельцев до 15 ноября'),6500)}}catch(e){}},3000)}
 HELP.push(['👽 Коллекция Alien',Object.keys(AL).length+' лимитированных вещей в стиле пришельцев: зелёный пришелец, антенки, НЛО над головой, шапочка из фольги, скафандр, лунные ботинки, бластер, луч похищения и другие, плюс 4 полных костюма. Каждую вещь можно купить один раз и только до 15 ноября. В Cosmetics — вкладка «👽 Alien».']);
+
+
+/* ================= Награды за место в топе (🏆 Рекорд) ================= */
+const TR_DAYS=10,TR_MIN=5;
+const TR_INFO={1:{ic:'🥇',n:'1 место',day:300,big:'👑 уникальная Золотая медаль чемпиона в профиле'},2:{ic:'🥈',n:'2 место',day:200,big:'🎁 случайный аксессуар до 10 000 🪙 + Серебряная медаль'},3:{ic:'🥉',n:'3 место',day:100,big:'🪙 5 000 монет + Бронзовая медаль'}};
+const TR_MED={gold:{n:'Золотая медаль чемпиона',d:'10 дней подряд на 1 месте в топе рекордов',c1:'#ffe27a',c2:'#d9a21c',rb:['#d8172b','#1f3b8a']},silver:{n:'Серебряная медаль',d:'10 дней подряд на 2 месте в топе рекордов',c1:'#f2f5fa',c2:'#9aa4b4',rb:['#1f3b8a','#ffffff']},bronze:{n:'Бронзовая медаль',d:'10 дней подряд на 3 месте в топе рекордов',c1:'#ffc79a',c2:'#b8682e',rb:['#2e8a5a','#ffffff']}};
+function trDay(t){const d=new Date(t||Date.now());return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()}
+function trDayN(k){const y=Math.floor(k/10000),m=Math.floor(k/100)%100,d=k%100;return Math.floor(new Date(y,m-1,d).getTime()/864e5)}
+function trState(){S.topRw=S.topRw||{place:0,since:0,last:0,paid:0};S.medals=S.medals||{};return S.topRw}
+/* my place in the global record top, only when enough players are known */
+function trRank(){if(!S||!user||user==='__guest'||S.set.hideTop)return null;const rows=new Map();rows.set(S.gid,{v:+S.best||0,me:1});
+  const now=Date.now();for(const p of Object.values(netPlayers)){if(!p||!p.gid||p.gid===S.gid)continue;if(now-(p.last||0)>30*864e5)continue;rows.set(p.gid,{v:+p.best||0})}
+  const db=loadDB();for(const u of Object.keys(db)){if(u===user)continue;try{const sv=fixSave(db[u].save);if(!rows.has(sv.gid))rows.set(sv.gid,{v:+sv.best||0})}catch(e){}}
+  if(rows.size<TR_MIN)return null;const mine=+S.best||0;if(mine<=0)return null;let place=1;for(const[g,r]of rows)if(!r.me&&r.v>mine)place++;return{place,n:rows.size}}
+function trCheck(){try{if(!S||typeof NET==='undefined'||!NET.ok())return;const r=trRank();if(!r)return;const st=trState(),today=trDay();
+  if(r.place>3){if(st.place){st.place=0;st.since=0;persist()}return}
+  if(st.place!==r.place){st.place=r.place;st.since=today;persist();setTimeout(()=>toast(`${TR_INFO[r.place].ic} Ты на ${r.place} месте в топе рекордов! Продержись ${TR_DAYS} дней — получишь награду`),3000)}
+  {st.last=today;const I=TR_INFO[r.place];if(st.paid!==today){st.paid=today;S.coins+=I.day;refreshTop();toast(`${I.ic} Награда дня за ${r.place} место в топе: +${I.day} 🪙`)}}
+  const days=trDayN(today)-trDayN(st.since)+1;if(days>=TR_DAYS){trGrant(r.place);st.since=today}persist()}catch(e){}}
+function trGrant(pl){const md=pl===1?'gold':pl===2?'silver':'bronze';S.medals[md]=(S.medals[md]||0)+1;stat('topMedal');let extra='';
+  if(pl===2){const pool=Object.entries(ITEMS.acc).filter(([id,d])=>d&&!d.src&&!d.lim&&!d.suit&&d.price>0&&d.price<=10000&&!S.own.acc.includes(id));const pk=pool[Math.floor(Math.random()*pool.length)];if(pk){addItem('acc',pk[0]);extra=' и аксессуар «'+pk[1].n+'»'}else{S.coins+=10000;extra=' и 10 000 🪙'}}
+  if(pl===3){S.coins+=5000;extra=' и 5 000 🪙'}
+  refreshTop();persist();try{publishPresence()}catch(e){}confetti(120);SND.win();
+  setTimeout(()=>trMedalOv(md,extra),400)}
+function trMedalSvg(md,sz){const M=TR_MED[md];return`<svg width="${sz}" height="${sz*1.25}" viewBox="0 0 80 100" aria-hidden="true"><path d="M22 0h14l10 34H32z" fill="${M.rb[0]}" stroke="#1d1838" stroke-width="3"/><path d="M58 0H44L34 34h14z" fill="${M.rb[1]}" stroke="#1d1838" stroke-width="3"/><circle cx="40" cy="64" r="30" fill="${M.c2}" stroke="#1d1838" stroke-width="4"/><circle cx="40" cy="64" r="22" fill="${M.c1}"/><path d="M40 48l5 10 11 1.6-8 7.8 1.9 11L40 73.2 30.1 78.4 32 67.4l-8-7.8L35 58z" fill="${M.c2}" stroke="#1d1838" stroke-width="2"/>${md==='gold'?'<path d="M26 38l6-8 8 6 8-6 6 8" fill="none" stroke="#1d1838" stroke-width="3"/>':''}</svg>`}
+function trMedalOv(md,extra){const M=TR_MED[md];let el=$('#trOv');if(!el){el=document.createElement('div');el.id='trOv';el.addEventListener('click',e=>{if(e.target===el||e.target.closest('[data-trc]'))el.style.display='none'});document.body.appendChild(el)}
+  el.innerHTML=`<div class="trbox"><div class="trmed">${trMedalSvg(md,110)}</div><h3>${M.n}!</h3><p>${M.d}${extra}. Медаль теперь видна в твоём профиле — её увидят все игроки.</p><button class="btn mint" data-trc>Ура!</button></div>`;el.style.display='flex'}
+function trMedalsHtml(m){if(!m)return'';const out=[];for(const md of['gold','silver','bronze'])if(m[md]>0)out.push(`<span class="trbadge" title="${TR_MED[md].n}: ${TR_MED[md].d}">${trMedalSvg(md,30)}${m[md]>1?`<b>×${m[md]}</b>`:''}</span>`);return out.length?`<div class="trbadges">${out.join('')}</div>`:''}
+/* medals travel with the public profile */
+{const _p=profOf;profOf=function(u,nk,sv,last){const o=_p.apply(this,arguments);try{if(sv&&sv.medals){const m={};for(const k of['gold','silver','bronze'])if(sv.medals[k]>0)m[k]=Math.min(999,sv.medals[k]|0);if(Object.keys(m).length)o.md=m}}catch(e){}return o}}
+{const _r=profRender;profRender=function(){const r=_r.apply(this,arguments);try{const p=profData(SOC.prof),m=p&&p.md;const h=$('#pfOv .pfhead>div:last-child');if(h&&m&&!h.querySelector('.trbadges'))h.insertAdjacentHTML('beforeend',trMedalsHtml(m))}catch(e){}return r}}
+/* top screen: rules and my progress */
+{const _rt=renderTop;renderTop=function(){const r=_rt.apply(this,arguments);try{if(topTab!=='best')return r;const box=$('#topList');if(!box)return r;const st=S?trState():null,rk=S?trRank():null;let me='';
+  if(!S||user==='__guest')me='Войди в аккаунт, чтобы получать награды за место в топе.';
+  else if(S.set.hideTop)me='Ты скрыт(а) из общего топа — награды за место не начисляются.';
+  else if(!rk)me='Награды считаются, когда игра видит в топе хотя бы '+TR_MIN+' игроков и у тебя есть рекорд.';
+  else if(rk.place>3)me=`Сейчас ты на ${rk.place} месте — попади в тройку лучших!`;
+  else{const days=st.place===rk.place&&st.since?trDayN(trDay())-trDayN(st.since)+1:1;me=`${TR_INFO[rk.place].ic} Ты на <b>${rk.place} месте</b> уже <b>${Math.min(days,TR_DAYS)}</b> из ${TR_DAYS} дней → ${TR_INFO[rk.place].big}<div class="trbar"><i style="width:${Math.min(100,days/TR_DAYS*100)}%"></i></div>`}
+  const html=`<div class="trrules"><b>🏆 Награды за место в топе рекордов</b><div class="trrow">${[1,2,3].map(p=>`<div><span>${TR_INFO[p].ic}</span><b>${TR_INFO[p].n}</b><small>${TR_DAYS} дней подряд: ${TR_INFO[p].big}<br>каждый день: +${TR_INFO[p].day} 🪙</small></div>`).join('')}</div><div class="trme">${me}</div>${S&&S.medals?trMedalsHtml(S.medals):''}</div>`;
+  box.insertAdjacentHTML('afterbegin',html)}catch(e){}return r}}
+(function(){const st=document.createElement('style');st.textContent=`.trrules{border:2.5px solid var(--ink);border-radius:16px;padding:12px;margin:0 0 12px;background:linear-gradient(135deg,#fff6d6,#ffe9b0);color:#3a2a10;box-shadow:0 3px 0 var(--ink)}.trrules>b{font-size:16px}.trrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.trrow>div{background:rgba(255,255,255,.65);border-radius:12px;padding:8px;text-align:center}.trrow span{font-size:26px;display:block}.trrow small{display:block;font-size:11px;font-weight:700;opacity:.85;margin-top:3px}.trme{font-weight:800;font-size:14px}.trbar{height:8px;border-radius:99px;background:rgba(0,0,0,.12);margin-top:6px;overflow:hidden}.trbar i{display:block;height:100%;background:linear-gradient(90deg,#5ee6c1,#ffc93c)}
+.trbadges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.trbadge{position:relative;display:inline-flex;align-items:flex-end}.trbadge b{font-size:12px;margin-left:2px}
+#trOv{position:fixed;inset:0;z-index:9999;background:rgba(10,6,30,.6);display:none;align-items:center;justify-content:center;padding:16px}#trOv .trbox{background:#fff7e8;color:#1d1838;border:3px solid #1d1838;border-radius:24px;padding:20px;max-width:420px;text-align:center;box-shadow:0 6px 0 rgba(0,0,0,.3)}#trOv .trmed{animation:trp 1.2s ease}@keyframes trp{0%{transform:scale(.2) rotate(-40deg)}60%{transform:scale(1.15) rotate(8deg)}100%{transform:none}}
+html.gl .trrules{background:linear-gradient(135deg,rgba(255,220,120,.22),rgba(255,240,200,.06))!important;color:#fff3cf;border:1px solid rgba(255,230,150,.5)!important}html.gl .trrow>div{background:rgba(255,255,255,.08)}@media(max-width:560px){.trrow{grid-template-columns:1fr}}`;document.head.appendChild(st)})();
+setInterval(trCheck,120000);setTimeout(trCheck,45000);
+HELP.push(['🏆 Награды за место в топе','Каждый день, пока ты в тройке топа рекордов: 1 место +300 🪙, 2 место +200 🪙, 3 место +100 🪙. Продержись на одном месте 10 дней подряд: 🥇 1 место — уникальная Золотая медаль чемпиона в профиле, 🥈 2 место — случайный аксессуар до 10 000 🪙 и Серебряная медаль, 🥉 3 место — 5 000 🪙 и Бронзовая медаль. Медали видны всем в твоём профиле. Если место изменилось, отсчёт 10 дней начинается заново.']);
 
 resize();
 const sess=lsGet('kz_session');
