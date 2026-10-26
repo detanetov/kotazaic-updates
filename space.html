@@ -104,13 +104,26 @@ html,body{margin:0;height:100%;overflow:hidden;background:#0b0820;color:#fff;fon
 #toast.on{opacity:1;transform:translateX(-50%)}
 .touch .hint{bottom:calc(env(safe-area-inset-bottom) + 136px)}
 @media (max-width:640px){.hc{left:12px;transform:none;top:calc(env(safe-area-inset-top) + 84px);justify-items:start}.hsec{display:none}.bossbar{width:52vw}#toast{top:calc(env(safe-area-inset-top) + 200px)}}
+/* масштаб интерфейса на ПК */
+#menu .wrap{min-height:calc(100% / var(--z,1))}
+.scr .wrap,.mtop,.hl,.hc,.hr,.hint,.mbox,#toast{zoom:var(--z,1)}
+.mtop .pill{cursor:pointer;font-family:inherit;font-size:15px}
+.mtop .pill:hover{background:var(--cream2)}
+.form{text-align:left}.form label{display:block;font-size:13px;color:var(--mut);margin:10px 2px 4px}
+.form input,.adm input{width:100%;font:800 16px inherit;font-family:inherit;color:var(--ink);background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px 12px;outline:none;box-shadow:0 3px 0 var(--ink);-webkit-user-select:text;user-select:text}
+.form input:focus,.adm input:focus{box-shadow:0 3px 0 var(--ink),0 0 0 4px rgba(63,216,173,.45)}
+.err{color:#d42a4a;font-size:13px;min-height:18px;margin-top:8px}
+.known{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.adm{display:grid;gap:14px}.adm .panel{padding:14px}.adm h4{margin:0 0 10px;font-size:17px}
+.adm .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.adm .row input{width:auto;flex:1;min-width:120px}
+.adml{display:grid;gap:6px;margin-bottom:10px}.adml div{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:6px 10px}.adml div span{flex:1}
 .cover .scr,.cover .mtop,.cover #toast{display:none!important}
 </style>
 </head>
 <body>
 <canvas id="cv"></canvas>
 
-<div class="mtop" id="mtop"><span class="pill" id="mNick">🐰</span><span class="pill" id="mBank">💎 0</span></div>
+<div class="mtop" id="mtop"><button class="pill" id="mNick" data-a="acc">🐰</button><span class="pill" id="mBank">💎 0</span><button class="pill" id="mFs" data-a="fs" title="Полный экран (F11)">⛶</button></div>
 
 <section class="scr on" id="menu"><div class="wrap">
  <h1 class="logo">Котозайцы<span>в космосе</span></h1>
@@ -120,6 +133,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#0b0820;color:#fff;fon
   <div class="mrow2"><button class="btn" data-a="map">🗺 Карта</button><button class="btn" data-a="hangar">🔧 Ангар</button></div>
   <div class="mrow2"><button class="btn" data-a="ships">🚀 Корабли</button><button class="btn" data-a="settings">⚙ Настройки</button></div>
   <button class="btn sky" data-a="endless" id="bEnd">♾ Бесконечный рейс</button>
+  <button class="btn vio" data-a="adm" id="bAdm" style="display:none">🛠 ADM-панель</button>
   <button class="btn white" data-a="exit" id="bExit" style="display:none">✕ Выйти в лаунчер</button>
  </div>
 </div></section>
@@ -143,6 +157,11 @@ html,body{margin:0;height:100%;overflow:hidden;background:#0b0820;color:#fff;fon
  <div class="top"><button class="btn white" data-a="back">←</button><h2>⚙ Настройки</h2></div>
  <div class="panel opts" id="setBox"></div>
  <div id="admBox"></div>
+</div></section>
+
+<section class="scr" id="adm"><div class="wrap">
+ <div class="top"><button class="btn white" data-a="back">←</button><h2>🛠 ADM-панель</h2><span class="pill hb">💎 0</span></div>
+ <div class="adm" id="admPanel"></div>
 </div></section>
 
 <div id="hud">
@@ -172,10 +191,18 @@ const fmt=n=>Math.round(n).toLocaleString('ru-RU');
 /* ---------- аккаунт лаунчера ---------- */
 const SK={"grey": ["Серый", "#a4a9b4", "#ece8e2", "#f3b7c8"], "smoke": ["Дымчатый", "#727786", "#cdc9d4", "#e9a3b8"], "milk": ["Молочный", "#efe4d1", "#fffaf0", "#f6b9c6"], "ginger": ["Рыжий", "#f0a35a", "#ffe2bf", "#ffb3a1"], "choco": ["Шоколадный", "#8a5a3c", "#dcb48e", "#f0a3a3"], "sky": ["Облачный", "#9fc8ff", "#eef5ff", "#ffb6d0"], "mint": ["Мятный", "#7fdcc0", "#e3fff5", "#ffb3c8"], "pinky": ["Розовый", "#ff9cc8", "#ffe6f1", "#ff6fa8"], "night": ["Ночной", "#3e3858", "#7a73a0", "#b48cff"], "ice": ["Ледяной", "#bfefff", "#ffffff", "#9fd8ff"], "cosmic": ["Космический", "#6a55d8", "#b9a9ff", "#ff9be0"], "ghost": ["Призрачный", "#e6e3ff", "#ffffff", "#d6c9ff"], "lavender": ["Лавандовый", "#c7a8ff", "#f3ecff", "#ff9cc8"], "lemon": ["Лимонный", "#ffe680", "#fffbe0", "#ffb36b"], "cherry": ["Вишнёвый", "#e8556e", "#ffd6dc", "#ffb3c0"], "neon": ["Неоновый", "#39e89f", "#d8fff0", "#ff7eb6"], "rainbow": ["Радужный", "#ff8fc8", "#ffffff", "#ffffff"], "golden": ["Звёздный", "#f2c94c", "#fff1b8", "#ffb36b"], "pumpkin": ["Тыквенный", "#ff8a3d", "#ffd29c", "#ffcf6b"], "peach": ["Персиковый", "#ffc2a1", "#fff0e6", "#ff9e9e"], "sand": ["Песочный", "#d9c08f", "#f6ecd6", "#f3b0a0"], "coffee": ["Кофейный", "#6b4a36", "#c9a786", "#e89c9c"], "forest": ["Лесной", "#5f9a5a", "#d8f0c8", "#ffb3a1"], "sea": ["Морской", "#3fa7c4", "#dff6ff", "#ffb6d0"], "blueberry": ["Черничный", "#4a4fae", "#c8ccff", "#ff9cc8"], "coral": ["Коралловый", "#ff7a6b", "#ffe0da", "#ffd06b"], "lava": ["Лавовый", "#3a1a1a", "#ff8a3d", "#ffcf33"], "emerald": ["Изумрудный", "#1fb37a", "#c8ffe6", "#ffe066"], "diamond": ["Алмазный", "#d6f4ff", "#ffffff", "#a8e4ff"]};
 function accDB(){try{return JSON.parse(LS.get('kz_accounts_v1'))||{}}catch(e){return{}}}
-const ACC=(()=>{const u=LS.get('kz_session');return u&&u!=='__guest'&&accDB()[u]?u:''})();
-const NICK=ACC?(accDB()[ACC].nick||ACC):(CFG.nick||'Гость');
-const IS_ADM=ACC==='deta'||ACC==='detanetov';
-const PAL=(()=>{let s=null;if(Array.isArray(CFG.skin))s=CFG.skin;else{const a=ACC&&accDB()[ACC],k=a&&a.save&&a.save.eq&&a.save.eq.skin;s=k&&SK[k]}s=s||SK.grey;return{b:s[1],bl:s[2],inn:s[3]}})();
+function saveDB(d){LS.set('kz_accounts_v1',JSON.stringify(d))}
+const BASE_ADM=['deta','detanetov'];
+function admList(){try{const a=JSON.parse(LS.get('kz_space_admins'));return Array.isArray(a)?a.filter(x=>/^[a-z0-9_]{3,16}$/.test(x)):[]}catch(e){return[]}}
+let ACC='',NICK='Гость',IS_ADM=false,IS_ROOT=false,PAL=null,KEYU='';
+function loadAcc(){const u=LS.get('kz_session'),db=accDB();ACC=u&&u!=='__guest'&&db[u]?u:'';const a=ACC?db[ACC]:null;
+ NICK=ACC?(a.nick||ACC):'Гость';IS_ROOT=BASE_ADM.includes(ACC);IS_ADM=!!ACC&&(IS_ROOT||admList().includes(ACC));
+ const k=a&&a.save&&a.save.eq&&a.save.eq.skin;let sk=k&&SK[k];if(!sk&&ACC&&Array.isArray(CFG.skin))sk=CFG.skin;sk=sk||SK.grey;PAL={b:sk[1],bl:sk[2],inn:sk[3]};KEYU='kz_space_u_'+(ACC||'__guest')}
+loadAcc();
+function known(){try{return JSON.parse(LS.get('kz_known'))||[]}catch(e){return[]}}
+function addKnown(u){const k=known().filter(x=>x!==u);k.unshift(u);LS.set('kz_known',JSON.stringify(k.slice(0,20)))}
+function djb(u,p){const str='kz::'+u+'::'+p;let h=5381;for(let i=0;i<str.length;i++)h=((h<<5)+h+str.charCodeAt(i))|0;return'd'+(h>>>0).toString(16)}
+async function hashPw(u,p){try{if(window.crypto&&crypto.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('kz::'+u+'::'+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}}catch(e){}return djb(u,p)}
 
 /* ---------- корабли и улучшения ---------- */
 const SHIPS=[
@@ -207,9 +234,9 @@ const NSEC=GAL.length*5;
 function secInfo(i){const g=Math.floor(i/5),k=i%5;return{i,g,k,G:GAL[g],boss:k===4,name:k===4?'Босс: '+GAL[g].boss:GAL[g].n+' · сектор '+(k+1),need:k===4?0:6+Math.floor(i*.9)}}
 
 /* ---------- сохранение ---------- */
-const KEYU='kz_space_u_'+(ACC||'__guest');
-function defSave(){return{crystals:0,total:0,sector:0,stars:{},up:{tank:0,engine:0,shield:0,magnet:0,laser:0},ship:'classic',ships:['classic'],best:0,runs:0,won:false,intro:false,set:{snd:1,mus:1,diff:1,hints:1}}}
-let S=(()=>{let o=null;try{o=JSON.parse(LS.get(KEYU))}catch(e){}const d=defSave();o=Object.assign(d,o||{});o.up=Object.assign(defSave().up,o.up||{});o.set=Object.assign(defSave().set,o.set||{});if(!Array.isArray(o.ships))o.ships=['classic'];if(!o.ships.includes('classic'))o.ships.unshift('classic');if(!SHIPS.some(x=>x.id===o.ship))o.ship='classic';o.sector=clamp(o.sector|0,0,NSEC);return o})();
+function defSave(){return{adm:{},crystals:0,total:0,sector:0,stars:{},up:{tank:0,engine:0,shield:0,magnet:0,laser:0},ship:'classic',ships:['classic'],best:0,runs:0,won:false,intro:false,set:{snd:1,mus:1,diff:1,hints:1}}}
+function loadSave(){let o=null;try{o=JSON.parse(LS.get(KEYU))}catch(e){}const d=defSave();o=Object.assign(d,o||{});o.up=Object.assign(defSave().up,o.up||{});o.set=Object.assign(defSave().set,o.set||{});if(!Array.isArray(o.ships))o.ships=['classic'];if(!o.ships.includes('classic'))o.ships.unshift('classic');if(!SHIPS.some(x=>x.id===o.ship))o.ship='classic';o.sector=clamp(o.sector|0,0,NSEC);if(!o.adm||typeof o.adm!=='object')o.adm={};return o}
+let S=loadSave();
 const starSum=()=>Object.values(S.stars).reduce((a,b)=>a+(b|0),0);
 function save(){S.t=Date.now();LS.set(KEYU,JSON.stringify(S));LS.set('kz_space',JSON.stringify({owner:ACC||'__guest',nick:NICK,sector:S.sector,total:S.total,best:S.best,crystals:S.crystals,stars:starSum(),won:S.won,ship:S.ship,t:S.t}))}
 const curShip=()=>SHIPS.find(x=>x.id===S.ship)||SHIPS[0];
@@ -242,8 +269,8 @@ function musStart(){if(MUS.t)return;MUS.t=setInterval(musTick,300)}
 
 /* ---------- холст ---------- */
 const cv=$('#cv'),ctx=cv.getContext('2d');
-let W=1,H=1,DPR=1,SC=1;
-function resize(){DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);SC=clamp(Math.min(W,H)/760,.62,1.2)}
+let W=1,H=1,DPR=1,SC=1,UIZ=1;
+function resize(){DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);SC=clamp(Math.min(W,H)/760,.62,1.6);UIZ=(W>=900&&matchMedia('(pointer:fine)').matches)?clamp(Math.min(W/1000,H/640),1,2.2):1;document.documentElement.style.setProperty('--z',UIZ)}
 addEventListener('resize',resize);resize();
 function mkCanvas(w,h){const c=document.createElement('canvas');c.width=Math.ceil(w);c.height=Math.ceil(h);return c}
 
@@ -327,7 +354,7 @@ setScene(0);
 /* ---------- ввод ---------- */
 const K={};let BOOST=false;
 const PTR={id:null,touch:false,ox:0,oy:0,x:0,y:0,on:false,mouse:false,mx:0,my:0};
-addEventListener('keydown',e=>{const k=e.key.toLowerCase();K[k]=1;if(MODE==='play'&&(k===' '||k.startsWith('arrow')))e.preventDefault();if((k==='escape'||k==='p'||k==='з')&&!e.repeat){if(MODE==='play')pause();else if(MODE==='pause')resume();else if($('#modal').classList.contains('on')&&MODE!=='result')closeModal();else if(SCREEN!=='menu')show('menu')}if(k==='enter'&&SCREEN==='menu'&&MODE==='menu'&&!$('#modal').classList.contains('on'))doAct('play')});
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(k==='f11'){e.preventDefault();if(!e.repeat)toggleFS();return}if(IS_ADM&&MODE==='play'&&/^f[234]$/.test(k)){e.preventDefault();if(!e.repeat)admCheat(k);return}if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName)){if(k==='enter'){const b=$('#mbox [data-a=dologin],#mbox [data-a=doreg],#mbox [data-a=nickok]');if(b)b.click()}return}K[k]=1;if(MODE==='play'&&(k===' '||k.startsWith('arrow')))e.preventDefault();if((k==='escape'||k==='p'||k==='з')&&!e.repeat){if(MODE==='play')pause();else if(MODE==='pause')resume();else if($('#modal').classList.contains('on')&&MODE!=='result')closeModal();else if(SCREEN!=='menu')show('menu')}if(k==='enter'&&SCREEN==='menu'&&MODE==='menu'&&!$('#modal').classList.contains('on'))doAct('play')});
 addEventListener('keyup',e=>{K[e.key.toLowerCase()]=0});
 addEventListener('blur',()=>{for(const k in K)K[k]=0;if(MODE==='play')pause()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(MODE==='play')pause();save()}});
@@ -386,7 +413,7 @@ function spawnComet(){const s=G.ship,a=Math.random()*TAU,x=s.x+Math.cos(a)*1100,
 
 function part(x,y,n,col,sp,life,size){for(let i=0;i<n&&G.parts.length<500;i++){const a=Math.random()*TAU,v=Math.random()*(sp||200);G.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:(life||.6)*rnd(.6,1.2),max:life||.6,c:col,s:size||rnd(2,5)})}}
 function popTxt(x,y,txt,c){G.pops.push({x,y,txt,c:c||'#fff',t:0})}
-function hit(n,from){const s=G.ship;if(s.inv>0||G.end)return;s.hp-=n;s.inv=1.4;CAM.shake=14;SFX.hit();part(s.x,s.y,22,'#ff7eb6',260,.6);if(navigator.vibrate)try{navigator.vibrate(60)}catch(e){}
+function hit(n,from){const s=G.ship;if(s.inv>0||G.end||cheat('god'))return;s.hp-=n;s.inv=1.4;CAM.shake=14;SFX.hit();part(s.x,s.y,22,'#ff7eb6',260,.6);if(navigator.vibrate)try{navigator.vibrate(60)}catch(e){}
  if(from){const dx=s.x-from.x,dy=s.y-from.y,d=Math.hypot(dx,dy)||1;s.vx+=dx/d*320;s.vy+=dy/d*320}
  if(s.hp<=0){s.hp=0;finish(false,'Корабль разбит')}}
 function collect(c){const t=CT[c.t],s=G.ship;G.got+=t.v;s.fuel=Math.min(s.fmax,s.fuel+t.fuel);SFX.pick(t.v);part(c.x,c.y,10,t.c[1],160,.5);popTxt(c.x,c.y-20,'+'+t.v+' 💎',t.c[1]);
@@ -407,12 +434,12 @@ function update(dt){
  else if(PTR.mouse){const sx=W/2+(s.x-CAM.x)*SC,sy=H/2+(s.y-CAM.y)*SC,dx=PTR.mx-sx,dy=PTR.my-sy,d=Math.hypot(dx,dy);if(d>24){const m=clamp((d-24)/140,0,1);ix=dx/d*m;iy=dy/d*m}}
  let len=Math.hypot(ix,iy);if(len>1){ix/=len;iy/=len;len=1}
  const fuelOk=s.fuel>0,boost=(K[' ']||K.shift||BOOST)&&fuelOk&&len>.1;
- const eng=S.up.engine,maxV=(270+eng*35)*(boost?1.6:1)*(s.slow>0?.55:1),acc=(600+eng*70)*(boost?1.4:1);
+ const eng=S.up.engine,fast=cheat('speed')?1.6:1,maxV=(270+eng*35)*(boost?1.6:1)*(s.slow>0?.55:1)*fast,acc=(600+eng*70)*(boost?1.4:1)*fast;
  if(fuelOk&&len>.05){s.vx+=ix*acc*dt;s.vy+=iy*acc*dt;s.thr=len*(boost?1.5:1)}else s.thr=0;
  const damp=Math.pow(s.thr>0?.6:.42,dt);s.vx*=damp;s.vy*=damp;
  let sp=Math.hypot(s.vx,s.vy);if(sp>maxV){s.vx*=maxV/sp;s.vy*=maxV/sp;sp=maxV}
  const drain=(s.thr>0?(boost?17:6):.8)*G.diff*(G.mode==='camp'?1+G.g*.07:1+(G.lvl-1)*.06);
- s.fuel=Math.max(0,s.fuel-drain*dt);
+ s.fuel=cheat('fuel')?s.fmax:Math.max(0,s.fuel-drain*dt);
  if(s.fuel<=0){s.zero+=dt;if(s.zero>4.5)return finish(false,'Топливо кончилось')}else s.zero=0;
  if(s.fuel<s.fmax*.22&&s.fuel>0){s.lowT-=dt;if(s.lowT<=0){s.lowT=1.2;SFX.low()}}
  s.x+=s.vx*dt;s.y+=s.vy*dt;G.dist+=sp*dt;
@@ -440,7 +467,7 @@ function update(dt){
  s.fire-=dt;if(s.fire<=0){let best=null,bd=1e9;const R2=560;
   const tst=(o,pri)=>{const d=Math.hypot(o.x-s.x,o.y-s.y)-(o.r||0);if(d<R2*pri&&d/pri<bd){bd=d/pri;best=o}};
   if(G.boss&&G.boss.hp>0)tst(G.boss,1.4);for(const o of G.dogs)tst(o,1.3);for(const o of G.ast)tst(o,.62);for(const o of G.comets)tst(o,.8);
-  if(best){shoot(best.x+(best.vx||0)*.15,best.y+(best.vy||0)*.15);s.fire=laserRate(S.up.laser)}else s.fire=.1}
+  if(best){shoot(best.x+(best.vx||0)*.15,best.y+(best.vy||0)*.15);s.fire=laserRate(S.up.laser)/(cheat('rapid')?3:1)}else s.fire=.1}
  for(let i=G.shots.length-1;i>=0;i--){const b=G.shots[i];b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;let done=b.life<=0;
   if(!done)for(const o of G.ast)if(Math.hypot(o.x-b.x,o.y-b.y)<o.r){damageAst(o,b.dmg);done=true;break}
   if(!done)for(const o of G.dogs)if(Math.hypot(o.x-b.x,o.y-b.y)<o.r){o.hp-=b.dmg;o.hit=.12;part(b.x,b.y,5,'#ffb36b',120,.3);if(o.hp<=0)killDog(o);done=true;break}
@@ -553,7 +580,7 @@ function render(t){
  ctx.setTransform(DPR,0,0,DPR,0,0);drawRadar(t);drawArrow(t);
  if(PTR.on){ctx.globalAlpha=.5;ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(PTR.ox,PTR.oy,70,0,TAU);ctx.stroke();ctx.fillStyle='#ffc93c';ctx.beginPath();ctx.arc(PTR.x,PTR.y,30,0,TAU);ctx.fill();ctx.globalAlpha=1}
  if(s.fuel<=0&&MODE==='play'){ctx.fillStyle='rgba(255,94,122,'+(.15+Math.sin(t*8)*.1)+')';ctx.fillRect(0,0,W,H)}}
-function drawRadar(t){const R=Math.min(62,W*.13),cx=W-R-14,cy=76+R,s=G.ship,k=R/1500;
+function drawRadar(t){const R=Math.min(62,W*.13)*UIZ,cx=W-R-14*UIZ,cy=76*UIZ+R,s=G.ship,k=R/1500;
  ctx.save();ctx.fillStyle='rgba(18,12,53,.72)';ctx.strokeStyle='#fff7e8';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,R,0,TAU);ctx.fill();ctx.stroke();ctx.clip();
  ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,R*.5,0,TAU);ctx.stroke();
  if(G.mode==='camp'){ctx.strokeStyle='rgba(255,126,182,.6)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx-s.x*k,cy-s.y*k,G.R*k,0,TAU);ctx.stroke()}
@@ -608,18 +635,18 @@ function finish(win,reason){if(G.end)return;G.end=true;G.win=win;MODE='result';$
 function ending(){modal(`<h3>🏠 Ты дома!</h3><p>Котозайц долетел до родной планеты <b>Котозаяции</b>. Все котозайцы встречают героя!</p><div class="big3">🐰🎉🐰</div><div class="rw"><span>🚀 Золотой корабль</span><span>♾ Бесконечный рейс</span></div><p class="mut">Можно перепроходить сектора на 3 звезды и ставить рекорды.</p><div class="mbtn"><button class="btn big mint" data-a="ships">🚀 Забрать корабль</button><button class="btn white" data-a="tomenu">🏠 В меню</button></div>`);
  if(G)for(let i=0;i<120;i++)part(G.ship.x+rnd(-300,300),G.ship.y+rnd(-200,200),1,pick(['#ffc93c','#ff6fa8','#3fd8ad','#5ab8ff']),200,2,5)}
 function pause(){if(MODE!=='play')return;MODE='pause';PTR.on=false;PTR.id=null;BOOST=false;
- modal(`<h3>⏸ Пауза</h3><p>${G.mode==='camp'?esc(GAL[G.sec.g].ic+' '+G.sec.name):'♾ Бесконечный рейс · '+fmt(score())+' очков'}</p><div class="opts" style="text-align:left">${swRow('snd','🔊 Звуки')}${swRow('mus','🎵 Музыка')}</div><div class="mbtn"><button class="btn big mint" data-a="resume">▶ Продолжить</button><div class="mrow2"><button class="btn" data-a="restart">↻ Заново</button><button class="btn white" data-a="quit">🚪 Выйти</button></div></div>`)}
+ modal(`<h3>⏸ Пауза</h3><p>${G.mode==='camp'?esc(GAL[G.sec.g].ic+' '+G.sec.name):'♾ Бесконечный рейс · '+fmt(score())+' очков'}</p><div class="opts" style="text-align:left">${swRow('snd','🔊 Звуки')}${swRow('mus','🎵 Музыка')}</div><div class="mbtn"><button class="btn big mint" data-a="resume">▶ Продолжить</button><div class="mrow2"><button class="btn" data-a="restart">↻ Заново</button><button class="btn white" data-a="quit">🚪 Выйти</button></div>${IS_ADM?`<div class="mrow2"><button class="btn vio sm" data-a="admwin">⏭ ${G.mode==='camp'?'Пройти сектор':'Закончить рейс'}</button><button class="btn vio sm" data-a="admheal">❤ Вылечить</button></div>`:''}</div>`)}
 function resume(){if(MODE!=='pause')return;closeModal();MODE='play'}
 
 /* ---------- экраны ---------- */
 function show(id){SCREEN=id||'';$$('.scr').forEach(e=>e.classList.toggle('on',e.id===id));$('#mtop').style.display=id==='menu'?'':'none';if(id)$('#hud').classList.remove('on');
- if(id==='menu')renderMenu();if(id==='map')renderMap();if(id==='hangar')renderHangar();if(id==='ships')renderShips();if(id==='settings')renderSettings();$$('.hb').forEach(e=>e.textContent='💎 '+fmt(S.crystals))}
+ if(id==='menu')renderMenu();if(id==='map')renderMap();if(id==='hangar')renderHangar();if(id==='ships')renderShips();if(id==='settings')renderSettings();if(id==='adm'){if(!IS_ADM){show('menu');return}renderAdm()}$$('.hb').forEach(e=>e.textContent='💎 '+fmt(S.crystals))}
 function toMenu(){closeModal();MODE='menu';G=null;$('#hud').classList.remove('on');setScene(Math.min(4,Math.floor(Math.min(S.sector,NSEC-1)/5)));show('menu')}
-function renderMenu(){$('#mBank').textContent='💎 '+fmt(S.crystals);$('#mNick').textContent='🐰 '+NICK;const i=Math.min(S.sector,NSEC-1),sec=secInfo(i);
+function renderMenu(){$('#mBank').textContent='💎 '+fmt(S.crystals);const i=Math.min(S.sector,NSEC-1),sec=secInfo(i);
  $('#bPlay').innerHTML=S.won?'▶ Играть':S.sector===0?'▶ Начать полёт':'▶ Продолжить · '+sec.G.ic+' '+(sec.boss?'Босс':'сектор '+(i+1));
  $('#bEnd').innerHTML=S.sector>=5||IS_ADM?'♾ Бесконечный рейс'+(S.best?' · 🏆 '+fmt(S.best):''):'🔒 Бесконечный рейс';
  $('#mSub').textContent=S.won?'Котозайц дома! Перепроходи сектора на 3 звезды и ставь рекорды в бесконечном рейсе.':S.sector?'До родной планеты Котозаяции осталось секторов: '+(NSEC-S.sector)+'. Кристаллы — твоё топливо!':'Корабль котозайца сбился с курса. Собирай кристаллы-топливо и долети до родной планеты!';
- $('#bExit').style.display=EMB||A?'':'none'}
+ $('#bExit').style.display=EMB||A?'':'none';$('#bAdm').style.display=IS_ADM?'':'none';$('#mNick').textContent=(ACC?'👤 ':'🔑 ')+(ACC?NICK:'Войти');$('#mFs').style.display=matchMedia('(pointer:fine)').matches?'':'none'}
 function renderMap(){$('#mapProg').textContent='⭐ '+starSum()+' / '+NSEC*3;
  $('#mapBox').innerHTML=GAL.map((g,gi)=>{const open=S.sector>=gi*5;return`<div class="panel gal"><div class="galh"><i style="background:${g.col}">${open?g.ic:'🔒'}</i><div><b>${esc(g.n)}</b><small>${open?'Босс: '+esc(g.boss):'Пройди предыдущую галактику'}</small></div></div><div class="nodes">${[0,1,2,3,4].map(k=>{const i=gi*5+k,lock=i>S.sector,st=S.stars[i]|0,cur=i===S.sector;return`<button class="node${k===4?' boss':''}${lock?' lock':''}${cur?' cur':''}" ${lock?'':`data-sec="${i}"`}>${lock?'🔒':k===4?'🐶':i+1}<small>${lock?'':'★'.repeat(st)+'☆'.repeat(3-st)}</small></button>`}).join('')}</div></div>`}).join('')+
  `<div class="panel home"><div style="font-size:46px">${S.won?'🏠':'🪐'}</div><div><b style="font-size:18px">Котозаяция</b><div class="mut">${S.won?'Ты долетел домой! 🎉':'Родная планета котозайцев. Осталось секторов: '+(NSEC-S.sector)}</div></div></div>`}
@@ -630,23 +657,86 @@ function swRow(k,n,d){return`<div class="opt"><div class="tx">${n}${d?`<small>${
 function renderSettings(){$('#setBox').innerHTML=swRow('snd','🔊 Звуки')+swRow('mus','🎵 Музыка','Тихая космическая мелодия')+swRow('hints','💡 Подсказки')+
  `<div class="opt"><div class="tx">🎯 Сложность<small>Расход топлива, сила врагов и боссов</small></div><div class="seg">${['Лёгкая','Обычная','Сложная'].map((n,i)=>`<button data-diff="${i}" class="${S.set.diff===i?'on':''}">${n}</button>`).join('')}</div></div>`+
  `<div class="opt"><div class="tx">🎮 Управление<small>ПК: WASD или стрелки, или зажми левую кнопку мыши. Пробел/Shift — форсаж. Esc — пауза.<br>Телефон: веди пальцем, кнопка 🚀 — форсаж. Лазер стреляет сам.</small></div></div>`+
- `<div class="opt"><div class="tx">👤 Аккаунт<small>${ACC?'@'+esc(ACC)+' · '+esc(NICK)+' — прогресс сохраняется для этого аккаунта':'Гость — войди в лаунчере, чтобы прогресс был в аккаунте'}</small></div></div>`+
+ `<div class="opt"><div class="tx">👤 Аккаунт<small>${ACC?'@'+esc(ACC)+' · '+esc(NICK)+' — прогресс сохраняется для этого аккаунта':'Гость — войди или зарегистрируйся, чтобы прогресс был в аккаунте'}</small></div><button class="btn sm ${ACC?'white':'mint'}" data-a="acc">${ACC?'Аккаунт':'🔑 Войти'}</button></div>`+
+ `<div class="opt"><div class="tx">🖥 Полный экран<small>Клавиша F11 — включить или выключить</small></div><button class="btn sm white" data-a="fs">⛶ F11</button></div>`+
  `<div class="opt"><div class="tx">🗑 Сбросить прогресс<small>Начать полёт заново</small></div><button class="btn sm red" data-a="reset">Сбросить</button></div>`;
- $('#admBox').innerHTML=IS_ADM?`<div class="panel opts" style="margin-top:14px"><div class="opt"><div class="tx"><b>🛠 ADM</b><small>Только для @${esc(ACC)}</small></div></div><div class="opt" style="flex-wrap:wrap;gap:8px"><button class="btn sm" data-adm="c">💎 +1000</button><button class="btn sm" data-adm="s">🗺 Открыть все сектора</button><button class="btn sm" data-adm="u">🔧 Всё на максимум</button><button class="btn sm" data-adm="sh">🚀 Все корабли</button></div></div>`:''}
+ $('#admBox').innerHTML=IS_ADM?`<div class="panel opts" style="margin-top:14px"><div class="opt"><div class="tx"><b>🛠 ADM</b><small>Ты админ: @${esc(ACC)}</small></div><button class="btn sm vio" data-a="adm">Открыть ADM-панель</button></div></div>`:''}
+
+/* ---------- аккаунты ---------- */
+function switchAcc(){save();loadAcc();S=loadSave();save();setScene(Math.min(4,Math.floor(Math.min(S.sector,NSEC-1)/5)));if(SCREEN==='adm'&&!IS_ADM)SCREEN='menu';if(MODE==='menu')show(SCREEN||'menu')}
+function accModal(){if(MODE==='play')return;if(!ACC){authForm(false);return}
+ modal(`<h3>👤 ${esc(NICK)}</h3><p>@${esc(ACC)}${IS_ADM?' · 🛠 '+(IS_ROOT?'главный админ':'админ'):''}</p><div class="rw"><span>🗺 ${S.won?'дома 🏠':'сектор '+Math.min(NSEC,S.sector+1)}</span><span>⭐ ${starSum()}</span><span>💎 ${fmt(S.crystals)}</span></div><p class="mut">Один аккаунт для всех игр Kotazaic Launcher</p><div class="mbtn"><button class="btn" data-a="accnick">✏ Сменить ник</button><div class="mrow2"><button class="btn white" data-a="accswitch">🔄 Другой аккаунт</button><button class="btn red" data-a="logout">🚪 Выйти</button></div><button class="btn white" data-a="mclose">Закрыть</button></div>`)}
+function authForm(reg){const db=accDB(),ks=known().filter(u=>db[u]).slice(0,6);
+ modal(`<h3>${reg?'✨ Регистрация':'🔑 Вход'}</h3><p class="mut" style="margin:0 0 6px">Один аккаунт для всех игр лаунчера</p><div class="seg" style="width:fit-content;margin:8px auto 4px"><button data-a="tabin" class="${reg?'':'on'}">Вход</button><button data-a="tabreg" class="${reg?'on':''}">Регистрация</button></div>
+ <div class="form"><label>Юзернейм</label><input id="fU" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="16" placeholder="латиница, цифры, _">${reg?'<label>Никнейм</label><input id="fN" maxlength="20" placeholder="Как тебя звать в игре">':''}<label>Пароль</label><input id="fP" type="password" autocomplete="${reg?'new-password':'current-password'}" placeholder="минимум 4 символа">${reg?'<label>Пароль ещё раз</label><input id="fP2" type="password" autocomplete="new-password">':''}<div class="err" id="fE"></div></div>
+ ${!reg&&ks.length?`<div class="known">${ks.map(u=>`<button class="btn sm white" data-fill="${esc(u)}">👤 ${esc(db[u].nick||u)}</button>`).join('')}</div>`:''}
+ <div class="mbtn"><button class="btn big mint" data-a="${reg?'doreg':'dologin'}">${reg?'✨ Создать аккаунт':'🔑 Войти'}</button><button class="btn white" data-a="guest">🐰 Играть как гость</button></div>`);setTimeout(()=>{const i=$('#fU');if(i)i.focus()},60)}
+async function doAuth(reg){const u=$('#fU').value.trim().toLowerCase(),p=$('#fP').value,err=$('#fE');
+ if(!/^[a-z0-9_]{3,16}$/.test(u)){err.textContent='Юзернейм: 3–16 символов — латиница, цифры или _';return}
+ if(p.length<4){err.textContent='Пароль минимум 4 символа';return}
+ const db=accDB(),h=await hashPw(u,p);
+ if(reg){const n=$('#fN').value.trim();if(!n){err.textContent='Придумай никнейм';return}if(p!==$('#fP2').value){err.textContent='Пароли не совпадают';return}if(db[u]){err.textContent='Такой юзернейм уже занят';return}db[u]={nick:n.slice(0,20),pass:h,save:null};saveDB(db);toast('🎉 Привет, '+n+'!')}
+ else{if(!db[u]){err.textContent='Такого аккаунта нет — зарегистрируйся';return}if(db[u].pass!==h&&db[u].pass!==djb(u,p)){err.textContent='Неверный пароль';return}if(db[u].pass!==h){db[u].pass=h;saveDB(db)}toast('👋 С возвращением, '+(db[u].nick||u)+'!')}
+ LS.set('kz_session',u);addKnown(u);switchAcc();closeModal();SFX.buy()}
+/* ---------- полный экран ---------- */
+function toggleFS(){const d=document;try{if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d)}else{const e=d.documentElement,f=e.requestFullscreen||e.webkitRequestFullscreen;const r=f&&f.call(e);if(r&&r.catch)r.catch(()=>toast('Полный экран тут недоступен'));if(!f)toast('Полный экран тут недоступен')}}catch(e){toast('Полный экран тут недоступен')}}
+document.addEventListener('fullscreenchange',()=>{setTimeout(resize,50);const b=$('#mFs');if(b)b.textContent=document.fullscreenElement?'🗗':'⛶'});
+/* ---------- ADM ---------- */
+const cheat=k=>IS_ADM&&S.adm&&!!S.adm[k];
+function admCheat(k){if(!IS_ADM||!G)return;const s=G.ship;
+ if(k==='f2'){if(MODE==='pause'){closeModal();MODE='play'}if(G.mode==='camp'){if(G.boss&&G.boss.hp>0)bossDmg(G.boss.hp);G.got=Math.max(G.got,G.need);finish(true)}else finish(false,'Рейс закончен админом');return}
+ if(k==='f3'){if(G.boss&&G.boss.hp>0){bossDmg(G.boss.hp);return}if(G.gate&&!G.gate.open){G.got=Math.max(G.got,G.need);G.gate.open=true;SFX.gate();toast('🛠 Врата открыты')}return}
+ if(k==='f4'){s.hp=s.hpMax;s.fuel=s.fmax;s.slow=0;toast('🛠 Корабль починен и заправлен');if(MODE==='pause')resume()}}
+function admAct(k,el){const v=id=>{const e=$(id);return e?e.value.trim():''};
+ if(k==='c1')S.crystals+=100;if(k==='c2')S.crystals+=1000;if(k==='c3')S.crystals+=10000;
+ if(k==='cset'){const n=parseInt(v('#aCr'),10);if(!(n>=0)){toast('Введи число');return}S.crystals=Math.min(n,1e9)}
+ if(k==='secset'){const n=parseInt(v('#aSec'),10);if(!(n>=1&&n<=NSEC+1)){toast('Сектор от 1 до '+(NSEC+1));return}S.sector=n-1}
+ if(k==='secall'){S.sector=NSEC}
+ if(k==='star3')for(let i=0;i<Math.min(S.sector,NSEC);i++)S.stars[i]=3;
+ if(k==='star0')S.stars={};
+ if(k==='upmax')for(const u of UPS)S.up[u.id]=5;
+ if(k==='up0')for(const u of UPS)S.up[u.id]=0;
+ if(k==='ships')S.ships=SHIPS.map(x=>x.id);
+ if(k==='won'){S.won=!S.won;if(S.won&&!S.ships.includes('gold'))S.ships.push('gold')}
+ if(k==='rec0')S.best=0;
+ if(k==='addadm'){if(!IS_ROOT)return;const u=v('#aAdm').toLowerCase().replace(/^@/,'');if(!/^[a-z0-9_]{3,16}$/.test(u)){toast('Юзернейм: 3–16 символов');return}const l=admList();if(BASE_ADM.includes(u)||l.includes(u)){toast('Уже админ');return}l.push(u);LS.set('kz_space_admins',JSON.stringify(l));toast('🛠 @'+u+' теперь админ')}
+ if(k==='deladm'){if(!IS_ROOT)return;const u=el.dataset.u;LS.set('kz_space_admins',JSON.stringify(admList().filter(x=>x!==u)));toast('@'+u+' больше не админ')}
+ if(k==='wipe'){const u=el.dataset.u;if(!confirm('Сбросить прогресс «Котозайцев в космосе» у @'+u+'?'))return;if(u===ACC){const set=S.set,adm=S.adm;S=defSave();S.set=set;S.adm=adm}else try{localStorage.removeItem('kz_space_u_'+u)}catch(e){}toast('Прогресс @'+u+' сброшен')}
+ save();SFX.click();if(!k.startsWith('add')&&!k.startsWith('del')&&k!=='wipe')toast('🛠 Готово');renderAdm();$$('.hb').forEach(e=>e.textContent='💎 '+fmt(S.crystals))}
+function renderAdm(){const db=accDB(),adms=[...BASE_ADM.map(u=>[u,1]),...admList().map(u=>[u,0])],cs=[['god','🛡 Бессмертие','Астероиды, псы и боссы не отнимают сердечки'],['fuel','⛽ Бесконечное топливо','Бак всегда полный'],['rapid','🥕 Быстрый лазер','Стреляет в 3 раза чаще'],['speed','🚀 Супер-скорость','Корабль летает в 1,6 раза быстрее']];
+ const prog=u=>{try{const o=JSON.parse(LS.get('kz_space_u_'+u));return o?'сектор '+Math.min(NSEC,(o.sector|0)+1)+' · 💎 '+fmt(o.crystals|0):'не играл'}catch(e){return'не играл'}};
+ $('#admPanel').innerHTML=`
+ <div class="panel"><h4>👤 @${esc(ACC)} · ${IS_ROOT?'главный админ 👑':'админ'}</h4><div class="mut">Изменения действуют на твой прогресс в «Котозайцах в космосе». В игре: <b>F2</b> — пройти сектор, <b>F3</b> — открыть врата / добить босса, <b>F4</b> — починить и заправить корабль.</div></div>
+ <div class="panel"><h4>💎 Кристаллы: ${fmt(S.crystals)}</h4><div class="row"><button class="btn sm" data-adm="c1">+100</button><button class="btn sm" data-adm="c2">+1 000</button><button class="btn sm" data-adm="c3">+10 000</button></div><div class="row" style="margin-top:10px"><input id="aCr" type="number" min="0" placeholder="Точное количество"><button class="btn sm mint" data-adm="cset">Установить</button></div></div>
+ <div class="panel"><h4>🗺 Прогресс: ${S.won?'дома 🏠':'сектор '+Math.min(NSEC,S.sector+1)+' из '+NSEC}</h4><div class="row"><input id="aSec" type="number" min="1" max="${NSEC+1}" placeholder="Открыть до сектора (1–${NSEC+1})"><button class="btn sm mint" data-adm="secset">Открыть</button></div><div class="row" style="margin-top:10px"><button class="btn sm" data-adm="secall">Открыть все</button><button class="btn sm" data-adm="star3">⭐⭐⭐ везде</button><button class="btn sm white" data-adm="star0">Сбросить звёзды</button><button class="btn sm white" data-adm="won">${S.won?'Убрать «дома»':'Отметить «дома»'}</button><button class="btn sm white" data-adm="rec0">Сбросить рекорд</button></div></div>
+ <div class="panel"><h4>🔧 Ангар и корабли</h4><div class="row"><button class="btn sm" data-adm="upmax">Всё на максимум</button><button class="btn sm white" data-adm="up0">Сбросить улучшения</button><button class="btn sm" data-adm="ships">Все корабли</button></div></div>
+ <div class="panel opts" style="padding:4px 0"><div class="opt"><div class="tx"><b>🎮 Читы в полёте</b><small>Работают только у админов</small></div></div>${cs.map(([k,n,d])=>`<div class="opt"><div class="tx">${n}<small>${d}</small></div><div class="sw${S.adm[k]?' on':''}" data-cheat="${k}" data-n="${n}"></div></div>`).join('')}</div>
+ <div class="panel"><h4>🛠 Админы</h4><div class="adml">${adms.map(([u,b])=>`<div><span>${b?'👑':'🛠'} @${esc(u)}${db[u]?' · '+esc(db[u].nick||''):''}</span>${!b&&IS_ROOT?`<button class="btn sm red" data-adm="deladm" data-u="${esc(u)}">✕</button>`:''}</div>`).join('')}</div>${IS_ROOT?`<div class="row"><input id="aAdm" placeholder="юзернейм нового админа" autocapitalize="none" spellcheck="false" maxlength="17"><button class="btn sm mint" data-adm="addadm">Добавить</button></div>`:'<div class="mut">Добавлять и убирать админов может только главный админ</div>'}</div>
+ <div class="panel"><h4>👥 Аккаунты на этом устройстве</h4><div class="adml">${Object.keys(db).map(u=>`<div><span>@${esc(u)} · ${esc(db[u].nick||'')}<br><small class="mut">${prog(u)}</small></span><button class="btn sm white" data-adm="wipe" data-u="${esc(u)}">Сбросить прогресс</button></div>`).join('')||'<div><span class="mut">Нет аккаунтов</span></div>'}</div></div>`}
 
 /* ---------- окна ---------- */
 function modal(h){$('#toast').classList.remove('on');$('#mbox').innerHTML=h;$('#modal').classList.add('on')}
 function closeModal(){$('#modal').classList.remove('on')}
 let toastTO=0;function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toastTO);toastTO=setTimeout(()=>e.classList.remove('on'),2600)}
-function exitToLauncher(){save();try{if(window.parent!==window){parent.postMessage({space:'exit'},'*');return}}catch(e){}
+function exitToLauncher(){save();try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}try{if(window.parent!==window){parent.postMessage({space:'exit'},'*');return}}catch(e){}
  if(A){try{location.href=A.fileUrl?A.fileUrl('launcher.html'):'launcher.html'}catch(e){location.href='launcher.html'}return}try{window.close()}catch(e){}}
 window.kzBack=()=>{if(MODE==='play'){pause();return}if(MODE==='pause'){resume();return}if($('#modal').classList.contains('on')){if(MODE==='result'){toMenu();return}closeModal();return}if(SCREEN&&SCREEN!=='menu'){show('menu');return}exitToLauncher()};
 
 function doAct(a,el){SFX.click();
  if(a==='play'){if(!S.intro){S.intro=true;save();modal(`<h3>🚀 Котозайцы в космосе</h3><p>Корабль котозайца сбился с курса и залетел на край галактики. Топлива почти нет!</p><div class="rw"><span>💎 кристаллы = топливо</span><span>🌀 врата = прыжок</span></div><p>Собирай кристаллы, открывай врата и прыгай от сектора к сектору. Остерегайся астероидов, космопсов и чёрных дыр. Впереди — 5 галактик и родная планета <b>Котозаяция</b>.</p><div class="mbtn"><button class="btn big mint" data-a="play">Полетели! 🚀</button></div>`);return}
   startSector(S.won?Math.min(S.sector,NSEC-1):S.sector);return}
- if(a==='map'||a==='hangar'||a==='ships'||a==='settings'){if(MODE==='result'){closeModal();MODE='menu';G=null}else closeModal();show(a);return}
+ if(a==='map'||a==='hangar'||a==='ships'||a==='settings'||a==='adm'){if(MODE==='result'){closeModal();MODE='menu';G=null}else closeModal();show(a);return}
  if(a==='back'){show('menu');return}
+ if(a==='acc'){accModal();return}if(a==='fs'){toggleFS();return}
+ if(a==='tabin'){authForm(false);return}if(a==='tabreg'){authForm(true);return}
+ if(a==='dologin'){doAuth(false);return}if(a==='doreg'){doAuth(true);return}
+ if(a==='guest'){LS.set('kz_session','__guest');switchAcc();closeModal();toast('🐰 Гостевой режим');return}
+ if(a==='logout'){LS.set('kz_session','__guest');switchAcc();authForm(false);toast('Ты вышел из аккаунта');return}
+ if(a==='accswitch'){authForm(false);return}
+ if(a==='accnick'){modal(`<h3>✏ Новый ник</h3><div class="form"><input id="fNick" maxlength="20" value="${esc(NICK)}"><div class="err" id="fE"></div></div><div class="mbtn"><button class="btn big mint" data-a="nickok">Сохранить</button><button class="btn white" data-a="acc">Отмена</button></div>`);setTimeout(()=>$('#fNick').focus(),60);return}
+ if(a==='nickok'){const n=$('#fNick').value.trim();if(!n){$('#fE').textContent='Ник не может быть пустым';return}const db=accDB();if(db[ACC]){db[ACC].nick=n.slice(0,20);saveDB(db)}loadAcc();save();renderMenu();accModal();toast('✓ Ник: '+n);return}
+ if(a==='mclose'){closeModal();return}
+ if(a==='admwin'){admCheat('f2');return}if(a==='admheal'){admCheat('f4');return}
  if(a==='endless'){startEndless();return}
  if(a==='exit'){exitToLauncher();return}
  if(a==='pause'){pause();return}if(a==='resume'){resume();return}
@@ -657,13 +747,15 @@ function doAct(a,el){SFX.click();
  if(a==='reset'){if(!confirm('Сбросить весь прогресс «Котозайцев в космосе»? Кристаллы, корабли и сектора пропадут.'))return;const set=S.set;S=defSave();S.set=set;save();toast('Прогресс сброшен');renderSettings();return}}
 document.addEventListener('click',e=>{const t=e.target;ac();if(S.set.mus)musStart();
  const b=t.closest('[data-a]');if(b){doAct(b.dataset.a,b);return}
+ const fl=t.closest('[data-fill]');if(fl){$('#fU').value=fl.dataset.fill;$('#fP').focus();return}
  const sc=t.closest('[data-sec]');if(sc){startSector(+sc.dataset.sec);return}
  const up=t.closest('[data-up]');if(up){const id=up.dataset.up,l=S.up[id],c=UPCOST[l];if(l>=5)return;if(S.crystals<c){toast('Не хватает 💎 — нужно '+c);SFX.low();return}S.crystals-=c;S.up[id]++;save();SFX.buy();toast('✨ '+UPS.find(u=>u.id===id).n+': уровень '+S.up[id]);show('hangar');return}
  const by=t.closest('[data-buy]');if(by){const sh=SHIPS.find(x=>x.id===by.dataset.buy);if(S.crystals<sh.price){toast('Не хватает 💎 — нужно '+sh.price);SFX.low();return}S.crystals-=sh.price;S.ships.push(sh.id);S.ship=sh.id;save();SFX.buy();toast('🚀 '+sh.n+' теперь твой!');show('ships');return}
  const se=t.closest('[data-ship]');if(se){S.ship=se.dataset.ship;save();show('ships');return}
  const sw=t.closest('[data-set]');if(sw){const k=sw.dataset.set;S.set[k]=S.set[k]?0:1;save();sw.classList.toggle('on',!!S.set[k]);if(k==='mus'&&S.set.mus)musStart();return}
  const df=t.closest('[data-diff]');if(df){S.set.diff=+df.dataset.diff;save();renderSettings();return}
- const ad=t.closest('[data-adm]');if(ad&&IS_ADM){const k=ad.dataset.adm;if(k==='c')S.crystals+=1000;if(k==='s')S.sector=NSEC-1;if(k==='u')for(const u of UPS)S.up[u.id]=5;if(k==='sh')S.ships=SHIPS.map(x=>x.id);save();toast('🛠 Готово');show('settings')}});
+ const ad=t.closest('[data-adm]');if(ad&&IS_ADM){admAct(ad.dataset.adm,ad);return}
+ const ch=t.closest('[data-cheat]');if(ch&&IS_ADM){const k=ch.dataset.cheat;S.adm[k]=S.adm[k]?0:1;save();ch.classList.toggle('on',!!S.adm[k]);toast('🛠 '+ch.dataset.n+': '+(S.adm[k]?'вкл':'выкл'));return}});
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&MODE==='menu')closeModal()});
 
 /* ---------- цикл ---------- */
@@ -673,6 +765,8 @@ function frame(now){const dt=Math.min(.033,(now-last)/1000);last=now;const t=now
  render(t);requestAnimationFrame(frame)}
 if(location.hash==='#cover')document.body.classList.add('cover');
 setScene(Math.min(4,Math.floor(Math.min(S.sector,NSEC-1)/5)));save();show('menu');requestAnimationFrame(frame);
+if(LS.get('kz_session')==null&&!document.body.classList.contains('cover'))setTimeout(()=>{if(MODE==='menu'&&!$('#modal').classList.contains('on'))authForm(false)},500);
+addEventListener('storage',e=>{if(e.key==='kz_session'&&MODE==='menu'){switchAcc()}});
 window.__space={get S(){return S},get G(){return G},startSector,startEndless,finish:(w)=>G&&finish(w,'тест')};
 </script>
 </body>
