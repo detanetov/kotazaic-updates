@@ -11,10 +11,10 @@
   "sha256": "d80c084e0fd60188d5d50a7e6651d8ee907a67c53b0c454d94d969048026f25a"
  },
  "launcher": {
-  "version": 17,
-  "label": "1.2.2",
+  "version": 18,
+  "label": "1.2.3",
   "file": "KotazaicLauncher.exe",
-  "sha256": "be9dfdc175c21f919feb93dbcfed08ae61cd4147cf47903dc18c8df5afc05ffc"
+  "sha256": "0708c1fee65395b854ac401c70f36dbab13c7141e22d69f7ff87938681b706a7"
  },
  "kotoio": {
   "version": 7,
@@ -33,11 +33,11 @@
   "date": "2026-10-22"
  },
  "mlauncher": {
-  "version": 4,
-  "label": "1.3",
-  "name": "Kotazaic Launcher 1.3: игры по разделам — Котозайцы и Ленивцы",
+  "version": 5,
+  "label": "1.4",
+  "name": "Kotazaic Launcher 1.4: новая игра «Котозайцы в космосе»",
   "file": "mlauncher.html",
-  "sha256": "ee7ff3de23b1b35c11190135ec3953251e06f8bed255cbbba6f6afb0ef6bf0d1",
+  "sha256": "6487078a110792975dfafd50aee3db4e2f1e2eb698ba54751c8b2d4b16c10427",
   "date": "2026-10-26",
   "apk": {
    "label": "1.8",
@@ -45,5 +45,19 @@
    "sha256": "730f46dd8fbfab58df588f079647c8d3865070a8377450fddb917f0a87d26e7f",
    "note": "Ставится поверх приложения Kotazaic and Stars и переносит его прогресс. Это приложение после этого можно удалить"
   }
+ },
+ "space": {
+  "version": 1,
+  "label": "1.0",
+  "name": "Котозайцы в космосе 1.0: полёт домой через 5 галактик — кристаллы-топливо, космопсы, чёрные дыры, 5 боссов, ангар, 8 кораблей и бесконечный рейс",
+  "file": "space.html",
+  "sha256": "3083e1b0743c3b846a2b5793b1e2b39e0b4a35141d20285da030cd4522eb3a1c",
+  "date": "2026-10-26"
+ },
+ "pcext": {
+  "version": 1,
+  "file": "pcext.js",
+  "sha256": "b776641873574de191a3865c177e9bed85b5f6c7b2ca07258894f4fcc6295232",
+  "date": "2026-10-26"
  }
 }
