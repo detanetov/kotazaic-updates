@@ -140,6 +140,9 @@ select.inp{font:800 14px inherit;font-family:inherit;color:var(--ink);background
 .rng{display:flex;align-items:center;gap:10px;min-width:220px;flex:1;max-width:340px}.rng input{flex:1;accent-color:#3fd8ad;height:26px}.rng b{min-width:52px;text-align:right}
 .opt .seg{flex-wrap:wrap}
 .setnote{color:#e6e0ff;font-size:13px;margin:10px 4px 0;text-shadow:0 1px 0 var(--ink)}
+.trow{display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:2px dashed rgba(29,24,56,.12)}.trow:last-child{border:0}
+.trow .pl{width:42px;text-align:center;font-size:20px;font-weight:1000;flex:none}.trow .tx{flex:1;min-width:0}.trow .tx b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.trow .tx small{color:var(--mut);font-size:12px}
+.trow .vl{font-size:17px;font-weight:1000;white-space:nowrap}.trow.me{background:#e6fff6;border-radius:14px;box-shadow:0 0 0 3px var(--mint) inset}
 .cover .scr,.cover .mtop,.cover #toast{display:none!important}
 </style>
 </head>
@@ -155,7 +158,7 @@ select.inp{font:800 14px inherit;font-family:inherit;color:var(--ink);background
   <button class="btn big mint" data-a="play" id="bPlay">▶ Играть</button>
   <div class="mrow2"><button class="btn" data-a="map">🗺 Карта</button><button class="btn" data-a="hangar">🔧 Ангар</button></div>
   <div class="mrow2"><button class="btn" data-a="ships">🚀 Корабли</button><button class="btn" data-a="settings">⚙ Настройки</button></div>
-  <button class="btn pink" data-a="quests" id="bQ">📋 Задания и достижения</button>
+  <div class="mrow2"><button class="btn pink" data-a="quests" id="bQ">📋 Задания</button><button class="btn pink" data-a="top">🏆 Топ игроков</button></div>
   <button class="btn sky" data-a="endless" id="bEnd">♾ Бесконечный рейс</button>
   <button class="btn vio" data-a="adm" id="bAdm" style="display:none">🛠 ADM-панель</button>
   <button class="btn white" data-a="exit" id="bExit" style="display:none">✕ Выйти в лаунчер</button>
@@ -188,6 +191,13 @@ select.inp{font:800 14px inherit;font-family:inherit;color:var(--ink);background
 <section class="scr" id="quests"><div class="wrap">
  <div class="top"><button class="btn white" data-a="back">←</button><h2>📋 Задания</h2><span class="pill hb">💎 0</span></div>
  <div id="qBox"></div>
+</div></section>
+
+<section class="scr" id="top"><div class="wrap">
+ <div class="top"><button class="btn white" data-a="back">←</button><h2>🏆 Топ игроков</h2><span class="pill" id="topNet">📡</span></div>
+ <div class="settabs" id="topTabs"></div>
+ <div class="panel" id="topBox" style="padding:8px"></div>
+ <div class="setnote" id="topNote"></div>
 </div></section>
 
 <section class="scr" id="adm"><div class="wrap">
@@ -223,7 +233,7 @@ const fmt=n=>Math.round(n).toLocaleString('ru-RU');
 const SK={"grey": ["Серый", "#a4a9b4", "#ece8e2", "#f3b7c8"], "smoke": ["Дымчатый", "#727786", "#cdc9d4", "#e9a3b8"], "milk": ["Молочный", "#efe4d1", "#fffaf0", "#f6b9c6"], "ginger": ["Рыжий", "#f0a35a", "#ffe2bf", "#ffb3a1"], "choco": ["Шоколадный", "#8a5a3c", "#dcb48e", "#f0a3a3"], "sky": ["Облачный", "#9fc8ff", "#eef5ff", "#ffb6d0"], "mint": ["Мятный", "#7fdcc0", "#e3fff5", "#ffb3c8"], "pinky": ["Розовый", "#ff9cc8", "#ffe6f1", "#ff6fa8"], "night": ["Ночной", "#3e3858", "#7a73a0", "#b48cff"], "ice": ["Ледяной", "#bfefff", "#ffffff", "#9fd8ff"], "cosmic": ["Космический", "#6a55d8", "#b9a9ff", "#ff9be0"], "ghost": ["Призрачный", "#e6e3ff", "#ffffff", "#d6c9ff"], "lavender": ["Лавандовый", "#c7a8ff", "#f3ecff", "#ff9cc8"], "lemon": ["Лимонный", "#ffe680", "#fffbe0", "#ffb36b"], "cherry": ["Вишнёвый", "#e8556e", "#ffd6dc", "#ffb3c0"], "neon": ["Неоновый", "#39e89f", "#d8fff0", "#ff7eb6"], "rainbow": ["Радужный", "#ff8fc8", "#ffffff", "#ffffff"], "golden": ["Звёздный", "#f2c94c", "#fff1b8", "#ffb36b"], "pumpkin": ["Тыквенный", "#ff8a3d", "#ffd29c", "#ffcf6b"], "peach": ["Персиковый", "#ffc2a1", "#fff0e6", "#ff9e9e"], "sand": ["Песочный", "#d9c08f", "#f6ecd6", "#f3b0a0"], "coffee": ["Кофейный", "#6b4a36", "#c9a786", "#e89c9c"], "forest": ["Лесной", "#5f9a5a", "#d8f0c8", "#ffb3a1"], "sea": ["Морской", "#3fa7c4", "#dff6ff", "#ffb6d0"], "blueberry": ["Черничный", "#4a4fae", "#c8ccff", "#ff9cc8"], "coral": ["Коралловый", "#ff7a6b", "#ffe0da", "#ffd06b"], "lava": ["Лавовый", "#3a1a1a", "#ff8a3d", "#ffcf33"], "emerald": ["Изумрудный", "#1fb37a", "#c8ffe6", "#ffe066"], "diamond": ["Алмазный", "#d6f4ff", "#ffffff", "#a8e4ff"]};
 function accDB(){try{return JSON.parse(LS.get('kz_accounts_v1'))||{}}catch(e){return{}}}
 function saveDB(d){LS.set('kz_accounts_v1',JSON.stringify(d))}
-const GAME_VER='1.2';
+const GAME_VER='1.1.1';
 let ACC='',NICK='Гость',IS_ADM=false,IS_ROOT=false,PAL=null,KEYU='';
 function loadAcc(){const u=LS.get('kz_session'),db=accDB();ACC=u&&u!=='__guest'&&db[u]?u:'';const a=ACC?db[ACC]:null;
  NICK=ACC?(a.nick||ACC):'Гость';IS_ADM=ACC==='deta';IS_ROOT=IS_ADM;
@@ -794,13 +804,13 @@ function resume(){if(MODE!=='pause')return;closeModal();MODE='play'}
 
 /* ---------- экраны ---------- */
 function show(id){SCREEN=id||'';$$('.scr').forEach(e=>e.classList.toggle('on',e.id===id));$('#mtop').style.display=id==='menu'?'':'none';if(id)$('#hud').classList.remove('on');
- if(id==='menu')renderMenu();if(id==='map')renderMap();if(id==='hangar')renderHangar();if(id==='ships')renderShips();if(id==='settings')renderSettings();if(id==='quests')renderQuests();if(id==='adm'){if(!IS_ADM){show('menu');return}renderAdm()}$$('.hb').forEach(e=>e.textContent='💎 '+fmt(S.crystals))}
-function toMenu(){closeModal();MODE='menu';G=null;$('#hud').classList.remove('on');setScene(Math.min(4,Math.floor(Math.min(S.sector,NSEC-1)/5)));show('menu');setTimeout(showPending,400)}
+ if(id==='menu')renderMenu();if(id==='map')renderMap();if(id==='hangar')renderHangar();if(id==='ships')renderShips();if(id==='settings')renderSettings();if(id==='quests')renderQuests();if(id==='top')renderTop();if(id==='adm'){if(!IS_ADM){show('menu');return}renderAdm()}$$('.hb').forEach(e=>e.textContent='💎 '+fmt(S.crystals))}
+function toMenu(){try{netPresence()}catch(e){}closeModal();MODE='menu';G=null;$('#hud').classList.remove('on');setScene(Math.min(4,Math.floor(Math.min(S.sector,NSEC-1)/5)));show('menu');setTimeout(showPending,400)}
 function renderMenu(){$('#mBank').textContent='💎 '+fmt(S.crystals);const i=Math.min(S.sector,NSEC-1),sec=secInfo(i);
  $('#bPlay').innerHTML=S.won?'▶ Играть':S.sector===0?'▶ Начать полёт':'▶ Продолжить · '+sec.G.ic+' '+(sec.boss?'Босс':'сектор '+(i+1));
  $('#bEnd').innerHTML=S.sector>=5||IS_ADM?'♾ Бесконечный рейс'+(S.best?' · 🏆 '+fmt(S.best):''):'🔒 Бесконечный рейс';
  $('#mSub').textContent=S.won?'Котозайц дома! Перепроходи сектора на 3 звезды и ставь рекорды в бесконечном рейсе.':S.sector?'До родной планеты Котозаяции осталось секторов: '+(NSEC-S.sector)+'. Кристаллы — твоё топливо!':'Корабль котозайца сбился с курса. Собирай кристаллы-топливо и долети до родной планеты!';
- $('#bExit').style.display=EMB||A?'':'none';if(worldX2()>1)$('#mSub').textContent+=' 💎×2 сейчас: двойные кристаллы!';$('#bAdm').style.display=IS_ADM?'':'none';{const n=claimable();$('#bQ').innerHTML='📋 Задания и достижения'+(n?' · 🎁 '+n:'')}$('#mNick').textContent=(ACC?'👤 ':'🔑 ')+(ACC?NICK:'Войти');$('#mFs').style.display=matchMedia('(pointer:fine)').matches?'':'none'}
+ $('#bExit').style.display=EMB||A?'':'none';if(worldX2()>1)$('#mSub').textContent+=' 💎×2 сейчас: двойные кристаллы!';$('#bAdm').style.display=IS_ADM?'':'none';{const n=claimable();$('#bQ').innerHTML='📋 Задания'+(n?' · 🎁 '+n:'')}$('#mNick').textContent=(ACC?'👤 ':'🔑 ')+(ACC?NICK:'Войти');$('#mFs').style.display=matchMedia('(pointer:fine)').matches?'':'none'}
 function renderMap(){$('#mapProg').textContent='⭐ '+starSum()+' / '+NSEC*3;
  $('#mapBox').innerHTML=GAL.map((g,gi)=>{const open=S.sector>=gi*5;return`<div class="panel gal"><div class="galh"><i style="background:${g.col}">${open?g.ic:'🔒'}</i><div><b>${esc(g.n)}</b><small>${open?'Босс: '+esc(g.boss):'Пройди предыдущую галактику'}</small></div></div><div class="nodes">${[0,1,2,3,4].map(k=>{const i=gi*5+k,lock=i>S.sector,st=S.stars[i]|0,cur=i===S.sector;const M=secInfo(i).M;return`<button class="node${k===4?' boss':''}${lock?' lock':''}${cur?' cur':''}" ${lock?'':`data-sec="${i}"`} title="${M.n}">${lock?'🔒':k===4?'🐶':`<span style="font-size:13px">${M.ic}</span>${i+1}`}<small>${lock?'':'★'.repeat(st)+'☆'.repeat(3-st)}</small></button>`}).join('')}</div></div>`}).join('')+
  `<div class="panel home"><div style="font-size:46px">${S.won?'🏠':'🪐'}</div><div><b style="font-size:18px">Котозаяция</b><div class="mut">${S.won?'Ты долетел домой! 🎉':'Родная планета котозайцев. Осталось секторов: '+(NSEC-S.sector)}</div></div></div>`}
@@ -812,7 +822,7 @@ let SETT=LS.get('kz_space_settab')||'main';
 function segRow(k,n,d,opts){return`<div class="opt"><div class="tx">${n}${d?`<small>${d}</small>`:''}</div><div class="seg">${opts.map(([v,l])=>`<button data-opt="${k}" data-v="${v}" class="${String(S.set[k])===String(v)?'on':''}">${l}</button>`).join('')}</div></div>`}
 function rngRow(k,n,d,min,max,step,unit){return`<div class="opt"><div class="tx">${n}${d?`<small>${d}</small>`:''}</div><div class="rng"><input type="range" data-rng="${k}" min="${min}" max="${max}" step="${step}" value="${S.set[k]}"><b data-rv="${k}">${S.set[k]}${unit||''}</b></div></div>`}
 function renderSettings(){const T=[['main','⚙ Основное'],['ctrl','🎮 Управление'],['gfx','🖥 Графика'],['ui','🖼 Интерфейс'],['snd','🔊 Звук'],['acc','👤 Аккаунт']];let h='';
- if(SETT==='main')h=segRow('diff','🎯 Сложность','Расход топлива, сила врагов и боссов',[[0,'🙂 Лёгкая'],[1,'😐 Обычная'],[2,'😈 Сложная']])+swRow('hints','💡 Подсказки','Советы внизу экрана')+swRow('banners','📢 Крупные надписи','«Врата открыты!», «Босс в ярости» и т. п.')+swRow('pops','🔢 Цифры «+💎» над кристаллами')+rngRow('shake','💥 Тряска экрана','При ударах и взрывах',0,150,10,'%')+swRow('vib','📳 Вибрация при ударе','Телефон')+swRow('pauseBlur','⏸ Пауза, когда окно не активно')+swRow('autoFire','🥕 Лазер стреляет сам','Если выключить — стреляй клавишей F или кнопкой 🎯 на телефоне');
+ if(SETT==='main')h=segRow('diff','🎯 Сложность','Расход топлива, сила врагов и боссов',[[0,'🙂 Лёгкая'],[1,'😐 Обычная'],[2,'😈 Сложная']])+swRow('hints','💡 Подсказки','Советы внизу экрана')+swRow('banners','📢 Крупные надписи','«Врата открыты!», «Босс в ярости» и т. п.')+swRow('pops','🔢 Цифры «+💎» над кристаллами')+rngRow('shake','💥 Тряска экрана','При ударах и взрывах',0,150,10,'%')+swRow('vib','📳 Вибрация при ударе','Телефон')+swRow('pauseBlur','⏸ Пауза, когда окно не активно')+swRow('hideTop','🙈 Скрыть меня из топа игроков')+swRow('autoFire','🥕 Лазер стреляет сам','Если выключить — стреляй клавишей F или кнопкой 🎯 на телефоне');
  if(SETT==='ctrl')h=rngRow('bsz','🔘 Размер кнопок в меню','Все кнопки на экранах и в окнах',70,160,5,'%')+rngRow('fbz','🚀 Размер кнопок в полёте','Форсаж, пауза и выстрел на телефоне',60,180,5,'%')+rngRow('joy','🕹 Размер джойстика','Телефон',60,160,5,'%')+rngRow('dead','🎯 Мёртвая зона джойстика','Насколько надо сдвинуть палец, чтобы корабль поехал',0,40,2,' px')+segRow('joyFix','📍 Джойстик','',[[0,'Где коснулся'],[1,'Всегда в углу']])+segRow('boostL','🚀 Кнопка форсажа','Телефон',[[0,'Справа'],[1,'Слева']])+segRow('mouseHold','🖱 Мышка','ПК',[[1,'Лететь, пока зажата'],[0,'Всегда за курсором']])+
   `<div class="opt"><div class="tx">⌨ Клавиши<small>WASD или стрелки — полёт · Пробел/Shift — форсаж · F — выстрел (если автоогонь выключен) · Esc/P — пауза · F11 — полный экран</small></div></div>`;
  if(SETT==='gfx')h=segRow('q','🎚 Качество графики','Авто само снижает качество, если игра тормозит',[['auto','🤖 Авто'],['hi','💎 Качество'],['mid','⚖ Баланс'],['low','🚀 Скорость'],['min','🥔 Минимум']])+segRow('fpsLim','🎞 Ограничение FPS','30 — экономит батарею',[[0,'Без'],[60,'60'],[45,'45'],[30,'30']])+rngRow('parts','✨ Количество частиц','Искры, взрывы, следы',0,150,10,'%')+swRow('glow','🌟 Свечение кораблей')+swRow('neb','🌌 Туманности')+swRow('stars','⭐ Звёзды на фоне')+swRow('showFps','📈 Показывать FPS')+`<div class="opt"><div class="tx">📊 Сейчас<small>FPS: ${FPS.v||'—'} · качество: ${['минимум','скорость','баланс','высокое'][qual()]} · экран ${W}×${H}</small></div></div>`;
@@ -846,6 +856,24 @@ function renderQuests(){ensureDaily();const D=S.daily,now=new Date(),mid=new Dat
  $('#qBox').innerHTML=h}
 function claimQ(k){ensureDaily();const D=S.daily;if(k==='chest'){if(D.chest||!D.q.every(q=>q.cl))return;D.chest=true;S.crystals+=CHEST;toast('🧰 Сундук дня: +'+CHEST+' 💎')}else{const q=D.q[+k];if(!q||q.cl||q.got<q.n)return;q.cl=true;const r=QR[q.tier]||QR[0];S.crystals+=r;qev('quest',1);toast('📋 +'+r+' 💎')}SFX.buy();save();renderQuests();$$('.hb').forEach(e=>e.textContent='💎 '+fmt(S.crystals))}
 function claimA(id){const a=ACH.find(x=>x.id===id);if(!a)return;const c=S.ach[id]|0;if(c>=a.t.length||achVal(a)<a.t[c])return;S.ach[id]=c+1;S.crystals+=ACHR[c];SFX.quest();toast('🏅 '+a.n+' '+'★'.repeat(c+1)+' · +'+ACHR[c]+' 💎');save();renderQuests();$$('.hb').forEach(e=>e.textContent='💎 '+fmt(S.crystals))}
+
+/* ---------- топ игроков ---------- */
+let TOPT=LS.get('kz_space_toptab')||'prog';
+const TOPS=[['prog','🗺 Прогресс',p=>(p.won?100:0)+(p.sector|0)+(p.stars|0)/100,p=>p.won?'🏠 дома':'сектор '+Math.min(NSEC,(p.sector|0)+1)],['best','♾ Рекорд рейса',p=>p.best|0,p=>fmt(p.best|0)],['stars','⭐ Звёзды',p=>p.stars|0,p=>'⭐ '+(p.stars|0)],['crys','💎 Кристаллы',p=>p.crystals|0,p=>'💎 '+fmt(p.crystals|0)],['kills','🐶 Космопсы',p=>p.kills|0,p=>'🐶 '+fmt(p.kills|0)],['ach','🏅 Достижения',p=>p.ach|0,p=>'🏅 '+(p.ach|0)]];
+function topSoon(){clearTimeout(topSoon.t);topSoon.t=setTimeout(()=>{if(SCREEN==='top')renderTop()},400)}
+function topList(){const m=new Map();for(const g in PLAYERS){const p=PLAYERS[g];if(!p.u)continue;const k=p.u;if(!m.has(k)||(m.get(k).last||0)<(p.last||0))m.set(k,p)}
+ if(ACC)m.set(ACC,Object.assign(prof(),{me:1}));else m.set('__me',Object.assign(prof(),{u:'',nick:'Ты (гость)',me:1}));
+ return [...m.values()].filter(p=>p.me||!p.hide)}
+function renderTop(){if(!NET.started){NET.start();NET.sub(LTP+'w')}NET.sub(LTP+'p/+');
+ const T=TOPS.find(x=>x[0]===TOPT)||TOPS[0],L=topList().sort((a,b)=>T[2](b)-T[2](a)),me=L.findIndex(p=>p.me);
+ $('#topTabs').innerHTML=TOPS.map(([k,n])=>`<button class="btn sm ${TOPT===k?'':'white'}" data-topt="${k}">${n}</button>`).join('');
+ $('#topNet').textContent=NET.ok()?'🟢 онлайн · '+L.length:'🟡 подключаюсь…';
+ const row=(p,i)=>`<div class="trow${p.me?' me':''}"><div class="pl">${['🥇','🥈','🥉'][i]||i+1}</div><div class="tx"><b>${p.u==='deta'?'🛠 ':''}${esc(p.nick||p.u)}${p.me?' · это ты':''}</b><small>${p.u?'@'+esc(p.u)+' · ':''}${p.dev==='phone'?'📱':'💻'} ${p.me?'сейчас':ago(p.last||0)}${p.won?' · 🏠 долетел домой':''}</small></div><div class="vl">${T[3](p)}</div></div>`;
+ let h=L.slice(0,50).map(row).join('');if(me>=50)h+=`<div class="trow"><div class="pl">…</div></div>`+row(L[me],me);
+ $('#topBox').innerHTML=h||'<div class="trow"><span class="mut">Пока никого нет</span></div>';
+ $('#topNote').textContent=(ACC?'':'Ты играешь как гость — войди в аккаунт, чтобы попасть в топ. ')+'В топе все игроки «Котозайцев в космосе» на ПК и телефонах. Скрыть себя можно в настройках → Основное.';
+ if(ACC)netPresence()}
+setInterval(()=>{if(SCREEN==='top')renderTop()},5000);
 
 /* ---------- аккаунты ---------- */
 function switchAcc(){save();loadAcc();S=loadSave();save();applySet();netStart();setScene(Math.min(4,Math.floor(Math.min(S.sector,NSEC-1)/5)));if(SCREEN==='adm'&&!IS_ADM)SCREEN='menu';if(MODE==='menu')show(SCREEN||'menu')}
@@ -899,13 +927,13 @@ const admVKp=(async()=>{try{return await crypto.subtle.importKey('jwk',ADM_PUB_S
 const PLAYERS={};
 let WORLD={x2:0,lock:0,ann:null,ts:0};
 const DEV=A||matchMedia('(pointer:coarse)').matches?'phone':'pc';
-function prof(){return{t:'ksp',gid:S.gid,u:ACC,nick:NICK,sector:S.sector,won:!!S.won,crystals:S.crystals,stars:starSum(),best:S.best,ship:S.ship,runs:S.runs,dev:DEV,last:Date.now()}}
+function prof(){return{t:'ksp',gid:S.gid,u:ACC,nick:NICK,sector:S.sector,won:!!S.won,crystals:S.crystals,stars:starSum(),best:S.best,ship:S.ship,runs:S.runs,kills:S.st.e_kill|0,ach:Object.values(S.ach).reduce((a,b)=>a+(b|0),0),hide:S.set.hideTop?1:0,dev:DEV,last:Date.now()}}
 function netPresence(){if(!ACC||!NET.started)return;clearTimeout(netPresence.t);netPresence.t=setTimeout(()=>NET.pub(LTP+'p/'+S.gid,prof(),true),1200)}
 setInterval(()=>netPresence(),60000);
 async function verifySigned(pl){const vk=await admVKp;if(!vk)return null;let m;try{m=JSON.parse(mqDec.decode(pl))}catch(e){return null}if(!m||typeof m.c!=='string'||typeof m.s!=='string')return null;
  let ok=false;try{ok=await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},vk,b64u8(m.s),mqEnc.encode(m.c))}catch(e){}if(!ok)return null;try{return JSON.parse(m.c)}catch(e){return null}}
 function netRecv(topic,pl){
- if(topic.startsWith(LTP+'p/')){try{const o=JSON.parse(mqDec.decode(pl));if(o&&o.t==='ksp'&&o.gid&&o.u){PLAYERS[o.gid]=o;admSoon()}}catch(e){}return}
+ if(topic.startsWith(LTP+'p/')){try{const o=JSON.parse(mqDec.decode(pl));if(o&&o.t==='ksp'&&o.gid&&o.u){PLAYERS[o.gid]=o;admSoon();topSoon()}}catch(e){}return}
  if(topic===LTP+'w'){verifySigned(pl).then(c=>{if(c&&c.ts>=WORLD.ts){WORLD=Object.assign({x2:0,lock:0,ann:null},c);worldApply();admSoon()}});return}
  if(topic===LTP+'in/'+S.gid)inbox(pl,S.gid);else if(topic===LTP+'in/all')inbox(pl,'*')}
 async function inbox(pl,to){const c=await verifySigned(pl);if(!c||c.to!==to||!Array.isArray(c.list))return;
@@ -1092,7 +1120,7 @@ window.kzBack=()=>{if(MODE==='play'){pause();return}if(MODE==='pause'){resume();
 function doAct(a,el){if(S.set.click)SFX.click();
  if(a==='play'){if(!S.intro){S.intro=true;save();modal(`<h3>🚀 Котозайцы в космосе</h3><p>Корабль котозайца сбился с курса и залетел на край галактики. Топлива почти нет!</p><div class="rw"><span>💎 кристаллы = топливо</span><span>🌀 врата = прыжок</span></div><p>Собирай кристаллы, открывай врата и прыгай от сектора к сектору. Остерегайся астероидов, космопсов и чёрных дыр. Впереди — 5 галактик и родная планета <b>Котозаяция</b>.</p><div class="mbtn"><button class="btn big mint" data-a="play">Полетели! 🚀</button></div>`);return}
   startSector(S.won?Math.min(S.sector,NSEC-1):S.sector);return}
- if(a==='map'||a==='hangar'||a==='ships'||a==='settings'||a==='adm'||a==='quests'){if(MODE==='result'){closeModal();MODE='menu';G=null}else closeModal();show(a);return}
+ if(a==='map'||a==='hangar'||a==='ships'||a==='settings'||a==='adm'||a==='quests'||a==='top'){if(MODE==='result'){closeModal();MODE='menu';G=null}else closeModal();show(a);return}
  if(a==='back'){show('menu');return}
  if(a==='acc'){accModal();return}if(a==='fs'){toggleFS();return}
  if(a==='tabin'){authForm(false);return}if(a==='tabreg'){authForm(true);return}
@@ -1121,6 +1149,7 @@ document.addEventListener('click',e=>{const t=e.target;ac();if(S.set.mus)musStar
  const wg=t.closest('[data-wgift]');if(wg&&IS_ADM){admGift(wg.dataset.wgift,true);return}
  const wd=t.closest('[data-world]');if(wd&&IS_ADM){admWorld(wd.dataset.world);return}
  const fl=t.closest('[data-fill]');if(fl){$('#fU').value=fl.dataset.fill;$('#fP').focus();return}
+ const tt=t.closest('[data-topt]');if(tt){TOPT=tt.dataset.topt;LS.set('kz_space_toptab',TOPT);renderTop();return}
  const cq=t.closest('[data-claimq]');if(cq){claimQ(cq.dataset.claimq);return}
  const ca=t.closest('[data-claima]');if(ca){claimA(ca.dataset.claima);return}
  const sc=t.closest('[data-sec]');if(sc){startSector(+sc.dataset.sec);return}
@@ -1129,7 +1158,7 @@ document.addEventListener('click',e=>{const t=e.target;ac();if(S.set.mus)musStar
  const se=t.closest('[data-ship]');if(se){S.ship=se.dataset.ship;save();show('ships');return}
  const st2=t.closest('[data-sett]');if(st2){SETT=st2.dataset.sett;LS.set('kz_space_settab',SETT);renderSettings();return}
  const op=t.closest('[data-opt]');if(op){const k=op.dataset.opt,v=op.dataset.v;S.set[k]=/^-?\d+(\.\d+)?$/.test(v)?+v:v;save();if(k==='q'){AUTOQ=3}applySet();renderSettings();return}
- const sw=t.closest('[data-set]');if(sw){const k=sw.dataset.set;S.set[k]=S.set[k]?0:1;save();sw.classList.toggle('on',!!S.set[k]);if(k==='mus'&&S.set.mus)musStart();applySet();return}
+ const sw=t.closest('[data-set]');if(sw){const k=sw.dataset.set;S.set[k]=S.set[k]?0:1;save();sw.classList.toggle('on',!!S.set[k]);if(k==='mus'&&S.set.mus)musStart();if(k==='hideTop')netPresence();applySet();return}
  const df=t.closest('[data-diff]');if(df){S.set.diff=+df.dataset.diff;save();renderSettings();return}
  const ad=t.closest('[data-adm]');if(ad&&IS_ADM){admAct(ad.dataset.adm,ad);return}
  const ch=t.closest('[data-cheat]');if(ch&&IS_ADM){const k=ch.dataset.cheat;S.adm[k]=S.adm[k]?0:1;save();ch.classList.toggle('on',!!S.adm[k]);toast('🛠 '+ch.dataset.n+': '+(S.adm[k]?'вкл':'выкл'));return}});
