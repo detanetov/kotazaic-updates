@@ -59,5 +59,15 @@
   "file": "pcext.js",
   "sha256": "b776641873574de191a3865c177e9bed85b5f6c7b2ca07258894f4fcc6295232",
   "date": "2026-10-26"
+ },
+ "ilauncher": {
+  "version": 1,
+  "label": "1.0",
+  "name": "Kotazaic Launcher для iPhone и iPad",
+  "file": "ilauncher.html",
+  "sha256": "556959f051b325b5829c03655077b36eac108810d2a5492c9b6c97d9995b0c44",
+  "url": "https://raw.githack.com/detanetov/kotazaic-updates/main/ilauncher.html",
+  "profile": "KotazaicLauncher.mobileconfig",
+  "date": "2026-10-26"
  }
 }
