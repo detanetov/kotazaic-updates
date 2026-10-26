@@ -11,10 +11,10 @@
   "sha256": "d80c084e0fd60188d5d50a7e6651d8ee907a67c53b0c454d94d969048026f25a"
  },
  "launcher": {
-  "version": 16,
-  "label": "1.2.1",
+  "version": 17,
+  "label": "1.2.2",
   "file": "KotazaicLauncher.exe",
-  "sha256": "48b332fa8ee3d6b2238ca622b8a94541f63a2ebb5bb03e78083341fec70ce34f"
+  "sha256": "be9dfdc175c21f919feb93dbcfed08ae61cd4147cf47903dc18c8df5afc05ffc"
  },
  "kotoio": {
   "version": 7,
@@ -33,12 +33,12 @@
   "date": "2026-10-22"
  },
  "mlauncher": {
-  "version": 3,
-  "label": "1.2",
-  "name": "Kotazaic Launcher 1.8: ставится поверх приложения Kotazaic and Stars и переносит весь прогресс",
+  "version": 4,
+  "label": "1.3",
+  "name": "Kotazaic Launcher 1.3: игры по разделам — Котозайцы и Ленивцы",
   "file": "mlauncher.html",
-  "sha256": "a214e3a110f5a3c4a2154564469a54a1e8f68a688a15116ede6093aae96d5af6",
-  "date": "2026-10-22",
+  "sha256": "5dd780f3ec8e2ffff98a0f4afc4ab3aaa30a8c43282811049f67042bebe22f14",
+  "date": "2026-10-26",
   "apk": {
    "label": "1.8",
    "file": "KotazaicLauncher.apk",
