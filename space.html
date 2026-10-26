@@ -143,6 +143,10 @@ select.inp{font:800 14px inherit;font-family:inherit;color:var(--ink);background
 .trow{display:flex;align-items:center;gap:10px;padding:9px 10px;border-bottom:2px dashed rgba(29,24,56,.12)}.trow:last-child{border:0}
 .trow .pl{width:42px;text-align:center;font-size:20px;font-weight:1000;flex:none}.trow .tx{flex:1;min-width:0}.trow .tx b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.trow .tx small{color:var(--mut);font-size:12px}
 .trow .vl{font-size:17px;font-weight:1000;white-space:nowrap}.trow.me{background:#e6fff6;border-radius:14px;box-shadow:0 0 0 3px var(--mint) inset}
+.shprev{display:flex;align-items:center;gap:14px;padding:10px;margin-bottom:14px;flex-wrap:wrap}.shprev canvas{width:min(380px,100%);height:auto;aspect-ratio:760/300;border-radius:16px;background:radial-gradient(circle at 50% 40%,#3a2a8a,#120c35);border:3px solid var(--ink)}
+.shpinfo{flex:1;min-width:200px}.shpinfo b{font-size:20px;display:block}.rar{display:inline-block;border-radius:99px;padding:2px 10px;color:#fff;font-size:12px;border:2px solid var(--ink);margin:4px 0}
+.shc .rar{margin:4px 0 0}.shc.lock canvas{filter:saturate(.75) brightness(.88)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}.pit{padding:8px;text-align:center;cursor:pointer}.pit canvas{width:84px;height:84px;display:block;margin:0 auto;border-radius:14px;background:radial-gradient(circle at 50% 40%,#3a2a8a,#120c35);border:3px solid var(--ink)}.pit b{display:block;font-size:13px;margin:6px 0 4px;line-height:1.2;min-height:32px}.pit.sel{background:#e6fff6;box-shadow:0 5px 0 var(--ink),0 0 0 4px var(--mint) inset}
 .cover .scr,.cover .mtop,.cover #toast{display:none!important}
 </style>
 </head>
@@ -157,7 +161,7 @@ select.inp{font:800 14px inherit;font-family:inherit;color:var(--ink);background
  <div class="mbtns">
   <button class="btn big mint" data-a="play" id="bPlay">▶ Играть</button>
   <div class="mrow2"><button class="btn" data-a="map">🗺 Карта</button><button class="btn" data-a="hangar">🔧 Ангар</button></div>
-  <div class="mrow2"><button class="btn" data-a="ships">🚀 Корабли</button><button class="btn" data-a="settings">⚙ Настройки</button></div>
+  <div class="mrow2"><button class="btn" data-a="ships">🚀 Скины</button><button class="btn" data-a="settings">⚙ Настройки</button></div>
   <div class="mrow2"><button class="btn pink" data-a="quests" id="bQ">📋 Задания</button><button class="btn pink" data-a="top">🏆 Топ игроков</button></div>
   <button class="btn sky" data-a="endless" id="bEnd">♾ Бесконечный рейс</button>
   <button class="btn vio" data-a="adm" id="bAdm" style="display:none">🛠 ADM-панель</button>
@@ -176,7 +180,10 @@ select.inp{font:800 14px inherit;font-family:inherit;color:var(--ink);background
 </div></section>
 
 <section class="scr" id="ships"><div class="wrap">
- <div class="top"><button class="btn white" data-a="back">←</button><h2>🚀 Корабли</h2><span class="pill hb">💎 0</span></div>
+ <div class="top"><button class="btn white" data-a="back">←</button><h2>🚀 Ангар скинов</h2><span class="pill hb">💎 0</span></div>
+ <div class="settabs" id="shipTabs"></div>
+ <div class="panel shprev"><canvas id="shipPrev" width="760" height="300"></canvas><div class="shpinfo" id="shipInfo"></div></div>
+ <div class="settabs" id="shipFilt"></div>
  <div class="ships" id="shipBox"></div>
 </div></section>
 
@@ -233,7 +240,7 @@ const fmt=n=>Math.round(n).toLocaleString('ru-RU');
 const SK={"grey": ["Серый", "#a4a9b4", "#ece8e2", "#f3b7c8"], "smoke": ["Дымчатый", "#727786", "#cdc9d4", "#e9a3b8"], "milk": ["Молочный", "#efe4d1", "#fffaf0", "#f6b9c6"], "ginger": ["Рыжий", "#f0a35a", "#ffe2bf", "#ffb3a1"], "choco": ["Шоколадный", "#8a5a3c", "#dcb48e", "#f0a3a3"], "sky": ["Облачный", "#9fc8ff", "#eef5ff", "#ffb6d0"], "mint": ["Мятный", "#7fdcc0", "#e3fff5", "#ffb3c8"], "pinky": ["Розовый", "#ff9cc8", "#ffe6f1", "#ff6fa8"], "night": ["Ночной", "#3e3858", "#7a73a0", "#b48cff"], "ice": ["Ледяной", "#bfefff", "#ffffff", "#9fd8ff"], "cosmic": ["Космический", "#6a55d8", "#b9a9ff", "#ff9be0"], "ghost": ["Призрачный", "#e6e3ff", "#ffffff", "#d6c9ff"], "lavender": ["Лавандовый", "#c7a8ff", "#f3ecff", "#ff9cc8"], "lemon": ["Лимонный", "#ffe680", "#fffbe0", "#ffb36b"], "cherry": ["Вишнёвый", "#e8556e", "#ffd6dc", "#ffb3c0"], "neon": ["Неоновый", "#39e89f", "#d8fff0", "#ff7eb6"], "rainbow": ["Радужный", "#ff8fc8", "#ffffff", "#ffffff"], "golden": ["Звёздный", "#f2c94c", "#fff1b8", "#ffb36b"], "pumpkin": ["Тыквенный", "#ff8a3d", "#ffd29c", "#ffcf6b"], "peach": ["Персиковый", "#ffc2a1", "#fff0e6", "#ff9e9e"], "sand": ["Песочный", "#d9c08f", "#f6ecd6", "#f3b0a0"], "coffee": ["Кофейный", "#6b4a36", "#c9a786", "#e89c9c"], "forest": ["Лесной", "#5f9a5a", "#d8f0c8", "#ffb3a1"], "sea": ["Морской", "#3fa7c4", "#dff6ff", "#ffb6d0"], "blueberry": ["Черничный", "#4a4fae", "#c8ccff", "#ff9cc8"], "coral": ["Коралловый", "#ff7a6b", "#ffe0da", "#ffd06b"], "lava": ["Лавовый", "#3a1a1a", "#ff8a3d", "#ffcf33"], "emerald": ["Изумрудный", "#1fb37a", "#c8ffe6", "#ffe066"], "diamond": ["Алмазный", "#d6f4ff", "#ffffff", "#a8e4ff"]};
 function accDB(){try{return JSON.parse(LS.get('kz_accounts_v1'))||{}}catch(e){return{}}}
 function saveDB(d){LS.set('kz_accounts_v1',JSON.stringify(d))}
-const GAME_VER='1.1.1';
+const GAME_VER='1.1.2';
 let ACC='',NICK='Гость',IS_ADM=false,IS_ROOT=false,PAL=null,KEYU='';
 function loadAcc(){const u=LS.get('kz_session'),db=accDB();ACC=u&&u!=='__guest'&&db[u]?u:'';const a=ACC?db[ACC]:null;
  NICK=ACC?(a.nick||ACC):'Гость';IS_ADM=ACC==='deta';IS_ROOT=IS_ADM;
@@ -245,15 +252,64 @@ function djb(u,p){const str='kz::'+u+'::'+p;let h=5381;for(let i=0;i<str.length;
 async function hashPw(u,p){try{if(window.crypto&&crypto.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('kz::'+u+'::'+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}}catch(e){}return djb(u,p)}
 
 /* ---------- корабли и улучшения ---------- */
+// r: 0 обычный, 1 редкий, 2 эпический, 3 легендарный, 4 награда
+const RAR=[['Обычный','#7a8a9a'],['Редкий','#3d7ee0'],['Эпический','#a35ae0'],['Легендарный','#e0961a'],['Награда','#3fa34d']];
+const SH=(id,n,d,shape,body,acc,fin,pat,pc,r,price,o)=>Object.assign({id,n,d,shape,body,acc,fin,pat:pat||'',pc:pc||'',r,price},o||{});
 const SHIPS=[
- {id:'classic',n:'Ракета',d:'Надёжная и белая',price:0,shape:'rocket',body:'#f4f1ff',acc:'#ff6fa8',fin:'#5ab8ff'},
- {id:'carrot',n:'Морковка',d:'Хрустящий двигатель',price:150,shape:'carrot',body:'#ff8a3d',acc:'#ffb36b',fin:'#5fbf4a'},
- {id:'pumpkin',n:'Тыква-ракета',d:'🎃 Хэллоуин-версия',price:250,shape:'pumpkin',body:'#ff8a3d',acc:'#ffd29c',fin:'#7a3db8'},
- {id:'ufo',n:'Тарелка',d:'Как у космопсов, но добрая',price:300,shape:'ufo',body:'#b9c4d6',acc:'#5ee6c1',fin:'#8f6bff'},
- {id:'ice',n:'Ледокол',d:'Для ледяных колец',price:400,shape:'rocket',body:'#dff6ff',acc:'#5ab8ff',fin:'#9fe8ff'},
- {id:'star',n:'Звездолёт',d:'Ночной с золотом',price:550,shape:'rocket',body:'#2b2f6e',acc:'#ffd84a',fin:'#ffd84a'},
- {id:'neon',n:'Неон',d:'Светится в темноте',price:750,shape:'rocket',body:'#14102e',acc:'#39e89f',fin:'#ff7eb6',glow:'#39e89f'},
- {id:'gold',n:'Золотой',d:'Награда: долети до Котозаяции',price:-1,shape:'rocket',body:'#f2c94c',acc:'#fff1b8',fin:'#e0961a',glow:'#ffd84a'}];
+ SH('classic','Ракета','Надёжная и белая','rocket','#f4f1ff','#ff6fa8','#5ab8ff','','',0,0),
+ SH('carrot','Морковка','Хрустящий двигатель','carrot','#ff8a3d','#ffb36b','#5fbf4a','','',0,150),
+ SH('mint','Мятная','Свежая как утро','rocket','#d8fff0','#3fd8ad','#8f6bff','stripes','#3fd8ad',0,180),
+ SH('lemon','Лимонная','Кисленькая, но быстрая','rocket','#fff3a8','#ffb36b','#ff6fa8','dots','#ffc93c',0,180),
+ SH('peach','Персик','Пушистая капсула','pod','#ffd6c2','#ff9e9e','#ffb36b','','',0,200),
+ SH('cloud','Облачко','Мягкая, как вата','pod','#eef5ff','#9fc8ff','#c7a8ff','dots','#bcd8ff',0,220),
+ SH('pumpkin','Тыква-ракета','🎃 Хэллоуин-версия','pumpkin','#ff8a3d','#ffd29c','#7a3db8','','',0,250),
+ SH('shuttle','Шаттл','Как у настоящих космонавтов','shuttle','#f4f1ff','#2b2f6e','#c9ced8','','',0,260),
+ SH('ufo','Тарелка','Как у космопсов, но добрая','ufo','#b9c4d6','#5ee6c1','#8f6bff','','',0,300),
+ SH('bunny','Зайкоракета','С ушками!','bunny','#ffe6f1','#ff9cc8','#ff6fa8','','',0,300),
+ SH('jet','Истребитель','Острый нос, быстрые крылья','jet','#9aa6bd','#5ab8ff','#3a4560','stripes','#ff5e7a',0,320),
+ SH('ice','Ледокол','Для ледяных колец','rocket','#dff6ff','#5ab8ff','#9fe8ff','','',1,400),
+ SH('tiger','Тигр','Р-р-ракета','rocket','#ffb347','#1d1838','#ff8a3d','zig','#1d1838',1,450),
+ SH('zebra','Зебра','Полосатый шаттл','shuttle','#ffffff','#1d1838','#1d1838','stripes','#1d1838',1,450),
+ SH('berry','Ягодка','Клубничная морковка','carrot','#e8556e','#ffd6dc','#3fa34d','dots','#ffd6dc',1,460),
+ SH('cow','Бурёнка','Му-у-у в космосе','shuttle','#ffffff','#ffb3c8','#1d1838','spots','#1d1838',1,480),
+ SH('ocean','Океан','Волны на борту','pod','#5ab8ff','#9fe8ff','#1f7a8a','waves','#e6faff',1,480),
+ SH('candy','Леденец','Сладкий и полосатый','rocket','#ffffff','#ff6fa8','#ff6fa8','diag','#ff6fa8',1,500),
+ SH('choco','Шоколадка','Плитка в космосе','pod','#8a5a3c','#dcb48e','#5a3a20','check','#6b4220',1,500),
+ SH('fire','Огненная','Оставляет огненный след','jet','#ff5e3a','#ffd84a','#c2401a','flames','#ffd84a',1,520,{trail:'#ff8a3d'}),
+ SH('forest','Лесная','Пахнет ёлкой','bunny','#5f9a5a','#d8f0c8','#3d7a3d','check','#4a8a4a',1,520),
+ SH('star','Звездолёт','Ночной с золотом','rocket','#2b2f6e','#ffd84a','#ffd84a','stars','#ffd84a',1,550),
+ SH('police','Космопатруль','Стоять, космопёс!','jet','#1d3a8a','#ffffff','#ff5e7a','stripes','#ffffff',1,600,{trail:'#5ab8ff'}),
+ SH('neon','Неон','Светится в темноте','rocket','#14102e','#39e89f','#ff7eb6','','',2,750,{glow:'#39e89f',trail:'#39e89f'}),
+ SH('galaxy','Галактика','Внутри целая вселенная','rocket','#2b1f6e','#c79bff','#ff9be0','stars','#ffe9a0',2,950,{glow:'#c79bff',trail:'#c79bff'}),
+ SH('sakura','Сакура','Весна круглый год','bunny','#ffe6f1','#ff9cc8','#c2407a','flowers','#ff9cc8',2,950),
+ SH('aurora','Сияние','Северное сияние на крыльях','shuttle','#0f3a4a','#3fd8ad','#9fe8ff','waves','#39e89f',2,1000,{glow:'#3fd8ad',trail:'#9fe8ff'}),
+ SH('pixel','Пиксель','8 бит, 100% мяу','shuttle','#39e89f','#14102e','#ff7eb6','check','#14102e',2,1000),
+ SH('robot','Робот','Бип-буп','jet','#b9c4d6','#ffd84a','#6c7890','check','#8a93a8',2,1050),
+ SH('lava','Лава','Горячо!','pod','#3a1010','#ff5e3a','#ff8a3d','flames','#ff8a3d',2,1100,{glow:'#ff5e3a',trail:'#ff5e3a'}),
+ SH('ghostS','Призрак','У-у-у','ufo','#e6e3ff','#b48cff','#ffffff','','',2,1100,{glow:'#e6e3ff',ghost:1}),
+ SH('crystal','Кристальный','Сделан из кристаллов-топлива','jet','#dff6ff','#9fe8ff','#c79bff','zig','#ffffff',2,1200,{glow:'#9fe8ff',trail:'#9fe8ff'}),
+ SH('rainbow','Радуга','Все цвета сразу','rocket','#ffffff','#ff6fa8','#5ab8ff','rainbow','',2,1300,{trail:'rainbow'}),
+ SH('dragon','Дракон','Чешуя и огонь','jet','#2a7a3a','#ffd84a','#ff5e3a','scales','#1f5a2a',3,2200,{glow:'#39e89f',trail:'#ff5e3a'}),
+ SH('cosmo','Космокот','Ночной зайко-корабль','bunny','#1d1838','#c79bff','#ffd84a','stars','#ffffff',3,2400,{glow:'#c79bff',trail:'#c79bff'}),
+ SH('phoenix','Феникс','Возрождается из пламени','jet','#ff8a3d','#ffd84a','#ff5e7a','flames','#ffd84a',3,2500,{glow:'#ff8a3d',trail:'rainbow'}),
+ SH('void','Пустота','Тёмнее чёрной дыры','ufo','#08060f','#8f6bff','#b48cff','stars','#8f6bff',3,2800,{glow:'#8f6bff',trail:'#8f6bff'}),
+ SH('diamond','Бриллиант','Самый блестящий','pod','#e6faff','#9fe8ff','#ffffff','zig','#bfe9ff',3,3000,{glow:'#ffffff',trail:'#9fe8ff'}),
+ SH('king','Королевский','Для настоящих котозайцев','shuttle','#7a3db8','#ffd84a','#ffd84a','stripes','#ffd84a',3,3200,{glow:'#ffd84a',trail:'#ffd84a'}),
+ SH('tr0','Трофей капитана','Награда: победи Пса-капитана','rocket','#ff9a5c','#1d1838','#ffd84a','stripes','#1d1838',4,-1,{lock:()=>(S.stars[4]|0)>0}),
+ SH('tr1','Трофей робота','Награда: победи Пса-робота','jet','#9aa6bd','#ff5e7a','#6c7890','check','#6c7890',4,-1,{lock:()=>(S.stars[9]|0)>0}),
+ SH('tr2','Ледяной трофей','Награда: победи Ледяного пса','shuttle','#bfefff','#ffffff','#5ab8ff','zig','#ffffff',4,-1,{glow:'#9fe8ff',lock:()=>(S.stars[14]|0)>0}),
+ SH('tr3','Призрачный трофей','Награда: победи Пса-призрака','ufo','#7a5ad8','#c79bff','#e6e3ff','stars','#e6e3ff',4,-1,{glow:'#c79bff',lock:()=>(S.stars[19]|0)>0}),
+ SH('gold','Золотой','Награда: долети до Котозаяции','rocket','#f2c94c','#fff1b8','#e0961a','stars','#fff1b8',4,-1,{glow:'#ffd84a',trail:'#ffd84a',lock:()=>!!S.won}),
+ SH('rescue','Спасатель','Награда: спаси 50 котозайчат','pod','#fff7e8','#ff5e7a','#ff5e7a','dots','#ff5e7a',4,-1,{lock:()=>(S.st.e_pod|0)>=50}),
+ SH('hunter','Охотник','Награда: сбей 150 космопсов','jet','#3a2a1a','#ff8a3d','#c2401a','zig','#ff8a3d',4,-1,{trail:'#ff8a3d',lock:()=>(S.st.e_kill|0)>=150}),
+ SH('daily','Сундучный','Награда: открой 7 сундуков дня','bunny','#ffd84a','#8a5a3c','#ff6fa8','check','#e0b030',4,-1,{lock:()=>(S.st.e_chest|0)>=7}),
+ SH('racer','Гонщик','Награда: пролети 40 колец','jet','#ffffff','#ff5e7a','#1d1838','check','#1d1838',4,-1,{trail:'#ffd84a',lock:()=>(S.st.e_ring|0)>=40})];
+/* ---------- пилот: котозайц в кабине ---------- */
+const PC_PRICE={grey:0,smoke:120,milk:120,ginger:120,choco:120,sky:150,mint:150,pinky:150,night:200,ice:200,cosmic:400,ghost:400,lavender:150,lemon:150,cherry:150,neon:400,rainbow:600,golden:600,pumpkin:200,peach:120,sand:120,coffee:120,forest:150,sea:150};
+const HATS=[['none','Без шапки',0],['cap','Кепка',150],['bow','Бантик',150],['flower','Цветочек',180],['headph','Наушники',250],['party','Колпак',250],['antenna','Антенки пришельца',300],['horns','Рожки',300],['cowboy','Ковбойская шляпа',400],['tophat','Цилиндр',450],['witch','Шляпа ведьмы',500],['santa','Новогодняя',500],['halo','Нимб',700],['crown','Корона',900],['astro','Шлем космонавта',800]];
+const EYES=[['none','Без очков',0],['glasses','Круглые очки',150],['sun','Тёмные очки',250],['heart','Очки-сердечки',300],['star','Очки-звёзды',300],['visor','Визор',400],['mono','Монокль',450],['mask','Маска героя',500]];
+const EXTRA=[['none','Ничего',0],['blush','Румянец-сердечки',120],['mustache','Усы',200],['bowtie','Бабочка',250],['scarf','Шарф',300],['star','Звёздочки на щеках',200]];
+function pilot(){const P=S.pilot||{},k=P.c&&P.c!=='acc'&&SK[P.c]?SK[P.c]:null;return{pal:k?{b:k[1],bl:k[2],inn:k[3]}:PAL,hat:P.hat||'none',eyes:P.eyes||'none',ex:P.ex||'none'}}
 const UPS=[
  {id:'tank',ic:'⛽',n:'Бак',d:l=>'Топлива: '+(100+l*30)},
  {id:'engine',ic:'🔥',n:'Двигатель',d:l=>'Скорость +'+l*13+'%'},
@@ -294,8 +350,8 @@ const ACH=[{id:'kill',ic:'🐶',n:'Гроза космопсов',d:'Сбей к
 const ACHR=[30,80,180,400],QR=[45,75,110],CHEST=150;
 
 /* ---------- сохранение ---------- */
-function defSave(){return{adm:{},seen:{},st:{},gid:'',ach:{},daily:null,crystals:0,total:0,sector:0,stars:{},up:{tank:0,engine:0,shield:0,magnet:0,laser:0,drone:0},ship:'classic',ships:['classic'],best:0,runs:0,won:false,intro:false,set:{snd:1,mus:1,diff:1,hints:1,vol:80,mvol:60,click:1,shake:100,pops:1,vib:1,pauseBlur:1,ui:100,bsz:100,fbz:100,joy:100,dead:8,joyFix:0,boostL:0,mouseHold:1,q:'auto',fpsLim:0,parts:100,neb:1,stars:1,glow:1,showFps:0,radar:1,radarSz:100,arrow:1,banners:1,cursor:'def',font:'round',hudA:100,autoFire:1}}}
-function loadSave(){let o=null;try{o=JSON.parse(LS.get(KEYU))}catch(e){}const d=defSave();o=Object.assign(d,o||{});o.up=Object.assign(defSave().up,o.up||{});o.set=Object.assign(defSave().set,o.set||{});for(const k of ['vol','mvol','shake','ui','bsz','fbz','joy','parts','hudA','radarSz'])if(typeof o.set[k]!=='number')o.set[k]=defSave().set[k];if(!Array.isArray(o.ships))o.ships=['classic'];if(!o.ships.includes('classic'))o.ships.unshift('classic');if(!SHIPS.some(x=>x.id===o.ship))o.ship='classic';o.sector=clamp(o.sector|0,0,NSEC);if(!o.adm||typeof o.adm!=='object')o.adm={};if(!o.seen||typeof o.seen!=='object')o.seen={};if(!o.st||typeof o.st!=='object')o.st={};if(!o.ach||typeof o.ach!=='object')o.ach={};if(!o.gid)o.gid='s'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);return o}
+function defSave(){return{pilot:{c:'acc',hat:'none',eyes:'none',ex:'none',own:[]},adm:{},seen:{},st:{},gid:'',ach:{},daily:null,crystals:0,total:0,sector:0,stars:{},up:{tank:0,engine:0,shield:0,magnet:0,laser:0,drone:0},ship:'classic',ships:['classic'],best:0,runs:0,won:false,intro:false,set:{snd:1,mus:1,diff:1,hints:1,vol:80,mvol:60,click:1,shake:100,pops:1,vib:1,pauseBlur:1,ui:100,bsz:100,fbz:100,joy:100,dead:8,joyFix:0,boostL:0,mouseHold:1,q:'auto',fpsLim:0,parts:100,neb:1,stars:1,glow:1,showFps:0,radar:1,radarSz:100,arrow:1,banners:1,cursor:'def',font:'round',hudA:100,autoFire:1}}}
+function loadSave(){let o=null;try{o=JSON.parse(LS.get(KEYU))}catch(e){}const d=defSave();o=Object.assign(d,o||{});o.up=Object.assign(defSave().up,o.up||{});o.set=Object.assign(defSave().set,o.set||{});for(const k of ['vol','mvol','shake','ui','bsz','fbz','joy','parts','hudA','radarSz'])if(typeof o.set[k]!=='number')o.set[k]=defSave().set[k];if(!Array.isArray(o.ships))o.ships=['classic'];if(!o.ships.includes('classic'))o.ships.unshift('classic');if(!SHIPS.some(x=>x.id===o.ship))o.ship='classic';o.sector=clamp(o.sector|0,0,NSEC);if(!o.adm||typeof o.adm!=='object')o.adm={};if(!o.seen||typeof o.seen!=='object')o.seen={};if(!o.st||typeof o.st!=='object')o.st={};if(!o.ach||typeof o.ach!=='object')o.ach={};if(!o.pilot||typeof o.pilot!=='object')o.pilot=defSave().pilot;if(!Array.isArray(o.pilot.own))o.pilot.own=[];if(!o.gid)o.gid='s'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);return o}
 let S=loadSave();
 const starSum=()=>Object.values(S.stars).reduce((a,b)=>a+(b|0),0);
 function save(){S.t=Date.now();LS.set(KEYU,JSON.stringify(S));LS.set('kz_space',JSON.stringify({owner:ACC||'__guest',nick:NICK,sector:S.sector,total:S.total,best:S.best,crystals:S.crystals,stars:starSum(),won:S.won,ship:S.ship,t:S.t}))}
@@ -346,51 +402,113 @@ function mkCanvas(w,h){const c=document.createElement('canvas');c.width=Math.cei
 
 /* --- котозайц (как в лаунчере) --- */
 function ell(c,x,y,rx,ry,fill,stroke){c.beginPath();c.ellipse(x,y,rx,ry,0,0,TAU);if(fill){c.fillStyle=fill;c.fill()}if(stroke){c.stroke()}}
-function drawKZ(c,x,y,s,pal,blink){c.save();c.translate(x,y);c.scale(s/34,s/34);c.translate(-32,-27);c.lineWidth=2.4;c.strokeStyle='#1d1838';c.lineJoin='round';
+function drawKZ(c,x,y,s,pal,blink,acc){c.save();c.translate(x,y);c.scale(s/34,s/34);c.translate(-32,-27);c.lineWidth=2.4;c.strokeStyle='#1d1838';c.lineJoin='round';
  for(const[cx,rot,ex] of [[18,25,14],[46,-25,50]]){c.save();c.translate(cx,22);c.rotate(rot*Math.PI/180);c.translate(-cx,-22);ell(c,ex,26,6,13,pal.b,1);ell(c,ex,27,3,9,pal.inn,0);c.restore()}
  ell(c,32,27,17,15,pal.b,1);ell(c,32,32,7,5,pal.bl,0);
  c.fillStyle='#1d1838';if(blink){c.lineWidth=2;c.beginPath();c.moveTo(23.5,25);c.lineTo(28.5,25);c.moveTo(35.5,25);c.lineTo(40.5,25);c.stroke()}else{ell(c,26,25,2.6,3.2,'#1d1838');ell(c,38,25,2.6,3.2,'#1d1838');c.fillStyle='#fff';c.beginPath();c.arc(27,23.8,1,0,TAU);c.arc(39,23.8,1,0,TAU);c.fill()}
  c.fillStyle='#ff7aa2';c.beginPath();c.moveTo(30,30);c.lineTo(34,30);c.lineTo(32,32);c.closePath();c.fill();
- c.globalAlpha=.45;ell(c,22,31,3,2,'#ff7fa8');ell(c,42,31,3,2,'#ff7fa8');c.restore()}
+ c.globalAlpha=.45;ell(c,22,31,3,2,'#ff7fa8');ell(c,42,31,3,2,'#ff7fa8');c.globalAlpha=1;if(acc)drawAcc(c,acc);c.restore()}
+function heartP(c,x,y,r){c.beginPath();c.moveTo(x,y+r*.9);c.bezierCurveTo(x-r*1.6,y-r*.2,x-r*.7,y-r*1.4,x,y-r*.45);c.bezierCurveTo(x+r*.7,y-r*1.4,x+r*1.6,y-r*.2,x,y+r*.9);c.closePath()}
+function starP(c,x,y,r){c.beginPath();for(let i=0;i<10;i++){const a=Math.PI/5*i-Math.PI/2,rr=i%2?r*.45:r;c.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}c.closePath()}
+function drawAcc(c,A){c.lineWidth=2;c.strokeStyle='#1d1838';c.lineJoin='round';const f=(col)=>{c.fillStyle=col;c.fill();c.stroke()};
+ // щёки и прочее
+ if(A.ex==='blush'){heartP(c,21,31,2.6);f('#ff6fa8');heartP(c,43,31,2.6);f('#ff6fa8')}
+ if(A.ex==='star'){starP(c,21,31,3);f('#ffd84a');starP(c,43,31,3);f('#ffd84a')}
+ if(A.ex==='mustache'){c.beginPath();c.moveTo(32,32.5);c.quadraticCurveTo(26,30,23,34);c.quadraticCurveTo(27,33,32,34.5);c.quadraticCurveTo(37,33,41,34);c.quadraticCurveTo(38,30,32,32.5);c.closePath();f('#3a2a1a')}
+ if(A.ex==='bowtie'){c.beginPath();c.moveTo(32,42);c.lineTo(25,38);c.lineTo(25,46);c.closePath();f('#ff5e7a');c.beginPath();c.moveTo(32,42);c.lineTo(39,38);c.lineTo(39,46);c.closePath();f('#ff5e7a');c.beginPath();c.arc(32,42,2,0,TAU);f('#ff5e7a')}
+ if(A.ex==='scarf'){c.beginPath();c.moveTo(17,37);c.quadraticCurveTo(32,46,47,37);c.lineTo(47,42);c.quadraticCurveTo(32,51,17,42);c.closePath();f('#ff5e7a');c.beginPath();c.rect(38,40,6,10);f('#ff5e7a');c.strokeStyle='rgba(255,255,255,.7)';c.beginPath();c.moveTo(22,40);c.lineTo(24,44);c.moveTo(30,42);c.lineTo(31,46);c.stroke();c.strokeStyle='#1d1838'}
+ // очки
+ const E=A.eyes;
+ if(E==='glasses'){c.lineWidth=1.8;c.beginPath();c.arc(26,25,4.6,0,TAU);c.moveTo(42.6,25);c.arc(38,25,4.6,0,TAU);c.moveTo(30.6,25);c.lineTo(33.4,25);c.stroke();c.fillStyle='rgba(255,255,255,.25)';c.fill()}
+ if(E==='sun'){c.beginPath();c.roundRect?c.roundRect(20,21.5,11,7,3):c.rect(20,21.5,11,7);f('#1d1838');c.beginPath();c.roundRect?c.roundRect(33,21.5,11,7,3):c.rect(33,21.5,11,7);f('#1d1838');c.beginPath();c.moveTo(31,24);c.lineTo(33,24);c.stroke();c.fillStyle='rgba(255,255,255,.6)';c.fillRect(22,23,3,1.5);c.fillRect(35,23,3,1.5)}
+ if(E==='heart'){heartP(c,26,25.5,4.4);f('#ff6fa8');heartP(c,38,25.5,4.4);f('#ff6fa8');c.beginPath();c.moveTo(30,25);c.lineTo(34,25);c.stroke()}
+ if(E==='star'){starP(c,26,25,5.4);f('#ffd84a');starP(c,38,25,5.4);f('#ffd84a')}
+ if(E==='visor'){c.beginPath();c.roundRect?c.roundRect(18,20.5,28,8.5,4):c.rect(18,20.5,28,8.5);c.fillStyle='rgba(90,220,255,.55)';c.fill();c.stroke();c.fillStyle='rgba(255,255,255,.7)';c.fillRect(21,22,7,1.6)}
+ if(E==='mono'){c.lineWidth=1.8;c.strokeStyle='#e0961a';c.beginPath();c.arc(38,25,5,0,TAU);c.stroke();c.beginPath();c.moveTo(43,26);c.quadraticCurveTo(46,34,42,40);c.stroke();c.strokeStyle='#1d1838'}
+ if(E==='mask'){c.beginPath();c.moveTo(17,22);c.quadraticCurveTo(32,18,47,22);c.lineTo(46,29);c.quadraticCurveTo(32,27,18,29);c.closePath();c.moveTo(29.5,25);c.ellipse(26,25,3.6,2.8,0,0,TAU);c.moveTo(41.5,25);c.ellipse(38,25,3.6,2.8,0,0,TAU);c.fillStyle='#1d1838';c.fill('evenodd');c.fillStyle='#fff';c.beginPath();c.arc(27,24,1,0,TAU);c.arc(39,24,1,0,TAU);c.fill()}
+ // шапки
+ const H=A.hat;
+ if(H==='cap'){c.beginPath();c.moveTo(19,15);c.quadraticCurveTo(32,1,45,15);c.closePath();f('#5ab8ff');c.beginPath();c.ellipse(41,15,11,3,0,0,TAU);f('#2f7fe0');c.beginPath();c.arc(32,7.5,1.8,0,TAU);f('#ffd84a')}
+ if(H==='bow'){c.beginPath();c.moveTo(40,12);c.lineTo(32,6);c.lineTo(32,17);c.closePath();f('#ff6fa8');c.beginPath();c.moveTo(40,12);c.lineTo(48,6);c.lineTo(48,17);c.closePath();f('#ff6fa8');c.beginPath();c.arc(40,12,2.4,0,TAU);f('#ff9cc8')}
+ if(H==='flower'){for(let i=0;i<5;i++){const a=i/5*TAU;c.beginPath();c.arc(42+Math.cos(a)*3.6,11+Math.sin(a)*3.6,2.8,0,TAU);f('#fff')}c.beginPath();c.arc(42,11,2.4,0,TAU);f('#ffd84a')}
+ if(H==='headph'){c.lineWidth=3.5;c.beginPath();c.arc(32,26,17,Math.PI*1.08,Math.PI*1.92);c.stroke();c.lineWidth=2;c.beginPath();c.ellipse(14.5,27,3.5,6,0,0,TAU);f('#ff6fa8');c.beginPath();c.ellipse(49.5,27,3.5,6,0,0,TAU);f('#ff6fa8')}
+ if(H==='party'){c.beginPath();c.moveTo(25,13);c.lineTo(32,-9);c.lineTo(39,13);c.closePath();f('#c79bff');c.strokeStyle='#ffd84a';c.lineWidth=2.4;c.beginPath();c.moveTo(27,6);c.lineTo(35,9);c.moveTo(29,-1);c.lineTo(34,1);c.stroke();c.strokeStyle='#1d1838';c.lineWidth=2;c.beginPath();c.arc(32,-10,3,0,TAU);f('#ff6fa8')}
+ if(H==='antenna'){c.beginPath();c.moveTo(27,13);c.lineTo(23,0);c.moveTo(37,13);c.lineTo(41,0);c.stroke();c.beginPath();c.arc(23,-1,3,0,TAU);f('#39e89f');c.beginPath();c.arc(41,-1,3,0,TAU);f('#39e89f')}
+ if(H==='horns'){c.beginPath();c.moveTo(24,15);c.quadraticCurveTo(20,6,25,2);c.quadraticCurveTo(25,9,29,13);c.closePath();f('#ff5e7a');c.beginPath();c.moveTo(40,15);c.quadraticCurveTo(44,6,39,2);c.quadraticCurveTo(39,9,35,13);c.closePath();f('#ff5e7a')}
+ if(H==='cowboy'){c.beginPath();c.moveTo(24,12);c.quadraticCurveTo(24,1,32,2);c.quadraticCurveTo(40,1,40,12);c.closePath();f('#a5713f');c.beginPath();c.ellipse(32,12.5,19,3.6,0,0,TAU);f('#8a5a2c');c.fillStyle='#5a3a20';c.fillRect(24.5,8.5,15,2.4)}
+ if(H==='tophat'){c.beginPath();c.rect(25,-6,14,18);f('#1d1838');c.fillStyle='#ff5e7a';c.fillRect(25.5,6,13,3);c.beginPath();c.ellipse(32,12.5,14,3,0,0,TAU);f('#1d1838')}
+ if(H==='witch'){c.beginPath();c.moveTo(23,12);c.quadraticCurveTo(30,0,33,-12);c.quadraticCurveTo(38,-8,44,-10);c.quadraticCurveTo(38,-4,41,12);c.closePath();f('#7a3db8');c.fillStyle='#ffd84a';c.fillRect(25,8,15,3);c.beginPath();c.ellipse(32,12.5,18,3.4,0,0,TAU);f('#5a2c90')}
+ if(H==='santa'){c.beginPath();c.moveTo(22,13);c.quadraticCurveTo(30,-6,44,-2);c.quadraticCurveTo(40,4,42,13);c.closePath();f('#e8303f');c.beginPath();c.ellipse(32,13,13,3.6,0,0,TAU);f('#fff');c.beginPath();c.arc(45,-2,3.4,0,TAU);f('#fff')}
+ if(H==='halo'){c.lineWidth=3;c.strokeStyle='#ffd84a';c.beginPath();c.ellipse(32,3,12,3.4,0,0,TAU);c.stroke();c.strokeStyle='#1d1838'}
+ if(H==='crown'){c.beginPath();c.moveTo(23,13);c.lineTo(23,3);c.lineTo(27.5,8);c.lineTo(32,0);c.lineTo(36.5,8);c.lineTo(41,3);c.lineTo(41,13);c.closePath();f('#ffd84a');c.beginPath();c.arc(32,9,1.8,0,TAU);f('#ff5e7a')}
+ if(H==='astro'){c.lineWidth=2.4;c.beginPath();c.arc(32,26,21,0,TAU);c.fillStyle='rgba(200,235,255,.28)';c.fill();c.stroke();c.strokeStyle='rgba(255,255,255,.85)';c.beginPath();c.arc(32,26,16,-2.6,-1.8);c.stroke();c.strokeStyle='#1d1838';c.beginPath();c.rect(26,45,12,4);f('#b9c4d6')}}
 
 /* --- корабль --- */
-const DOME={rocket:[4,-10,13],carrot:[0,-8,12],ufo:[0,-11,15],pumpkin:[0,-14,12]};
-function drawShip(c,sh,x,y,a,sc,thr,t,inv){
- const ufo=sh.shape==='ufo',ra=ufo?clamp(Math.cos(a),-1,1)*.18:a,flip=!ufo&&Math.cos(a)<0?-1:1;
+const DOME={rocket:[4,-10,13],carrot:[0,-8,12],ufo:[0,-11,15],pumpkin:[0,-14,12],shuttle:[14,-11,11],jet:[8,-8,10],bunny:[4,-10,13],pod:[4,-14,13]};
+function bodyPath(c,sh){c.beginPath();const S2=sh.shape;
+ if(S2==='rocket'||S2==='bunny'){c.moveTo(38,0);c.quadraticCurveTo(26,-18,-6,-16);c.lineTo(-22,-12);c.quadraticCurveTo(-28,0,-22,12);c.lineTo(-6,16);c.quadraticCurveTo(26,18,38,0)}
+ else if(S2==='carrot'){c.moveTo(40,0);c.quadraticCurveTo(10,-20,-20,-15);c.quadraticCurveTo(-26,0,-20,15);c.quadraticCurveTo(10,20,40,0)}
+ else if(S2==='shuttle'){c.moveTo(40,0);c.quadraticCurveTo(32,-12,16,-12);c.lineTo(-24,-12);c.lineTo(-29,-4);c.lineTo(-29,4);c.lineTo(-24,12);c.lineTo(16,12);c.quadraticCurveTo(32,12,40,0)}
+ else if(S2==='jet'){c.moveTo(46,0);c.lineTo(22,-9);c.lineTo(-16,-10);c.lineTo(-26,-5);c.lineTo(-26,5);c.lineTo(-16,10);c.lineTo(22,9)}
+ else if(S2==='pod'){c.ellipse(0,0,30,21,0,0,TAU)}
+ else if(S2==='ufo'){c.ellipse(0,2,38,12,0,0,TAU)}
+ c.closePath()}
+const RBW=['#ff5e7a','#ff8a3d','#ffd84a','#3fd8ad','#5ab8ff','#8f6bff'];
+function drawPattern(c,sh,t){const P=sh.pat,col=sh.pc;if(!P)return;c.save();bodyPath(c,sh);c.clip();c.fillStyle=col;c.strokeStyle=col;
+ if(P==='stripes'){for(let x=-36;x<46;x+=13)c.fillRect(x,-30,5,60)}
+ else if(P==='diag'){c.lineWidth=5;for(let x=-70;x<60;x+=12){c.beginPath();c.moveTo(x,-30);c.lineTo(x+30,30);c.stroke()}}
+ else if(P==='dots'){for(let x=-30;x<44;x+=11)for(let y=-24;y<26;y+=11){c.beginPath();c.arc(x+((y/11|0)%2?5:0),y,2.6,0,TAU);c.fill()}}
+ else if(P==='spots'){for(const[x,y,r] of [[-14,-6,6],[4,6,5],[18,-5,4],[-4,-12,3],[-20,8,4]]){c.beginPath();c.ellipse(x,y,r*1.3,r,.4,0,TAU);c.fill()}}
+ else if(P==='check'){for(let x=-40;x<50;x+=8)for(let y=-28;y<28;y+=8)if(((x+y)/8|0)%2===0)c.fillRect(x,y,8,8)}
+ else if(P==='zig'){c.lineWidth=3;for(let y=-16;y<20;y+=10){c.beginPath();for(let x=-34;x<48;x+=8)c.lineTo(x,y+((x/8|0)%2?4:-4));c.stroke()}}
+ else if(P==='waves'){c.lineWidth=3;for(let y=-16;y<20;y+=9){c.beginPath();for(let x=-34;x<48;x+=3)c.lineTo(x,y+Math.sin(x/6+t*3)*3);c.stroke()}}
+ else if(P==='flames'){for(let i=0;i<3;i++){const y=-8+i*8;c.beginPath();c.moveTo(-30,y-5);c.quadraticCurveTo(-8,y-8+Math.sin(t*8+i)*2,6+i*3,y);c.quadraticCurveTo(-8,y+8,-30,y+5);c.closePath();c.fill()}}
+ else if(P==='stars'){for(const[x,y,r] of [[-16,-7,3.5],[2,6,2.8],[16,-4,3],[-6,-12,2],[-22,7,2.4],[28,2,2]]){starP(c,x,y,r+Math.sin(t*3+x)*.4);c.fill()}}
+ else if(P==='flowers'){for(const[x,y] of [[-14,-4],[6,6],[20,-5],[-24,7]]){for(let i=0;i<5;i++){const a=i/5*TAU;c.beginPath();c.arc(x+Math.cos(a)*2.6,y+Math.sin(a)*2.6,2,0,TAU);c.fill()}c.fillStyle='#ffd84a';c.beginPath();c.arc(x,y,1.5,0,TAU);c.fill();c.fillStyle=col}}
+ else if(P==='scales'){c.lineWidth=1.8;for(let y=-20;y<24;y+=7)for(let x=-34;x<46;x+=8){c.beginPath();c.arc(x+((y/7|0)%2?4:0),y,4,0,Math.PI);c.stroke()}}
+ else if(P==='rainbow'){for(let i=0;i<6;i++){c.fillStyle=RBW[i];c.fillRect(-40,-24+i*8,90,8)}}
+ c.restore()}
+function drawShip(c,sh,x,y,a,sc,thr,t,inv,pil){
+ const ufo=sh.shape==='ufo',ra=ufo?clamp(Math.cos(a),-1,1)*.18:a,flip=!ufo&&Math.cos(a)<0?-1:1;pil=pil||pilot();
  c.save();c.translate(x,y);c.rotate(ra);c.scale(sc,sc*flip);c.lineJoin='round';c.lineCap='round';c.strokeStyle='#1d1838';c.lineWidth=3;
- if(inv&&Math.floor(t*14)%2){c.globalAlpha=.45}
+ if(inv&&Math.floor(t*14)%2){c.globalAlpha=.45}else if(sh.ghost)c.globalAlpha=.82;
  if(sh.glow&&S.set.glow&&qual()>1){c.shadowColor=sh.glow;c.shadowBlur=18}
  // пламя
- if(thr>0){const fl=thr*(0.75+Math.sin(t*50)*.25),tx=ufo?0:sh.shape==='pumpkin'?-24:-24,ty=ufo?14:0;c.save();c.shadowBlur=0;if(ufo){c.translate(0,ty);c.rotate(-Math.PI/2)}else c.translate(tx,ty);
-  c.fillStyle='#ff6b3d';c.beginPath();c.moveTo(0,-8);c.quadraticCurveTo(-26*fl,-6,-44*fl,0);c.quadraticCurveTo(-26*fl,6,0,8);c.fill();
+ if(thr>0){const fl=thr*(0.75+Math.sin(t*50)*.25),ty=ufo?14:0,tx=sh.shape==='jet'?-26:sh.shape==='shuttle'?-29:sh.shape==='pod'?-28:-24;c.save();c.shadowBlur=0;if(ufo){c.translate(0,ty);c.rotate(-Math.PI/2)}else c.translate(tx,ty);
+  const rb=sh.trail==='rainbow';c.fillStyle=rb?RBW[Math.floor(t*12)%6]:sh.trail||'#ff6b3d';c.beginPath();c.moveTo(0,-8);c.quadraticCurveTo(-26*fl,-6,-44*fl,0);c.quadraticCurveTo(-26*fl,6,0,8);c.fill();
   c.fillStyle='#ffd84a';c.beginPath();c.moveTo(0,-5);c.quadraticCurveTo(-16*fl,-3,-28*fl,0);c.quadraticCurveTo(-16*fl,3,0,5);c.fill();c.restore()}
- if(sh.shape==='rocket'){
-  c.fillStyle=sh.fin;for(const s of [-1,1]){c.beginPath();c.moveTo(-4,14*s);c.lineTo(-22,28*s);c.lineTo(-28,26*s);c.lineTo(-22,10*s);c.closePath();c.fill();c.stroke()}
-  c.fillStyle=sh.body;c.beginPath();c.moveTo(38,0);c.quadraticCurveTo(26,-18,-6,-16);c.lineTo(-22,-12);c.quadraticCurveTo(-28,0,-22,12);c.lineTo(-6,16);c.quadraticCurveTo(26,18,38,0);c.closePath();c.fill();c.stroke();
-  c.shadowBlur=0;c.fillStyle=sh.acc;c.beginPath();c.moveTo(38,0);c.quadraticCurveTo(33,-9,24,-12);c.quadraticCurveTo(28,0,24,12);c.quadraticCurveTo(33,9,38,0);c.fill();c.stroke();
-  c.beginPath();c.moveTo(-14,-14);c.quadraticCurveTo(-10,0,-14,14);c.lineWidth=5;c.strokeStyle=sh.acc;c.stroke();c.lineWidth=3;c.strokeStyle='#1d1838';
-  c.fillStyle='#b9c4d6';c.beginPath();c.rect(-30,-7,8,14);c.fill();c.stroke();
- }else if(sh.shape==='carrot'){
-  c.fillStyle=sh.fin;for(const s of [-1,0,1]){c.beginPath();c.moveTo(-20,s*6);c.quadraticCurveTo(-34,s*14-6,-40,s*18);c.quadraticCurveTo(-30,s*14+4,-20,s*6+3);c.closePath();c.fill();c.stroke()}
-  c.fillStyle=sh.body;c.beginPath();c.moveTo(40,0);c.quadraticCurveTo(10,-20,-20,-15);c.quadraticCurveTo(-26,0,-20,15);c.quadraticCurveTo(10,20,40,0);c.closePath();c.fill();c.stroke();
-  c.shadowBlur=0;c.strokeStyle='rgba(29,24,56,.5)';c.lineWidth=2.5;for(const xx of [-8,6,20]){c.beginPath();c.moveTo(xx,-12+Math.abs(xx)*.08);c.lineTo(xx+5,-6);c.stroke();c.beginPath();c.moveTo(xx+2,13-Math.abs(xx)*.1);c.lineTo(xx+7,7);c.stroke()}
- }else if(sh.shape==='ufo'){
-  c.fillStyle=sh.fin;c.beginPath();c.ellipse(0,8,22,8,0,0,TAU);c.fill();c.stroke();
-  c.fillStyle=sh.body;c.beginPath();c.ellipse(0,2,38,12,0,0,TAU);c.fill();c.stroke();
-  c.shadowBlur=0;for(let i=-2;i<=2;i++){c.fillStyle=(Math.floor(t*4)+i)%2?sh.acc:'#fff';c.beginPath();c.arc(i*13,4,3.5,0,TAU);c.fill();c.stroke()}
- }else if(sh.shape==='pumpkin'){
-  c.fillStyle=sh.fin;for(const s of [-1,1]){c.beginPath();c.moveTo(-6,16*s);c.lineTo(-24,28*s);c.lineTo(-28,24*s);c.lineTo(-18,10*s);c.closePath();c.fill();c.stroke()}
+ const SP=sh.shape;
+ // крылья и детали за корпусом
+ c.fillStyle=sh.fin;
+ if(SP==='rocket'||SP==='bunny'){for(const s of [-1,1]){c.beginPath();c.moveTo(-4,14*s);c.lineTo(-22,28*s);c.lineTo(-28,26*s);c.lineTo(-22,10*s);c.closePath();c.fill();c.stroke()}}
+ if(SP==='bunny'){for(const[ex,rot] of [[-4,-.35],[-14,-.6]]){c.save();c.translate(ex,-14);c.rotate(rot);c.beginPath();c.ellipse(0,-11,5.5,13,0,0,TAU);c.fillStyle=sh.body;c.fill();c.stroke();c.beginPath();c.ellipse(0,-11,2.6,9,0,0,TAU);c.fillStyle=sh.acc;c.fill();c.restore()}c.fillStyle=sh.fin}
+ if(SP==='carrot'){for(const s of [-1,0,1]){c.beginPath();c.moveTo(-20,s*6);c.quadraticCurveTo(-34,s*14-6,-40,s*18);c.quadraticCurveTo(-30,s*14+4,-20,s*6+3);c.closePath();c.fill();c.stroke()}}
+ if(SP==='shuttle'){for(const s of [-1,1]){c.beginPath();c.moveTo(10,10*s);c.lineTo(-16,30*s);c.lineTo(-26,30*s);c.lineTo(-22,10*s);c.closePath();c.fill();c.stroke()}c.beginPath();c.moveTo(-12,-11);c.lineTo(-24,-26);c.lineTo(-30,-26);c.lineTo(-27,-11);c.closePath();c.fill();c.stroke()}
+ if(SP==='jet'){for(const s of [-1,1]){c.beginPath();c.moveTo(6,8*s);c.lineTo(-14,32*s);c.lineTo(-22,32*s);c.lineTo(-16,9*s);c.closePath();c.fill();c.stroke();c.beginPath();c.moveTo(-18,9*s);c.lineTo(-28,18*s);c.lineTo(-32,18*s);c.lineTo(-26,6*s);c.closePath();c.fill();c.stroke()}}
+ if(SP==='pod'){for(const s of [-1,1]){c.beginPath();c.moveTo(-14,16*s);c.lineTo(-30,26*s);c.lineTo(-34,22*s);c.lineTo(-26,10*s);c.closePath();c.fill();c.stroke()}}
+ if(SP==='ufo'){c.beginPath();c.ellipse(0,8,22,8,0,0,TAU);c.fill();c.stroke()}
+ if(SP==='pumpkin'){for(const s of [-1,1]){c.beginPath();c.moveTo(-6,16*s);c.lineTo(-24,28*s);c.lineTo(-28,24*s);c.lineTo(-18,10*s);c.closePath();c.fill();c.stroke()}
   c.fillStyle=sh.body;for(const[ox,rx] of [[-12,16],[12,16],[0,22]]){c.beginPath();c.ellipse(ox,2,rx,19,0,0,TAU);c.fill();c.stroke()}
   c.shadowBlur=0;c.fillStyle='#1d1838';c.beginPath();c.moveTo(14,-2);c.lineTo(20,4);c.lineTo(8,4);c.closePath();c.fill();
   c.beginPath();c.moveTo(4,10);c.quadraticCurveTo(14,18,24,8);c.lineTo(20,10);c.lineTo(16,7);c.lineTo(12,11);c.lineTo(8,8);c.closePath();c.fill();
-  c.fillStyle='#3fa34d';c.beginPath();c.rect(-24,-4,8,10);c.fill();c.stroke();
+  c.fillStyle='#3fa34d';c.beginPath();c.rect(-24,-4,8,10);c.fill();c.stroke()}
+ else{
+  // корпус
+  c.fillStyle=sh.body;bodyPath(c,sh);c.fill();c.shadowBlur=0;drawPattern(c,sh,t);bodyPath(c,sh);c.stroke();
+  if(SP==='rocket'||SP==='bunny'){c.fillStyle=sh.acc;c.beginPath();c.moveTo(38,0);c.quadraticCurveTo(33,-9,24,-12);c.quadraticCurveTo(28,0,24,12);c.quadraticCurveTo(33,9,38,0);c.fill();c.stroke();
+   c.beginPath();c.moveTo(-14,-14);c.quadraticCurveTo(-10,0,-14,14);c.lineWidth=5;c.strokeStyle=sh.acc;c.stroke();c.lineWidth=3;c.strokeStyle='#1d1838';c.fillStyle='#b9c4d6';c.beginPath();c.rect(-30,-7,8,14);c.fill();c.stroke()}
+  if(SP==='carrot'){c.strokeStyle='rgba(29,24,56,.5)';c.lineWidth=2.5;for(const xx of [-8,6,20]){c.beginPath();c.moveTo(xx,-12+Math.abs(xx)*.08);c.lineTo(xx+5,-6);c.stroke();c.beginPath();c.moveTo(xx+2,13-Math.abs(xx)*.1);c.lineTo(xx+7,7);c.stroke()}c.strokeStyle='#1d1838';c.lineWidth=3}
+  if(SP==='shuttle'){c.fillStyle=sh.acc;c.beginPath();c.moveTo(40,0);c.quadraticCurveTo(36,-7,30,-10);c.quadraticCurveTo(33,0,30,10);c.quadraticCurveTo(36,7,40,0);c.fill();c.stroke();c.fillStyle='#b9c4d6';c.beginPath();c.rect(-33,-8,5,16);c.fill();c.stroke()}
+  if(SP==='jet'){c.fillStyle=sh.acc;c.beginPath();c.moveTo(46,0);c.lineTo(34,-4.5);c.lineTo(34,4.5);c.closePath();c.fill();c.stroke();c.fillStyle='#b9c4d6';c.beginPath();c.rect(-30,-5,5,10);c.fill();c.stroke()}
+  if(SP==='pod'){c.strokeStyle=sh.acc;c.lineWidth=5;c.beginPath();c.ellipse(0,0,30,21,0,-.9,.9);c.stroke();c.lineWidth=3;c.strokeStyle='#1d1838';c.fillStyle='#b9c4d6';c.beginPath();c.rect(-33,-6,6,12);c.fill();c.stroke()}
+  if(SP==='ufo'){for(let i=-2;i<=2;i++){c.fillStyle=(Math.floor(t*4)+i)%2?sh.acc:'#fff';c.beginPath();c.arc(i*13,4,3.5,0,TAU);c.fill();c.stroke()}}
  }
  c.restore();
  // купол с котозайцем: всегда сверху и ровно
- const d=DOME[sh.shape]||DOME.rocket,lx=d[0]*sc,ly=d[1]*sc*flip,ca=Math.cos(ra),sa=Math.sin(ra),wx=x+lx*ca-ly*sa,wy=y+lx*sa+ly*ca,r=d[2]*sc;
+ const d=DOME[SP]||DOME.rocket,lx=d[0]*sc,ly=d[1]*sc*flip,ca=Math.cos(ra),sa=Math.sin(ra),wx=x+lx*ca-ly*sa,wy=y+lx*sa+ly*ca,r=d[2]*sc;
  c.save();if(inv&&Math.floor(t*14)%2)c.globalAlpha=.45;c.lineWidth=3*sc;c.strokeStyle='#1d1838';
  c.fillStyle='rgba(120,190,255,.35)';c.beginPath();c.arc(wx,wy,r,0,TAU);c.fill();
- drawKZ(c,wx,wy+r*.2,r*1.45,PAL,(t%4)<.12);
+ drawKZ(c,wx,wy+r*.2,r*1.45,pil.pal,(t%4)<.12,pil);
  c.beginPath();c.arc(wx,wy,r,0,TAU);c.stroke();
  c.strokeStyle='rgba(255,255,255,.75)';c.lineWidth=2.4*sc;c.beginPath();c.arc(wx,wy,r*.72,-2.6,-1.7);c.stroke();c.restore()}
 
@@ -562,7 +680,7 @@ function update(dt){
  // дрон
  const dl=S.up.drone|0;if(dl){const D=G.drone;D.a+=dt*2.2;D.x=s.x+Math.cos(D.a)*62;D.y=s.y+Math.sin(D.a)*50;D.fire-=dt;if(D.fire<=0){let best=null,bd=480;for(const o of G.dogs){const q=Math.hypot(o.x-D.x,o.y-D.y);if(q<bd){bd=q;best=o}}if(!best&&G.boss&&G.boss.hp>0&&Math.hypot(G.boss.x-D.x,G.boss.y-D.y)<520)best=G.boss;if(!best)for(const o of G.ast){const q=Math.hypot(o.x-D.x,o.y-D.y);if(q<bd*.7){bd=q/.7;best=o}}
   if(best){const a=Math.atan2(best.y-D.y,best.x-D.x);G.shots.push({x:D.x,y:D.y,vx:Math.cos(a)*900,vy:Math.sin(a)*900,a,life:.65,dmg:dl>=5?2:1,dr:1});D.fire=droneRate(dl)}else D.fire=.15}}
- if(s.thr>0&&Math.random()<.6){const b=s.a+Math.PI+rnd(-.3,.3);G.parts.push({x:s.x+Math.cos(s.a+Math.PI)*26,y:s.y+Math.sin(s.a+Math.PI)*26,vx:Math.cos(b)*120+s.vx*.3,vy:Math.sin(b)*120+s.vy*.3,life:.35,max:.35,c:boost?'#ff7eb6':'#ffb36b',s:rnd(2,5)})}
+ if(s.thr>0&&Math.random()<.6){const b=s.a+Math.PI+rnd(-.3,.3),tc=curShip().trail;G.parts.push({x:s.x+Math.cos(s.a+Math.PI)*26,y:s.y+Math.sin(s.a+Math.PI)*26,vx:Math.cos(b)*120+s.vx*.3,vy:Math.sin(b)*120+s.vy*.3,life:.35,max:.35,c:tc==='rainbow'?pick(RBW):tc||(boost?'#ff7eb6':'#ffb36b'),s:rnd(2,5)})}
  // кристаллы
  const mag=cheat('mag')?1100:s.pu.magnet>0?620:70+S.up.magnet*40;
  for(let i=G.crys.length-1;i>=0;i--){const c=G.crys[i],dx=s.x-c.x,dy=s.y-c.y,d=Math.hypot(dx,dy);
@@ -805,7 +923,7 @@ function resume(){if(MODE!=='pause')return;closeModal();MODE='play'}
 /* ---------- экраны ---------- */
 function show(id){SCREEN=id||'';$$('.scr').forEach(e=>e.classList.toggle('on',e.id===id));$('#mtop').style.display=id==='menu'?'':'none';if(id)$('#hud').classList.remove('on');
  if(id==='menu')renderMenu();if(id==='map')renderMap();if(id==='hangar')renderHangar();if(id==='ships')renderShips();if(id==='settings')renderSettings();if(id==='quests')renderQuests();if(id==='top')renderTop();if(id==='adm'){if(!IS_ADM){show('menu');return}renderAdm()}$$('.hb').forEach(e=>e.textContent='💎 '+fmt(S.crystals))}
-function toMenu(){try{netPresence()}catch(e){}closeModal();MODE='menu';G=null;$('#hud').classList.remove('on');setScene(Math.min(4,Math.floor(Math.min(S.sector,NSEC-1)/5)));show('menu');setTimeout(showPending,400)}
+function toMenu(){checkUnlocks();try{netPresence()}catch(e){}closeModal();MODE='menu';G=null;$('#hud').classList.remove('on');setScene(Math.min(4,Math.floor(Math.min(S.sector,NSEC-1)/5)));show('menu');setTimeout(showPending,400)}
 function renderMenu(){$('#mBank').textContent='💎 '+fmt(S.crystals);const i=Math.min(S.sector,NSEC-1),sec=secInfo(i);
  $('#bPlay').innerHTML=S.won?'▶ Играть':S.sector===0?'▶ Начать полёт':'▶ Продолжить · '+sec.G.ic+' '+(sec.boss?'Босс':'сектор '+(i+1));
  $('#bEnd').innerHTML=S.sector>=5||IS_ADM?'♾ Бесконечный рейс'+(S.best?' · 🏆 '+fmt(S.best):''):'🔒 Бесконечный рейс';
@@ -815,8 +933,24 @@ function renderMap(){$('#mapProg').textContent='⭐ '+starSum()+' / '+NSEC*3;
  $('#mapBox').innerHTML=GAL.map((g,gi)=>{const open=S.sector>=gi*5;return`<div class="panel gal"><div class="galh"><i style="background:${g.col}">${open?g.ic:'🔒'}</i><div><b>${esc(g.n)}</b><small>${open?'Босс: '+esc(g.boss):'Пройди предыдущую галактику'}</small></div></div><div class="nodes">${[0,1,2,3,4].map(k=>{const i=gi*5+k,lock=i>S.sector,st=S.stars[i]|0,cur=i===S.sector;const M=secInfo(i).M;return`<button class="node${k===4?' boss':''}${lock?' lock':''}${cur?' cur':''}" ${lock?'':`data-sec="${i}"`} title="${M.n}">${lock?'🔒':k===4?'🐶':`<span style="font-size:13px">${M.ic}</span>${i+1}`}<small>${lock?'':'★'.repeat(st)+'☆'.repeat(3-st)}</small></button>`}).join('')}</div></div>`}).join('')+
  `<div class="panel home"><div style="font-size:46px">${S.won?'🏠':'🪐'}</div><div><b style="font-size:18px">Котозаяция</b><div class="mut">${S.won?'Ты долетел домой! 🎉':'Родная планета котозайцев. Осталось секторов: '+(NSEC-S.sector)}</div></div></div>`}
 function renderHangar(){$('#upBox').innerHTML=UPS.map(u=>{const l=S.up[u.id]|0,max=l>=5,c=max?0:(u.cost||UPCOST)[l];return`<div class="panel up"><div class="ic">${u.ic}</div><div class="tx"><b>${u.n}</b><small>${esc(u.d(l))}${max?'':' → '+esc(u.d(l+1))}</small><div class="pips">${[0,1,2,3,4].map(i=>`<i class="${i<l?'on':''}"></i>`).join('')}</div></div>${max?'<span class="pill">МАКС</span>':`<button class="btn ${S.crystals>=c?'mint':'white'}" data-up="${u.id}">💎 ${c}</button>`}</div>`}).join('')+`<p class="mut" style="text-align:center;color:#e6e0ff">Кристаллы дают за пройденные сектора, звёзды и рейсы</p>`}
-function renderShips(){$('#shipBox').innerHTML=SHIPS.map(s=>{const own=S.ships.includes(s.id),sel=S.ship===s.id;return`<div class="panel shc${sel?' sel':''}"><canvas data-prev="${s.id}" width="320" height="220"></canvas><b>${esc(s.n)}</b><small>${esc(s.d)}</small>${sel?'<span class="pill">✓ Выбран</span>':own?`<button class="btn sm mint" data-ship="${s.id}">Выбрать</button>`:s.price<0?'<span class="pill">🔒 Награда</span>':`<button class="btn sm ${S.crystals>=s.price?'':'white'}" data-buy="${s.id}">💎 ${s.price}</button>`}</div>`}).join('');
- $$('[data-prev]').forEach(cn=>{const c=cn.getContext('2d'),sh=SHIPS.find(x=>x.id===cn.dataset.prev);c.setTransform(2,0,0,2,0,0);drawShip(c,sh,80,62,-.15,1.6,.6,1,false)})}
+let SHT=LS.get('kz_space_shtab')||'ships',SHF='all';
+function shipOwned(s){return S.ships.includes(s.id)}
+function checkUnlocks(silent){const got=[];for(const s of SHIPS)if(s.lock&&!S.ships.includes(s.id)&&s.lock()){S.ships.push(s.id);got.push(s)}if(got.length){save();if(!silent)setTimeout(()=>{SFX.quest();toast('🎁 Новый корабль: '+got.map(x=>x.n).join(', ')+'!')},600)}return got}
+function shipPrevDraw(){const cn=$('#shipPrev');if(!cn)return;const c=cn.getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cn.width,cn.height);c.setTransform(2,0,0,2,0,0);const t=performance.now()/1000,sh=SHT==='ships'&&SHIPS.find(x=>x.id===SHP)||curShip();drawShip(c,sh,190,78+Math.sin(t*1.6)*4,-.12,2.6,.8,t,false)}
+let SHP=null;function renderShips(){checkUnlocks();if(!SHP)SHP=S.ship;
+ $('#shipTabs').innerHTML=[['ships','🚀 Корабли · '+SHIPS.filter(shipOwned).length+'/'+SHIPS.length],['pc','🎨 Цвет пилота'],['hat','🎩 Шапки'],['eyes','🕶 Очки'],['ex','🎀 Аксессуары']].map(([k,n])=>`<button class="btn sm ${SHT===k?'':'white'}" data-sht="${k}">${n}</button>`).join('');
+ const P=S.pilot;
+ if(SHT==='ships'){const sh=SHIPS.find(x=>x.id===SHP)||curShip(),own=shipOwned(sh),R1=RAR[sh.r];
+  $('#shipInfo').innerHTML=`<b>${esc(sh.n)}</b><span class="rar" style="background:${R1[1]}">${R1[0]}</span><div class="mut">${esc(sh.d)}</div><div class="row" style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">${S.ship===sh.id?'<span class="pill">✓ Выбран</span>':own?`<button class="btn mint" data-ship="${sh.id}">Выбрать</button>`:sh.price<0?'<span class="pill">🔒 '+esc(sh.d.replace('Награда: ',''))+'</span>':`<button class="btn ${S.crystals>=sh.price?'mint':'white'}" data-buy="${sh.id}">Купить · 💎 ${fmt(sh.price)}</button>`}</div>`;
+  $('#shipFilt').innerHTML=[['all','Все'],['own','Мои'],['0','Обычные'],['1','Редкие'],['2','Эпические'],['3','Легендарные'],['4','Награды']].map(([k,n])=>`<button class="btn sm ${SHF===k?'':'white'}" data-shf="${k}">${n}</button>`).join('');$('#shipFilt').style.display='';
+  const L=SHIPS.filter(s=>SHF==='all'||(SHF==='own'?shipOwned(s):String(s.r)===SHF));
+  $('#shipBox').className='ships';$('#shipBox').innerHTML=L.map(s=>{const own=shipOwned(s),sel=S.ship===s.id,R1=RAR[s.r];return`<div class="panel shc${sel?' sel':''}${own?'':' lock'}" data-pick="${s.id}" style="cursor:pointer${SHP===s.id?';outline:4px dashed #ffc93c;outline-offset:2px':''}"><canvas data-prev="${s.id}" width="320" height="220"></canvas><b>${esc(s.n)}</b><span class="rar" style="background:${R1[1]}">${R1[0]}</span><small>${sel?'✓ выбран':own?'есть':s.price<0?'🔒 награда':'💎 '+fmt(s.price)}</small></div>`}).join('');
+  $$('[data-prev]').forEach(cn=>{const c=cn.getContext('2d'),sh=SHIPS.find(x=>x.id===cn.dataset.prev);c.setTransform(2,0,0,2,0,0);drawShip(c,sh,80,62,-.15,1.6,.6,1,false)})}
+ else{$('#shipFilt').style.display='none';const list=SHT==='pc'?[['acc','Как в аккаунте',0],...Object.keys(SK).map(k=>[k,SK[k][0],PC_PRICE[k]!=null?PC_PRICE[k]:150])]:SHT==='hat'?HATS:SHT==='eyes'?EYES:EXTRA,key=SHT==='pc'?'c':SHT,pref=SHT==='pc'?'c:':SHT==='hat'?'h:':SHT==='eyes'?'e:':'x:';
+  const cur=P[key]||'none';$('#shipInfo').innerHTML=`<b>🐰 Пилот</b><div class="mut">Котозайц в кабине корабля. Цвет, шапка, очки и аксессуары видны во время полёта.</div><div class="mut" style="margin-top:6px">Открыто: ${list.filter(([k,,pr])=>!pr||P.own.includes(pref+k)).length}/${list.length}</div>`;
+  $('#shipBox').className='pgrid';$('#shipBox').innerHTML=list.map(([k,n,pr])=>{const own=!pr||P.own.includes(pref+k),sel=cur===k;return`<div class="panel pit${sel?' sel':''}" ${own?`data-pset="${key}" data-v="${k}"`:`data-pbuy="${key}" data-v="${k}" data-p="${pr}"`}><canvas data-pp="${key}:${k}" width="168" height="168"></canvas><b>${esc(n)}</b>${sel?'<span class="pill" style="font-size:12px">✓ надето</span>':own?'<span class="mut">надеть</span>':`<span class="pill" style="font-size:12px;background:${S.crystals>=pr?'#3fd8ad':'#fff'}">💎 ${fmt(pr)}</span>`}</div>`}).join('');
+  $$('[data-pp]').forEach(cn=>{const [k,v]=cn.dataset.pp.split(':'),c=cn.getContext('2d'),pl=pilot();if(k==='c'){const q=v==='acc'?null:SK[v];pl.pal=q?{b:q[1],bl:q[2],inn:q[3]}:PAL}else pl[k]=v;c.setTransform(2,0,0,2,0,0);c.fillStyle='rgba(120,190,255,.25)';c.beginPath();c.arc(42,46,34,0,TAU);c.fill();drawKZ(c,42,48,k==='hat'?42:50,pl.pal,false,pl)})}
+ shipPrevDraw()}
 function swRow(k,n,d){return`<div class="opt"><div class="tx">${n}${d?`<small>${d}</small>`:''}</div><div class="sw${S.set[k]?' on':''}" data-set="${k}"></div></div>`}
 let SETT=LS.get('kz_space_settab')||'main';
 function segRow(k,n,d,opts){return`<div class="opt"><div class="tx">${n}${d?`<small>${d}</small>`:''}</div><div class="seg">${opts.map(([v,l])=>`<button data-opt="${k}" data-v="${v}" class="${String(S.set[k])===String(v)?'on':''}">${l}</button>`).join('')}</div></div>`}
@@ -854,7 +988,7 @@ function renderQuests(){ensureDaily();const D=S.daily,now=new Date(),mid=new Dat
  `<div class="panel q" style="background:${D.chest?'#e6fff6':'#fff3c4'}"><div style="font-size:30px">${D.chest?'✅':'🧰'}</div><div class="tx"><b>Сундук дня</b><small class="mut">Выполни все три задания · 💎 ${CHEST}</small></div>${D.chest?'<span class="pill">Получен</span>':D.q.every(q=>q.cl)?'<button class="btn mint" data-claimq="chest">Открыть</button>':''}</div></div>`;
  h+=`<div class="qh">🏅 Достижения</div><div class="achs">`+ACH.map(a=>{const c=S.ach[a.id]|0,v=achVal(a),full=c>=a.t.length,next=full?a.t[a.t.length-1]:a.t[c],ok=!full&&v>=next;return`<div class="panel ach${full?' done':''}"><div class="ic">${a.ic}</div><div class="tx"><b>${esc(a.n)}</b><small>${esc(a.d)}: ${fmt(Math.min(v,next))} / ${fmt(next)}</small><div class="tier">${'★'.repeat(c)}${'☆'.repeat(a.t.length-c)}</div><div class="qbar"><i style="width:${Math.min(100,v/next*100)}%"></i></div></div>${ok?`<button class="btn sm mint" data-claima="${a.id}">💎 ${ACHR[c]}</button>`:full?'<span class="pill">✓</span>':''}</div>`}).join('')+'</div>';
  $('#qBox').innerHTML=h}
-function claimQ(k){ensureDaily();const D=S.daily;if(k==='chest'){if(D.chest||!D.q.every(q=>q.cl))return;D.chest=true;S.crystals+=CHEST;toast('🧰 Сундук дня: +'+CHEST+' 💎')}else{const q=D.q[+k];if(!q||q.cl||q.got<q.n)return;q.cl=true;const r=QR[q.tier]||QR[0];S.crystals+=r;qev('quest',1);toast('📋 +'+r+' 💎')}SFX.buy();save();renderQuests();$$('.hb').forEach(e=>e.textContent='💎 '+fmt(S.crystals))}
+function claimQ(k){ensureDaily();const D=S.daily;if(k==='chest'){if(D.chest||!D.q.every(q=>q.cl))return;D.chest=true;S.crystals+=CHEST;qev('chest',1);toast('🧰 Сундук дня: +'+CHEST+' 💎')}else{const q=D.q[+k];if(!q||q.cl||q.got<q.n)return;q.cl=true;const r=QR[q.tier]||QR[0];S.crystals+=r;qev('quest',1);toast('📋 +'+r+' 💎')}SFX.buy();save();renderQuests();$$('.hb').forEach(e=>e.textContent='💎 '+fmt(S.crystals))}
 function claimA(id){const a=ACH.find(x=>x.id===id);if(!a)return;const c=S.ach[id]|0;if(c>=a.t.length||achVal(a)<a.t[c])return;S.ach[id]=c+1;S.crystals+=ACHR[c];SFX.quest();toast('🏅 '+a.n+' '+'★'.repeat(c+1)+' · +'+ACHR[c]+' 💎');save();renderQuests();$$('.hb').forEach(e=>e.textContent='💎 '+fmt(S.crystals))}
 
 /* ---------- топ игроков ---------- */
@@ -1154,8 +1288,13 @@ document.addEventListener('click',e=>{const t=e.target;ac();if(S.set.mus)musStar
  const ca=t.closest('[data-claima]');if(ca){claimA(ca.dataset.claima);return}
  const sc=t.closest('[data-sec]');if(sc){startSector(+sc.dataset.sec);return}
  const up=t.closest('[data-up]');if(up){const id=up.dataset.up,l=S.up[id]|0,c=(UPS.find(u=>u.id===id).cost||UPCOST)[l];if(l>=5)return;if(S.crystals<c){toast('Не хватает 💎 — нужно '+c);SFX.low();return}S.crystals-=c;S.up[id]++;save();SFX.buy();toast('✨ '+UPS.find(u=>u.id===id).n+': уровень '+S.up[id]);show('hangar');return}
- const by=t.closest('[data-buy]');if(by){const sh=SHIPS.find(x=>x.id===by.dataset.buy);if(S.crystals<sh.price){toast('Не хватает 💎 — нужно '+sh.price);SFX.low();return}S.crystals-=sh.price;S.ships.push(sh.id);S.ship=sh.id;save();SFX.buy();toast('🚀 '+sh.n+' теперь твой!');show('ships');return}
- const se=t.closest('[data-ship]');if(se){S.ship=se.dataset.ship;save();show('ships');return}
+ const by=t.closest('[data-buy]');if(by){const sh=SHIPS.find(x=>x.id===by.dataset.buy);if(!sh||sh.price<0||shipOwned(sh))return;if(S.crystals<sh.price){toast('Не хватает 💎 — нужно '+fmt(sh.price));SFX.low();return}S.crystals-=sh.price;S.ships.push(sh.id);S.ship=sh.id;save();SFX.buy();toast('🚀 '+sh.n+' теперь твой!');show('ships');return}
+ const sht=t.closest('[data-sht]');if(sht){SHT=sht.dataset.sht;LS.set('kz_space_shtab',SHT);renderShips();return}
+ const shf=t.closest('[data-shf]');if(shf){SHF=shf.dataset.shf;renderShips();return}
+ const pk=t.closest('[data-pick]');if(pk&&!t.closest('button')){SHP=pk.dataset.pick;renderShips();return}
+ const ps=t.closest('[data-pset]');if(ps){S.pilot[ps.dataset.pset]=ps.dataset.v;save();SFX.pu();renderShips();return}
+ const pb=t.closest('[data-pbuy]');if(pb){const pr=+pb.dataset.p,key=pb.dataset.pbuy,v=pb.dataset.v,pref=key==='c'?'c:':key==='hat'?'h:':key==='eyes'?'e:':'x:';if(S.crystals<pr){toast('Не хватает 💎 — нужно '+fmt(pr));SFX.low();return}S.crystals-=pr;S.pilot.own.push(pref+v);S.pilot[key]=v;save();SFX.buy();toast('✨ Куплено и надето!');show('ships');return}
+ const se=t.closest('[data-ship]');if(se){S.ship=se.dataset.ship;SHP=S.ship;save();SFX.pu();show('ships');return}
  const st2=t.closest('[data-sett]');if(st2){SETT=st2.dataset.sett;LS.set('kz_space_settab',SETT);renderSettings();return}
  const op=t.closest('[data-opt]');if(op){const k=op.dataset.opt,v=op.dataset.v;S.set[k]=/^-?\d+(\.\d+)?$/.test(v)?+v:v;save();if(k==='q'){AUTOQ=3}applySet();renderSettings();return}
  const sw=t.closest('[data-set]');if(sw){const k=sw.dataset.set;S.set[k]=S.set[k]?0:1;save();sw.classList.toggle('on',!!S.set[k]);if(k==='mus'&&S.set.mus)musStart();if(k==='hideTop')netPresence();applySet();return}
@@ -1171,7 +1310,7 @@ let lastDraw=0,slowT=0;function frame(now){if(S.set.fpsLim&&now-lastDraw<1000/S.
  if(S.set.q==='auto'&&MODE==='play'&&FPS.v){if(FPS.v<38){slowT+=dt;if(slowT>3&&AUTOQ>0){AUTOQ--;slowT=0;resize()}}else slowT=0}const t=now/1000;if(MODE==='result'&&G&&G.warpT!=null)G.warpT+=dt;
  FPS.n++;if(now-FPS.t>1000){FPS.v=FPS.n;FPS.n=0;FPS.t=now}
  if(MODE==='play'&&G){const sp=IS_ADM&&S.adm&&S.adm.spd?S.adm.spd:1;update(dt*sp);S.st.time=(S.st.time||0)+dt;hudUpdate()}else if(MODE==='result'&&G){for(let i=G.parts.length-1;i>=0;i--){const p=G.parts[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;if(p.life<=0)G.parts.splice(i,1)}}
- render(t);requestAnimationFrame(frame)}
+ render(t);if(SCREEN==='ships')shipPrevDraw();requestAnimationFrame(frame)}
 if(location.hash==='#cover')document.body.classList.add('cover');
 applySet();setScene(Math.min(4,Math.floor(Math.min(S.sector,NSEC-1)/5)));save();show('menu');requestAnimationFrame(frame);
 if(LS.get('kz_session')==null&&!document.body.classList.contains('cover'))setTimeout(()=>{if(MODE==='menu'&&!$('#modal').classList.contains('on'))authForm(false)},500);
