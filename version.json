@@ -61,11 +61,11 @@
   "date": "2026-10-27"
  },
  "ilauncher": {
-  "version": 2,
-  "label": "1.1",
-  "name": "Kotazaic Launcher для iPhone и iPad 1.1: новая игра «Котозайцы-обжоры»",
+  "version": 3,
+  "label": "1.2",
+  "name": "Kotazaic Launcher для iPhone и iPad 1.2: автообновления — новые игры и обновления лаунчера появляются сами",
   "file": "ilauncher.html",
-  "sha256": "2c39c8c2c90c37ef5da6b5deb1f810293610b8b3a4f413001ae5ba2bb69e902e",
+  "sha256": "60cd8e7aeec63244d913414e37bd64b74680bb7625a57858bd0d7299aa15b1d3",
   "url": "https://raw.githack.com/detanetov/kotazaic-updates/main/ilauncher.html",
   "profile": "KotazaicLauncher.mobileconfig",
   "date": "2026-10-27"
