@@ -332,6 +332,26 @@ select.ain{padding:0 8px}
 .prow.on{background:var(--ac);color:var(--on)}.prow.on small,.prow.on .mut{color:var(--on);opacity:.8}
 #adm .tabs button{font-size:14px}
 @media (max-width:520px){.arow{flex-wrap:wrap}.arow .ain{flex-basis:100%}}
+.itabs{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none}.itabs::-webkit-scrollbar{display:none}
+.itabs button{flex:none;display:flex;align-items:center;gap:5px;height:36px;padding:0 12px;border-radius:12px;background:var(--paper2);border:2.5px solid var(--ink);font-weight:900;font-size:13px;color:var(--mut)}
+.itabs button.on{background:var(--ac);color:var(--on)}
+.ipick{display:flex;gap:10px;align-items:flex-start}
+.iprev{width:170px;flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;text-align:center;position:sticky;top:0}
+.iprev b{font-size:15px;line-height:1.15}.iprev small{color:var(--mut);font-weight:800;font-size:12px}.iprev .btn{width:100%;min-height:42px;font-size:15px}
+.igrid{flex:1;min-width:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;max-height:330px;overflow:auto;padding:4px}
+.ic2{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;border-radius:14px;background:var(--paper2);border:2.5px solid var(--ink);position:relative}
+.ic2 .t{width:58px;height:58px;display:grid;place-items:center}.ic2 .t .ava{--s:54px}.ic2 .bedth{width:62px!important}
+.ic2 small{font-size:10.5px;font-weight:800;line-height:1.1;color:var(--mut);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ic2.on{background:var(--ac);transform:translateY(-2px);box-shadow:0 3px 0 var(--ink)}.ic2.on small{color:var(--on)}
+.ic2.has::after{content:"✓";position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#7fe08a;border:2px solid var(--ink);font-size:11px;font-weight:1000;display:grid;place-items:center;color:#0a2a10}
+.pcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;max-height:380px;overflow:auto;padding:4px}
+.pc{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:16px;background:var(--paper2);border:2.5px solid var(--ink);text-align:left;min-width:0}
+.pc.on{background:var(--ac);color:var(--on)}.pc.on small{color:var(--on)!important;opacity:.85}
+.pa{position:relative;flex:none;display:grid;place-items:center}.pa i{position:absolute;right:-2px;bottom:2px;width:14px;height:14px;border-radius:50%;background:#8a8aa0;border:2.5px solid var(--ink)}.pa i.g{background:#5fe08a}
+.pc.all .pa{width:58px;height:58px;border-radius:50%;background:var(--acs);border:2.5px solid var(--ink);font-size:30px}
+.pt3{min-width:0;flex:1}.pt3 b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px}.pt3 small{display:block;color:var(--mut);font-weight:800;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdet{display:flex;gap:16px;align-items:center}.pdet h3{margin:0}
+@media (max-width:560px){.ipick{flex-direction:column}.iprev{width:100%;position:static;flex-direction:row;flex-wrap:wrap;justify-content:center}.iprev .ava,.iprev .bedth,.iprev .fxth,.iprev .clkth{zoom:.8}.igrid{max-height:300px;width:100%}.pdet{flex-direction:column;text-align:center}.pdet .arow{justify-content:center}}
 /* click effects keyframes (preview) */
 @keyframes cf-squish{30%{transform:scale(1.15,.8)}60%{transform:scale(.92,1.08)}}
 @keyframes cf-jump{40%{transform:translateY(-22%)}70%{transform:translateY(0) scale(1.1,.9)}}
@@ -420,7 +440,7 @@ html.nofx .deco{display:none}
 <div id="toast"></div>
 <script>
 'use strict';
-const GAME_VER='1.4',GAME_BUILD=10;
+const GAME_VER='1.4.1',GAME_BUILD=11;
 const CFG=window.CLICK||{};
 const A=window.KZAndroid||null;
 const EMB=!!(CFG.embedded||window.parent!==window);
@@ -1010,7 +1030,7 @@ try{const o=JSON.parse(LS.get('kz_click_adms'));if(o&&Array.isArray(o.l)){ADMS=o
 const DEV=A||matchMedia('(pointer:coarse)').matches?'phone':'pc';
 const isAdm=()=>IS_DETA||(!!ACC&&ADMS.includes(ACC));
 const worldMult=()=>WORLD.until>Date.now()?(WORLD.xm||1):1;
-function prof(){return{t:'kcl',gid:S.gid,u:ACC,nick:NICK,c:S.c,tot:S.tot,pv:clickBase(),clicks:S.clicks,skin:S.skin,pass:passLvl(),adm:isAdm()?1:0,dev:DEV,last:Date.now()}}
+function prof(){return{t:'kcl',gid:S.gid,u:ACC,nick:NICK,c:S.c,tot:S.tot,pv:clickBase(),clicks:S.clicks,skin:S.skin,eq:{hat:S.eq.hat,frame:S.eq.frame,bg:S.eq.bg,bed:S.eq.bed},ach:S.ach.length,pass:passLvl(),adm:isAdm()?1:0,dev:DEV,last:Date.now()}}
 function netPresence(){if(!ACC||!NET.started||!S)return;clearTimeout(netPresence.t);netPresence.t=setTimeout(()=>{if(S)NET.pub(LTP+'p/'+S.gid,prof(),true)},1200)}
 setInterval(()=>netPresence(),60000);
 async function verifySigned(pl){const vk=await admVKp;if(!vk)return null;let m;try{m=JSON.parse(mqDec.decode(pl))}catch(e){return null}if(!m||typeof m.c!=='string'||typeof m.s!=='string')return null;
@@ -1061,8 +1081,8 @@ function ago(t){const m=Math.floor((Date.now()-t)/60000);return m<3?'🟢 в с�
 function parseNum(x){x=String(x||'').trim().replace(',','.').replace(/\s+/g,'');if(!x)return NaN;const m=x.match(/^(-?[\d.]+(?:e[+-]?\d+)?)([a-zA-Z]*)$/);if(!m)return NaN;let v=parseFloat(m[1]);if(m[2]){const i=SUF.findIndex(s=>s&&s.toLowerCase()===m[2].toLowerCase());if(i<0)return NaN;v*=Math.pow(1000,i)}return v}
 function readSave(u){if(u===ACC)return S;try{const o=JSON.parse(LS.get('kz_click_u_'+u));if(!o)return null;const prevA=ACC;return o}catch(e){return null}}
 function admTargets(){const by={},db=accDB();
- for(const u of Object.keys(db)){if(u==='__guest')continue;const sv=readSave(u);by[u]={u,nick:db[u].nick||u,local:true,gid:sv&&sv.gid,c:sv?sv.c:0,last:u===ACC?Date.now():(sv&&sv.last)||0,dev:'here'}}
- for(const p of Object.values(PLAYERS)){const o=by[p.u];if(o&&o.local&&o.gid&&o.gid!==p.gid&&o.last>p.last)continue;by[p.u]=Object.assign(o||{},{u:p.u,nick:p.nick||p.u,gid:p.gid,c:p.c,last:Math.max(p.last,(o&&o.last)||0),dev:o&&o.local?'here':p.dev,online:true,local:!!(o&&o.local),pv:p.pv})}
+ for(const u of Object.keys(db)){if(u==='__guest')continue;const sv=readSave(u);by[u]={u,nick:db[u].nick||u,local:true,gid:sv&&sv.gid,c:sv?sv.c:0,clicks:sv?sv.clicks|0:0,skin:sv&&sv.skin||'base',eq:sv&&sv.eq||{},own:sv&&sv.own,pass:sv&&sv.hw?null:0,ach:sv&&sv.ach?sv.ach.length:0,last:u===ACC?Date.now():(sv&&sv.last)||0,dev:'here'}}
+ for(const p of Object.values(PLAYERS)){const o=by[p.u];if(o&&o.local&&o.gid&&o.gid!==p.gid&&o.last>p.last)continue;by[p.u]=Object.assign(o||{},{u:p.u,nick:p.nick||p.u,gid:p.gid,c:p.c,last:Math.max(p.last,(o&&o.last)||0),dev:o&&o.local?'here':p.dev,online:true,local:!!(o&&o.local),pv:p.pv,clicks:p.clicks|0,skin:p.skin||(o&&o.skin)||'base',eq:p.eq||(o&&o.eq)||{},pass:p.pass,ach:p.ach})}
  return Object.values(by).sort((a,b)=>(b.u===ACC)-(a.u===ACC)||b.last-a.last)}
 // выдача: себе и аккаунтам на этом устройстве — сразу; другим устройствам — подписанным ключом письмом
 const OUTK='kz_click_admout';
@@ -1083,12 +1103,25 @@ async function setAdmins(list){if(!IS_DETA)return;if(!SIGK){toast('🔑 Чтоб
 async function setWorld(o,label){if(!SIGK){toast('🔑 Для событий нужен ключ ADM');ADT='key';renderAdm();return}if(!NET.ok()){toast('Нет связи с онлайн-сервером');return}
  WORLD=Object.assign({},WORLD,o,{ts:Date.now()});await signPub(LTP+'w',WORLD);admLog('🌍 '+label);toast('📡 '+label);SFX.gold();_lastChips='';renderAdm()}
 function admTabsHtml(){const T=[['me','🙋 Себе'],['pl','👥 Игроки'],['world','🌍 Мир'],['key',SIGK?'🔓 Ключ':'🔑 Ключ']];return T.map(([k,n])=>`<button data-adt="${k}" class="${ADT===k?'on':''}">${n}</button>`).join('')}
-function itemSelect(){return `<select class="ain" id="aiCat">${Object.entries(CATS).map(([k,c])=>`<option value="${k}">${c.ic} ${c.n}</option>`).join('')}</select><select class="ain" id="aiItem"></select>`}
-function fillItems(){const c=$('#aiCat'),s=$('#aiItem');if(!c||!s)return;s.innerHTML=CATS[c.value].L.filter(x=>x.price!==0||c.value==='skin').filter(x=>!x.ex||IS_DETA).map(x=>`<option value="${x.id}">${esc(x.n)}${x.hw?' 🎃':''}${x.ex?' ⭐':''}</option>`).join('')}
+let AIC='skin',AII=null;
+function lookOf(t){const e=(t&&t.eq)||{};return{skin:SKM[t&&t.skin]?t.skin:'base',eq:{hat:e.hat||'none',frame:e.frame||'classic',bg:e.bg||'accent',bed:e.bed||'classic',clk:'squish',fx:'sparks'}}}
+function admTgt(){if(!admSel||admSel==='*')return null;return admTargets().find(x=>x.u===admSel)||null}
+function pickItems(){return CATS[AIC].L.filter(x=>(x.price!==0||AIC==='skin')&&(!x.ex||IS_DETA))}
+function pickHtml(){const L=pickItems();if(!AII||!L.find(x=>x.id===AII))AII=L[0]&&L[0].id;const t=admTgt(),own=t&&t.own?t.own[AIC]||[]:admSel===ACC?S.own[AIC]:null,it=findIt(AIC,AII);
+ const lk=lookOf(admSel==='*'?null:(admSel===ACC?{skin:S.skin,eq:S.eq}:t));let pv='';
+ if(it){if(AIC==='skin')pv=avatar({skin:it.id,eq:Object.assign({},lk.eq,{hat:'none'}),size:'120px'});
+  else if(AIC==='bed')pv=bedThumb(it,150);
+  else if(AIC==='fx'||AIC==='clk')pv=itemThumb(AIC,it,120);
+  else pv=avatar({skin:lk.skin,eq:Object.assign({},lk.eq,{[AIC]:it.id}),size:'120px'})}
+ const has=own&&it&&(own.includes(it.id)||(it.ex&&admSel==='deta'));
+ return `<div class="itabs">${Object.entries(CATS).map(([k,c])=>`<button data-aic="${k}" class="${AIC===k?'on':''}"><span>${c.ic}</span>${c.n}</button>`).join('')}</div>
+ <div class="ipick"><div class="iprev pap">${pv}<b>${it?esc(it.n):''}</b><small>${it?(AIC==='skin'?'×'+it.m+' 🥕 за клик':CATS[AIC].n)+(it.secret?' · секретный':it.ex?' · эксклюзив':it.hw?' · хэллоуин':''):''}</small>${has?'<span class="tag" style="background:#7fe08a;color:#0a2a10">Уже есть</span>':''}<button class="btn" data-adg="item" ${it?'':'disabled'}>🎁 Выдать</button></div>
+ <div class="igrid">${L.map(x=>`<button class="ic2${x.id===AII?' on':''}${own&&own.includes(x.id)?' has':''}" data-aii="${x.id}" title="${esc(x.n)}"><div class="t">${itemThumb(AIC,x,54)}</div><small>${esc(x.n)}</small></button>`).join('')}</div></div>`}
+function renderPick(){const e=$('#aPick');if(e)e.innerHTML=pickHtml()}
 function giveBox(who){return `<div class="adp pap"><h3>🎯 Выдать: ${who}</h3>
  <div class="arow"><input class="ain" id="aC" placeholder="Морковка: 1000, 5M, 10Qa, 1e20"><button class="btn sm" data-adg="c">+ Дать</button>${admSel!=='*'?'<button class="btn sm ghost" data-adg="cset">= Установить</button>':''}</div>
  <div class="arow"><input class="ain" id="aK" placeholder="Конфеты 🍬" inputmode="numeric"><button class="btn sm hw" data-adg="candy">+ Дать</button><input class="ain" id="aP" placeholder="Уровень пасса 0–30" inputmode="numeric" style="max-width:150px"><button class="btn sm hw" data-adg="pass">🎟</button></div>
- <div class="arow">${itemSelect()}<button class="btn sm" data-adg="item">🎁 Выдать</button></div>
+ <div class="sect" style="margin:14px 2px 8px">🎁 Предмет</div><div id="aPick">${pickHtml()}</div>
  <div class="arow wrap"><button class="btn sm" data-adg="allitems">✨ Все вещи</button><button class="btn sm" data-adg="upmax">🔧 Все улучшения</button><button class="btn sm" data-adg="hpmax">🐰 Все помощники</button><button class="btn sm" data-adg="ach">🏆 Все награды</button><button class="btn sm" data-adg="everything">💎 ВСЁ сразу</button></div>
  <div class="arow"><input class="ain" id="aM" placeholder="Сообщение игроку" maxlength="300"><button class="btn sm ghost" data-adg="msg">✉ Отправить</button></div></div>`}
 function renderAdm(){if(!isAdm()){show('menu');return}
@@ -1099,11 +1132,16 @@ function renderAdm(){if(!isAdm()){show('menu');return}
   admSel=ACC;h+=giveBox('себе');
   h+=`<div class="adp pap"><h3>🎮 Читы</h3>${ch('inf','⚡','Бесконечная бодрость','Котозаяц не устаёт и не уходит спать')}${ch('x100','💯','Клик ×100','Каждый тап в 100 раз сильнее')}${ch('crit','💥','Всегда крит','Каждый тап — крит')}${ch('auto','🤖','Автотап','10 тапов в секунду сами')}
   <div class="arow wrap"><button class="btn sm" data-adx="gold">🥕 Золотая морковка</button><button class="btn sm hw" data-adx="pk">🎃 Тыква</button><button class="btn sm ghost" data-adx="sleep">😴 Уложить спать</button><button class="btn sm ghost" data-adx="wake">⏰ Разбудить</button><button class="btn sm ghost" data-adx="daily">🎁 Сбросить подарок дня</button><button class="btn sm red" data-adx="reset">🗑 Обнулить себя</button></div></div>`}
- else if(ADT==='pl'){const L=admTargets();if(admSel===ACC&&ADT==='pl'&&!admSel)admSel=null;
-  h+=`<div class="adp pap"><h3>👥 Игроки · ${L.length}</h3><p class="mut">${NET.ok()?'🟢 онлайн-сервер на связи':'🟡 подключаюсь к онлайн-серверу…'} · игроки на других устройствах появляются, когда заходят в Kotozaic Clicker${SIGK?'':' · 🔑 без ключа можно выдавать только аккаунтам на этом устройстве'}</p>
-  <div class="plist"><div class="prow${admSel==='*'?' on':''}" data-adsel="*"><b>🌍 Все игроки</b><small>подарок получит каждый${SIGK?'':' · нужен ключ'}</small></div>
-  ${L.map(t=>{const ad=t.u==='deta'||ADMS.includes(t.u);return `<div class="prow${admSel===t.u?' on':''}" data-adsel="${esc(t.u)}"><b>${ad?'🛠 ':''}${esc(t.nick)} <span class="mut">@${esc(t.u)}</span>${t.u===ACC?' · это ты':''}</b><small>🥕 ${fmt(t.c||0)} · ${t.dev==='here'?'💻 это устройство':(t.dev==='phone'?'📱 ':'💻 ')+ago(t.last)}</small></div>`}).join('')}</div></div>`;
-  if(admSel){const t=L.find(x=>x.u===admSel);h+=giveBox(admSel==='*'?'всем игрокам':esc(t?t.nick+' @'+t.u:admSel));
+ else if(ADT==='pl'){const L=admTargets();
+  const card=t=>{const ad=t.u==='deta'||ADMS.includes(t.u),lk=t.u===ACC?{skin:S.skin,eq:S.eq}:lookOf(t),on=t.dev==='here'||Date.now()-t.last<3*60000;
+   return `<button class="pc${admSel===t.u?' on':''}" data-adsel="${esc(t.u)}"><div class="pa">${avatar({skin:lk.skin,eq:lk.eq,size:'58px'})}<i class="${on?'g':''}"></i></div><div class="pt3"><b>${ad?'🛠 ':''}${esc(t.nick)}</b><small>@${esc(t.u)}${t.u===ACC?' · ты':''}</small><small>🥕 ${fmt(t.c||0)} · ${t.dev==='here'?'💻 здесь':(t.dev==='phone'?'📱 ':'💻 ')+ago(t.last)}</small></div></button>`};
+  h+=`<div class="adp pap"><h3>👥 Игроки · ${L.length}</h3><p class="mut">${NET.ok()?'🟢 онлайн-сервер на связи':'🟡 подключаюсь к онлайн-серверу…'} · игроки с других устройств появляются, когда заходят в Kotozaic Clicker${SIGK?'':' · 🔑 без ключа — только аккаунты на этом устройстве'}</p>
+  <div class="pcs"><button class="pc all${admSel==='*'?' on':''}" data-adsel="*"><div class="pa"><span>🌍</span></div><div class="pt3"><b>Все игроки</b><small>подарок получит каждый</small><small>${SIGK?'📡 через онлайн':'🔑 нужен ключ'}</small></div></button>${L.map(card).join('')}</div></div>`;
+  if(admSel){const t=L.find(x=>x.u===admSel);
+   if(t){const lk=t.u===ACC?{skin:S.skin,eq:S.eq}:lookOf(t),sk=SKM[lk.skin],ad=t.u==='deta'||ADMS.includes(t.u);
+    h+=`<div class="adp pap pdet"><div class="pa">${avatar({skin:lk.skin,eq:lk.eq,size:'110px'})}</div><div class="pt3"><h3>${ad?'🛠 ':''}${esc(t.nick)}</h3><small>@${esc(t.u)} · ${t.dev==='here'?'💻 это устройство':(t.dev==='phone'?'📱 телефон':'💻 ПК')+' · '+ago(t.last)}</small>
+    <div class="arow wrap"><span class="chip">🥕 ${fmt(t.c||0)}</span>${t.pv?`<span class="chip">+${fmt(t.pv)} за клик</span>`:''}<span class="chip">👆 ${fmtInt(t.clicks||0)}</span>${t.pass!=null?`<span class="chip">🎟 ${t.pass}/30</span>`:''}${t.ach!=null?`<span class="chip">🏆 ${t.ach}</span>`:''}<span class="chip ac">🐰 ${esc(sk?sk.n:'Котозаяц')}</span></div></div></div>`}
+   h+=giveBox(admSel==='*'?'всем игрокам':esc(t?t.nick+' @'+t.u:admSel));
    if(IS_DETA&&admSel!=='*'&&admSel!=='deta'){const on=ADMS.includes(admSel);h+=`<div class="adp pap"><h3>🛠 Админка для @${esc(admSel)}</h3><p class="mut">${on?'У игрока есть ADM: он может выдавать вещи себе.':'Игрок получит свою ADM-панель (выдача себе и читы).'} Выдавать и забирать ADM можно только с ключом.</p><button class="btn ${on?'red':''}" data-adadm="${on?'off':'on'}">${on?'❌ Забрать ADM':'🛠 Выдать ADM'}</button></div>`}}}
  else if(ADT==='world'){const act=worldMult()>1;
   h+=`<div class="adp pap"><h3>🌍 События для всех</h3><p class="mut">Работают на всех устройствах. Нужен ключ.</p>${act?`<p><b>🔥 Сейчас: морковка ×${WORLD.xm}, ещё ${Math.ceil((WORLD.until-Date.now())/60000)} мин</b></p>`:''}
@@ -1115,10 +1153,12 @@ function renderAdm(){if(!isAdm()){show('menu');return}
   h+=`<div class="adp pap"><h3>${SIGK?'🔓 Ключ введён':'🔑 Ключ ADM'}</h3><p class="mut">Ключ — это пароль ADM, такой же, как в Kotazaic and Stars. Он нужен, чтобы выдавать вещи на другие устройства, запускать события и выдавать/забирать админку. Ключ не сохраняется — после перезапуска игры введи его снова.</p>
   ${SIGK?'<button class="btn ghost" data-adk="lock">🔒 Забыть ключ</button>':IS_DETA?'<div class="arow"><input class="ain" id="akIn" type="password" placeholder="Пароль ADM" autocomplete="off"><button class="btn" data-adk="go">🔓 Открыть</button></div>':'<p><b>Ключ есть только у главного админа (deta).</b></p>'}</div>
   <div class="adp pap"><h3>📜 Журнал</h3>${L.length?L.slice(0,40).map(x=>`<div class="mut" style="font-size:13px;padding:3px 0">${esc(x)}</div>`).join(''):'<p class="mut">Пусто</p>'}</div>`}
- $('#admBody').innerHTML=h;fillItems()}
+ $('#admBody').innerHTML=h}
 $('#admTabs').addEventListener('click',e=>{const b=e.target.closest('[data-adt]');if(!b)return;ADT=b.dataset.adt;if(ADT==='pl'&&admSel===ACC)admSel=null;SFX.click();renderAdm()});
-$('#admBody').addEventListener('change',e=>{if(e.target.id==='aiCat')fillItems()});
+
 $('#admBody').addEventListener('click',async e=>{const q=s=>e.target.closest(s);let b;
+ if(b=q('[data-aic]')){AIC=b.dataset.aic;AII=null;SFX.click();renderPick();return}
+ if(b=q('[data-aii]')){AII=b.dataset.aii;SFX.click();renderPick();return}
  if(b=q('[data-adsel]')){const u=b.dataset.adsel;admSel=admSel===u?null:u;renderAdm();return}
  if(b=q('[data-adc]')){const k=b.dataset.adc;S.adm=S.adm||{};S.adm[k]=!S.adm[k];save();b.querySelector('.tg').classList.toggle('on',S.adm[k]);SFX.click();admLog((S.adm[k]?'✅ ':'⬜ ')+'чит '+k);return}
  if(b=q('[data-adx]')){const x=b.dataset.adx;
@@ -1130,7 +1170,7 @@ $('#admBody').addEventListener('click',async e=>{const q=s=>e.target.closest(s);
   if(g==='c'||g==='cset'){const v=parseNum($('#aC').value);if(!isFinite(v)){toast('Не понял число. Примеры: 5000, 5M, 10Qa, 1e20');return}items=[{op:g,a:{n:v}}];label=(g==='c'?'+':'= ')+fmt(Math.abs(v))+' 🥕'}
   else if(g==='candy'){const v=Math.round(+$('#aK').value);if(!v){toast('Сколько конфет?');return}items=[{op:'candy',a:{n:v}}];label=v+' 🍬'}
   else if(g==='pass'){const v=clamp(Math.round(+$('#aP').value||0),0,30);items=[{op:'pass',a:{n:v}}];label='пасс ур. '+v}
-  else if(g==='item'){const t=$('#aiCat').value,id=$('#aiItem').value;if(!id)return;items=[{op:'item',a:{t,id}}];label=rewardName([t,id])}
+  else if(g==='item'){const t=AIC,id=AII;if(!id)return;items=[{op:'item',a:{t,id}}];label=rewardName([t,id])}
   else if(g==='msg'){const t=$('#aM').value.trim();if(!t)return;items=[{op:'msg',a:{t}}];label='сообщение'}
   else if(g==='everything'){items=[{op:'allitems'},{op:'upmax'},{op:'hpmax'},{op:'ach'},{op:'pass',a:{n:30}}];label='ВСЁ'}
   else{items=[{op:g}];label=({allitems:'все вещи',upmax:'все улучшения',hpmax:'все помощники',ach:'все награды'})[g]}
