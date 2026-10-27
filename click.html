@@ -319,6 +319,8 @@ html.light .gi.hwi{background:linear-gradient(160deg,#ffdcbe,#f3e2ff);color:var(
 .bedth{position:relative;flex:none}.bedth .bl{position:absolute;left:46%;transform:translate(-50%,-62%) rotate(-88deg);z-index:1}
 .bedth .bz{position:absolute;left:12%;top:0;font-weight:1000;font-size:20px;color:#fff;-webkit-text-stroke:4px var(--ink);paint-order:stroke fill;animation:zz 2.2s infinite}
 .gi .th{overflow:visible}
+.pt.spk,.bp.spk{width:16px;height:16px;clip-path:polygon(50% 0,62% 36%,100% 38%,70% 60%,80% 100%,50% 76%,20% 100%,30% 60%,0 38%,38% 36%);filter:drop-shadow(0 0 2px #0006)}
+.bp.spk{width:13px;height:13px}
 /* ADM */
 .adp{padding:14px;margin-bottom:14px}.adp h3{margin:0 0 8px;font-size:19px;font-weight:1000}.adp p{margin:4px 0 10px;font-size:13.5px}
 .arow{display:flex;gap:8px;align-items:center;margin:8px 0}.arow.wrap{flex-wrap:wrap}
@@ -417,7 +419,7 @@ html.nofx .deco{display:none}
 <div id="toast"></div>
 <script>
 'use strict';
-const GAME_VER='1.3.2',GAME_BUILD=7;
+const GAME_VER='1.3.3',GAME_BUILD=8;
 const CFG=window.CLICK||{};
 const A=window.KZAndroid||null;
 const EMB=!!(CFG.embedded||window.parent!==window);
@@ -497,12 +499,8 @@ const BGS=[
  {id:'accent',n:'В цвет темы',price:0},{id:'sky',n:'Небо',price:5e4},{id:'meadow',n:'Луг',price:5e6},{id:'field',n:'Морковное поле',price:1e9},{id:'sunset',n:'Закат',price:5e10},{id:'space',n:'Космос',price:5e12},
  {id:'hwnight',n:'Ночь Хэллоуина',hw:1},{id:'moon',n:'Полнолуние',hw:1}];
 const FXS=[
- {id:'carrots',n:'Морковки',e:['🥕'],price:0},{id:'hearts',n:'Сердечки',e:['💖','💗','💕'],price:1e4},{id:'stars',n:'Звёзды',e:['⭐','✨','🌟'],price:2e6},
- {id:'confetti',n:'Конфетти',e:['🎉','🎊','✨'],price:3e9},{id:'bubbles',n:'Пузыри',e:['b'],price:4e11},{id:'gems',n:'Кристаллы',e:['💎','💠'],price:6e13},
- {id:'candy',n:'Конфеты',e:['🍬','🍭'],hw:1},{id:'bats',n:'Летучие мыши',e:['🦇'],hw:1},{id:'ghosts',n:'Призраки',e:['👻'],hw:1},{id:'pumpkins',n:'Тыковки',e:['🎃'],hw:1}];
-const PETS=[
- {id:'none',n:'Без питомца',e:'',price:0},{id:'carrot',n:'Морковка',e:'🥕',price:1e5},{id:'butter',n:'Бабочка',e:'🦋',price:1e8},{id:'star',n:'Звёздочка',e:'⭐',price:1e11},{id:'bunny',n:'Мини-котозаяц',e:'🐰',price:1e15},
- {id:'bat',n:'Летучая мышка',e:'🦇',hw:1},{id:'ghost',n:'Призрачок',e:'👻',hw:1},{id:'pumpkin',n:'Тыковка',e:'🎃',hw:1},{id:'spider',n:'Паучок',e:'🕷️',hw:1}];
+ {id:'sparks',n:'Искорки',e:['s'],price:0},{id:'bubbles',n:'Пузыри',e:['b'],price:4e11}];
+const PETS=[{id:'none',n:'Без питомца',e:'',price:0}]; // раздел убран
 const INK='#1d1636';
 function bedSvg(b,part){const k=`stroke="${INK}" stroke-width="4" stroke-linejoin="round"`;
  if(part==='blank')return `<svg viewBox="0 0 200 110"><path d="M66 58q50-18 116-2v34H60q-6-18 6-32z" fill="${b.bl}" ${k}/>${b.blx||''}<path d="M66 58q50-18 116-2" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="4" transform="translate(0 6)"/></svg>`;
@@ -520,9 +518,9 @@ const CLKS=[
  {id:'squish',n:'Сжатие',ic:'👆',price:0,d:.26},{id:'tilt',n:'Наклон',ic:'↩️',price:1e3,d:.3},{id:'jump',n:'Прыжок',ic:'⬆️',price:2e4,d:.34},{id:'jelly',n:'Желе',ic:'🍮',price:3e6,d:.45},
  {id:'beat',n:'Сердцебиение',ic:'💓',price:2e8,d:.36},{id:'shake',n:'Тряска',ic:'〰️',price:5e9,d:.3},{id:'ripple',n:'Волна',ic:'🌊',price:2e11,d:.3},{id:'flash',n:'Вспышка',ic:'💡',price:5e12,d:.3},
  {id:'spin',n:'Кувырок',ic:'🌀',price:1e14,d:.45},{id:'spooky',n:'Жуткая дрожь',ic:'👻',hw:1,d:.45}];
-const CATS={skin:{n:'Скины',ic:'🐰',L:SKINS},hat:{n:'Шапки',ic:'🎩',L:HATS},frame:{n:'Рамки',ic:'⭕',L:FRAMES},bg:{n:'Фоны',ic:'🌄',L:BGS},fx:{n:'Частицы',ic:'✨',L:FXS},clk:{n:'Эффект клика',ic:'👆',L:CLKS},pet:{n:'Питомцы',ic:'🦋',L:PETS},bed:{n:'Кроватка',ic:'🛏️',L:BEDS}};
+const CATS={skin:{n:'Скины',ic:'🐰',L:SKINS},hat:{n:'Шапки',ic:'🎩',L:HATS},frame:{n:'Рамки',ic:'⭕',L:FRAMES},bg:{n:'Фоны',ic:'🌄',L:BGS},fx:{n:'Частицы',ic:'✨',L:FXS},clk:{n:'Эффект клика',ic:'👆',L:CLKS},bed:{n:'Кроватка',ic:'🛏️',L:BEDS}};
 
-const findIt=(t,id)=>CATS[t].L.find(x=>x.id===id);
+const findIt=(t,id)=>t==='pet'?(id==='none'?PETS[0]:undefined):CATS[t]?CATS[t].L.find(x=>x.id===id):undefined;
 
 /* ---------- улучшения и помощники ---------- */
 const UPG=[
@@ -550,15 +548,14 @@ const HMAX=10,HG=4;
 /* ---------- Хэллоуин ---------- */
 const HW_END=new Date('2026-11-09T23:59:59+03:00').getTime();
 const hwOn=()=>Date.now()<HW_END;
-const PASS=[['c'],['fx','candy'],['c'],['hat','witch'],['bg','hwnight'],['c'],['pet','bat'],['frame','pumpkin'],['c'],['skin','ghost'],
- ['fx','bats'],['c'],['hat','horns'],['pet','ghost'],['frame','web'],['bed','pumpkinbed'],['fx','ghosts'],['hat','pumpkinhat'],['c'],['skin','pumpkin'],
- ['pet','pumpkin'],['clk','spooky'],['bg','moon'],['frame','candy'],['c'],['hat','batwings'],['c'],['c'],['pet','spider'],['skin','night']];
+const PASS=[['c'],['c'],['c'],['hat','witch'],['bg','hwnight'],['c'],['c'],['frame','pumpkin'],['c'],['skin','ghost'],
+ ['c'],['c'],['hat','horns'],['c'],['frame','web'],['bed','pumpkinbed'],['c'],['hat','pumpkinhat'],['c'],['skin','pumpkin'],
+ ['c'],['clk','spooky'],['bg','moon'],['frame','candy'],['c'],['hat','batwings'],['c'],['c'],['c'],['skin','night']];
 const passNeed=n=>10+3*n; // конфет до следующего уровня
 const HWSHOP=[
  {id:'boost',ic:'🍬',n:'Конфетный ливень',d:'×2 конфеты на 10 минут',p:40},
  {id:'energy',ic:'⚡',n:'Зелье бодрости',d:'Полная бодрость и 60 с без усталости',p:25},
  {id:'chest',ic:'🧰',n:'Тыквенный сундук',d:'Случайная хэллоуин-вещь или гора морковки',p:60},
- {id:'fx:pumpkins',ic:'🎃',n:'Эффект «Тыковки»',d:'Эффект тапа из лавки',p:90},
  {id:'frame:candle',ic:'🕯️',n:'Рамка «Свечи»',d:'Мерцающая рамка из лавки',p:120},
  {id:'bed:coffin',ic:'⚰️',n:'Кроватка «Уютный гроб»',d:'Котозаяц спит в ней как маленький вампир',p:100}];
 const QPOOL=[
@@ -584,7 +581,7 @@ const ACH=[
 /* ---------- сохранение ---------- */
 let S;
 function keyU(){return'kz_click_u_'+(ACC||'__guest')}
-function fresh(){return{v:1,gid:'k'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),seen:{},adm:{},c:0,tot:0,clicks:0,crits:0,gc:0,bestCombo:0,up:{},hp:{},en:100,skin:'base',naps:0,own:{skin:['base'],hat:['none'],frame:['classic'],bg:['accent'],fx:['carrots'],pet:['none'],clk:['squish'],bed:['classic']},eq:{hat:'none',frame:'classic',bg:'accent',fx:'carrots',pet:'none',clk:'squish',bed:'classic'},ach:[],daily:{last:'',streak:0},hw:{candy:0,earned:0,claimed:[],q:null,boost:0,pk:0},buffs:{},last:Date.now()}}
+function fresh(){return{v:1,gid:'k'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),seen:{},adm:{},c:0,tot:0,clicks:0,crits:0,gc:0,bestCombo:0,up:{},hp:{},en:100,skin:'base',naps:0,own:{skin:['base'],hat:['none'],frame:['classic'],bg:['accent'],fx:['sparks'],pet:['none'],clk:['squish'],bed:['classic']},eq:{hat:'none',frame:'classic',bg:'accent',fx:'sparks',pet:'none',clk:'squish',bed:'classic'},ach:[],daily:{last:'',streak:0},hw:{candy:0,earned:0,claimed:[],q:null,boost:0,pk:0},buffs:{},last:Date.now()}}
 function loadSave(){let s=null;try{s=JSON.parse(LS.get(keyU()))}catch(e){}const f=fresh();if(!s)return f;
  const d=fresh();s=Object.assign(f,s);s.own=Object.assign(d.own,s.own||{});for(const k in d.own)if(!Array.isArray(s.own[k]))s.own[k]=d.own[k].slice();
  s.eq=Object.assign(d.eq,s.eq||{});for(const k in d.eq)if(!findIt(k,s.eq[k]))s.eq[k]=fresh().eq[k];if(!SKM[s.skin])s.skin='base';
@@ -661,7 +658,8 @@ function avatar(o){o=o||{};const sk=SKM[o.skin||S.skin]||SKINS[0],eq=Object.assi
  if(hat){const a=sk.a;h+=`<div class="hat" style="left:${(a.x-a.w/2)*100}%;top:${(a.y-a.w*.8*.88)*100}%;width:${a.w*100}%;height:${a.w*80}%;transform:rotate(${a.r}deg)">${HATSVG[hat]}</div>`}
  if(pet&&pet.e&&!o.noPet)h+=`<div class="orb"><span>${pet.e}</span></div>`;
  return h+'</div>'}
-function burstHtml(it){const e=it.e;return Array.from({length:7},(_,i)=>{const a=i/7*Math.PI*2+.4,d=.5+(i%3)*.09,ch=e[i%e.length];return `<span class="bp${ch==='b'?' bub':''}" style="--dx:${(Math.cos(a)*d).toFixed(2)};--dy:${(Math.sin(a)*d).toFixed(2)};--r:${(i%2?1:-1)*(60+i*20)}deg;animation-delay:${(i%4)*-.4}s">${ch==='b'?'':ch}</span>`}).join('')}
+const SPK=['#ffe14a','#ff9cc8','#9fe8ff','#b39cff','#7fe08a','#ffb35a'];
+function burstHtml(it){const e=it.e;return Array.from({length:7},(_,i)=>{const a=i/7*Math.PI*2+.4,d=.5+(i%3)*.09,ch=e[i%e.length];return `<span class="bp${ch==='b'?' bub':ch==='s'?' spk':''}" style="${ch==='s'?'background:'+SPK[i%6]+';':''}--dx:${(Math.cos(a)*d).toFixed(2)};--dy:${(Math.sin(a)*d).toFixed(2)};--r:${(i%2?1:-1)*(60+i*20)}deg;animation-delay:${(i%4)*-.4}s">${ch==='b'||ch==='s'?'':ch}</span>`}).join('')}
 function bedThumb(b,w){return `<div class="bedth" style="width:${w}px"><div>${bedSvg(b)}</div><div class="bl" style="top:54.5%">${avatar({noPet:1,eq:{hat:'none'},size:Math.round(w*.42)+'px'})}</div><div style="position:absolute;inset:0">${bedSvg(b,'blank')}</div><span class="bz">z</span></div>`}
 function itemThumb(t,it,sz){const S0=sz?sz+'px':undefined,sk=SKM[S.skin]&&SKM[S.skin].a?S.skin:'base';
  if(t==='skin')return avatar({skin:it.id,eq:{hat:'none',pet:'none'},size:S0});
@@ -671,7 +669,7 @@ function itemThumb(t,it,sz){const S0=sz?sz+'px':undefined,sk=SKM[S.skin]&&SKM[S.
  if(t==='fx')return `<div class="fxth">${avatar({noPet:1,eq:{hat:'none'},size:S0})}${burstHtml(it)}</div>`;
  if(t==='pet')return `<div class="petth">${avatar({eq:{pet:it.id,hat:'none'},size:S0})}</div>`;
  if(t==='bed')return bedThumb(it,sz?Math.round(sz*1.15):108);
- if(t==='clk')return `<div class="clkth" data-clk="${it.id}">${avatar({noPet:1,eq:{hat:'none'},size:S0})}<span class="clkic">${it.ic}</span></div>`}
+ if(t==='clk')return `<div class="clkth" data-clk="${it.id}">${avatar({noPet:1,eq:{hat:'none'},size:S0})}</div>`}
 function exitToLauncher(){save();try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}
  try{if(window.parent!==window){if(A&&A.ios&&A.exit){A.exit();return}if(A&&A.exit&&!A.fileUrl){A.exit();return}parent.postMessage({click:'exit'},'*');return}}catch(e){}
  if(A){try{location.href=A.fileUrl?A.fileUrl('launcher.html'):'launcher.html'}catch(e){location.href='launcher.html'}return}try{window.close()}catch(e){}}
@@ -799,7 +797,7 @@ function updGame(){if(SCREEN!=='game'||!roomBuilt)return;
 const comboMul=()=>1+Math.min(combo,100)/100*comboMax();
 let fxCount=0;
 function fnum(x,y,t,cls){if(!SET.fnum&&!cls)return;if(fxCount>40)return;const e=document.createElement('div');e.className='fnum '+(cls||'');e.textContent=t;e.style.left=x+'px';e.style.top=y+'px';e.style.setProperty('--dx',rnd(-40,40)+'px');document.body.appendChild(e);fxCount++;setTimeout(()=>{e.remove();fxCount--},1000)}
-function parts(x,y,n,set,force){if(!SET.parts&&!force)return;const fx=set||(findIt('fx',S.eq.fx)||FXS[0]).e;for(let i=0;i<n;i++){if(fxCount>60)return;const e=document.createElement('div'),ch=pick(fx);e.className='pt'+(ch==='b'?' bub':'');if(ch!=='b')e.textContent=ch;const a=rnd(0,Math.PI*2),d=rnd(50,120);e.style.left=x+'px';e.style.top=y+'px';e.style.setProperty('--dx',Math.cos(a)*d+'px');e.style.setProperty('--dy',Math.sin(a)*d-30+'px');e.style.setProperty('--r',rnd(-180,180)+'deg');e.style.fontSize=rnd(16,28)+'px';document.body.appendChild(e);fxCount++;setTimeout(()=>{e.remove();fxCount--},820)}}
+function parts(x,y,n,set,force){if(!SET.parts&&!force)return;const fx=set||(findIt('fx',S.eq.fx)||FXS[0]).e;for(let i=0;i<n;i++){if(fxCount>60)return;const e=document.createElement('div'),ch=pick(fx);e.className='pt'+(ch==='b'?' bub':ch==='s'?' spk':'');if(ch==='s')e.style.background=pick(SPK);else if(ch!=='b')e.textContent=ch;const a=rnd(0,Math.PI*2),d=rnd(50,120);e.style.left=x+'px';e.style.top=y+'px';e.style.setProperty('--dx',Math.cos(a)*d+'px');e.style.setProperty('--dy',Math.sin(a)*d-30+'px');e.style.setProperty('--r',rnd(-180,180)+'deg');e.style.fontSize=rnd(16,28)+'px';document.body.appendChild(e);fxCount++;setTimeout(()=>{e.remove();fxCount--},820)}}
 function clickFx(el,id,x,y){if(!el)return;const c=findIt('clk',id)||CLKS[0];
  if(c.kf){el.style.animation='none';(el._cf||[]).forEach(a=>a.cancel());el._cf=[el.animate(c.kf(c.k),{duration:c.d*1000,easing:'cubic-bezier(.3,1.25,.5,1)'})];
   if(c.glow){el._cf.push(el.animate([{filter:'none'},{filter:`drop-shadow(0 0 ${Math.round(el.offsetWidth*.08)}px ${c.glow}) brightness(1.15)`},{filter:'none'}],{duration:c.d*1000+120,composite:'add'}));if(x!=null){const r=document.createElement('div');r.className='ring2';r.style.left=x+'px';r.style.top=y+'px';r.style.borderColor=c.glow;document.body.appendChild(r);setTimeout(()=>r.remove(),650)}}return}
@@ -971,7 +969,7 @@ function helpModal(){modal(`<h2>Как играть</h2>
  <div class="hl"><span>🎵</span><div><b>Комбо</b> — тапай быстро без пауз, и каждый тап станет сильнее.</div></div>
  <div class="hl"><span>✨</span><div><b>Золотая морковка</b> иногда пролетает по экрану — лови! Даёт морковный дождь, безумие ×7, бодрость или криты.</div></div>
  <div class="hl"><span>🐰</span><div><b>Помощники</b> тапают сами, даже когда игра закрыта.</div></div>
- <div class="hl"><span>🎨</span><div><b>Скины</b> умножают морковку за клик, а шапки, рамки, фоны, частицы, эффекты клика, питомцы и кроватки — для красоты.</div></div>
+ <div class="hl"><span>🎨</span><div><b>Скины</b> умножают морковку за клик, а шапки, рамки, фоны, частицы, эффекты клика и кроватки — для красоты.</div></div>
  <div class="hl"><span>🏆</span><div><b>Награды</b> — каждая даёт +2% ко всей морковке навсегда.</div></div>
  <div class="hl"><span>🎃</span><div><b>Halloween</b> — собирай конфеты и открывай вещи в пассе до ${new Date(HW_END).toLocaleDateString('ru-RU',{day:'numeric',month:'long'})}.</div></div>
  <div class="mrow"><button class="btn" data-a="mclose">Понятно</button></div>`)}
