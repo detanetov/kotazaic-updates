@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=100;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=101;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&KZAndroid.isLauncher)?'launcher':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3065,6 +3065,7 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
+ {v:101,l:'1.4.0',items:['✍ В Кастомизации новый раздел «Надписи»: большая надпись на заднем плане меню и игры','🐰 Готовая надпись «Котозаяц» и своя — напиши любой текст до 30 символов и выбери стиль: ночь, небо, закат или мята','📱 Надпись рисуется под размер экрана и не обрезается на телефоне']},
  {v:98,l:'1.4.0',items:['🐱 Лимитированная коллекция «Котики» — 50 милых кошачьих вещей до 30 ноября: 5 скинов (рыжий, чёрный, сиамский, трёхцветная, розовый котёнок)','🎀 Кошачьи ушки, наушники-ушки, котик на голове, корона котов, кошачий хвостик, котёнок на руках и в рюкзаке, крылья-лапки, тапочки-лапки','🐾 Следы лапок, сердечки «мяу», рыбки и клубочки, ауры: кошачьи глаза, хоровод котиков, мурчание; игрушки с бонусами: удочка-дразнилка, клубок, мышка, лазерная указка','👑 4 полных костюма и вкладка «🐱 Котики» в Cosmetics']},
  {v:97,l:'1.4.0',items:['🐰 Голос котозайца: фразы звучат мультяшным голосом самого котозайца — по слогам, как у зверят в мультиках, одинаково на ПК и телефоне. У друзей в пати голос чуть другой','🗣 В Settings → Фразы можно выбрать: голос котозайца, голос устройства или без голоса']},
  {v:96,l:'1.4.0',items:['💬 Фразы котозайца: колесо фраз на клавише C (или кнопка 💬 в углу) — котозаяц говорит фразу голосом и показывает облачко','🐷 Фраза «1 свинья» и 11 милых фраз: «Привет, я котозаяц!», «Обнимашки!», «Морковку будешь?», «Мур-мур~» и другие','⏳ Фразу можно сказать раз в 5 секунд — в меню, в забеге одному и вместе в пати: друзья видят облачко над твоим котозайцем','⚙ В Settings новая вкладка «💬 Фразы»: клавиша, голос, звук, какие фразы в колесе']},
@@ -8209,6 +8210,57 @@ function ctLeft(){const ms=CT_END-Date.now();if(ms<=0)return'завершила�
 (function(){const st=document.createElement('style');st.textContent=`#ctBanner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px;padding:10px 14px;border:2.5px solid var(--ink);border-radius:16px;background:linear-gradient(135deg,#ffe0ec,#fff1dc 60%,#ffd9c0);box-shadow:0 3px 0 var(--ink);color:#5a2a3a}#ctBanner i{font-style:normal;font-size:26px}#ctBanner b{font-size:16px;color:#e8356d}#ctBanner span{flex:1;min-width:220px;font-weight:700;font-size:13px;opacity:.85}#ctBanner .btn{background:#ff9cc0!important;color:#1d1838!important}html.gl #ctBanner{background:linear-gradient(135deg,rgba(255,160,200,.25),rgba(255,220,180,.08))!important;color:#ffe0ec;border:1px solid rgba(255,180,210,.5)!important}`;document.head.appendChild(st)})();
 {const iv=setInterval(()=>{try{if(!S||user==='__guest')return;clearInterval(iv);if(!ctEnded()&&!S.stats.ctSeen){S.stats.ctSeen=1;persist();setTimeout(()=>toast('🐱 В Cosmetics — коллекция «Котики»: '+Object.keys(CT).length+' милых лимитированных вещей до 30 ноября'),9500)}}catch(e){}},3000)}
 HELP.push(['🐱 Коллекция «Котики»',Object.keys(CT).length+' лимитированных милых кошачьих вещей: кошачьи ушки, котик на голове, хвостик, котёнок в рюкзаке, тапочки-лапки, следы лапок, хоровод котиков и другие, плюс 4 полных костюма. Каждую вещь можно купить один раз и только до 30 ноября. В Cosmetics — вкладка «🐱 Котики».']);
+
+/* ================= Надписи на фоне (Кастомизация → ✍ Надписи): готовая «Котозаяц» и своя ================= */
+const TXB_ST={
+  night:{n:'🌙 Ночь',bg:['#2a1660','#6a2f8f','#e46fa6'],glow:'rgba(255,190,235,.45)',fill:['#fff3fa','#ffb3d9','#ff6fae'],sh:'rgba(255,120,200,.85)'},
+  sky:{n:'☁ Небо',bg:['#1d3f8f','#3f7fd8','#9fd6ff'],glow:'rgba(200,235,255,.45)',fill:['#ffffff','#fff2a8','#ffc93c'],sh:'rgba(255,220,120,.8)'},
+  sunset:{n:'🌅 Закат',bg:['#3a1450','#c2416b','#ffb057'],glow:'rgba(255,210,160,.45)',fill:['#fffbe8','#ffe08a','#ff9a3c'],sh:'rgba(255,170,90,.85)'},
+  mint:{n:'🌿 Мята',bg:['#0f3b44','#1f8a7a','#8ff0c8'],glow:'rgba(200,255,230,.45)',fill:['#ffffff','#c8fff0','#3fd8ad'],sh:'rgba(120,255,210,.8)'}};
+const TXB_KZ={t:'Котозаяц',st:'sky'};
+function txbCur(){const b=S&&S.set&&S.set.bg||'';if(b==='t:kz')return TXB_KZ;if(b==='t:own'){const o=S.set.bgTxt||{};const t=String(o.t||'').trim();if(t)return{t,st:TXB_ST[o.st]?o.st:'night'}}return null}
+function txbLines(c,txt,font,maxW){const words=txt.split(/\s+/).filter(Boolean);const out=[];let cur='';
+  for(const w of words){const n=cur?cur+' '+w:w;c.font=font;if(cur&&c.measureText(n).width>maxW){out.push(cur);cur=w}else cur=n}if(cur)out.push(cur);return out.slice(0,4)}
+function txbDraw(c,w,h,txt,stId){const P=TXB_ST[stId]||TXB_ST.night;let sd=7;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;
+  const g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,P.bg[0]);g.addColorStop(.55,P.bg[1]);g.addColorStop(1,P.bg[2]);c.fillStyle=g;c.fillRect(0,0,w,h);const m=Math.min(w,h);
+  const gl=c.createRadialGradient(w/2,h*.5,0,w/2,h*.5,Math.max(w,h)*.6);gl.addColorStop(0,P.glow);gl.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=gl;c.fillRect(0,0,w,h);
+  for(let i=0;i<Math.round(w*h/2600);i++){const x=rnd()*w,y=rnd()*h*.85,r=rnd()*1.6+.4;c.globalAlpha=.3+rnd()*.6;c.fillStyle=rnd()<.15?'#ffe9a0':'#fff';c.beginPath();c.arc(x,y,r,0,7);c.fill()}c.globalAlpha=1;
+  c.fillStyle='rgba(255,255,255,.45)';for(let i=0;i<9;i++){const x=w*(i/8),y=h*(.93+rnd()*.05),r=m*(.09+rnd()*.06);c.beginPath();c.arc(x,y,r,0,7);c.arc(x+r*.9,y+r*.15,r*.8,0,7);c.arc(x-r*.9,y+r*.2,r*.7,0,7);c.fill()}
+  const spark=(x,y,s)=>{c.fillStyle='#fff6c8';c.beginPath();c.moveTo(x,y-s);c.quadraticCurveTo(x,y,x+s,y);c.quadraticCurveTo(x,y,x,y+s);c.quadraticCurveTo(x,y,x-s,y);c.quadraticCurveTo(x,y,x,y-s);c.fill()};
+  for(let i=0;i<12;i++){const a=rnd()*Math.PI*2,d=.34+rnd()*.22;c.globalAlpha=.5+rnd()*.4;spark(w/2+Math.cos(a)*w*d*.9,h*.5+Math.sin(a)*h*d*.8,m*(.012+rnd()*.02))}c.globalAlpha=1;
+  const font=s=>'900 '+s+'px "Nunito KZ","Nunito","Segoe UI",system-ui,sans-serif';const maxW=w*.86;
+  /* the biggest size at which the words fit in up to 4 lines */
+  let fs=Math.min(h*.34,w*.3),lines=[txt];for(let k=0;k<40;k++){lines=txbLines(c,txt,font(fs),maxW);c.font=font(fs);const wid=Math.max(...lines.map(l=>c.measureText(l).width));if(wid<=maxW&&lines.length*fs*1.08<=h*.7)break;fs*=.92}
+  c.font=font(fs);c.textAlign='center';c.textBaseline='middle';c.lineJoin='round';const lh=fs*1.08,y0=h*.5-(lines.length-1)*lh/2;
+  lines.forEach((l,i)=>{const x=w/2,y=y0+i*lh;c.shadowColor=P.sh;c.shadowBlur=fs*.35;c.fillStyle='#fff';c.fillText(l,x,y);c.shadowBlur=0;
+    c.lineWidth=fs*.13;c.strokeStyle='#1d1838';c.strokeText(l,x,y+fs*.05);c.strokeText(l,x,y);
+    const tg=c.createLinearGradient(0,y-fs*.5,0,y+fs*.5);tg.addColorStop(0,P.fill[0]);tg.addColorStop(.5,P.fill[1]);tg.addColorStop(1,P.fill[2]);c.fillStyle=tg;c.fillText(l,x,y);
+    c.save();c.globalAlpha=.32;c.fillStyle='#fff';c.beginPath();c.rect(0,y-fs*.48,w,fs*.2);c.clip();c.fillText(l,x,y);c.restore()})}
+/* drawn for the real screen size, so the words never get cropped on a phone */
+let txbC=null,txbK='';
+function txbCanvas(o){const cw=Math.max(200,Math.round(typeof W!=='undefined'&&W>0?W:1280)),ch=Math.max(200,Math.round(typeof H!=='undefined'&&H>0?H:720)),k=cw+'x'+ch+'|'+o.st+'|'+o.t+'|'+(window.txbFontOk?1:0);
+  if(txbC&&txbK===k)return txbC;const c=document.createElement('canvas');c.width=cw;c.height=ch;txbDraw(c.getContext('2d'),cw,ch,o.t,o.st);txbK=k;return txbC=c}
+function txbThumb(t,st){const c=document.createElement('canvas');c.width=384;c.height=216;txbDraw(c.getContext('2d'),384,216,t,st);return c.toDataURL('image/jpeg',.85)}
+{const _bd=bgDraw;bgDraw=function(t){const b=S&&S.set&&S.set.bg||'';if(!b.startsWith('t:'))return _bd.apply(this,arguments);const o=txbCur();if(!o)return false;
+  const src=txbCanvas(o);ctx.drawImage(src,0,0,W,H);const dm=(S.set.bgDim??15)/100;if(dm>0){ctx.fillStyle=`rgba(8,6,24,${dm})`;ctx.fillRect(0,0,W,H)}return true}}
+/* ---------- the section in Settings → Кастомизация ---------- */
+function renderTxb(){if(!S)return;const row=$('#bgDimRow');if(!row)return;let sec=$('#txbSec');
+  if(!sec){sec=document.createElement('div');sec.id='txbSec';row.insertAdjacentElement('afterend',sec)}
+  const cur=S.set.bg||'none',o=S.set.bgTxt||{t:'',st:'night'},own=String(o.t||'').trim(),st=TXB_ST[o.st]?o.st:'night';
+  sec.innerHTML=`<h3 class="sec">✍ Надписи</h3><p class="sub" style="margin-bottom:6px">Большая надпись на заднем плане меню и игры. Выбери готовую или напиши свою.</p>
+  <div class="thgrid"><div class="bgtile ${cur==='t:kz'?'cur':''}" data-bg="t:kz" style="background-image:url(${txbThumb(TXB_KZ.t,TXB_KZ.st)})"><b>Котозаяц</b></div>${own?`<div class="bgtile ${cur==='t:own'?'cur':''}" data-bg="t:own" style="background-image:url(${txbThumb(own,st)})"><b>✏ ${esc(own)}</b></div>`:''}</div>
+  <div class="box" style="margin-top:8px"><b>✏ Своя надпись</b>
+   <div class="row" style="gap:6px;margin-top:6px;flex-wrap:wrap"><input class="inp" id="txbIn" maxlength="30" placeholder="Например, своё имя" value="${esc(own)}" style="flex:1;min-width:160px">
+   <select class="inp" id="txbSt">${Object.entries(TXB_ST).map(([k,v])=>`<option value="${k}" ${k===st?'selected':''}>${v.n}</option>`).join('')}</select>
+   <button class="btn sm mint" id="txbSet">✔ Поставить</button></div><p class="hint" style="margin:6px 0 0">До 30 символов. Длинная надпись сама разобьётся на строки.</p></div>`}
+{const _rb=renderBg;renderBg=async function(){const r=await _rb.apply(this,arguments);try{renderTxb()}catch(e){}return r}}
+function txbApply(){const t=String(($('#txbIn')||{}).value||'').replace(/\s+/g,' ').trim().slice(0,30);if(!t){toast('✏ Сначала напиши надпись');return}
+  S.set.bgTxt={t,st:($('#txbSt')||{}).value||'night'};S.set.bg='t:own';persist();try{SND.click()}catch(e){}toast('✍ Надпись стоит на фоне');renderBg()}
+document.addEventListener('click',e=>{if(!S)return;if(e.target.closest('#txbSet'))txbApply()});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='txbIn'){e.preventDefault();txbApply()}});
+document.addEventListener('change',e=>{if(e.target&&e.target.id==='txbSt'&&S&&S.set.bgTxt&&S.set.bg==='t:own'){S.set.bgTxt.st=e.target.value;persist();renderBg()}});
+/* redraw once the cartoon font has loaded */
+try{document.fonts&&document.fonts.load('900 100px "Nunito KZ"','Котозаяц').then(()=>{window.txbFontOk=1;txbC=null;try{if($('#txbSec')&&$('#txbSec').offsetParent)renderTxb()}catch(e){}}).catch(()=>{})}catch(e){}
 
 resize();
 const sess=lsGet('kz_session');
