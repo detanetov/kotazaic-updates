@@ -33,12 +33,12 @@
   "date": "2026-10-22"
  },
  "mlauncher": {
-  "version": 5,
-  "label": "1.4",
-  "name": "Kotazaic Launcher 1.4: новая игра «Котозайцы в космосе»",
+  "version": 6,
+  "label": "1.5",
+  "name": "Kotazaic Launcher 1.5: новая игра «Котозайцы-обжоры»",
   "file": "mlauncher.html",
-  "sha256": "6487078a110792975dfafd50aee3db4e2f1e2eb698ba54751c8b2d4b16c10427",
-  "date": "2026-10-26",
+  "sha256": "c2f363cff9c667a88233243fb809b7cf293efb19d333fac8bc2bf2a120a91e37",
+  "date": "2026-10-27",
   "apk": {
    "label": "1.8",
    "file": "KotazaicLauncher.apk",
@@ -55,19 +55,27 @@
   "date": "2026-10-26"
  },
  "pcext": {
-  "version": 1,
+  "version": 2,
   "file": "pcext.js",
-  "sha256": "b776641873574de191a3865c177e9bed85b5f6c7b2ca07258894f4fcc6295232",
-  "date": "2026-10-26"
+  "sha256": "6511c252b14b172640eb811d10561a6dd97e7c92c3c4941b85e467aba7710398",
+  "date": "2026-10-27"
  },
  "ilauncher": {
-  "version": 1,
-  "label": "1.0",
-  "name": "Kotazaic Launcher для iPhone и iPad",
+  "version": 2,
+  "label": "1.1",
+  "name": "Kotazaic Launcher для iPhone и iPad 1.1: новая игра «Котозайцы-обжоры»",
   "file": "ilauncher.html",
-  "sha256": "556959f051b325b5829c03655077b36eac108810d2a5492c9b6c97d9995b0c44",
+  "sha256": "2c39c8c2c90c37ef5da6b5deb1f810293610b8b3a4f413001ae5ba2bb69e902e",
   "url": "https://raw.githack.com/detanetov/kotazaic-updates/main/ilauncher.html",
   "profile": "KotazaicLauncher.mobileconfig",
-  "date": "2026-10-26"
+  "date": "2026-10-27"
+ },
+ "fat": {
+  "version": 1,
+  "label": "1.0",
+  "name": "Котозайцы-обжоры 1.0: корми котозайца от скелетика до 100-й стадии жира, перерождайся, открывай 16 видов и 50 вещей",
+  "file": "fat.html",
+  "sha256": "cc2537899cc693f354e9d96072d8bee9f891fc2d843efcf4e2b63779485342d4",
+  "date": "2026-10-27"
  }
 }

@@ -45,3 +45,50 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
 spLoad().then(()=>{spSoft();setTimeout(()=>{if(!(SP.html&&ST.settings&&ST.settings.autoUpdate===false))spCheck(0)},2600)});
 if(page==='lib')renderLib();else if(page==='set')renderSet();
 })();
+/* Kotazaic Launcher (ПК): «Котозайцы-обжоры» */
+(function(){
+if(window.__kzFat)return;window.__kzFat=1;
+const st=document.createElement('style');st.textContent=`
+.fthero{min-height:250px;margin-top:22px;background:linear-gradient(160deg,#3fc266,#1d7a3c 85%);overflow:hidden}
+.fthero .ftbg{position:absolute;inset:0;width:100%;height:100%}
+.fthero .in{align-items:center}.fthero .in>div:first-child{display:flex;align-items:center;gap:12px}
+.ftlogo{font:900 44px/.92 "Nunito KZ","Segoe UI",system-ui,sans-serif;letter-spacing:-1px;background:linear-gradient(135deg,#fff3a8,#ffb36b 50%,#ff8fc8);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 18px rgba(0,0,0,.25))}
+.ftlogo span{display:block;font-size:.62em}
+#ftOv{position:fixed;inset:0;z-index:30;display:none;background:#239246}#ftOv iframe{width:100%;height:100%;border:0;display:block}`;
+document.head.appendChild(st);
+const FT={v:+lsGet('kz_upd_fat_v')||0,label:lsGet('kz_upd_fat_l')||'',html:null,busy:false,latest:0,latestL:''};
+window.FT=FT;
+async function ftCache(){try{return window.caches?await caches.open('fat'):null}catch(e){return null}}
+async function ftLoad(){if(!FT.v)return;try{const c=await ftCache(),r=c&&await c.match('/fat.html');if(r)FT.html=await r.text();else FT.v=0}catch(e){FT.v=0}}
+async function ftCheck(manual){if(FT.busy)return;FT.busy=true;ftSoft();
+ try{const b=await koBase(),j=await (await fetch(b+'version.json?t='+Date.now(),{cache:'no-store'})).json(),k=j.fat;if(!k)throw 0;FT.latest=k.version;FT.latestL=k.label||'';
+  if(k.version>FT.v||!FT.html){const buf=await (await fetch(b+(k.file||'fat.html')+'?t='+Date.now(),{cache:'no-store'})).arrayBuffer();
+   if(k.sha256&&window.crypto&&crypto.subtle){const h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',buf))].map(x=>x.toString(16).padStart(2,'0')).join('');if(h!==k.sha256)throw 1}
+   const t=new TextDecoder().decode(buf),c=await ftCache();if(c)try{await c.put('/fat.html',new Response(t,{headers:{'Content-Type':'text/html'}}))}catch(e){}
+   const was=FT.v;FT.html=t;FT.v=k.version;FT.label=FT.latestL;lsSet('kz_upd_fat_v',FT.v);lsSet('kz_upd_fat_l',FT.label);toast(was?'✨ «Котозайцы-обжоры» обновились до '+FT.label:'✓ «Котозайцы-обжоры» установлены')}
+  else if(manual)toast('✓ У тебя последняя версия «Котозайцев-обжор»')}
+ catch(e){if(manual||!FT.html)toast(e===1?'⚠ Файл игры повреждён — попробуй ещё раз':'Нет связи с сервером обновлений «Котозайцев-обжор»')}
+ FT.busy=false;ftSoft();if(manual&&page==='set')renderSet()}
+function ftStat(){try{const o=JSON.parse(lsGet('kz_fat'))||{},c=curUser();if(c&&o.owner&&o.owner!==c.u)return{};return o}catch(e){return{}}}
+function ftMeta(){const s=ftStat();return `<b style="font-size:18px">Котозайцы-обжоры</b><small>Корми худого котозайца, пока он не станет самым жирным, — и перерождайся! Новые виды котозайцев и вещи</small><small>${FT.html?'Версия '+esc(FT.label||FT.v):'Не установлена'}${FT.latest>FT.v?' · есть обновление':''}${FT.html&&s.stage?' · ⚖ стадия '+s.stage+'/100 · 🌀 '+(s.R|0)+' перерожд.':''}</small>`}
+function ftBtns(){return FT.busy?`<button class="btn big" disabled>⏳ ${FT.html?'Обновляю…':'Скачиваю…'}</button>`:FT.html?'<button class="btn big mint" data-a="ftplay">▶ Играть</button><button class="btn ghost" data-a="ftcheck" title="Проверить обновления">🔄</button>':'<button class="btn big mint" data-a="ftcheck">⬇ Установить</button>'}
+function ftSoft(){const b=document.getElementById('ftBtns'),m=document.getElementById('ftMeta'),x=ftBtns(),y=ftMeta();if(b&&b._h!==x){b.innerHTML=x;b._h=x}if(m&&m._h!==y){m.innerHTML=y;m._h=y}}
+const FT_BG=`<svg class="ftbg" viewBox="0 0 400 160" preserveAspectRatio="xMidYMid slice"><g stroke="#fff" stroke-opacity=".1" stroke-width="1">${Array.from({length:12},(_,i)=>`<path d="M${i*36} 0V160"/>`).join('')}${Array.from({length:5},(_,i)=>`<path d="M0 ${i*36}H400"/>`).join('')}</g><g font-size="22" opacity=".35"><text x="300" y="40">🍕</text><text x="350" y="120">🍔</text><text x="250" y="140">🍰</text><text x="360" y="60">🐟</text></g></svg>`;
+function ftIcon(){return `<svg viewBox="0 0 120 100" width="112" height="94"><g stroke="#1d1838" stroke-width="3.2" stroke-linejoin="round"><path d="M70 92q34 0 36-14 2-10-8-8" fill="none" stroke-width="7"/><path d="M70 92q34 0 36-14 2-10-8-8" fill="none" stroke="#8d93a3" stroke-width="4"/><path d="M60 40q-44 6-46 36 0 16 46 16t46-16q-2-30-46-36z" fill="#8d93a3"/><ellipse cx="60" cy="72" rx="24" ry="16" fill="#c3c7d2" stroke="none"/><ellipse cx="60" cy="38" rx="27" ry="23" fill="#8d93a3"/><ellipse cx="35" cy="34" rx="8" ry="14" fill="#8d93a3" transform="rotate(32 35 34)"/><ellipse cx="85" cy="34" rx="8" ry="14" fill="#8d93a3" transform="rotate(-32 85 34)"/><path d="M44 18h32v-8a8 8 0 0 0-6-8 9 9 0 0 0-10-3 9 9 0 0 0-10 3 8 8 0 0 0-6 8z" fill="#fff"/></g><ellipse cx="35" cy="36" rx="3.5" ry="8" fill="#e7b3c3" transform="rotate(32 35 34)"/><ellipse cx="85" cy="36" rx="3.5" ry="8" fill="#e7b3c3" transform="rotate(-32 85 34)"/><ellipse cx="51" cy="36" rx="3.4" ry="4.2" fill="#1d1838"/><ellipse cx="69" cy="36" rx="3.4" ry="4.2" fill="#1d1838"/><circle cx="52.3" cy="34.5" r="1.3" fill="#fff"/><circle cx="70.3" cy="34.5" r="1.3" fill="#fff"/><path d="M57.5 43h5l-2.5 2.6z" fill="#ff7aa2"/><path d="M55 47q2.5 3 5 0 2.5 3 5 0" fill="none" stroke="#1d1838" stroke-width="1.8" stroke-linecap="round"/><ellipse cx="44" cy="45" rx="4" ry="2.4" fill="#ff7fa8" opacity=".5"/><ellipse cx="76" cy="45" rx="4" ry="2.4" fill="#ff7fa8" opacity=".5"/></svg>`}
+function ftHero(){return `<div class="hero fthero" id="fatg">${FT_BG}<div class="in"><div>${ftIcon()}<div class="ftlogo">Котозайцы<span>-обжоры</span></div></div><div class="meta" id="ftMeta">${ftMeta()}</div><div id="ftBtns" class="row">${ftBtns()}</div></div></div>`}
+function ftFixSec(){try{if(typeof LSECS!=='undefined'&&LSECS[0]&&LSECS[0].g<4){LSECS[0].g=4;LSECS[0].d='Kotazaic and Stars, koto.io, Космос и Обжоры'}
+ const sec=document.querySelector('.libsec[data-sec-id="k"] .sech small');if(sec)sec.textContent='· 4 игры';
+ const bt=document.querySelector('.secbar [data-sec="k"] small');if(bt)bt.textContent=LSECS[0].d+' · 4 игры'}catch(e){}}
+{const _rl=renderLib;renderLib=function(soft){const r=_rl.apply(this,arguments);if(soft&&document.getElementById('fatg'))ftSoft();else{const s=document.getElementById('spaceg')||document.getElementById('koto')||document.getElementById('libStats');if(s&&!document.getElementById('fatg'))s.insertAdjacentHTML('afterend',ftHero())}ftFixSec();return r}}
+{const _rs=renderSet;renderSet=function(){_rs.apply(this,arguments);const h=`<h2>Котозайцы-обжоры</h2><div class="opt"><div><b>🍔 Котозайцы-обжоры</b><small>${FT.html?'Установлена версия '+esc(FT.label||FT.v):'Не установлена'}${FT.latest>FT.v?' · доступно обновление '+esc(FT.latestL):''} · обновляется при запуске лаунчера</small></div><button class="btn ghost" data-a="ftcheck">🔄 Проверить обновления</button></div>`;
+ const d=[...$('#main').querySelectorAll('h2')].find(x=>(x.dataset.orig||x.textContent)==='Данные');if(d)d.insertAdjacentHTML('beforebegin',h);else $('#main').insertAdjacentHTML('beforeend',h)}}
+function ftPlay(){if(!FT.html)return;const c=curUser(),cfg={nick:c&&c.u!=='__guest'?c.a.nick:'',embedded:true};
+ let ov=document.getElementById('ftOv');if(!ov){ov=document.createElement('div');ov.id='ftOv';document.body.appendChild(ov)}ov.innerHTML='<iframe allow="autoplay; fullscreen"></iframe>';const fr=ov.firstChild;
+ fr.srcdoc=FT.html.replace('<head>','<head><script>window.FAT='+JSON.stringify(cfg).replace(/</g,'\\u003c')+'<\/script>');ov.style.display='block';setTimeout(()=>fr.focus(),50);toast('🍔 Запускаю «Котозайцев-обжор»…')}
+function ftClose(){const ov=document.getElementById('ftOv');if(ov){ov.style.display='none';ov.innerHTML=''}try{setTimeout(sync,300)}catch(e){}if(page==='lib')renderLib()}
+addEventListener('message',e=>{const ov=document.getElementById('ftOv'),fr=ov&&ov.firstChild;if(fr&&e.source===fr.contentWindow&&e.data&&e.data.fat==='exit')ftClose()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;if(b.dataset.a==='ftplay')ftPlay();if(b.dataset.a==='ftcheck')ftCheck(true)});
+setInterval(()=>{try{if(document.getElementById('ftOv')&&document.getElementById('ftOv').style.display==='block')sync()}catch(e){}},30000);
+ftLoad().then(()=>{ftSoft();setTimeout(()=>{if(!(FT.html&&ST.settings&&ST.settings.autoUpdate===false))ftCheck(0)},3200)});
+if(page==='lib')renderLib();else if(page==='set')renderSet();
+})();
