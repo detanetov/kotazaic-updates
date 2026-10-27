@@ -34,6 +34,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#2b9a4b;color:#fff;fon
 .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffb36b,#ff6fa8);transition:width .15s}
 .bar.max i{background:linear-gradient(90deg,#ffd84a,#ff9a3d,#ff6fa8,#c79bff);background-size:200% 100%;animation:shine 1.6s linear infinite}
 @keyframes shine{to{background-position:200% 0}}
+.bar.ap{height:14px;margin-top:5px}.bar.ap i{background:linear-gradient(90deg,#ff7a6b,#ffd84a 45%,#3fd8ad);transition:width .12s linear}.bar.ap.lock i{background:repeating-linear-gradient(45deg,#9fd8ff 0 8px,#c9ebff 8px 16px)}.bar.ap em{font-size:10px}
 .bar em{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:11px;line-height:1;color:var(--ink)}
 .tbtns{display:flex;gap:6px}
 .ib{width:44px;height:44px;padding:0;font-size:20px;border-radius:14px}
@@ -159,7 +160,7 @@ body.cutting #hud,body.cutting #nav,body.cutting #sheet{visibility:hidden}
 <canvas id="cv"></canvas>
 <div id="hud">
  <div class="coins"><div class="pill" id="hCoins">🪙 0</div><small id="hRate">+0 / сек</small></div>
- <div class="stage" id="hStage"><div class="t"><b id="hSt">Стадия 1</b><i id="hTitle" style="font-style:normal">Скелетик</i><span id="hKg">⚖ 0,8 кг</span></div><div class="bar" id="hBarW"><i id="hBar"></i><em id="hBarT"></em></div></div>
+ <div class="stage" id="hStage"><div class="t"><b id="hSt">Стадия 1</b><i id="hTitle" style="font-style:normal">Скелетик</i><span id="hKg">⚖ 0,8 кг</span></div><div class="bar" id="hBarW"><i id="hBar"></i><em id="hBarT"></em></div><div class="bar ap" id="hApW"><i id="hAp"></i><em id="hApT"></em></div></div>
  <div class="tbtns"><button class="btn white ib" data-a="acc" title="Аккаунт" id="bAcc">👤</button><button class="btn white ib" data-a="fs" title="Полный экран (F11)" id="bFs">⛶</button><button class="btn red ib" data-a="exit" title="Выйти в лаунчер" id="bExit">✕</button></div>
 </div>
 <div id="nav">
@@ -188,7 +189,7 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
 const TAU=Math.PI*2,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,rnd=(a,b)=>a+Math.random()*(b-a),pick=a=>a[Math.floor(Math.random()*a.length)];
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const GAME_VER='1.0';
+const GAME_VER='1.1';
 /* ---------- числа ---------- */
 const SUF=['','тыс','млн','млрд','трлн','квдрлн','квинтлн','секстлн','септлн','октлн','нонлн','децлн'];
 function fmt(n,dec){if(!isFinite(n))return'∞';n=Math.max(0,n);
@@ -267,7 +268,7 @@ const accOf=(s,id)=>ACCS.find(a=>a.s===s&&a.id===id);
 
 /* ---------- сохранение ---------- */
 function defSave(){return{coins:0,cal:0,R:0,sp:'grey',spOwn:['grey'],food:FOODS.map(()=>0),help:HELPERS.map(()=>0),eq:{hat:'none',eyes:'none',ex:'none',neck:'none',aura:'none',bg:'field'},own:[],
- tot:{coins:0,cal:0,taps:0,reb:0,spent:0,time:0},maxStage:1,maxCoins:0,intro:false,gid:'',seen:{},adm:{},t:0,
+ tot:{coins:0,cal:0,taps:0,reb:0,spent:0,time:0},maxStage:1,maxCoins:0,ap:40,apT:0,intro:false,gid:'',seen:{},adm:{},t:0,
  set:{snd:1,mus:1,vol:70,mvol:50,vib:1,parts:100,fly:1,pops:1,nums:'short',hold:1,shake:1,video:1,ask:1,hideTop:0,ui:100,q:'hi',fps:0,buy:1,offl:1}}}
 function loadSave(){let o=null;try{o=JSON.parse(LS.get(KEYU))}catch(e){}const d=defSave();o=Object.assign(d,o||{});
  o.set=Object.assign(defSave().set,o.set||{});o.eq=Object.assign(defSave().eq,o.eq||{});o.tot=Object.assign(defSave().tot,o.tot||{});
@@ -287,6 +288,13 @@ let STAGE=1,FRAC=0;
 function calcStage(){let n=STAGE;const R=S.R;if(S.cal<need(n,R))n=1;while(n<100&&S.cal>=need(n+1,R))n++;STAGE=n;FRAC=n>=100?1:clamp((S.cal-need(n,R))/(need(n+1,R)-need(n,R)),0,1);return n}
 function spBonus(k){let b=0;for(const id of S.spOwn){const s=spById(id);b+=(s.bon[k]|0)}return b}
 const cheat=k=>IS_ADM&&S.adm&&!!S.adm[k];
+/* аппетит: полоска, сколько ещё можно кормить; кончилась — котозайц наелся на 15 секунд */
+const AP_MAX=40,AP_LOCK=15;
+const apOff=()=>cheat('nofull')||document.body.classList.contains('cover');
+const apLocked=()=>!apOff()&&S.apT>Date.now();
+function apTick(dt){if(apOff()){S.ap=AP_MAX;S.apT=0;return}
+ if(S.apT){if(Date.now()>=S.apT){S.apT=0;S.ap=AP_MAX;apReady()}else S.ap=AP_MAX*(1-(S.apT-Date.now())/(AP_LOCK*1000))}
+ else S.ap=Math.min(AP_MAX,(+S.ap||0)+AP_MAX/AP_LOCK*dt)}
 let WORLD={x2:0,ann:null,ts:0};
 const worldX2=()=>WORLD.x2>Date.now()?2:1;
 function mCoin(){return(1+0.25*S.R)*(1+spBonus('c')/100)*worldX2()*(cheat('x10c')?10:1)}
@@ -528,7 +536,11 @@ function view(){const top=($('#hud').getBoundingClientRect().bottom||70)+10;let 
  const vw=x1-x0,vh=Math.max(80,y1-y0);const U=Math.max(30,Math.min(vw/2.15,vh/1.8));return{cx:(x0+x1)/2-U*0.12,gy:y1-U*0.06,U,x0,x1,y0,y1}}
 let V=null;
 /* ---------- поедание ---------- */
-function tap(px,py,auto){const tc=tapCal(),cc=coinTap();
+let fullPopT=0;
+function tap(px,py,auto){
+ if(!auto&&!apOff()){if(apLocked()){const n=performance.now();if(n-fullPopT>700){fullPopT=n;POPS.push({x:px,y:py-8,vy:-60,life:1,t:'😴 Наелся! Ещё '+Math.ceil((S.apT-Date.now())/1000)+' с',c:'#bfe6ff'});tone(300,.08,'sine',.03)}return}
+  S.ap=Math.max(0,S.ap-1);if(S.ap<=0){S.apT=Date.now()+AP_LOCK*1000;HOLD=null;SFX.burp();BANNER={t:'😴 Котозайц наелся!',s:'Подожди '+AP_LOCK+' секунд, пока он снова проголодается',life:3};vib(40)}}
+ const tc=tapCal(),cc=coinTap();
  const was=STAGE;if(STAGE<100){S.cal+=tc;S.tot.cal+=tc}S.coins+=cc;S.tot.coins+=cc;S.tot.taps++;if(S.coins>S.maxCoins)S.maxCoins=S.coins;calcStage();
  if(!auto){AN.sqv-=0.9;AN.chomp=1;AN.happy=0.25;SFX.chomp();if(S.set.vib&&Math.random()<.35)vib(8);
   if(S.set.fly&&V)spawnFood(px,py,true);
@@ -565,7 +577,7 @@ function update(dt){AN.t+=dt;S.tot.time+=dt;
  AN.sqv+=(-AN.sq*90-AN.sqv*9)*dt;AN.sq+=AN.sqv*dt;AN.sq=clamp(AN.sq,-.25,.25);
  AN.chomp=Math.max(0,AN.chomp-dt*5);AN.happy=Math.max(0,AN.happy-dt);AN.shake=Math.max(0,AN.shake-dt);
  AN.nextBlink-=dt;if(AN.nextBlink<0){AN.blink=.12;AN.nextBlink=rnd(2,5)}AN.blink=Math.max(0,AN.blink-dt);
- AN.bob=Math.sin(AN.t*2)*V.U*0.006;
+ AN.bob=Math.sin(AN.t*2)*V.U*0.006;apTick(dt);
  // удержание
  if(HOLD){HOLD.t+=dt;if(HOLD.t>.28){HOLD.acc=(HOLD.acc||0)+dt*9;while(HOLD.acc>=1){HOLD.acc--;tap(HOLD.x,HOLD.y)}}}
  // помощники
@@ -585,7 +597,8 @@ function render(){const c=cx;c.setTransform(DPR,0,0,DPR,0,0);V=view();const sp=s
  const g=catGeom(V.U,AN.f);c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.ellipse(V.cx,V.gy,g.bw+V.U*0.25,V.U*0.06,0,0,TAU);c.fill();
  drawAura(c,S.eq.aura,V.cx,V.gy+g.hy*0.62,V.U*(0.9+AN.f*0.45),AN.t);
  if(STAGE>=100){const r=V.U*1.3,gr=c.createRadialGradient(V.cx,V.gy-V.U*0.5,0,V.cx,V.gy-V.U*0.5,r);gr.addColorStop(0,'rgba(255,230,120,.35)');gr.addColorStop(1,'rgba(255,230,120,0)');c.fillStyle=gr;c.fillRect(V.cx-r,V.gy-V.U*0.5-r,r*2,r*2)}
- drawCat(c,V.cx,V.gy,V.U,AN.f,sp,S.eq,{t:AN.t,sq:AN.sq,chomp:AN.chomp,blink:AN.blink>0,happy:AN.happy>0&&AN.chomp<.2,bob:AN.bob});
+ drawCat(c,V.cx,V.gy,V.U,AN.f,sp,S.eq,{t:AN.t,sq:AN.sq,chomp:AN.chomp,blink:AN.blink>0,happy:(AN.happy>0&&AN.chomp<.2)||apLocked(),bob:AN.bob});
+ if(apLocked()){const g2=catGeom(V.U,AN.f);c.textAlign='center';c.textBaseline='middle';for(let i=0;i<3;i++){const k=((AN.t*0.5+i/3)%1),x=V.cx+g2.hr*0.9+k*V.U*0.25,y=V.gy+g2.hy-g2.hr*0.6-k*V.U*0.35;c.globalAlpha=Math.sin(k*Math.PI);c.font='900 '+Math.round(V.U*(0.08+k*0.08))+'px "Nunito KZ",Nunito,sans-serif';c.lineWidth=4;c.strokeStyle=INK;c.strokeText('z',x,y);c.fillStyle='#bfe6ff';c.fillText('z',x,y)}c.globalAlpha=1}
  if(sp.feat==='universe'){for(let i=0;i<6;i++){const a=AN.t*0.6+i,r=V.U*(1.05+0.2*Math.sin(AN.t+i));c.fillStyle='rgba(255,240,200,.8)';starP(c,V.cx+Math.cos(a)*r,V.gy-V.U*0.55+Math.sin(a)*r*0.6,4);c.fill()}}
  // летящая еда
  c.textAlign='center';c.textBaseline='middle';
@@ -601,7 +614,10 @@ function hud(){$('#hCoins').textContent='🪙 '+fmt(S.coins);const ar=autoRate()
  $('#hSt').textContent='Стадия '+STAGE+(STAGE<100?' / 100':'');$('#hTitle').textContent='· '+stTitle(STAGE);$('#hKg').textContent='⚖ '+kgOf(STAGE,FRAC).toFixed(1).replace('.',',')+' кг'+(S.R?' · 🌀 '+S.R:'');
  const mx=STAGE>=100;$('#hBarW').classList.toggle('max',mx);$('#hBar').style.width=(mx?Math.min(100,S.coins/rebCost(S.R)*100):FRAC*100)+'%';
  $('#hBarT').textContent=mx?(S.coins>=rebCost(S.R)?'🌀 Можно переродиться!':'Для перерождения: '+fmt(S.coins)+' / '+fmt(rebCost(S.R))+' 🪙'):'до стадии '+(STAGE+1)+': '+fmt(need(STAGE+1,S.R)-S.cal)+' 🍖';
- renderNav();if(TAB&&(TAB==='food'||TAB==='help'||TAB==='reb'))softTab()}
+ apHud();renderNav();if(TAB&&(TAB==='food'||TAB==='help'||TAB==='reb'))softTab()}
+function apHud(){const w=$('#hApW');if(!w)return;const off=apOff();w.style.display=off?'none':'';if(off)return;const L=apLocked();w.classList.toggle('lock',L);$('#hAp').style.width=(S.ap/AP_MAX*100)+'%';
+ $('#hApT').textContent=L?'😴 Наелся — ещё '+Math.ceil((S.apT-Date.now())/1000)+' с':'🍽 Аппетит: '+Math.ceil(S.ap)+' / '+AP_MAX}
+function apReady(){tone(880,.1,'triangle',.05);tone(1175,.12,'triangle',.05,0,.1);POPS.push({x:V?V.cx:W/2,y:V?V.gy-V.U*1.3:H/2,vy:-50,life:1.4,t:'🍽 Снова голоден!',c:'#ffe066',big:1})}
 function renderNav(){const af=FOODS.some((f,i)=>S.coins>=foodCost(i,S.food[i])&&(i===0||S.food[i-1]>0||S.food[i]>0)),ah=HELPERS.some((h,i)=>S.coins>=helpCost(i,S.help[i])&&(i===0||S.help[i-1]>0||S.help[i]>0));
  $('#dFood').classList.toggle('on',af&&TAB!=='food');$('#dHelp').classList.toggle('on',ah&&TAB!=='help');const cr=canReb();$('#nReb').classList.toggle('ready',cr);$('#dReb').classList.toggle('on',cr&&TAB!=='reb');
  const ns=SPECIES.some(s=>S.spOwn.includes(s.id)&&!S.seen['sp_'+s.id]&&s.id!=='grey');$('#dSp').classList.toggle('on',ns&&TAB!=='sp');
@@ -818,7 +834,7 @@ function admTargets(){const out=[],db=accDB(),localG=new Set();
  for(const u of Object.keys(db)){if(u==='__guest')continue;const sv=readSave(u);if(sv&&sv.gid)localG.add(sv.gid);out.push({id:'l:'+u,u,nick:db[u].nick||u,R:sv?sv.R|0:0,stage:u===ACC?STAGE:(sv?'?':0),coins:sv?+sv.coins||0:0,dev:DEV,local:true,last:u===ACC?Date.now():(sv&&sv.t)||0})}
  for(const g in PLAYERS){if(localG.has(g))continue;const p=PLAYERS[g];out.push({id:'n:'+g,gid:g,u:p.u,nick:p.nick||p.u,R:p.R|0,stage:p.stage|0,coins:p.coins||0,dev:p.dev,local:false,last:p.last||0})}
  return out}
-const ADM_CHEATS=[['x10c','🪙 Монеты ×10','Каждое нажатие даёт в 10 раз больше монет'],['x10k','🍖 Калории ×10','Котозайц толстеет в 10 раз быстрее'],['auto','🤖 Автокормление','+20 кормлений в секунду'],['freereb','🌀 Перерождение без условий','Можно переродиться в любой момент'],['allacc','👒 Весь гардероб','Все вещи доступны (только пока включено)'],['fps','📈 FPS','Счётчик кадров']];
+const ADM_CHEATS=[['x10c','🪙 Монеты ×10','Каждое нажатие даёт в 10 раз больше монет'],['x10k','🍖 Калории ×10','Котозайц толстеет в 10 раз быстрее'],['auto','🤖 Автокормление','+20 кормлений в секунду'],['freereb','🌀 Перерождение без условий','Можно переродиться в любой момент'],['allacc','👒 Весь гардероб','Все вещи доступны (только пока включено)'],['nofull','🍽 Без сытости','Котозайц никогда не наедается'],['fps','📈 FPS','Счётчик кадров']];
 function admBox(t,b,full){return`<div class="panel"${full?' style="grid-column:1/-1"':''}><h5>${t}</h5>${b}</div>`}
 function lockBox(){return SIGK?`<div class="note g"><b>🔓 Пароль ADM введён</b> — подарки и события уходят игрокам на всех устройствах. Связь: ${NET.ok()?'🟢 есть':'🟡 подключаюсь…'}</div>`:`<div class="note"><b>🔑 Пароль ADM</b> — тот же, что в Kotazaic and Stars. Нужен, чтобы дарить игрокам на других устройствах и включать события для всех. Аккаунтам на этом устройстве можно дарить без пароля.<div class="row" style="margin-top:8px"><input id="aPw" type="password" placeholder="Пароль ADM" autocomplete="off"><button class="btn sm mint" data-adm="unlock">Открыть</button></div></div>`}
 function renderAdm(){if(!IS_ADM)return;const T=[['me','👤 Мой прогресс'],['cheat','🎮 Читы'],['players','👥 Игроки и подарки'],['world','🌍 Для всех'],['stats','📊 Статистика']];
@@ -937,7 +953,7 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;FPS.n++;if(n
 function offline(){if(!S.set.offl||!S.t)return;const away=Math.min(4*3600,(Date.now()-S.t)/1000);const ar=autoRate();if(away<60||ar<=0)return;
  const taps=ar*away*0.5;const tc=tapCal()*taps,cc=coinTap()*taps,was=STAGE;if(STAGE<100){S.cal+=tc;S.tot.cal+=tc}S.coins+=cc;S.tot.coins+=cc;calcStage();
  setTimeout(()=>modal(`<h3>💤 Пока тебя не было</h3><p>Помощники кормили котозайца ${away>=3600?Math.floor(away/3600)+' ч '+Math.round(away%3600/60)+' мин':Math.round(away/60)+' мин'}</p><div class="rw">${STAGE<100||was<100?`<span>🍖 +${fmt(tc)}</span>`:''}<span>🪙 +${fmt(cc)}</span>${STAGE>was?`<span>⚖ стадия ${was} → ${STAGE}</span>`:''}</div><div class="mbtn"><button class="btn big mint" data-a="mclose">Ням!</button></div>`),700)}
-function intro(){modal(`<h3>🐰 Котозайцы-обжоры</h3><p>Твой котозайц совсем худой — одни косточки! Корми его, чтобы он толстел.</p><div class="rw"><span>👆 нажимай — он ест</span><span>🪙 толще = больше монет</span><span>🍖 покупай еду</span><span>👵 найми помощников</span><span>🌀 стань самым жирным и переродись</span></div><div class="mbtn"><button class="btn big mint" data-a="mclose">Начать кормить!</button></div>`);S.intro=true;save()}
+function intro(){modal(`<h3>🐰 Котозайцы-обжоры</h3><p>Твой котозайц совсем худой — одни косточки! Корми его, чтобы он толстел.</p><div class="rw"><span>👆 нажимай — он ест</span><span>🍽 съел всю полоску — наелся на 15 с</span><span>🪙 толще = больше монет</span><span>🍖 покупай еду</span><span>👵 найми помощников</span><span>🌀 стань самым жирным и переродись</span></div><div class="mbtn"><button class="btn big mint" data-a="mclose">Начать кормить!</button></div>`);S.intro=true;save()}
 if(location.hash==='#cover'){document.body.classList.add('cover');S=Object.assign(defSave(),{cal:need(78,0)+1,eq:{hat:'chef',eyes:'none',ex:'blush',neck:'bib',aura:'hearts',bg:'field'},tot:Object.assign(defSave().tot,{taps:1})});save=()=>{}}
 calcStage();AN.f=STAGE>=100?1:(STAGE-1+FRAC)/99;resize();
 if(!EMB&&!A)$('#bExit').style.display='none';
