@@ -189,7 +189,7 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
 const TAU=Math.PI*2,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,rnd=(a,b)=>a+Math.random()*(b-a),pick=a=>a[Math.floor(Math.random()*a.length)];
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const GAME_VER='1.1';
+const GAME_VER='1.1.1';
 /* ---------- числа ---------- */
 const SUF=['','тыс','млн','млрд','трлн','квдрлн','квинтлн','секстлн','септлн','октлн','нонлн','децлн'];
 function fmt(n,dec){if(!isFinite(n))return'∞';n=Math.max(0,n);
@@ -544,7 +544,7 @@ function tap(px,py,auto){
  const was=STAGE;if(STAGE<100){S.cal+=tc;S.tot.cal+=tc}S.coins+=cc;S.tot.coins+=cc;S.tot.taps++;if(S.coins>S.maxCoins)S.maxCoins=S.coins;calcStage();
  if(!auto){AN.sqv-=0.9;AN.chomp=1;AN.happy=0.25;SFX.chomp();if(S.set.vib&&Math.random()<.35)vib(8);
   if(S.set.fly&&V)spawnFood(px,py,true);
-  if(S.set.pops){POPS.push({x:px+rnd(-14,14),y:py-8,vy:-90,life:.9,t:(STAGE<100||was<100?'+'+fmt(tc,1)+' 🍖  ':'')+'+'+fmt(cc,1)+' 🪙',c:'#fff'})}
+  if(S.set.pops){POPS.push({x:px+rnd(-40,40),y:py-8+rnd(-10,10),vy:-90,life:.9,t:(STAGE<100||was<100?'+'+fmt(tc,1)+' 🍖  ':'')+'+'+fmt(cc,1),coin:1,c:'#fff'})}
   for(let i=0;i<Math.round(4*S.set.parts/100);i++)PARTS.push({x:px,y:py,vx:rnd(-160,160),vy:rnd(-240,-60),life:rnd(.4,.8),c:pick(['#ffd84a','#ff9a3d','#fff3c4']),r:rnd(2,4)})}
  if(STAGE>was)stageUp(was)}
 function spawnFood(px,py,fromTap){if(!V)return;const fd=bestFood(),g=catGeom(V.U,AN.f);const tx=V.cx,ty=V.gy+g.hy+g.hr*0.47;
@@ -579,7 +579,7 @@ function update(dt){AN.t+=dt;S.tot.time+=dt;
  AN.nextBlink-=dt;if(AN.nextBlink<0){AN.blink=.12;AN.nextBlink=rnd(2,5)}AN.blink=Math.max(0,AN.blink-dt);
  AN.bob=Math.sin(AN.t*2)*V.U*0.006;apTick(dt);
  // удержание
- if(HOLD){HOLD.t+=dt;if(HOLD.t>.28){HOLD.acc=(HOLD.acc||0)+dt*9;while(HOLD.acc>=1){HOLD.acc--;tap(HOLD.x,HOLD.y)}}}
+ if(HOLD){HOLD.t+=dt;if(HOLD.t>.28){HOLD.acc=(HOLD.acc||0)+dt*9;while(HOLD&&HOLD.acc>=1){HOLD.acc--;tap(HOLD.x,HOLD.y)}}}
  // помощники
  const ar=autoRate();if(ar>0&&!CUT.on){autoAcc+=ar*dt;const n=Math.floor(autoAcc);if(n>0){autoAcc-=n;const tc=tapCal()*n,cc=coinTap()*n,was=STAGE;if(STAGE<100){S.cal+=tc;S.tot.cal+=tc}S.coins+=cc;S.tot.coins+=cc;if(S.coins>S.maxCoins)S.maxCoins=S.coins;calcStage();if(STAGE>was)stageUp(was)}
   flyAcc+=Math.min(ar,5)*dt;if(flyAcc>=1){flyAcc=0;if(S.set.fly)spawnFood(0,0,false);AN.chomp=Math.max(AN.chomp,.6)}}
@@ -605,7 +605,7 @@ function render(){const c=cx;c.setTransform(DPR,0,0,DPR,0,0);V=view();const sp=s
  for(const o of FLY){const k=o.t/o.d,e=k*k,x=lerp(o.sx,o.tx,e),y=lerp(o.sy,o.ty,e)-Math.sin(k*Math.PI)*V.U*0.25,s=V.U*(0.16-0.08*k);c.save();c.translate(x,y);c.rotate(o.rot*k);c.font=Math.round(s)+'px sans-serif';c.fillText(o.e,0,0);c.restore()}
  for(const p of PARTS){c.globalAlpha=Math.min(1,p.life*2);c.fillStyle=p.c;if(p.star){starP(c,p.x,p.y,p.r*1.6);c.fill()}else{c.beginPath();c.arc(p.x,p.y,p.r,0,TAU);c.fill()}}c.globalAlpha=1;
  c.restore();
- for(const p of POPS){c.globalAlpha=Math.min(1,p.life*2);c.font=(p.big?'900 30px ':'900 19px ')+'"Nunito KZ",Nunito,"Segoe UI",sans-serif';c.lineWidth=5;c.strokeStyle='rgba(29,24,56,.85)';c.strokeText(p.t,p.x,p.y);c.fillStyle=p.c;c.fillText(p.t,p.x,p.y)}c.globalAlpha=1;
+ for(const p of POPS){c.globalAlpha=Math.min(1,p.life*2);c.font=(p.big?'900 30px ':'900 19px ')+'"Nunito KZ",Nunito,"Segoe UI",sans-serif';c.lineWidth=5;c.strokeStyle='rgba(29,24,56,.85)';c.strokeText(p.t,p.x,p.y);c.fillStyle=p.c;c.fillText(p.t,p.x,p.y);if(p.coin){const x=p.x+c.measureText(p.t).width/2+11;c.beginPath();c.arc(x,p.y,8,0,TAU);c.fillStyle='#ffd84a';c.fill();c.lineWidth=2.5;c.strokeStyle=INK;c.stroke();c.fillStyle='#e0961a';c.beginPath();c.arc(x,p.y,4,0,TAU);c.fill()}}c.globalAlpha=1;
  if(BANNER){const a=Math.min(1,BANNER.life*2,(2.4-BANNER.life+2)*2),y=V.y0+Math.min(80,V.U*0.35);c.globalAlpha=clamp(a,0,1);let fs=Math.round(clamp(V.U*0.17,22,48));c.font='900 '+fs+'px "Nunito KZ",Nunito,"Segoe UI",sans-serif';const mw=c.measureText(BANNER.t).width,aw=(V.x1-V.x0)*0.92;if(mw>aw){fs=Math.floor(fs*aw/mw);c.font='900 '+fs+'px "Nunito KZ",Nunito,"Segoe UI",sans-serif'}c.lineWidth=8;c.strokeStyle=INK;c.strokeText(BANNER.t,V.cx,y);c.fillStyle='#ffe066';c.fillText(BANNER.t,V.cx,y);if(BANNER.s){c.font='900 '+Math.round(fs*.5)+'px "Nunito KZ",Nunito,"Segoe UI",sans-serif';c.lineWidth=5;c.strokeText(BANNER.s,V.cx,y+fs*0.8);c.fillStyle='#fff';c.fillText(BANNER.s,V.cx,y+fs*0.8)}c.globalAlpha=1}
  if(!S.tot.taps&&!TAB){const y=V.gy-V.U*1.45+Math.sin(AN.t*4)*6;c.font='900 '+(W<500?15:22)+'px "Nunito KZ",Nunito,"Segoe UI",sans-serif';c.lineWidth=6;c.strokeStyle=INK;const tx=A||matchMedia('(pointer:coarse)').matches?'👆 Нажимай на котозайца — корми его!':'👆 Кликай по котозайцу (или пробел) — корми его!';c.strokeText(tx,V.cx,Math.max(V.y0+20,y));c.fillStyle='#fff';c.fillText(tx,V.cx,Math.max(V.y0+20,y))}}
 /* ---------- HUD ---------- */
@@ -949,7 +949,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&$('#modal').classLis
 /* ---------- цикл ---------- */
 let last=performance.now();const FPS={n:0,t:0,v:0};
 function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;FPS.n++;if(now-FPS.t>1000){FPS.v=FPS.n;FPS.n=0;FPS.t=now;if(S.set.fps||cheat('fps'))$('#fps').textContent=FPS.v+' FPS · частиц '+PARTS.length}
- if(!V)V=view();update(dt);render();requestAnimationFrame(frame)}
+ requestAnimationFrame(frame);try{if(!V)V=view();update(dt);render()}catch(e){HOLD=null;console.error(e)}}
 function offline(){if(!S.set.offl||!S.t)return;const away=Math.min(4*3600,(Date.now()-S.t)/1000);const ar=autoRate();if(away<60||ar<=0)return;
  const taps=ar*away*0.5;const tc=tapCal()*taps,cc=coinTap()*taps,was=STAGE;if(STAGE<100){S.cal+=tc;S.tot.cal+=tc}S.coins+=cc;S.tot.coins+=cc;calcStage();
  setTimeout(()=>modal(`<h3>💤 Пока тебя не было</h3><p>Помощники кормили котозайца ${away>=3600?Math.floor(away/3600)+' ч '+Math.round(away%3600/60)+' мин':Math.round(away/60)+' мин'}</p><div class="rw">${STAGE<100||was<100?`<span>🍖 +${fmt(tc)}</span>`:''}<span>🪙 +${fmt(cc)}</span>${STAGE>was?`<span>⚖ стадия ${was} → ${STAGE}</span>`:''}</div><div class="mbtn"><button class="btn big mint" data-a="mclose">Ням!</button></div>`),700)}
