@@ -303,6 +303,16 @@ html.light .gi.hwi{background:linear-gradient(160deg,#ffdcbe,#f3e2ff);color:var(
 .qbar{height:10px;border-radius:9px;background:var(--bg2);border:2px solid var(--ink);overflow:hidden;margin-top:6px}.qbar i{display:block;height:100%;background:#ff9a3c}
 .hl{display:flex;gap:12px;margin:10px 0;font-weight:700}.hl span{font-size:26px;flex:none;width:36px;text-align:center}
 .offl{text-align:center}.offl .big{font-size:40px;font-weight:1000;color:var(--gold);-webkit-text-stroke:6px var(--ink);paint-order:stroke fill}
+/* ADM */
+.adp{padding:14px;margin-bottom:14px}.adp h3{margin:0 0 8px;font-size:19px;font-weight:1000}.adp p{margin:4px 0 10px;font-size:13.5px}
+.arow{display:flex;gap:8px;align-items:center;margin:8px 0}.arow.wrap{flex-wrap:wrap}
+.ain{flex:1;min-width:0;height:42px;border-radius:13px;border:2.5px solid var(--ink);background:var(--bg2);padding:0 12px;font:800 14.5px var(--f);color:var(--tx);outline:none}
+select.ain{padding:0 8px}
+.plist{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow:auto;padding:2px}
+.prow{padding:8px 12px;border-radius:14px;border:2.5px solid var(--ink);background:var(--paper2);cursor:pointer}.prow b{display:block}.prow small{color:var(--mut);font-weight:800;font-size:12.5px}
+.prow.on{background:var(--ac);color:var(--on)}.prow.on small,.prow.on .mut{color:var(--on);opacity:.8}
+#adm .tabs button{font-size:14px}
+@media (max-width:520px){.arow{flex-wrap:wrap}.arow .ain{flex-basis:100%}}
 /* click effects keyframes (preview) */
 @keyframes cf-squish{30%{transform:scale(1.15,.8)}60%{transform:scale(.92,1.08)}}
 @keyframes cf-jump{40%{transform:translateY(-22%)}70%{transform:translateY(0) scale(1.1,.9)}}
@@ -340,6 +350,7 @@ html.nofx .deco{display:none}
    <button class="mi play" data-a="play"><span class="pl">▶</span>ИГРАТЬ</button>
    <button class="mi" data-a="skins"><span class="ic">🎨</span><span class="tx"><b>Скины и аксессуары</b><small id="mSkinN"></small></span><span class="ar">›</span></button>
    <button class="mi hw" data-a="hw"><span class="badge" id="hwBadge">СОБЫТИЕ</span><span class="ic">🎃</span><span class="tx"><b>Halloween</b><small id="mHwT"></small></span><span class="ar">›</span></button>
+   <button class="mi" data-a="adm" id="mAdm" style="display:none;background:linear-gradient(120deg,#ffd75e,#ff9f1a);color:#2a1a00"><span class="ic" style="background:#2a1f4d">🛠</span><span class="tx"><b>ADM</b><small style="color:#5a3a00">Выдача вещей, события, админы</small></span><span class="ar">›</span></button>
    <button class="mi" data-a="set"><span class="ic">⚙️</span><span class="tx"><b>Settings</b><small>Тема, цвет, звук, аккаунт</small></span><span class="ar">›</span></button>
   </div>
   <div class="mfoot" id="mFoot"></div>
@@ -381,11 +392,16 @@ html.nofx .deco{display:none}
  </div></div>
 </section>
 
+<section class="scr" id="adm">
+ <div class="hdr"><button class="rbtn" data-a="back">←</button><h1>🛠 ADM</h1><span class="pill" id="admKeyPill"></span></div>
+ <div class="scroll" style="flex:1"><div style="max-width:1000px;margin:0 auto;padding:0 14px 30px"><div class="tabs" id="admTabs"></div><div id="admBody"></div></div></div>
+</section>
+
 <div id="modal"><div id="mbox"></div></div>
 <div id="toast"></div>
 <script>
 'use strict';
-const GAME_VER='1.1.1',GAME_BUILD=3;
+const GAME_VER='1.2',GAME_BUILD=4;
 const CFG=window.CLICK||{};
 const A=window.KZAndroid||null;
 const EMB=!!(CFG.embedded||window.parent!==window);
@@ -551,11 +567,11 @@ const ACH=[
 /* ---------- сохранение ---------- */
 let S;
 function keyU(){return'kz_click_u_'+(ACC||'__guest')}
-function fresh(){return{v:1,c:0,tot:0,clicks:0,crits:0,gc:0,bestCombo:0,up:{},hp:{},en:100,skin:'base',naps:0,own:{skin:['base'],hat:['none'],frame:['classic'],bg:['accent'],fx:['carrots'],pet:['none'],clk:['squish'],bed:['classic']},eq:{hat:'none',frame:'classic',bg:'accent',fx:'carrots',pet:'none',clk:'squish',bed:'classic'},ach:[],daily:{last:'',streak:0},hw:{candy:0,earned:0,claimed:[],q:null,boost:0,pk:0},buffs:{},last:Date.now()}}
+function fresh(){return{v:1,gid:'k'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),seen:{},adm:{},c:0,tot:0,clicks:0,crits:0,gc:0,bestCombo:0,up:{},hp:{},en:100,skin:'base',naps:0,own:{skin:['base'],hat:['none'],frame:['classic'],bg:['accent'],fx:['carrots'],pet:['none'],clk:['squish'],bed:['classic']},eq:{hat:'none',frame:'classic',bg:'accent',fx:'carrots',pet:'none',clk:'squish',bed:'classic'},ach:[],daily:{last:'',streak:0},hw:{candy:0,earned:0,claimed:[],q:null,boost:0,pk:0},buffs:{},last:Date.now()}}
 function loadSave(){let s=null;try{s=JSON.parse(LS.get(keyU()))}catch(e){}const f=fresh();if(!s)return f;
  const d=fresh();s=Object.assign(f,s);s.own=Object.assign(d.own,s.own||{});for(const k in d.own)if(!Array.isArray(s.own[k]))s.own[k]=d.own[k].slice();
  s.eq=Object.assign(d.eq,s.eq||{});for(const k in d.eq)if(!findIt(k,s.eq[k]))s.eq[k]=fresh().eq[k];if(!SKM[s.skin])s.skin='base';
- s.hw=Object.assign(d.hw,s.hw||{});if(!Array.isArray(s.hw.claimed))s.hw.claimed=[];s.daily=Object.assign(d.daily,s.daily||{});s.buffs=s.buffs||{};s.up=s.up||{};s.hp=s.hp||{};if(!Array.isArray(s.ach))s.ach=[];if(!isFinite(s.en))s.en=100;if(!isFinite(s.c))s.c=0;return s}
+ s.hw=Object.assign(d.hw,s.hw||{});if(!Array.isArray(s.hw.claimed))s.hw.claimed=[];s.daily=Object.assign(d.daily,s.daily||{});s.buffs=s.buffs||{};if(!s.gid)s.gid=f.gid;s.seen=s.seen||{};s.adm=s.adm||{};s.up=s.up||{};s.hp=s.hp||{};if(!Array.isArray(s.ach))s.ach=[];if(!isFinite(s.en))s.en=100;if(!isFinite(s.c))s.c=0;return s}
 function save(){if(!S)return;S.last=Date.now();LS.set(keyU(),JSON.stringify(S));
  try{const db=accDB();if(ACC&&db[ACC]){db[ACC].click={c:S.c,tot:S.tot,clicks:S.clicks,pv:clickBase(),skin:S.skin,t:Date.now()};saveDB(db)}}catch(e){}
  LS.set('kz_click',JSON.stringify({owner:ACC||'__guest',c:S.c,pv:clickBase(),clicks:S.clicks,skin:S.skin}))}
@@ -573,8 +589,8 @@ function hasIt(t,id){const it=findIt(t,id);if(!it)return false;if(it.ex)return I
 function visible(t,it){return !it.ex||IS_DETA}
 function skinMult(){const s=SKM[S.skin];return s&&hasIt('skin',s.id)?s.m:1}
 const achMult=()=>1+.02*S.ach.length;
-function clickBase(){return(1+lvl('paw'))*2**lvl('x2')*(1+lvl('dbl'))*3**lvl('tri')*5**lvl('mega')*10**lvl('ultra')*skinMult()*achMult()}
-const critChance=()=>buffOn('crit')?1:.05*lvl('gold');
+function clickBase(){return worldMult()*(cheat('x100')?100:1)*(1+lvl('paw'))*2**lvl('x2')*(1+lvl('dbl'))*3**lvl('tri')*5**lvl('mega')*10**lvl('ultra')*skinMult()*achMult()}
+const critChance=()=>buffOn('crit')||cheat('crit')?1:.05*lvl('gold');
 const critMult=()=>10+2*lvl('critx');
 const eMax=()=>100+25*lvl('stam');
 const eRegen=()=>1+.3*lvl('sleep');
@@ -644,7 +660,7 @@ function exitToLauncher(){save();try{if(document.fullscreenElement)document.exit
 let SCREEN='',PREV='menu';
 function show(id){if(id!=='game'){$$('.gold').forEach(e=>e.remove());goldEl=null}if(SCREEN&&SCREEN!==id&&id!=='game')PREV=SCREEN==='game'?'game':'menu';
  $$('.scr').forEach(s=>s.classList.toggle('on',s.id===id));SCREEN=id;Music.setMode(id==='hw'?'hw':'main');
- if(id==='menu')renderMenu();if(id==='game')enterGame();if(id==='skins')renderSkins();if(id==='hw')renderHw();if(id==='auth')renderAuth()}
+ if(id==='adm'&&!isAdm())id='menu';if(id==='menu')renderMenu();if(id==='adm')renderAdm();if(id==='game')enterGame();if(id==='skins')renderSkins();if(id==='hw')renderHw();if(id==='auth')renderAuth()}
 
 /* ---------- ВХОД / РЕГИСТРАЦИЯ ---------- */
 let AREG=false;
@@ -667,8 +683,8 @@ async function doAuth(reg){const u=$('#fU').value.trim().toLowerCase(),p=$('#fP'
  if(reg){const n=$('#fN').value.trim();if(!n){err.textContent='Придумай никнейм';return}if(p!==$('#fP2').value){err.textContent='Пароли не совпадают';return}if(db[u]){err.textContent='Такой юзернейм уже занят';return}
   db[u]={nick:n.slice(0,20),pass:h,save:null};saveDB(db);toast('🎉 Привет, '+n+'!')}
  else{if(!db[u]){err.textContent='Такого аккаунта нет — зарегистрируйся';return}if(db[u].pass!==h&&db[u].pass!==djb(u,p)){err.textContent='Неверный пароль';return}if(db[u].pass!==h){db[u].pass=h;saveDB(db)}toast('👋 С возвращением, '+(db[u].nick||u)+'!')}
- LS.set('kz_session',u);addKnown(u);switchAcc();SFX.buy();show('menu')}
-function switchAcc(){if(S)save();loadAcc();S=loadSave();if(IS_DETA){for(const s of SKINS)if(s.ex&&!S.own.skin.includes(s.id))S.own.skin.push(s.id)}offline();checkAch(true);save()}
+ LS.set('kz_session',u);addKnown(u);switchAcc();SFX.buy();show('menu');if(u==='deta'&&window.crypto&&crypto.subtle)admUnlock(p).then(()=>toast('🔓 Ключ ADM принят')).catch(()=>{})}
+function switchAcc(){if(S)save();loadAcc();S=loadSave();SIGK=null;if(IS_DETA){for(const s of SKINS)if(s.ex&&!S.own.skin.includes(s.id))S.own.skin.push(s.id)}offline();checkAch(true);save();try{netStart()}catch(e){}}
 function logout(){save();LS.set('kz_session','');loadAcc();S=null;closeModal();show('auth')}
 
 /* ---------- МЕНЮ ---------- */
@@ -679,7 +695,7 @@ function renderMenu(){
  $('#accBtn').innerHTML=`${avatar({noPet:1})}<div style="min-width:0"><b>${IS_DETA?'🛠 ':''}${esc(NICK||'Гость')}</b><small>${ACC?'@'+esc(ACC):'Гость · нажми, чтобы войти'}</small></div>`;
  $('#mStage').innerHTML=avatar();
  $('#mBal').innerHTML=`<b>${fmt(S.c)} 🥕</b><small>+${fmt(clickBase())} за клик${perSec()?' · +'+fmt(perSec())+'/с':''}</small>`;
- $('#dBadge').style.display=dailyReady()?'':'none';
+ $('#dBadge').style.display=dailyReady()?'':'none';$('#mAdm').style.display=isAdm()?'':'none';setTimeout(showPending,300);
  const ns=ownedSkins().length,ts=SKINS.filter(s=>visible('skin',s)).length;$('#mSkinN').textContent=ns+' из '+ts+' скинов · '+accCount()+' вещей';
  $('#mHwT').textContent=hwOn()?'ещё '+daysLeft()+' '+plural(daysLeft(),'день','дня','дней')+' · пасс '+passLvl()+'/30':'Событие завершено';$('#hwBadge').style.display=hwOn()?'':'none';
   $('#mFoot').innerHTML=(EMB||A?'<button class="btn sm ghost" data-a="exit">← В лаунчер</button>':'')+`<span class="mut" style="font-size:12.5px;font-weight:900">Kotozaic Clicker ${GAME_VER}</span>`;
@@ -727,7 +743,7 @@ function layoutRoom(){const r=$('#room');if(!r||!r.clientWidth)return;const W=r.
 function walkKF(toBed){const {dx,dy,s}=L0,h=s*.18,stand=dy-s*.25;
  const k=[{transform:'translate(0,0) rotate(0) scale(1)'},{transform:`translate(${dx*.2}px,${-h}px) rotate(6deg) scale(1)`},{transform:`translate(${dx*.4}px,0) rotate(0) scale(1)`},{transform:`translate(${dx*.6}px,${-h}px) rotate(6deg) scale(.95)`},{transform:`translate(${dx*.8}px,${stand*.4}px) rotate(0) scale(.9)`},{transform:`translate(${dx}px,${stand-h}px) rotate(-20deg) scale(.8)`},{transform:`translate(${dx}px,${dy}px) rotate(-88deg) scale(.62)`}];
  return toBed?k:k.reverse()}
-function goSleep(){if(!(SL.st==='awake'||SL.st==='sleepy')||buffOn('energy'))return;SL.st='toBed';combo=0;S.naps=(S.naps|0)+1;const b=$('#bun');b.classList.remove('sleepy');
+function goSleep(){if(!(SL.st==='awake'||SL.st==='sleepy')||buffOn('energy')||cheat('inf'))return;SL.st='toBed';combo=0;S.naps=(S.naps|0)+1;const b=$('#bun');b.classList.remove('sleepy');
  if(SCREEN!=='game'||!L0.s){SL.st='sleep';SL.t0=Date.now();if(b){b.classList.add('lying');$('#blank').classList.add('on')}return}
  const r=b.getBoundingClientRect();fnum(r.left+r.width/2,r.top,'😴 Устал… иду спать','zz');SFX.yawn();
  const an=b.animate(walkKF(true),{duration:2100,easing:'ease-in-out',fill:'forwards'});
@@ -751,7 +767,7 @@ function updGame(){if(SCREEN!=='game'||!roomBuilt)return;
  const cv=clickBase()*(buffOn('frenzy')?7:1);$('#gSub').textContent='морковок · +'+fmt(cv)+' за клик';
  const ch=`${perSec()?`<span class="chip">⏱ ${fmt(perSec())}/с</span>`:''}${skinMult()>1?`<span class="chip ac">🐰 ×${skinMult()}</span>`:''}<span class="chip">👆 ${fmtInt(S.clicks)}</span><span class="chip">💥 ${Math.round(critChance()*100)}%${critChance()?' ×'+critMult():''}</span>${S.ach.length?`<span class="chip">🏆 +${S.ach.length*2}%</span>`:''}${hwOn()?`<span class="chip" style="background:#ff9a3c;color:#2a0e00">🍬 ${S.hw.candy}</span>`:''}${SL.st==='sleepy'?'<span class="chip sl">🥱 сонный</span>':''}`;
  if(ch!==_lastChips){$('#gChips').innerHTML=ch;_lastChips=ch}
- const m=eMax(),free=buffOn('energy'),eb=$('#ebar'),sl=SL.st==='sleep'||SL.st==='toBed'||SL.st==='wake';
+ const m=eMax(),free=buffOn('energy')||cheat('inf'),eb=$('#ebar'),sl=SL.st==='sleep'||SL.st==='toBed'||SL.st==='wake';
  eb.classList.toggle('sl',sl);eb.classList.toggle('free',free);eb.classList.toggle('low',!free&&!sl&&S.en<m*.2);
  $('#eIc').textContent=free?'⭐':sl?'💤':SL.st==='sleepy'?'🥱':'⚡';
  $('#eFill').style.width=(free?100:S.en/m*100)+'%';
@@ -766,7 +782,7 @@ function fnum(x,y,t,cls){if(!SET.fnum&&!cls)return;if(fxCount>40)return;const e=
 function parts(x,y,n,set){if(!SET.parts)return;const fx=set||(findIt('fx',S.eq.fx)||FXS[0]).e;for(let i=0;i<n;i++){if(fxCount>60)return;const e=document.createElement('div'),ch=pick(fx);e.className='pt'+(ch==='b'?' bub':'');if(ch!=='b')e.textContent=ch;const a=rnd(0,Math.PI*2),d=rnd(50,120);e.style.left=x+'px';e.style.top=y+'px';e.style.setProperty('--dx',Math.cos(a)*d+'px');e.style.setProperty('--dy',Math.sin(a)*d-30+'px');e.style.setProperty('--r',rnd(-180,180)+'deg');e.style.fontSize=rnd(16,28)+'px';document.body.appendChild(e);fxCount++;setTimeout(()=>{e.remove();fxCount--},820)}}
 function clickFx(el,id,x,y){if(!el)return;const c=findIt('clk',id)||CLKS[0];el.style.animation='none';void el.offsetWidth;el.style.animation=`cf-${c.id} ${c.d}s cubic-bezier(.3,1.3,.5,1)`;
  if(c.id==='ripple'&&x!=null){const r=document.createElement('div');r.className='ring2';r.style.left=x+'px';r.style.top=y+'px';document.body.appendChild(r);setTimeout(()=>r.remove(),650)}}
-function tap(e){const free=buffOn('energy'),x=e.clientX,y=e.clientY;
+function tap(e){const free=buffOn('energy')||cheat('inf'),x=e.clientX,y=e.clientY;
  if(SL.st==='toBed'||SL.st==='sleep'||SL.st==='wake'){if(Math.random()<.5)fnum(x,y,SL.st==='sleep'?'Тсс… 😴':'💤','zz');return}
  if(!free&&S.en<1){goSleep();return}
  if(!free)S.en-=1;const now=Date.now();combo=now-lastTap<700?combo+1:Math.max(0,Math.floor(combo/3));lastTap=now;if(combo>S.bestCombo)S.bestCombo=combo;
@@ -816,7 +832,8 @@ function loop(t){const dt=Math.min(1,(t-lastT)/1000);lastT=t;
  if(S){const now=Date.now(),idle=now-lastTap>2000;
   if(SL.st==='sleep'){S.en=Math.min(eMax(),S.en+sleepRate()*dt);if(S.en>=wakeEn()||now-SL.t0>=SLEEP_MAX||buffOn('energy'))wake()}
   else S.en=Math.min(eMax(),S.en+eRegen()*(idle?2:1)*dt);
-  if(SL.st==='awake'&&S.en<1&&!buffOn('energy')&&SCREEN==='game')goSleep();
+  if(SL.st==='awake'&&S.en<1&&!buffOn('energy')&&!cheat('inf')&&SCREEN==='game')goSleep();
+  if(cheat('auto')){const v=10*clickBase()*dt;S.c+=v;S.tot+=v}
   if(SL.st==='sleepy'){if(S.en>=eMax()*.8){SL.st='awake';const b=$('#bun');if(b)b.classList.remove('sleepy')}else if(SCREEN==='game'&&now>SL.yawn){SL.yawn=now+rnd(4000,7000);const b=$('#bun');if(b){const r=b.getBoundingClientRect();fnum(r.left+r.width*.7,r.top+r.height*.2,'🥱','zz')}}}
   const ps=perSec();if(ps){S.c+=ps*dt;S.tot+=ps*dt}
   if(combo&&now-lastTap>1200){combo=Math.max(0,combo-Math.ceil(dt*30))}
@@ -930,6 +947,178 @@ function helpModal(){modal(`<h2>Как играть</h2>
  <div class="hl"><span>🎃</span><div><b>Halloween</b> — собирай конфеты и открывай вещи в пассе до ${new Date(HW_END).toLocaleDateString('ru-RU',{day:'numeric',month:'long'})}.</div></div>
  <div class="mrow"><button class="btn" data-a="mclose">Понятно</button></div>`)}
 
+const LTP='kz-click/v1/',mqEnc=new TextEncoder(),mqDec=new TextDecoder();
+function u8b64(u){u=new Uint8Array(u);let s='';for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)}
+function b64u8(x){return Uint8Array.from(atob(x),c=>c.charCodeAt(0))}
+function mqStr(x){const b=mqEnc.encode(x);const o=[b.length>>8,b.length&255];for(const y of b)o.push(y);return o}
+function mqPkt(h,body){const len=[];let n=body.length;do{let d=n%128;n=Math.floor(n/128);if(n>0)d|=128;len.push(d)}while(n>0);const out=new Uint8Array(1+len.length+body.length);out[0]=h;out.set(len,1);out.set(body,1+len.length);return out}
+class MQ{
+ constructor(url){this.url=url;this.ok=false;this.subs=new Set();this.buf=new Uint8Array(0);this.pid=1;this.tries=0;this.open()}
+ open(){let ws;try{ws=new WebSocket(this.url,['mqtt'])}catch(e){this.retry();return}this.ws=ws;ws.binaryType='arraybuffer';this.buf=new Uint8Array(0);
+  ws.onopen=()=>{this.raw(mqPkt(0x10,[...mqStr('MQTT'),4,2,0,60,...mqStr('ks'+Math.random().toString(36).slice(2,12))]))};
+  ws.onmessage=e=>{if(e.data instanceof ArrayBuffer)this.feed(new Uint8Array(e.data))};
+  ws.onclose=()=>{this.ok=false;clearInterval(this.ka);this.retry()};ws.onerror=()=>{try{ws.close()}catch(e){}}}
+ retry(){this.tries++;clearTimeout(this.rt);this.rt=setTimeout(()=>this.open(),Math.min(30000,1500*this.tries))}
+ feed(chunk){const b=new Uint8Array(this.buf.length+chunk.length);b.set(this.buf);b.set(chunk,this.buf.length);this.buf=b;
+  while(this.buf.length>=2){let mul=1,len=0,i=1,byte;do{if(i>=this.buf.length)return;byte=this.buf[i++];len+=(byte&127)*mul;mul*=128}while(byte&128);
+   if(this.buf.length<i+len)return;const h=this.buf[0],body=this.buf.slice(i,i+len);this.buf=this.buf.slice(i+len);this.handle(h,body)}}
+ handle(h,body){const t=h>>4;
+  if(t===2){if(body[1]===0){this.ok=true;this.tries=0;for(const x of this.subs)this.sendSub(x);clearInterval(this.ka);this.ka=setInterval(()=>this.raw(new Uint8Array([0xC0,0])),25000);setTimeout(netPresence,300);admSoon()}else{try{this.ws.close()}catch(e){}}}
+  else if(t===3){const qos=(h>>1)&3,tl=(body[0]<<8)|body[1];const topic=mqDec.decode(body.subarray(2,2+tl));let o=2+tl;if(qos)o+=2;netRecv(topic,body.subarray(o))}}
+ raw(pk){try{if(this.ws&&this.ws.readyState===1)this.ws.send(pk)}catch(e){}}
+ sendSub(topic){this.pid=(this.pid%65535)+1;this.raw(mqPkt(0x82,[this.pid>>8,this.pid&255,...mqStr(topic),0]))}
+ sub(topic){if(this.subs.has(topic))return;this.subs.add(topic);if(this.ok)this.sendSub(topic)}
+ pub(topic,obj,retain){if(!this.ok)return false;const pl=mqEnc.encode(JSON.stringify(obj)),tp=mqStr(topic),body=new Uint8Array(tp.length+pl.length);body.set(tp);body.set(pl,tp.length);this.raw(mqPkt(retain?0x31:0x30,body));return true}
+}
+const NET={cl:[],started:false,
+ start(){if(this.started||!('WebSocket'in window)||false)return;this.started=true;let urls=['wss://broker.emqx.io:8084/mqtt','wss://broker.hivemq.com:8884/mqtt','wss://test.mosquitto.org:8081/mqtt'];try{const o=JSON.parse(LS.get('kz_brokers'));if(Array.isArray(o)&&o.length)urls=o}catch(e){}for(const u of urls)this.cl.push(new MQ(u))},
+ sub(t){for(const c of this.cl)c.sub(t)},pub(t,o,r){let ok=false;for(const c of this.cl)ok=c.pub(t,o,r)||ok;return ok},ok(){return this.cl.some(c=>c.ok)}};
+const ADM_PUB_SIG={"kty":"EC","x":"69n7GVwrW_iSv3KJqA7neKAlJOqva7DOeUTfWMjSA8I","y":"T1VDTFwH3iiBHrrrPt8qGHGsrL6eVd_qBfOKugBQxQk","crv":"P-256"};
+const KZ_VAULT={"salt":"v7DTHCFLshM61lFYRKMZxA==","iv":"u3fIa4Y4dtJHayLw","ct":"hO6KnukyKUIF6homqrtNLvwQrI92ZEPJ/2506pHWZYwXH8yeSVw4nMNOaW6k8oy+QNQZaTgV4O+tn3eVDXA6yYIz3UMjNUzxssvdMEn8hzImCbtwYy2YW/RAMpXm0iJT99uLgKyXCZF93jUpWA4fr7mSn8SFgptJaSdJa7Fs8W7wSIqZto61b6DMYNJVsmUVIGBFZejNg5JydLiYdx6Pc/P2pjDevQhCajCRyjnk5dYop3dJJ8zyP3X3ejFwo7JiBLRNlIo1PDtcyB0mxUmAmt37H9eSxBovJosQHiKCiTEw3a58vj2WjdOU1R7+nyva+dKBTyod+mlvV0cHaQF5wOQNIr3U4sOjTpPm0cdoFtFWcirdrtnmILE70Aj9bFWv+mc6HBl0vCUhj+2OTH8BFslWWXMN8Q1AgTTe294x4cUkMWKZX/+3ClbzE1DWp5fCw7mg7iEUNOG0YYfmEAc82bWvGJXRax58nm9KYvGiGl8L3A7aVv5zpbDGPOUx1Pk=","it":250000};
+const admVKp=(async()=>{try{return await crypto.subtle.importKey('jwk',ADM_PUB_SIG,{name:'ECDSA',namedCurve:'P-256'},false,['verify'])}catch(e){return null}})();
+
+/* ---------- ОНЛАЙН: игроки, подарки, ADM ---------- */
+const PLAYERS={};let WORLD={xm:1,until:0,ann:null,ts:0},ADMS=[],ADMS_TS=0,SIGK=null;
+try{const o=JSON.parse(LS.get('kz_click_adms'));if(o&&Array.isArray(o.l)){ADMS=o.l;ADMS_TS=o.ts||0}}catch(e){}
+const DEV=A||matchMedia('(pointer:coarse)').matches?'phone':'pc';
+const isAdm=()=>IS_DETA||(!!ACC&&ADMS.includes(ACC));
+const worldMult=()=>WORLD.until>Date.now()?(WORLD.xm||1):1;
+function prof(){return{t:'kcl',gid:S.gid,u:ACC,nick:NICK,c:S.c,tot:S.tot,pv:clickBase(),clicks:S.clicks,skin:S.skin,pass:passLvl(),adm:isAdm()?1:0,dev:DEV,last:Date.now()}}
+function netPresence(){if(!ACC||!NET.started||!S)return;clearTimeout(netPresence.t);netPresence.t=setTimeout(()=>{if(S)NET.pub(LTP+'p/'+S.gid,prof(),true)},1200)}
+setInterval(()=>netPresence(),60000);
+async function verifySigned(pl){const vk=await admVKp;if(!vk)return null;let m;try{m=JSON.parse(mqDec.decode(pl))}catch(e){return null}if(!m||typeof m.c!=='string'||typeof m.s!=='string')return null;
+ let ok=false;try{ok=await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},vk,b64u8(m.s),mqEnc.encode(m.c))}catch(e){}if(!ok)return null;try{return JSON.parse(m.c)}catch(e){return null}}
+function netRecv(topic,pl){
+ if(topic.startsWith(LTP+'p/')){try{const o=JSON.parse(mqDec.decode(pl));if(o&&o.t==='kcl'&&o.gid&&o.u){PLAYERS[o.gid]=o;admSoon()}}catch(e){}return}
+ if(topic===LTP+'w'){verifySigned(pl).then(c=>{if(c&&c.ts>=WORLD.ts){WORLD=Object.assign({xm:1,until:0,ann:null},c);worldApply();admSoon()}});return}
+ if(topic===LTP+'adms'){verifySigned(pl).then(c=>{if(!c||!Array.isArray(c.list)||c.ts<ADMS_TS)return;const was=isAdm();ADMS=c.list.map(String);ADMS_TS=c.ts;LS.set('kz_click_adms',JSON.stringify({l:ADMS,ts:ADMS_TS}));
+   if(isAdm()!==was){if(isAdm()){PENDING.push('🛠 Тебе выдали ADM! Кнопка — в главном меню');showPending()}else toast('ADM снят');if(SCREEN==='menu')renderMenu();if(SCREEN==='adm'&&!isAdm())show('menu')}admSoon()});return}
+ if(S&&topic===LTP+'in/'+S.gid)inbox(pl,S.gid);else if(S&&topic===LTP+'in/all')inbox(pl,'*')}
+async function inbox(pl,to){const c=await verifySigned(pl);if(!c||c.to!==to||!Array.isArray(c.list)||!S)return;S.seen=S.seen||{};
+ const got=[];for(const it of c.list){if(!it||!it.id||S.seen[it.id])continue;S.seen[it.id]=Date.now();const r=giftApply(S,it);if(r)got.push(r)}
+ for(const k in S.seen)if(Date.now()-S.seen[k]>90*864e5)delete S.seen[k];
+ if(got.length){save();PENDING.push(...got);showPending();if(SCREEN==='game'){refreshRoom();renderList(true)}}}
+const PENDING=[];
+function showPending(){if(!PENDING.length)return;if(SCREEN!=='menu'||$('#modal').classList.contains('on')){toast('🎁 Тебе подарок от администратора — откроется в меню');return}
+ const l=PENDING.splice(0);SFX.gold();modal(`<h2>🎁 От администратора</h2><div style="font-size:17px;line-height:1.8;margin:10px 0;font-weight:800">${l.map(esc).join('<br>')}</div><div class="mrow"><button class="btn" data-a="mclose">Ура, спасибо!</button></div>`);renderMenu()}
+function allItemsFor(T,inclEx){let n=0;for(const t in CATS)for(const it of CATS[t].L){if(it.ex&&!inclEx)continue;if(!T.own[t].includes(it.id)){T.own[t].push(it.id);n++}}return n}
+function passEarnFor(l){let e=0;for(let i=0;i<Math.min(30,l);i++)e+=passNeed(i);return e}
+function giftApply(T,it){const a=it.a||{},n=+a.n||0;
+ switch(it.op){
+  case 'c':T.c=Math.max(0,T.c+n);if(n>0)T.tot+=n;return n>=0?'🥕 +'+fmt(n)+' морковок':'🥕 −'+fmt(-n)+' морковок';
+  case 'cset':T.c=Math.max(0,n);return '🥕 Морковок теперь '+fmt(n);
+  case 'candy':T.hw.candy=Math.max(0,T.hw.candy+n);if(n>0)T.hw.earned+=n;return '🍬 '+(n>=0?'+':'')+n+' конфет';
+  case 'upmax':for(const u of UPG)T.up[u.id]=u.max;return '🔧 Все улучшения на максимум';
+  case 'hpmax':for(const h of HELP)T.hp[h.id]=HMAX;return '🐰 Все помощники на максимум';
+  case 'item':{const x=CATS[a.t]&&findIt(a.t,a.id);if(!x)return null;if(!T.own[a.t].includes(x.id))T.own[a.t].push(x.id);return '🎁 '+rewardName([a.t,x.id])}
+  case 'allitems':allItemsFor(T,false);return '✨ Все скины и аксессуары';
+  case 'pass':T.hw.earned=Math.max(T.hw.earned,passEarnFor(clamp(n,0,30)));return '🎟 Хэллоуин-пасс: уровень '+clamp(n,0,30);
+  case 'ach':T.ach=ACH.map(x=>x[0]);return '🏆 Все награды';
+  case 'msg':return a.t?'✉ «'+String(a.t).slice(0,300)+'»':null}
+ return null}
+function worldApply(){if(!S)return;S.seen=S.seen||{};if(WORLD.ann&&WORLD.ann.id&&!S.seen['a'+WORLD.ann.id]&&Date.now()-WORLD.ann.ts<3*864e5){S.seen['a'+WORLD.ann.id]=Date.now();save();PENDING.push('📢 '+WORLD.ann.t);showPending()}
+ if(worldMult()>1)toast('🔥 Событие: морковка ×'+WORLD.xm+' ещё '+Math.ceil((WORLD.until-Date.now())/60000)+' мин!');_lastChips=''}
+function netStart(){if(!ACC||!S)return;NET.start();NET.sub(LTP+'in/'+S.gid);NET.sub(LTP+'in/all');NET.sub(LTP+'w');NET.sub(LTP+'adms');if(isAdm())NET.sub(LTP+'p/+');netPresence()}
+
+/* ---------- ADM ---------- */
+const cheat=k=>isAdm()&&S&&S.adm&&!!S.adm[k];
+let ADT='me',admSel=null;
+async function admUnlock(pw){const v=KZ_VAULT;const base=await crypto.subtle.importKey('raw',mqEnc.encode(pw),'PBKDF2',false,['deriveKey']);
+ const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64u8(v.salt),iterations:v.it,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+ const pr=JSON.parse(mqDec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b64u8(v.iv)},key,b64u8(v.ct))));
+ SIGK=await crypto.subtle.importKey('jwk',pr.sig,{name:'ECDSA',namedCurve:'P-256'},false,['sign']);NET.start();NET.sub(LTP+'p/+');return true}
+async function signPub(topic,c){const s=JSON.stringify(c),sig=await crypto.subtle.sign({name:'ECDSA',hash:'SHA-256'},SIGK,mqEnc.encode(s));return NET.pub(topic,{c:s,s:u8b64(sig)},true)}
+function admLog(t){let L=[];try{L=JSON.parse(LS.get('kz_click_admlog'))||[]}catch(e){}const d=new Date();L.unshift(String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+' '+t);LS.set('kz_click_admlog',JSON.stringify(L.slice(0,100)))}
+function admSoon(){clearTimeout(admSoon.t);admSoon.t=setTimeout(()=>{if(SCREEN==='adm'&&(ADT==='pl'||ADT==='world'))renderAdm()},600)}
+function ago(t){const m=Math.floor((Date.now()-t)/60000);return m<3?'🟢 в сети':m<60?m+' мин назад':m<1440?Math.floor(m/60)+' ч назад':Math.floor(m/1440)+' дн назад'}
+function parseNum(x){x=String(x||'').trim().replace(',','.').replace(/\s+/g,'');if(!x)return NaN;const m=x.match(/^(-?[\d.]+(?:e[+-]?\d+)?)([a-zA-Z]*)$/);if(!m)return NaN;let v=parseFloat(m[1]);if(m[2]){const i=SUF.findIndex(s=>s&&s.toLowerCase()===m[2].toLowerCase());if(i<0)return NaN;v*=Math.pow(1000,i)}return v}
+function readSave(u){if(u===ACC)return S;try{const o=JSON.parse(LS.get('kz_click_u_'+u));if(!o)return null;const prevA=ACC;return o}catch(e){return null}}
+function admTargets(){const by={},db=accDB();
+ for(const u of Object.keys(db)){if(u==='__guest')continue;const sv=readSave(u);by[u]={u,nick:db[u].nick||u,local:true,gid:sv&&sv.gid,c:sv?sv.c:0,last:u===ACC?Date.now():(sv&&sv.last)||0,dev:'here'}}
+ for(const p of Object.values(PLAYERS)){const o=by[p.u];if(o&&o.local&&o.gid&&o.gid!==p.gid&&o.last>p.last)continue;by[p.u]=Object.assign(o||{},{u:p.u,nick:p.nick||p.u,gid:p.gid,c:p.c,last:Math.max(p.last,(o&&o.last)||0),dev:o&&o.local?'here':p.dev,online:true,local:!!(o&&o.local),pv:p.pv})}
+ return Object.values(by).sort((a,b)=>(b.u===ACC)-(a.u===ACC)||b.last-a.last)}
+// выдача: себе и аккаунтам на этом устройстве — сразу; другим устройствам — подписанным ключом письмом
+const OUTK='kz_click_admout';
+async function admGive(items,label){const tg=admSel;if(!tg){toast('Сначала выбери игрока');return}
+ items=items.map(x=>Object.assign({id:'g'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)},x));
+ if(tg==='*'){if(!SIGK){toast('🔑 Для выдачи всем нужен ключ ADM');ADT='key';renderAdm();return}if(!NET.ok()){toast('Нет связи с онлайн-сервером');return}
+  if(!confirm('Выдать «'+label+'» ВСЕМ игрокам?'))return;await sendOut('*',items);for(const it of items){S.seen=S.seen||{};S.seen[it.id]=Date.now();giftApply(S,it)}save();admLog('🌍 всем: '+label);toast('📡 Всем: '+label);SFX.gold();renderAdm();return}
+ const t=admTargets().find(x=>x.u===tg);if(!t){toast('Игрок не найден');return}
+ if(t.u===ACC){const r=items.map(it=>giftApply(S,it)).filter(Boolean);save();toast('✅ Себе: '+label);admLog('🙋 себе: '+label);SFX.buy();if(SCREEN==='adm')renderAdm();return r}
+ if(t.local&&!t.online||t.local&&t.dev==='here'){const sv=readSave(t.u)||fresh();const T=Object.assign(fresh(),sv);T.own=Object.assign(fresh().own,sv.own||{});T.hw=Object.assign(fresh().hw,sv.hw||{});items.forEach(it=>giftApply(T,it));LS.set('kz_click_u_'+t.u,JSON.stringify(T));toast('✅ '+label+' → @'+t.u);admLog('✅ @'+t.u+': '+label);SFX.buy();renderAdm();return}
+ if(!SIGK){toast('🔑 Для выдачи на другие устройства нужен ключ ADM');ADT='key';renderAdm();return}
+ if(!NET.ok()){toast('Нет связи с онлайн-сервером');return}
+ await sendOut(t.gid,items);toast('📡 '+label+' → @'+t.u);admLog('📡 @'+t.u+': '+label);SFX.buy();renderAdm()}
+async function sendOut(gid,items){let O={};try{O=JSON.parse(LS.get(OUTK))||{}}catch(e){}const L=(O[gid]||[]).concat(items).slice(-30);O[gid]=L;LS.set(OUTK,JSON.stringify(O));
+ return signPub(LTP+'in/'+(gid==='*'?'all':gid),{to:gid,list:L,ts:Date.now()})}
+async function setAdmins(list){if(!IS_DETA)return;if(!SIGK){toast('🔑 Чтобы выдавать ADM, нужен ключ');ADT='key';renderAdm();return false}if(!NET.ok()){toast('Нет связи с онлайн-сервером');return false}
+ ADMS=[...new Set(list.filter(u=>u&&u!=='deta'))];ADMS_TS=Date.now();LS.set('kz_click_adms',JSON.stringify({l:ADMS,ts:ADMS_TS}));await signPub(LTP+'adms',{list:ADMS,ts:ADMS_TS});return true}
+async function setWorld(o,label){if(!SIGK){toast('🔑 Для событий нужен ключ ADM');ADT='key';renderAdm();return}if(!NET.ok()){toast('Нет связи с онлайн-сервером');return}
+ WORLD=Object.assign({},WORLD,o,{ts:Date.now()});await signPub(LTP+'w',WORLD);admLog('🌍 '+label);toast('📡 '+label);SFX.gold();_lastChips='';renderAdm()}
+function admTabsHtml(){const T=[['me','🙋 Себе'],['pl','👥 Игроки'],['world','🌍 Мир'],['key',SIGK?'🔓 Ключ':'🔑 Ключ']];return T.map(([k,n])=>`<button data-adt="${k}" class="${ADT===k?'on':''}">${n}</button>`).join('')}
+function itemSelect(){return `<select class="ain" id="aiCat">${Object.entries(CATS).map(([k,c])=>`<option value="${k}">${c.ic} ${c.n}</option>`).join('')}</select><select class="ain" id="aiItem"></select>`}
+function fillItems(){const c=$('#aiCat'),s=$('#aiItem');if(!c||!s)return;s.innerHTML=CATS[c.value].L.filter(x=>x.price!==0||c.value==='skin').filter(x=>!x.ex||IS_DETA).map(x=>`<option value="${x.id}">${esc(x.n)}${x.hw?' 🎃':''}${x.ex?' ⭐':''}</option>`).join('')}
+function giveBox(who){return `<div class="adp pap"><h3>🎯 Выдать: ${who}</h3>
+ <div class="arow"><input class="ain" id="aC" placeholder="Морковка: 1000, 5M, 10Qa, 1e20"><button class="btn sm" data-adg="c">+ Дать</button>${admSel!=='*'?'<button class="btn sm ghost" data-adg="cset">= Установить</button>':''}</div>
+ <div class="arow"><input class="ain" id="aK" placeholder="Конфеты 🍬" inputmode="numeric"><button class="btn sm hw" data-adg="candy">+ Дать</button><input class="ain" id="aP" placeholder="Уровень пасса 0–30" inputmode="numeric" style="max-width:150px"><button class="btn sm hw" data-adg="pass">🎟</button></div>
+ <div class="arow">${itemSelect()}<button class="btn sm" data-adg="item">🎁 Выдать</button></div>
+ <div class="arow wrap"><button class="btn sm" data-adg="allitems">✨ Все вещи</button><button class="btn sm" data-adg="upmax">🔧 Все улучшения</button><button class="btn sm" data-adg="hpmax">🐰 Все помощники</button><button class="btn sm" data-adg="ach">🏆 Все награды</button><button class="btn sm" data-adg="everything">💎 ВСЁ сразу</button></div>
+ <div class="arow"><input class="ain" id="aM" placeholder="Сообщение игроку" maxlength="300"><button class="btn sm ghost" data-adg="msg">✉ Отправить</button></div></div>`}
+function renderAdm(){if(!isAdm()){show('menu');return}
+ $('#admKeyPill').textContent=SIGK?'🔓 ключ':(IS_DETA?'🔒 без ключа':'🛠 ADM');$('#admTabs').innerHTML=admTabsHtml();let h='';
+ if(ADT==='me'){const ch=(k,ic,n,d)=>`<div class="opt" data-adc="${k}"><div class="oi">${ic}</div><div class="ot"><b>${n}</b><small>${d}</small></div><div class="tg${cheat(k)?' on':''}"></div></div>`;
+  h+=`<div class="adp pap"><h3>🙋 ${esc(NICK)} @${esc(ACC)}${IS_DETA?' · главный админ':' · админ'}</h3><p class="mut">Тут всё выдаётся себе и работает без ключа.</p>
+  <div class="arow wrap"><span class="chip">🥕 ${fmt(S.c)}</span><span class="chip">+${fmt(clickBase())} за клик</span><span class="chip">🍬 ${S.hw.candy}</span><span class="chip">🎟 ${passLvl()}/30</span></div></div>`;
+  admSel=ACC;h+=giveBox('себе');
+  h+=`<div class="adp pap"><h3>🎮 Читы</h3>${ch('inf','⚡','Бесконечная бодрость','Котозаяц не устаёт и не уходит спать')}${ch('x100','💯','Клик ×100','Каждый тап в 100 раз сильнее')}${ch('crit','💥','Всегда крит','Каждый тап — крит')}${ch('auto','🤖','Автотап','10 тапов в секунду сами')}
+  <div class="arow wrap"><button class="btn sm" data-adx="gold">🥕 Золотая морковка</button><button class="btn sm hw" data-adx="pk">🎃 Тыква</button><button class="btn sm ghost" data-adx="sleep">😴 Уложить спать</button><button class="btn sm ghost" data-adx="wake">⏰ Разбудить</button><button class="btn sm ghost" data-adx="daily">🎁 Сбросить подарок дня</button><button class="btn sm red" data-adx="reset">🗑 Обнулить себя</button></div></div>`}
+ else if(ADT==='pl'){const L=admTargets();if(admSel===ACC&&ADT==='pl'&&!admSel)admSel=null;
+  h+=`<div class="adp pap"><h3>👥 Игроки · ${L.length}</h3><p class="mut">${NET.ok()?'🟢 онлайн-сервер на связи':'🟡 подключаюсь к онлайн-серверу…'} · игроки на других устройствах появляются, когда заходят в Kotozaic Clicker${SIGK?'':' · 🔑 без ключа можно выдавать только аккаунтам на этом устройстве'}</p>
+  <div class="plist"><div class="prow${admSel==='*'?' on':''}" data-adsel="*"><b>🌍 Все игроки</b><small>подарок получит каждый${SIGK?'':' · нужен ключ'}</small></div>
+  ${L.map(t=>{const ad=t.u==='deta'||ADMS.includes(t.u);return `<div class="prow${admSel===t.u?' on':''}" data-adsel="${esc(t.u)}"><b>${ad?'🛠 ':''}${esc(t.nick)} <span class="mut">@${esc(t.u)}</span>${t.u===ACC?' · это ты':''}</b><small>🥕 ${fmt(t.c||0)} · ${t.dev==='here'?'💻 это устройство':(t.dev==='phone'?'📱 ':'💻 ')+ago(t.last)}</small></div>`}).join('')}</div></div>`;
+  if(admSel){const t=L.find(x=>x.u===admSel);h+=giveBox(admSel==='*'?'всем игрокам':esc(t?t.nick+' @'+t.u:admSel));
+   if(IS_DETA&&admSel!=='*'&&admSel!=='deta'){const on=ADMS.includes(admSel);h+=`<div class="adp pap"><h3>🛠 Админка для @${esc(admSel)}</h3><p class="mut">${on?'У игрока есть ADM: он может выдавать вещи себе.':'Игрок получит свою ADM-панель (выдача себе и читы).'} Выдавать и забирать ADM можно только с ключом.</p><button class="btn ${on?'red':''}" data-adadm="${on?'off':'on'}">${on?'❌ Забрать ADM':'🛠 Выдать ADM'}</button></div>`}}}
+ else if(ADT==='world'){const act=worldMult()>1;
+  h+=`<div class="adp pap"><h3>🌍 События для всех</h3><p class="mut">Работают на всех устройствах. Нужен ключ.</p>${act?`<p><b>🔥 Сейчас: морковка ×${WORLD.xm}, ещё ${Math.ceil((WORLD.until-Date.now())/60000)} мин</b></p>`:''}
+  <div class="arow"><select class="ain" id="awX"><option value="2">×2</option><option value="3">×3</option><option value="5">×5</option><option value="10">×10</option></select><input class="ain" id="awM" value="30" inputmode="numeric" style="max-width:110px"><span class="mut">мин</span><button class="btn sm" data-adw="x">🔥 Запустить</button>${act?'<button class="btn sm red" data-adw="stop">⏹ Стоп</button>':''}</div>
+  <div class="arow"><input class="ain" id="awA" placeholder="Объявление всем игрокам" maxlength="300"><button class="btn sm" data-adw="ann">📢 Объявить</button></div></div>`;
+  if(IS_DETA)h+=`<div class="adp pap"><h3>🛠 Админы</h3>${ADMS.length?ADMS.map(u=>`<div class="arow"><span style="flex:1">🛠 @${esc(u)}</span><button class="btn sm red" data-adrm="${esc(u)}">Забрать</button></div>`).join(''):'<p class="mut">Кроме тебя админов нет. Выдать — во вкладке «Игроки».</p>'}
+  <div class="arow"><input class="ain" id="awU" placeholder="юзернейм" autocapitalize="none"><button class="btn sm" data-adw="addadm">🛠 Выдать ADM</button></div></div>`}
+ else{let L=[];try{L=JSON.parse(LS.get('kz_click_admlog'))||[]}catch(e){}
+  h+=`<div class="adp pap"><h3>${SIGK?'🔓 Ключ введён':'🔑 Ключ ADM'}</h3><p class="mut">Ключ — это пароль ADM, такой же, как в Kotazaic and Stars. Он нужен, чтобы выдавать вещи на другие устройства, запускать события и выдавать/забирать админку. Ключ не сохраняется — после перезапуска игры введи его снова.</p>
+  ${SIGK?'<button class="btn ghost" data-adk="lock">🔒 Забыть ключ</button>':IS_DETA?'<div class="arow"><input class="ain" id="akIn" type="password" placeholder="Пароль ADM" autocomplete="off"><button class="btn" data-adk="go">🔓 Открыть</button></div>':'<p><b>Ключ есть только у главного админа (deta).</b></p>'}</div>
+  <div class="adp pap"><h3>📜 Журнал</h3>${L.length?L.slice(0,40).map(x=>`<div class="mut" style="font-size:13px;padding:3px 0">${esc(x)}</div>`).join(''):'<p class="mut">Пусто</p>'}</div>`}
+ $('#admBody').innerHTML=h;fillItems()}
+$('#admTabs').addEventListener('click',e=>{const b=e.target.closest('[data-adt]');if(!b)return;ADT=b.dataset.adt;if(ADT==='pl'&&admSel===ACC)admSel=null;SFX.click();renderAdm()});
+$('#admBody').addEventListener('change',e=>{if(e.target.id==='aiCat')fillItems()});
+$('#admBody').addEventListener('click',async e=>{const q=s=>e.target.closest(s);let b;
+ if(b=q('[data-adsel]')){const u=b.dataset.adsel;admSel=admSel===u?null:u;renderAdm();return}
+ if(b=q('[data-adc]')){const k=b.dataset.adc;S.adm=S.adm||{};S.adm[k]=!S.adm[k];save();b.querySelector('.tg').classList.toggle('on',S.adm[k]);SFX.click();admLog((S.adm[k]?'✅ ':'⬜ ')+'чит '+k);return}
+ if(b=q('[data-adx]')){const x=b.dataset.adx;
+  if(x==='gold'||x==='pk'){show('game');setTimeout(()=>spawnFloater(x),400)}
+  else if(x==='sleep'){S.en=0;show('game');setTimeout(goSleep,500)}else if(x==='wake'){S.en=Math.max(S.en,wakeEn());if(SL.st==='sleep')wake();toast('⏰ Разбудил')}
+  else if(x==='daily'){S.daily.last='';save();toast('🎁 Подарок дня снова доступен')}
+  else if(x==='reset'){if(confirm('Обнулить свой прогресс в Kotozaic Clicker?')){const g=S.gid;S=fresh();S.gid=g;if(IS_DETA)for(const s of SKINS)if(s.ex)S.own.skin.push(s.id);save();toast('Обнулено');renderAdm()}}return}
+ if(b=q('[data-adg]')){const g=b.dataset.adg;let items=[],label='';
+  if(g==='c'||g==='cset'){const v=parseNum($('#aC').value);if(!isFinite(v)){toast('Не понял число. Примеры: 5000, 5M, 10Qa, 1e20');return}items=[{op:g,a:{n:v}}];label=(g==='c'?'+':'= ')+fmt(Math.abs(v))+' 🥕'}
+  else if(g==='candy'){const v=Math.round(+$('#aK').value);if(!v){toast('Сколько конфет?');return}items=[{op:'candy',a:{n:v}}];label=v+' 🍬'}
+  else if(g==='pass'){const v=clamp(Math.round(+$('#aP').value||0),0,30);items=[{op:'pass',a:{n:v}}];label='пасс ур. '+v}
+  else if(g==='item'){const t=$('#aiCat').value,id=$('#aiItem').value;if(!id)return;items=[{op:'item',a:{t,id}}];label=rewardName([t,id])}
+  else if(g==='msg'){const t=$('#aM').value.trim();if(!t)return;items=[{op:'msg',a:{t}}];label='сообщение'}
+  else if(g==='everything'){items=[{op:'allitems'},{op:'upmax'},{op:'hpmax'},{op:'ach'},{op:'pass',a:{n:30}}];label='ВСЁ'}
+  else{items=[{op:g}];label=({allitems:'все вещи',upmax:'все улучшения',hpmax:'все помощники',ach:'все награды'})[g]}
+  await admGive(items,label);if(SCREEN==='adm'&&ADT==='me')renderAdm();return}
+ if(b=q('[data-adadm]')){const on=b.dataset.adadm==='on',u=admSel;const ok=await setAdmins(on?ADMS.concat(u):ADMS.filter(x=>x!==u));if(ok){admLog((on?'🛠 выдан ADM @':'❌ снят ADM @')+u);toast(on?'🛠 @'+u+' теперь админ':'ADM у @'+u+' забран');SFX.gold();renderAdm()}return}
+ if(b=q('[data-adrm]')){const u=b.dataset.adrm;if(await setAdmins(ADMS.filter(x=>x!==u))){admLog('❌ снят ADM @'+u);renderAdm()}return}
+ if(b=q('[data-adw]')){const w=b.dataset.adw;
+  if(w==='x'){const x=+$('#awX').value,m=clamp(Math.round(+$('#awM').value||30),1,1440);await setWorld({xm:x,until:Date.now()+m*60000},'морковка ×'+x+' на '+m+' мин')}
+  else if(w==='stop')await setWorld({xm:1,until:0},'событие остановлено');
+  else if(w==='ann'){const t=$('#awA').value.trim();if(!t)return;await setWorld({ann:{id:Date.now().toString(36),t,ts:Date.now()}},'объявление: '+t)}
+  else if(w==='addadm'){const u=$('#awU').value.trim().toLowerCase().replace(/^@/,'');if(!/^[a-z0-9_]{3,16}$/.test(u)){toast('Неверный юзернейм');return}if(await setAdmins(ADMS.concat(u))){admLog('🛠 выдан ADM @'+u);toast('🛠 @'+u+' теперь админ');renderAdm()}}return}
+ if(b=q('[data-adk]')){if(b.dataset.adk==='lock'){SIGK=null;toast('🔒 Ключ забыт');renderAdm();return}
+  const pw=$('#akIn').value;if(!pw)return;b.disabled=true;b.textContent='⏳ Проверяю…';try{await admUnlock(pw);toast('🔓 Ключ принят!');SFX.gold();admLog('🔓 ключ введён')}catch(err){toast('❌ Неверный ключ');SFX.no()}renderAdm()}});
+$('#admBody').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='akIn'){const b=$('[data-adk=go]');b&&b.click()}});
+
 /* ---------- кнопки ---------- */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){const a=b.dataset.a;
  if(a==='play'){SFX.click();show('game')}
@@ -938,6 +1127,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b)
  else if(a==='set')setModal();
  else if(a==='help')helpModal();
  else if(a==='daily')claimDaily();
+ else if(a==='adm'){ADT=ADT||'me';show('adm')}
  else if(a==='menu')show('menu');
  else if(a==='back')show(PREV==='game'&&SCREEN!=='game'?'game':'menu');
  else if(a==='exit')exitToLauncher();
@@ -959,7 +1149,7 @@ $('#accBtn').addEventListener('click',()=>accModal());
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&SCREEN==='auth'&&!$('#modal').classList.contains('on')){doAuth(AREG)}
  if(e.key==='Escape'){if($('#modal').classList.contains('on'))closeModal();else if(SCREEN==='game'||SCREEN==='skins'||SCREEN==='hw')show(SCREEN==='game'?'menu':(PREV==='game'?'game':'menu'))}
  if(e.code==='Space'&&SCREEN==='game'&&!e.repeat){const r=$('#bun').getBoundingClientRect();tap({clientX:r.left+r.width/2+rnd(-r.width/4,r.width/4),clientY:r.top+r.height/2+rnd(-r.height/4,r.height/4)});e.preventDefault()}});
-window.kzBack=()=>{if($('#modal').classList.contains('on')){closeModal();return}if(SCREEN==='game'||SCREEN==='skins'||SCREEN==='hw'){show(SCREEN==='game'?'menu':(PREV==='game'?'game':'menu'));return}exitToLauncher()};
+window.kzBack=()=>{if($('#modal').classList.contains('on')){closeModal();return}if(SCREEN==='game'||SCREEN==='skins'||SCREEN==='hw'){show(SCREEN==='game'?'menu':(PREV==='game'?'game':'menu'));return}if(SCREEN==='adm'){show('menu');return}exitToLauncher()};
 
 /* ---------- старт ---------- */
 try{applySet()}catch(e){console.error(e)}loadAcc();

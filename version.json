@@ -79,14 +79,14 @@
   "date": "2026-10-27"
  },
  "click": {
-  "version": 3,
-  "label": "1.1.1",
-  "name": "Kotozaic Clicker 1.1.1: исправлен пустой экран при запуске у тех, кто играл в 1.0",
+  "version": 4,
+  "label": "1.2",
+  "name": "Kotozaic Clicker 1.2: ADM для deta — выдача себе и игрокам, события, выдача админки по ключу ADM",
   "title": "Kotozaic Clicker",
   "desc": "Тапай котозайца, собирай морковку и открывай скины",
   "icon": "🥕",
   "file": "click.html",
-  "sha256": "8ca2ed15a9ebfe22317b5a822bd900a4a0b56a28646434342d634ad32724ec13",
+  "sha256": "2c590352e2a711286289a6e1378625ce25e133e81f9888a53bfe698e0de333ae",
   "date": "2026-10-27"
  }
 }
