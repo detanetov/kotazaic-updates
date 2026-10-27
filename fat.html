@@ -166,6 +166,7 @@ body.cutting #hud,body.cutting #nav,body.cutting #sheet{visibility:hidden}
 <div id="nav">
  <button class="btn" data-tab="food"><span class="e">🍖</span>Еда<span class="dot" id="dFood">!</span></button>
  <button class="btn" data-tab="help"><span class="e">👵</span>Помощники<span class="dot" id="dHelp">!</span></button>
+ <button class="btn" data-tab="up"><span class="e">⬆</span>Улучшения<span class="dot" id="dUp">!</span></button>
  <button class="btn" data-tab="reb" id="nReb"><span class="e">🌀</span>Перерождение<span class="dot" id="dReb">!</span></button>
  <button class="btn" data-tab="sp"><span class="e">🐾</span>Виды<span class="dot" id="dSp">!</span></button>
  <button class="btn" data-tab="ward"><span class="e">👒</span>Гардероб</button>
@@ -190,7 +191,7 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
 const TAU=Math.PI*2,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,rnd=(a,b)=>a+Math.random()*(b-a),pick=a=>a[Math.floor(Math.random()*a.length)];
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const GAME_VER='1.2';
+const GAME_VER='1.3';
 /* ---------- числа ---------- */
 const SUF=['','тыс','млн','млрд','трлн','квдрлн','квинтлн','секстлн','септлн','октлн','нонлн','децлн'];
 function fmt(n,dec){if(!isFinite(n))return'∞';n=Math.max(0,n);
@@ -270,7 +271,7 @@ const accOf=(s,id)=>ACCS.find(a=>a.s===s&&a.id===id);
 
 /* ---------- сохранение ---------- */
 function defSave(){return{coins:0,cal:0,R:0,sp:'grey',spOwn:['grey'],food:FOODS.map(()=>0),help:HELPERS.map(()=>0),eq:{hat:'none',eyes:'none',ex:'none',neck:'none',aura:'none',bg:'field'},own:[],
- tot:{coins:0,cal:0,taps:0,reb:0,spent:0,time:0,full:0,crit:0,gold:0},maxStage:1,maxCoins:0,ap:40,apT:0,stars:0,up:{},ach:{},intro:false,gid:'',seen:{},adm:{},t:0,
+ tot:{coins:0,cal:0,taps:0,reb:0,spent:0,time:0,full:0,crit:0,gold:0},maxStage:1,maxCoins:0,ap:40,apT:0,stars:0,up:{},cu:{},ach:{},intro:false,gid:'',seen:{},adm:{},t:0,
  set:{talk:1,snd:1,mus:1,vol:70,mvol:50,vib:1,parts:100,fly:1,pops:1,nums:'short',hold:1,shake:1,video:1,ask:1,hideTop:0,ui:100,q:'hi',fps:0,buy:1,offl:1}}}
 function loadSave(){let o=null;try{o=JSON.parse(LS.get(KEYU))}catch(e){}const d=defSave();o=Object.assign(d,o||{});
  o.set=Object.assign(defSave().set,o.set||{});o.eq=Object.assign(defSave().eq,o.eq||{});o.tot=Object.assign(defSave().tot,o.tot||{});
@@ -278,7 +279,7 @@ function loadSave(){let o=null;try{o=JSON.parse(LS.get(KEYU))}catch(e){}const d=
  if(!Array.isArray(o.spOwn))o.spOwn=['grey'];if(!o.spOwn.includes('grey'))o.spOwn.unshift('grey');
  for(const s of SPECIES)if(o.R>=s.r&&!o.spOwn.includes(s.id))o.spOwn.push(s.id);
  if(!o.spOwn.includes(o.sp))o.sp='grey';if(!Array.isArray(o.own))o.own=[];
- for(const k of ['seen','adm','up','ach'])if(!o[k]||typeof o[k]!=='object')o[k]={};
+ for(const k of ['seen','adm','up','cu','ach'])if(!o[k]||typeof o[k]!=='object')o[k]={};
  o.coins=+o.coins||0;o.cal=+o.cal||0;o.R=Math.max(0,o.R|0);
  if(!o.gid)o.gid='f'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);return o}
 let S=loadSave();
@@ -296,21 +297,28 @@ const UPG=[['belly','🫃','Большой живот','+10 к аппетиту'
  .map(u=>({id:u[0],e:u[1],n:u[2],d:u[3],max:u[4],base:u[5]}));
 const upL=id=>(S&&S.up&&S.up[id])|0;
 const upCost=u=>u.base+upL(u.id)*(u.base+1);
-const apMax=()=>40+10*upL('belly'),apLock=()=>15-upL('digest');
+/* улучшения за монеты (обнуляются при перерождении) */
+const CUPG=[['cd','⏱','Быстрое переваривание','Сытость короче на 0,5 с',16,400],['belly','🫃','Растянутый живот','+5 к аппетиту',20,250],['regen','🍽','Быстрый голод','Аппетит восстанавливается на 10% быстрее',20,300],
+ ['crit','💥','Острые зубки','+1% шанс крита',15,600],['critx','💢','Мощный укус','Крит сильнее на ×1',5,5000],['coin','🪙','Мурчание','+10% монет',25,500],['cal','🍖','Жирный соус','+10% калорий',25,500],
+ ['help','👵','Премия помощникам','+10% к помощникам',25,1500],['luck','🍩','Запах пончиков','Золотые пончики прилетают на 5% чаще',10,2000],['frz','🔥','Долгая лихорадка','Лихорадка от пончика длится на 2 с дольше',10,3000]]
+ .map(u=>({id:u[0],e:u[1],n:u[2],d:u[3],max:u[4],base:u[5]}));
+const cuL=id=>(S&&S.cu&&S.cu[id])|0;
+const cuCost=u=>Math.ceil(u.base*Math.pow(1.55,cuL(u.id))*Math.pow(1.3,S.R)/10)*10;
+const apMax=()=>40+10*upL('belly')+5*cuL('belly'),apLock=()=>Math.max(3,15-upL('digest')-0.5*cuL('cd')),apRegen=()=>1+0.1*cuL('regen');
 let BUFF={frz:0,bott:0};
 const frzMul=()=>BUFF.frz>Date.now()?7:1;
 const apOff=()=>cheat('nofull')||BUFF.bott>Date.now()||document.body.classList.contains('cover');
 const apLocked=()=>!apOff()&&S.apT>Date.now();
 function apTick(dt){if(apOff()){S.ap=apMax();S.apT=0;return}
  if(S.apT){if(Date.now()>=S.apT){S.apT=0;S.ap=apMax();apReady()}else S.ap=apMax()*(1-(S.apT-Date.now())/(apLock()*1000))}
- else S.ap=Math.min(apMax(),(+S.ap||0)+apMax()/apLock()*dt)}
+ else S.ap=Math.min(apMax(),(+S.ap||0)+apMax()/apLock()*apRegen()*dt)}
 let WORLD={x2:0,ann:null,ts:0};
 const worldX2=()=>WORLD.x2>Date.now()?2:1;
-function mCoin(){return(1+0.25*S.R)*(1+0.15*upL('teeth'))*frzMul()*(1+spBonus('c')/100)*worldX2()*(cheat('x10c')?10:1)}
-function mCal(){return(1+spBonus('k')/100)*(1+0.15*upL('food'))*(cheat('x10k')?10:1)}
+function mCoin(){return(1+0.25*S.R)*(1+0.15*upL('teeth'))*(1+0.1*cuL('coin'))*frzMul()*(1+spBonus('c')/100)*worldX2()*(cheat('x10c')?10:1)}
+function mCal(){return(1+spBonus('k')/100)*(1+0.15*upL('food'))*(1+0.1*cuL('cal'))*(cheat('x10k')?10:1)}
 function tapCal(){let c=1;for(let i=0;i<FOODS.length;i++)c+=S.food[i]*FOODS[i].cal;return c*mCal()}
 function baseTapCal(){let c=1;for(let i=0;i<FOODS.length;i++)c+=S.food[i]*FOODS[i].cal;return c}
-function autoRate(){let r=0;for(let i=0;i<HELPERS.length;i++)r+=S.help[i]*HELPERS[i].rate;return r*(1+spBonus('a')/100)*(1+0.15*upL('lazy'))+(cheat('auto')?20:0)}
+function autoRate(){let r=0;for(let i=0;i<HELPERS.length;i++)r+=S.help[i]*HELPERS[i].rate;return r*(1+spBonus('a')/100)*(1+0.15*upL('lazy'))*(1+0.1*cuL('help'))+(cheat('auto')?20:0)}
 function coinTap(){return(1+0.12*(STAGE-1))*(1+Math.pow(baseTapCal(),0.6)*0.25)*mCoin()}
 function canReb(){return(STAGE>=100&&S.coins>=rebCost(S.R))||cheat('freereb')}
 function bestFood(){let b=0;for(let i=0;i<FOODS.length;i++)if(S.food[i]>0)b=i;return FOODS[b]}
@@ -550,11 +558,11 @@ function tap(px,py,auto){
  if(!auto&&!apOff()){if(apLocked()){const n=performance.now();if(n-fullPopT>700){fullPopT=n;POPS.push({x:px,y:py-8,vy:-60,life:1,t:'😴 Наелся! Ещё '+Math.ceil((S.apT-Date.now())/1000)+' с',c:'#bfe6ff'});tone(300,.08,'sine',.03)}return}
   S.ap=Math.max(0,S.ap-1);if(S.ap<=0){S.apT=Date.now()+apLock()*1000;S.tot.full++;say('full');HOLD=null;SFX.burp();BANNER={t:'😴 Котозайц наелся!',s:'Подожди '+apLock()+' секунд, пока он снова проголодается',life:3};vib(40)}}
  let tc=tapCal(),cc=coinTap(),crit=false;
- if(!auto&&Math.random()<critChance()){crit=true;tc*=5;cc*=5;S.tot.crit++}
+ if(!auto&&Math.random()<critChance()){crit=true;tc*=critMul();cc*=critMul();S.tot.crit++}
  const was=STAGE;if(STAGE<100){S.cal+=tc;S.tot.cal+=tc}S.coins+=cc;S.tot.coins+=cc;S.tot.taps++;if(S.coins>S.maxCoins)S.maxCoins=S.coins;calcStage();
  if(!auto){AN.sqv-=0.9;AN.chomp=1;AN.happy=0.25;SFX.chomp();if(S.set.vib&&Math.random()<.35)vib(8);
   if(S.set.fly&&V)spawnFood(px,py,true);
-  if(crit){POPS.push({x:px,y:py-40,vy:-70,life:1.1,t:'💥 КРИТ ×5!',c:'#ff9a3d',big:1});AN.shake=Math.max(AN.shake,.18);tone(1046,.08,'square',.04);tone(1568,.12,'square',.035,0,.06);say('crit');burstAt(px,py,14)}
+  if(crit){POPS.push({x:px,y:py-40,vy:-70,life:1.1,t:'💥 КРИТ ×'+critMul()+'!',c:'#ff9a3d',big:1});AN.shake=Math.max(AN.shake,.18);tone(1046,.08,'square',.04);tone(1568,.12,'square',.035,0,.06);say('crit');burstAt(px,py,14)}
   else if(Math.random()<.03)say('tap');
   if(S.set.pops){POPS.push({x:px+rnd(-40,40),y:py-8+rnd(-10,10),vy:-90,life:.9,t:(STAGE<100||was<100?'+'+fmt(tc,1)+' 🍖  ':'')+'+'+fmt(cc,1),coin:1,c:'#fff'})}
   for(let i=0;i<Math.round(4*S.set.parts/100);i++)PARTS.push({x:px,y:py,vx:rnd(-160,160),vy:rnd(-240,-60),life:rnd(.4,.8),c:pick(['#ffd84a','#ff9a3d','#fff3c4']),r:rnd(2,4)})}
@@ -627,7 +635,7 @@ function hud(){$('#hCoins').textContent='🪙 '+fmt(S.coins);const ar=autoRate()
  $('#hSt').textContent='Стадия '+STAGE+(STAGE<100?' / 100':'');$('#hTitle').textContent='· '+stTitle(STAGE);$('#hKg').textContent='⚖ '+kgOf(STAGE,FRAC).toFixed(1).replace('.',',')+' кг'+(S.R?' · 🌀 '+S.R:'');
  const mx=STAGE>=100;$('#hBarW').classList.toggle('max',mx);$('#hBar').style.width=(mx?Math.min(100,S.coins/rebCost(S.R)*100):FRAC*100)+'%';
  $('#hBarT').textContent=mx?(S.coins>=rebCost(S.R)?'🌀 Можно переродиться!':'Для перерождения: '+fmt(S.coins)+' / '+fmt(rebCost(S.R))+' 🪙'):'до стадии '+(STAGE+1)+': '+fmt(need(STAGE+1,S.R)-S.cal)+' 🍖';
- apHud();renderNav();if(TAB&&(TAB==='food'||TAB==='help'||TAB==='reb'))softTab()}
+ apHud();renderNav();if(TAB&&(TAB==='food'||TAB==='help'||TAB==='reb'||TAB==='up'))softTab()}
 function apHud(){const w=$('#hApW');if(!w)return;const off=apOff();w.style.display=off?'none':'';if(off)return;const L=apLocked();w.classList.toggle('lock',L);$('#hAp').style.width=(S.ap/apMax()*100)+'%';
  $('#hApT').textContent=L?'😴 Наелся — ещё '+Math.ceil((S.apT-Date.now())/1000)+' с':'🍽 Аппетит: '+Math.ceil(S.ap)+' / '+apMax()}
 function apReady(){tone(880,.1,'triangle',.05);tone(1175,.12,'triangle',.05,0,.1);POPS.push({x:V?V.cx:W/2,y:V?V.gy-V.U*1.3:H/2,vy:-50,life:1.4,t:'🍽 Снова голоден!',c:'#ffe066',big:1})}
@@ -636,7 +644,7 @@ function renderNav(){const af=FOODS.some((f,i)=>S.coins>=foodCost(i,S.food[i])&&
  const ns=SPECIES.some(s=>S.spOwn.includes(s.id)&&!S.seen['sp_'+s.id]&&s.id!=='grey');$('#dSp').classList.toggle('on',ns&&TAB!=='sp');
  $('#nAdm').style.display=IS_ADM?'':'none';$$('#nav [data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===TAB))}
 /* ---------- вкладки ---------- */
-const TABN={food:'🍖 Еда',help:'👵 Помощники',reb:'🌀 Перерождение',sp:'🐾 Виды котозайцев',ward:'👒 Гардероб',top:'🏆 Топ обжор',set:'⚙ Настройки',ach:'🏅 Достижения',adm:'🛠 ADM-панель'};
+const TABN={food:'🍖 Еда',help:'👵 Помощники',reb:'🌀 Перерождение',sp:'🐾 Виды котозайцев',ward:'👒 Гардероб',top:'🏆 Топ обжор',set:'⚙ Настройки',ach:'🏅 Достижения',up:'⬆ Улучшения',adm:'🛠 ADM-панель'};
 let WSLOT='hat',SETT='game',BUYN=1;
 function openTab(t){if(t==='adm'&&!IS_ADM)return;if(TAB===t){closeTab();return}TAB=t;SFX.open();$('#sheet').classList.add('on');$('#sheet').classList.toggle('xl',t==='adm');document.body.classList.add('sheet');$('#shT').textContent=TABN[t];renderTab();renderNav();$('#sheet .sb').scrollTop=0;if(t==='top')netPresence()}
 function closeTab(){if(!TAB)return;TAB=null;SFX.close();$('#sheet').classList.remove('on');document.body.classList.remove('sheet');renderNav()}
@@ -648,8 +656,9 @@ function renderTab(){const b=$('#shB');if(!TAB)return;
  if(TAB==='top'){b.innerHTML=topHtml();drawThumbs()}
  if(TAB==='set')b.innerHTML=setHtml();
  if(TAB==='ach')b.innerHTML=achHtml();
+ if(TAB==='up')b.innerHTML=upTabHtml();
  if(TAB==='adm')renderAdm()}
-function softTab(){if(TAB==='reb'){const e=$('#rebLive'),h=rebLive();if(e&&e._h!==h){e.innerHTML=h;e._h=h}const b=$('#rebBtn');if(b){const ok=canReb();b.disabled=!ok;b.classList.toggle('pink',ok)}return}
+function softTab(){if(TAB==='up'){upSoft();return}if(TAB==='reb'){const e=$('#rebLive'),h=rebLive();if(e&&e._h!==h){e.innerHTML=h;e._h=h}const b=$('#rebBtn');if(b){const ok=canReb();b.disabled=!ok;b.classList.toggle('pink',ok)}return}
  const L=TAB==='food'?FOODS:HELPERS,cf=TAB==='food'?foodCost:helpCost,lv=TAB==='food'?S.food:S.help;
  L.forEach((x,i)=>{const b=document.querySelector(`[data-buy="${TAB}"][data-i="${i}"]`);if(!b)return;const[n,c]=buyInfo(cf,i,lv[i]);b.classList.toggle('nope',S.coins<c||n<1)});
  const ex=$('#shopExtra');if(ex)ex.innerHTML=shopHead(TAB)}
@@ -673,7 +682,7 @@ function rebHtml(){const R=S.R,ns=nextSp(),un=SPECIES.find(s=>s.r===R+1);return`
  <div class="note p" style="margin-top:10px;text-align:left">Когда котозайц станет <b>максимально жирным</b> и ты накопишь монеты — можно переродиться. Он проглотит вселенную 🌌, станет снова худым, и всё начнётся сначала: еда, помощники, монеты и вес обнулятся. Зато перерождение даёт деньги на старт и <b>+25% монет навсегда</b>, а иногда — новый вид котозайца!</div>
  <div id="rebLive">${rebLive()}</div><div class="mbtn"><button class="btn big ${canReb()?'pink':''}" data-a="reb" id="rebBtn" ${canReb()?'':'disabled'}>🌀 Переродиться</button></div>
  <h4>Награда за перерождение №${R+1}</h4><div class="rew"><span>🪙 +${fmt(rebStart(R+1))} на старте</span><span>💰 +25% монет навсегда</span><span>⭐ +${rebStars(R+1)} звёзд</span>${un?`<span>🐾 новый вид: ${esc(un.n)}</span>`:''}${ACCS.filter(a=>a.reb===R+1).map(a=>`<span>🎁 ${esc(a.n)}</span>`).join('')}</div>
- ${ns?`<div class="mut">Следующий новый вид — «${esc(ns.n)}» на ${ns.r}-м перерождении</div>`:'<div class="mut">Ты открыл все виды котозайцев! 👑</div>'}</div>`+upgHtml()}
+ ${ns?`<div class="mut">Следующий новый вид — «${esc(ns.n)}» на ${ns.r}-м перерождении</div>`:'<div class="mut">Ты открыл все виды котозайцев! 👑</div>'}<div class="mbtn"><button class="btn vio" data-tab="up">⬆ Потратить ⭐ ${S.stars} в «Улучшениях»</button></div></div>`}
 function askReb(){if(!canReb())return;if(!S.set.ask){doReb();return}
  const un=SPECIES.find(s=>s.r===S.R+1);modal(`<h3>🌀 Переродиться?</h3><p>Котозайц станет снова худым. Еда, помощники и монеты обнулятся.</p><div class="rw"><span>🪙 +${fmt(rebStart(S.R+1))} на старте</span><span>💰 +25% монет навсегда</span><span>⭐ +${rebStars(S.R+1)}</span>${un?`<span>🐾 ${esc(un.n)}</span>`:''}</div><div class="mbtn"><button class="btn big pink" data-a="rebgo">🌀 Да, переродиться!</button><button class="btn white" data-a="mclose">Ещё рано</button></div>`)}
 const CUT={on:false,url:null,done:null,tm:0};
@@ -681,7 +690,7 @@ function vidUrl(){if(CUT.url)return CUT.url;try{const t=$('#rebVid').innerHTML.t
 function doReb(){if(!canReb()||CUT.on||PRE)return;closeModal();closeTab();save();
  const prevR=S.R,newR=S.R+1,un=SPECIES.find(s=>s.r===newR);
  CUT.on=true;CUT.done=()=>{ // всё сначала, за чёрным экраном
-  const start=rebStart(newR);S.R=newR;S.tot.reb++;S.coins=start;S.cal=0;S.food=FOODS.map(()=>0);S.help=HELPERS.map(()=>0);STAGE=1;FRAC=0;AN.f=0;FLY.length=0;PARTS.length=0;POPS.length=0;autoAcc=0;
+  const start=rebStart(newR);S.R=newR;S.tot.reb++;S.coins=start;S.cal=0;S.food=FOODS.map(()=>0);S.help=HELPERS.map(()=>0);S.cu={};STAGE=1;FRAC=0;AN.f=0;FLY.length=0;PARTS.length=0;POPS.length=0;autoAcc=0;
   const got=[];for(const s of SPECIES)if(S.R>=s.r&&!S.spOwn.includes(s.id)){S.spOwn.push(s.id);got.push('🐾 Новый вид: '+s.n)}
   for(const a of ACCS)if(a.reb&&S.R>=a.reb&&!S.own.includes(a.s+':'+a.id)){S.own.push(a.s+':'+a.id);got.push('🎁 '+a.n)}
   if(un)S.sp=un.id;calcStage();save();netPresence();hud();
@@ -728,7 +737,7 @@ function wearOrBuy(id){const a=ACCS.find(x=>x.s===WSLOT&&x.id===id);
 function buyAcc(id){const a=ACCS.find(x=>x.s===WSLOT&&x.id===id);if(!a||S.coins<a.p)return;S.coins-=a.p;S.tot.spent+=a.p;S.own.push(a.s+':'+a.id);S.eq[WSLOT]=a.id;SFX.buy();closeModal();toast('✨ '+a.n+' — твоё!');save();renderTab();hud();netPresence()}
 
 /* ================= 1.2: криты, золотые пончики, реплики, достижения, улучшения вселенной ================= */
-const critChance=()=>0.03+0.02*upL('crit');
+const critChance=()=>0.03+0.02*upL('crit')+0.01*cuL('crit'),critMul=()=>5+cuL('critx');
 function burstAt(x,y,n){n=Math.round(n*S.set.parts/100);for(let i=0;i<n;i++){const a=rnd(0,TAU),v=rnd(100,320);PARTS.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-80,life:rnd(.4,.9),c:pick(['#ffd84a','#ff9a3d','#fff3c4','#ff6fa8']),r:rnd(2,5),star:Math.random()<.4})}}
 /* ---------- реплики котозайца ---------- */
 const LINES={hungry:['Я так голоден…','Покорми меня!','Одни косточки…','Хочу есть!','Где моя морковка?'],tap:['Ням!','Ещё!','Вкуснятина!','Мур-р-р','Можно добавки?','Ам-ам!','Обожаю еду!'],
@@ -743,11 +752,11 @@ function drawSay(c){if(!SAY||!V)return;const g=catGeom(V.U,AN.f),a=clamp(Math.mi
  c.fillStyle=INK;c.textAlign='left';c.textBaseline='middle';c.fillText(SAY.t,x+fs*0.6,y+h/2);c.restore()}
 /* ---------- золотые пончики ---------- */
 let GOLD=null,goldT=rnd(25,45);
-function goldEvery(){return rnd(45,85)*(1-0.06*upL('luck'))}
+function goldEvery(){return rnd(45,85)*(1-0.06*upL('luck'))*(1-0.05*cuL('luck'))}
 function spawnGold(){if(!V)return;const fromL=Math.random()<.5,y=rnd(V.y0+40,V.y0+(V.y1-V.y0)*0.55);GOLD={x:fromL?V.x0-40:V.x1+40,y,vx:(fromL?1:-1)*rnd(70,110),t:0,life:12,y0:y};tone(1568,.12,'sine',.04);tone(2093,.15,'sine',.035,0,.1)}
 function goldHit(x,y){if(!GOLD)return false;if(Math.hypot(x-GOLD.x,y-GOLD.y)>Math.max(46,V?V.U*0.16:46))return false;const gx=GOLD.x,gy=GOLD.y;GOLD=null;S.tot.gold++;goldT=goldEvery();burstAt(gx,gy,40);SFX.max();vib(30);say('gold');
  const r=Math.random();let txt;
- if(r<.38){BUFF.frz=Date.now()+20000;txt='🔥 Обжорная лихорадка! Монеты ×7 на 20 с'}
+ if(r<.38){const fd=20+2*cuL('frz');BUFF.frz=Date.now()+fd*1000;txt='🔥 Обжорная лихорадка! Монеты ×7 на '+fd+' с'}
  else if(r<.68){const v=Math.max(lastRate*90,coinTap()*60);S.coins+=v;S.tot.coins+=v;txt='💰 Клад: +'+fmt(v)+' монет'}
  else if(r<.9){BUFF.bott=Date.now()+30000;S.apT=0;S.ap=apMax();txt='♾ Бездонный живот: 30 с без сытости'}
  else{S.stars++;txt='⭐ +1 звезда вселенной!'}
@@ -805,6 +814,16 @@ const ACH=[
 function achCheck(){let got=0;for(const a of ACH){if(S.ach[a.id])continue;if(a.v()>=a.goal){S.ach[a.id]=Date.now();S.stars+=a.st;got++;toast('🏅 '+a.n+' · +'+a.st+' ⭐');SFX.stage()}}if(got){save();if(TAB==='ach')renderTab()}const d=$('#dAch');if(d)d.classList.toggle('on',false)}
 function achHtml(){const n=ACH.filter(a=>S.ach[a.id]).length;return`<div class="note g">🏅 Выполнено ${n} из ${ACH.length}. За каждое достижение дают ⭐ звёзды вселенной.</div>`+ACH.map(a=>{const ok=!!S.ach[a.id],v=Math.min(a.goal,a.v());return`<div class="it ${ok?'':'lock'}" style="${ok?'background:#fff8d6':''}"><div class="ic">${a.e}</div><div class="tx"><b>${a.n}${ok?' ✅':''}</b><small>${a.d}</small>${ok?'':`<div class="bar" style="height:10px;border-width:2px;margin-top:4px"><i style="width:${v/a.goal*100}%"></i></div><small>${fmt(v)} / ${fmt(a.goal)}</small>`}</div><span class="pill">+${a.st} ⭐</span></div>`}).join('')}
 document.addEventListener('click',e=>{const u=e.target.closest('[data-upg]');if(u)buyUpg(u.dataset.upg)});
+/* ---------- вкладка «Улучшения» ---------- */
+let UPT='coin';
+function upTabHtml(){const lk=apLock(),mx=apMax();let h=`<div class="note g">🍽 Аппетит: <b>${mx}</b> укусов · сытость <b>${String(lk).replace('.',',')} с</b> · восстановление ×${String(apRegen().toFixed(1)).replace('.',',')} · крит <b>${Math.round(critChance()*100)}%</b> ×${critMul()}</div>
+ <div class="tabs"><button class="btn sm ${UPT==='coin'?'':'white'}" data-upt="coin">🪙 За монеты</button><button class="btn sm ${UPT==='star'?'':'white'}" data-upt="star">⭐ Вселенная · ${S.stars}</button></div>`;
+ if(UPT==='coin')h+=`<div class="note">Улучшения за монеты действуют до следующего перерождения — потом их нужно покупать заново.</div>`+CUPG.map(u=>{const l=cuL(u.id),m=l>=u.max,c=cuCost(u);return`<div class="it"><div class="ic">${u.e}</div><div class="tx"><b>${u.n}<span class="lv">${l}/${u.max}</span></b><small>${u.d}</small></div><button class="btn org ${m||S.coins<c?'nope':''}" data-cupg="${u.id}" ${m?'disabled':''}>${m?'МАКС':fmt(c)+' 🪙'}<small>${m?'':'улучшить'}</small></button></div>`}).join('');
+ else h+=upgHtml();return h}
+function upSoft(){$$('[data-cupg]').forEach(b=>{const u=CUPG.find(x=>x.id===b.dataset.cupg);if(u&&cuL(u.id)<u.max)b.classList.toggle('nope',S.coins<cuCost(u))})}
+function buyCu(id){const u=CUPG.find(x=>x.id===id);if(!u)return;const l=cuL(id),c=cuCost(u);if(l>=u.max)return;if(S.coins<c){SFX.low();toast('Не хватает монет — нужно '+fmt(c)+' 🪙');return}S.coins-=c;S.tot.spent+=c;S.cu[id]=l+1;SFX.buy();toast(u.e+' '+u.n+' — уровень '+(l+1));save();renderTab();hud()}
+document.addEventListener('click',e=>{const u=e.target.closest('[data-cupg]');if(u){buyCu(u.dataset.cupg);return}const t=e.target.closest('[data-upt]');if(t){UPT=t.dataset.upt;SFX.click();renderTab()}});
+{const _rn=renderNav;renderNav=function(){_rn();const d=$('#dUp');if(d)d.classList.toggle('on',TAB!=='up'&&(CUPG.some(u=>cuL(u.id)<u.max&&S.coins>=cuCost(u))||UPG.some(u=>upL(u.id)<u.max&&S.stars>=upCost(u))))}}
 
 /* ---------- настройки ---------- */
 const sw=(k,n,d)=>`<div class="opt"><div class="tx">${n}${d?`<small>${d}</small>`:''}</div><div class="sw${S.set[k]?' on':''}" data-set="${k}"></div></div>`;
