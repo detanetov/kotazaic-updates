@@ -1,10 +1,10 @@
 {
- "version": 98,
+ "version": 99,
  "label": "1.4.0",
- "name": "1.4.0: лимитированная коллекция «Котики» — 50 милых кошачьих вещей",
+ "name": "1.4.0: новый фон «Соня» в Кастомизации",
  "file": "game.html",
- "sha256": "c91998bd2ee8d6e6a1a71d62770165fadaf22039c78ffb3ddbfa14b9012b2685",
- "date": "2026-10-24",
+ "sha256": "407674e52057e93e17184eae1aeedccc2b89d76a4803addc8864665c97bd8de1",
+ "date": "2026-10-27",
  "exe": {
   "version": 6,
   "file": "KotazaicAndStars.exe",
