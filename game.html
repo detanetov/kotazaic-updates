@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
-window.KZ_VER=99;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
+window.KZ_VER=100;window.KZ_VNAME='1.4.0';window.KZ_UPD='https://raw.githubusercontent.com/detanetov/kotazaic-updates/main/';
 window.KZ_MODE=(location.protocol==='http:'&&location.hostname==='127.0.0.1')?'exe':(window.KZAndroid&&KZAndroid.isLauncher)?'launcher':(window.KZAndroid&&typeof KZAndroid.saveUpdate==='function')?'android':'web';
 (function(){try{var L=localStorage;var o0=L.getItem('kz_upd_base');if(o0)window.KZ_UPD=o0;if(window.KZ_MODE!=='web'){['kz_upd_html','kz_upd_prev_html','kz_upd_ver','kz_upd_prev_ver','kz_upd_try','kz_upd_ok'].forEach(function(k){L.removeItem(k)});
     if(window.KZ_MODE==='android'){var at=+L.getItem('kz_a_try')||0,ao=+L.getItem('kz_a_ok')||0;if(at>window.KZ_VER&&ao!==at)L.setItem('kz_upd_bad',at)}return}var v=+L.getItem('kz_upd_ver')||0;var o=L.getItem('kz_upd_base');if(o)window.KZ_UPD=o;
@@ -3065,7 +3065,6 @@ document.addEventListener('click',e=>{if(!S)return;const g=e.target.closest('[da
   if(g.id==='trCancel'){trCancel();return}});
 /* ---------------- Mail ---------------- */
 const CHANGELOG=[
- {v:99,l:'1.4.0',items:['💖 Новый фон «Соня»: большая надпись «Соня» на розово-фиолетовом ночном небе с луной, звёздами и сердечками','🎨 Выбирается в Settings → Кастомизация → Фоны; на телефоне надпись подстраивается под экран и не обрезается']},
  {v:98,l:'1.4.0',items:['🐱 Лимитированная коллекция «Котики» — 50 милых кошачьих вещей до 30 ноября: 5 скинов (рыжий, чёрный, сиамский, трёхцветная, розовый котёнок)','🎀 Кошачьи ушки, наушники-ушки, котик на голове, корона котов, кошачий хвостик, котёнок на руках и в рюкзаке, крылья-лапки, тапочки-лапки','🐾 Следы лапок, сердечки «мяу», рыбки и клубочки, ауры: кошачьи глаза, хоровод котиков, мурчание; игрушки с бонусами: удочка-дразнилка, клубок, мышка, лазерная указка','👑 4 полных костюма и вкладка «🐱 Котики» в Cosmetics']},
  {v:97,l:'1.4.0',items:['🐰 Голос котозайца: фразы звучат мультяшным голосом самого котозайца — по слогам, как у зверят в мультиках, одинаково на ПК и телефоне. У друзей в пати голос чуть другой','🗣 В Settings → Фразы можно выбрать: голос котозайца, голос устройства или без голоса']},
  {v:96,l:'1.4.0',items:['💬 Фразы котозайца: колесо фраз на клавише C (или кнопка 💬 в углу) — котозаяц говорит фразу голосом и показывает облачко','🐷 Фраза «1 свинья» и 11 милых фраз: «Привет, я котозаяц!», «Обнимашки!», «Морковку будешь?», «Мур-мур~» и другие','⏳ Фразу можно сказать раз в 5 секунд — в меню, в забеге одному и вместе в пати: друзья видят облачко над твоим котозайцем','⚙ В Settings новая вкладка «💬 Фразы»: клавиша, голос, звук, какие фразы в колесе']},
@@ -8210,48 +8209,6 @@ function ctLeft(){const ms=CT_END-Date.now();if(ms<=0)return'завершила�
 (function(){const st=document.createElement('style');st.textContent=`#ctBanner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px;padding:10px 14px;border:2.5px solid var(--ink);border-radius:16px;background:linear-gradient(135deg,#ffe0ec,#fff1dc 60%,#ffd9c0);box-shadow:0 3px 0 var(--ink);color:#5a2a3a}#ctBanner i{font-style:normal;font-size:26px}#ctBanner b{font-size:16px;color:#e8356d}#ctBanner span{flex:1;min-width:220px;font-weight:700;font-size:13px;opacity:.85}#ctBanner .btn{background:#ff9cc0!important;color:#1d1838!important}html.gl #ctBanner{background:linear-gradient(135deg,rgba(255,160,200,.25),rgba(255,220,180,.08))!important;color:#ffe0ec;border:1px solid rgba(255,180,210,.5)!important}`;document.head.appendChild(st)})();
 {const iv=setInterval(()=>{try{if(!S||user==='__guest')return;clearInterval(iv);if(!ctEnded()&&!S.stats.ctSeen){S.stats.ctSeen=1;persist();setTimeout(()=>toast('🐱 В Cosmetics — коллекция «Котики»: '+Object.keys(CT).length+' милых лимитированных вещей до 30 ноября'),9500)}}catch(e){}},3000)}
 HELP.push(['🐱 Коллекция «Котики»',Object.keys(CT).length+' лимитированных милых кошачьих вещей: кошачьи ушки, котик на голове, хвостик, котёнок в рюкзаке, тапочки-лапки, следы лапок, хоровод котиков и другие, плюс 4 полных костюма. Каждую вещь можно купить один раз и только до 30 ноября. В Cosmetics — вкладка «🐱 Котики».']);
-
-/* ================= Фон «Соня»: надпись на заднем плане (Кастомизация → Фоны) ================= */
-function sonyaDraw(c,w,h){
-  /* seeded random so the picture does not jump between redraws */
-  let sd=7;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;
-  const g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,'#2a1660');g.addColorStop(.55,'#6a2f8f');g.addColorStop(1,'#e46fa6');c.fillStyle=g;c.fillRect(0,0,w,h);
-  const m=Math.min(w,h);
-  /* soft glow behind the name */
-  const gl=c.createRadialGradient(w/2,h*.5,0,w/2,h*.5,Math.max(w,h)*.6);gl.addColorStop(0,'rgba(255,190,235,.45)');gl.addColorStop(1,'rgba(255,190,235,0)');c.fillStyle=gl;c.fillRect(0,0,w,h);
-  /* stars */
-  for(let i=0;i<Math.round(w*h/2600);i++){const x=rnd()*w,y=rnd()*h*.85,r=rnd()*1.6+.4;c.globalAlpha=.35+rnd()*.65;c.fillStyle=rnd()<.15?'#ffe9a0':'#fff';c.beginPath();c.arc(x,y,r,0,7);c.fill()}c.globalAlpha=1;
-  /* moon */
-  const mx=w*.84,my=h*.16,mr=m*.075;const mg=c.createRadialGradient(mx-mr*.3,my-mr*.3,0,mx,my,mr);mg.addColorStop(0,'#fffbe6');mg.addColorStop(1,'#f5d36a');c.fillStyle='rgba(255,233,160,.18)';c.beginPath();c.arc(mx,my,mr*1.8,0,7);c.fill();c.fillStyle=mg;c.beginPath();c.arc(mx,my,mr,0,7);c.fill();
-  /* clouds at the bottom */
-  c.fillStyle='rgba(255,230,245,.55)';for(let i=0;i<9;i++){const x=w*(i/8),y=h*(.93+rnd()*.05),r=m*(.09+rnd()*.06);c.beginPath();c.arc(x,y,r,0,7);c.arc(x+r*.9,y+r*.15,r*.8,0,7);c.arc(x-r*.9,y+r*.2,r*.7,0,7);c.fill()}
-  /* little hearts and sparkles */
-  const heart=(x,y,s,col)=>{c.fillStyle=col;c.beginPath();c.moveTo(x,y+s*.3);c.bezierCurveTo(x,y,x-s*.5,y,x-s*.5,y+s*.3);c.bezierCurveTo(x-s*.5,y+s*.6,x,y+s*.8,x,y+s);c.bezierCurveTo(x,y+s*.8,x+s*.5,y+s*.6,x+s*.5,y+s*.3);c.bezierCurveTo(x+s*.5,y,x,y,x,y+s*.3);c.fill()};
-  const spark=(x,y,s)=>{c.fillStyle='#fff6c8';c.beginPath();c.moveTo(x,y-s);c.quadraticCurveTo(x,y,x+s,y);c.quadraticCurveTo(x,y,x,y+s);c.quadraticCurveTo(x,y,x-s,y);c.quadraticCurveTo(x,y,x,y-s);c.fill()};
-  for(let i=0;i<14;i++){const a=rnd()*Math.PI*2,d=.32+rnd()*.25,x=w/2+Math.cos(a)*w*d*.9,y=h*.5+Math.sin(a)*h*d*.8,s=m*(.025+rnd()*.03);c.globalAlpha=.55+rnd()*.4;if(i%2)heart(x,y-s/2,s,rnd()<.5?'#ff8cc6':'#ffc1de');else spark(x,y,s*.6)}c.globalAlpha=1;
-  /* the name */
-  const txt='Соня';let fs=Math.min(h*.34,w*.3);c.textAlign='center';c.textBaseline='middle';
-  const font=s=>'900 '+s+'px "Nunito KZ","Nunito","Segoe UI",system-ui,sans-serif';c.font=font(fs);
-  const tw=c.measureText(txt).width;if(tw>w*.86){fs*=w*.86/tw;c.font=font(fs)}
-  const x=w/2,y=h*.5;c.lineJoin='round';
-  c.shadowColor='rgba(255,120,200,.85)';c.shadowBlur=fs*.35;c.fillStyle='#fff';c.fillText(txt,x,y);c.shadowBlur=0;
-  c.lineWidth=fs*.13;c.strokeStyle='#2a1238';c.strokeText(txt,x,y+fs*.05);
-  c.lineWidth=fs*.13;c.strokeStyle='#2a1238';c.strokeText(txt,x,y);
-  const tg=c.createLinearGradient(0,y-fs*.5,0,y+fs*.5);tg.addColorStop(0,'#fff3fa');tg.addColorStop(.5,'#ffb3d9');tg.addColorStop(1,'#ff6fae');c.fillStyle=tg;c.fillText(txt,x,y);
-  /* shine on the letters */
-  c.save();c.globalAlpha=.35;c.fillStyle='#fff';c.beginPath();c.rect(0,y-fs*.48,w,fs*.22);c.clip();c.fillText(txt,x,y);c.restore();
-  /* a tiny crown over the name */
-  const cw=fs*.42,cx=x+Math.min(c.measureText(txt).width*.36,w*.33),cy=y-fs*.62;c.fillStyle='#ffd34d';c.strokeStyle='#2a1238';c.lineWidth=fs*.035;c.beginPath();c.moveTo(cx-cw/2,cy+cw*.35);c.lineTo(cx-cw/2,cy-cw*.15);c.lineTo(cx-cw/4,cy+cw*.08);c.lineTo(cx,cy-cw*.28);c.lineTo(cx+cw/4,cy+cw*.08);c.lineTo(cx+cw/2,cy-cw*.15);c.lineTo(cx+cw/2,cy+cw*.35);c.closePath();c.fill();c.stroke()}
-BG_CLASSIC.sonya={n:'💖 Соня',d:sonyaDraw};
-/* the name always fits the screen: on a phone the picture is drawn for the phone, not cropped from a wide one */
-{const _bc=bgCanvas;bgCanvas=function(id){if(id!=='sonya')return _bc(id);
-  const cw=Math.max(200,Math.round(typeof W!=='undefined'&&W>0?W:1280)),ch=Math.max(200,Math.round(typeof H!=='undefined'&&H>0?H:720)),k='sonya_'+cw+'x'+ch;
-  if(bgCache[k])return bgCache[k];for(const q in bgCache)if(q.startsWith('sonya_'))delete bgCache[q];
-  const c=document.createElement('canvas');c.width=cw;c.height=ch;sonyaDraw(c.getContext('2d'),cw,ch);return bgCache[k]=c}}
-{const _bt=bgThumb;bgThumb=function(id){if(id!=='sonya')return _bt(id);if(bgCache.t_sonya)return bgCache.t_sonya;
-  const c=document.createElement('canvas');c.width=384;c.height=216;sonyaDraw(c.getContext('2d'),384,216);return bgCache.t_sonya=c.toDataURL('image/jpeg',.85)}}
-/* redraw once the cartoon font has loaded */
-try{document.fonts&&document.fonts.load('900 100px "Nunito KZ"','Соня').then(()=>{for(const q in bgCache)if(q.startsWith('sonya_')||q==='t_sonya')delete bgCache[q];try{if($('#bgGrid')&&$('#bgGrid').offsetParent)renderBg()}catch(e){}}).catch(()=>{})}catch(e){}
 
 resize();
 const sess=lsGet('kz_session');
