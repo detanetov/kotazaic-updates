@@ -385,7 +385,7 @@ html.nofx .deco{display:none}
 <div id="toast"></div>
 <script>
 'use strict';
-const GAME_VER='1.1',GAME_BUILD=2;
+const GAME_VER='1.1.1',GAME_BUILD=3;
 const CFG=window.CLICK||{};
 const A=window.KZAndroid||null;
 const EMB=!!(CFG.embedded||window.parent!==window);
@@ -553,7 +553,9 @@ let S;
 function keyU(){return'kz_click_u_'+(ACC||'__guest')}
 function fresh(){return{v:1,c:0,tot:0,clicks:0,crits:0,gc:0,bestCombo:0,up:{},hp:{},en:100,skin:'base',naps:0,own:{skin:['base'],hat:['none'],frame:['classic'],bg:['accent'],fx:['carrots'],pet:['none'],clk:['squish'],bed:['classic']},eq:{hat:'none',frame:'classic',bg:'accent',fx:'carrots',pet:'none',clk:'squish',bed:'classic'},ach:[],daily:{last:'',streak:0},hw:{candy:0,earned:0,claimed:[],q:null,boost:0,pk:0},buffs:{},last:Date.now()}}
 function loadSave(){let s=null;try{s=JSON.parse(LS.get(keyU()))}catch(e){}const f=fresh();if(!s)return f;
- s=Object.assign(f,s);s.own=Object.assign(f.own,s.own||{});s.eq=Object.assign(fresh().eq,s.eq||{});s.hw=Object.assign(fresh().hw,s.hw||{});s.daily=Object.assign(fresh().daily,s.daily||{});s.buffs=s.buffs||{};return s}
+ const d=fresh();s=Object.assign(f,s);s.own=Object.assign(d.own,s.own||{});for(const k in d.own)if(!Array.isArray(s.own[k]))s.own[k]=d.own[k].slice();
+ s.eq=Object.assign(d.eq,s.eq||{});for(const k in d.eq)if(!findIt(k,s.eq[k]))s.eq[k]=fresh().eq[k];if(!SKM[s.skin])s.skin='base';
+ s.hw=Object.assign(d.hw,s.hw||{});if(!Array.isArray(s.hw.claimed))s.hw.claimed=[];s.daily=Object.assign(d.daily,s.daily||{});s.buffs=s.buffs||{};s.up=s.up||{};s.hp=s.hp||{};if(!Array.isArray(s.ach))s.ach=[];if(!isFinite(s.en))s.en=100;if(!isFinite(s.c))s.c=0;return s}
 function save(){if(!S)return;S.last=Date.now();LS.set(keyU(),JSON.stringify(S));
  try{const db=accDB();if(ACC&&db[ACC]){db[ACC].click={c:S.c,tot:S.tot,clicks:S.clicks,pv:clickBase(),skin:S.skin,t:Date.now()};saveDB(db)}}catch(e){}
  LS.set('kz_click',JSON.stringify({owner:ACC||'__guest',c:S.c,pv:clickBase(),clicks:S.clicks,skin:S.skin}))}
@@ -960,8 +962,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&SCREEN==='auth'&&!$(
 window.kzBack=()=>{if($('#modal').classList.contains('on')){closeModal();return}if(SCREEN==='game'||SCREEN==='skins'||SCREEN==='hw'){show(SCREEN==='game'?'menu':(PREV==='game'?'game':'menu'));return}exitToLauncher()};
 
 /* ---------- старт ---------- */
-applySet();loadAcc();
-if(LS.get('kz_session')){switchAcc();show('menu')}else{show('auth')}
+try{applySet()}catch(e){console.error(e)}loadAcc();
+try{if(LS.get('kz_session')){switchAcc();show('menu')}else{show('auth')}}
+catch(e){console.error(e);if(!S)S=loadSave();try{show('menu')}catch(e2){console.error(e2);try{show('game')}catch(e3){$('#auth').classList.add('on');renderAuth()}}}
 requestAnimationFrame(loop);
 
 </script>
