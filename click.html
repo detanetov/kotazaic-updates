@@ -322,6 +322,22 @@ html.light .gi.hwi{background:linear-gradient(160deg,#ffdcbe,#f3e2ff);color:var(
 @keyframes sech{to{filter:hue-rotate(360deg)}}
 .gi.secret small{color:#d6ccf5}
 .tag.sec{background:linear-gradient(90deg,#ff5e7a,#ffe14a,#5fe08a,#4ad6ff,#c79bff);color:#1d1636}
+/* trades */
+#trPop{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top));transform:translate(-50%,-180%);z-index:85;display:flex;align-items:center;gap:10px;padding:10px 12px;width:min(440px,calc(100vw - 24px));transition:transform .35s cubic-bezier(.2,1.3,.4,1)}
+#trPop.on{transform:translate(-50%,0)}#trPop b{display:block}#trPop small{color:var(--mut);font-weight:800}
+.trpi{width:44px;height:44px;border-radius:14px;background:#8fe3ff;border:2.5px solid var(--ink);display:grid;place-items:center;font-size:24px;flex:none;animation:wig 1.6s infinite}
+.trcols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.trside{background:var(--paper2);border:2.5px solid var(--ink);border-radius:18px;padding:10px;min-width:0;transition:.2s}
+.trside.ready{background:color-mix(in srgb,#7fe08a 25%,var(--paper2));border-color:#3fa34d}
+.trh{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}.trh .chip{height:28px;font-size:12px}
+.trg{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.tri{position:relative}.trc{position:absolute;left:-6px;top:-6px;font-size:12px;width:22px;height:22px;border-radius:8px;background:var(--paper);border:2px solid var(--ink);display:grid;place-items:center}
+.trx{position:absolute;right:-6px;top:-6px;width:20px;height:20px;border-radius:50%;background:#ff8a8a;border:2px solid var(--ink);font-size:11px;font-weight:1000;display:grid;place-items:center;color:#3a0a0a}
+.tri:disabled{opacity:.55}
+.trcar{margin-top:8px;font-weight:1000;background:var(--gold);color:#2a1a00;border:2.5px solid var(--ink);border-radius:12px;padding:4px 10px;display:inline-block}
+.trok{margin-top:8px;font-weight:1000;color:#5fe08a}
+.pc .btn{flex:none}
+@media (max-width:620px){.trcols{grid-template-columns:1fr}}
 /* ADM */
 .adp{padding:14px;margin-bottom:14px}.adp h3{margin:0 0 8px;font-size:19px;font-weight:1000}.adp p{margin:4px 0 10px;font-size:13.5px}
 .arow{display:flex;gap:8px;align-items:center;margin:8px 0}.arow.wrap{flex-wrap:wrap}
@@ -389,6 +405,7 @@ html.nofx .deco{display:none}
    <button class="mi play" data-a="play"><span class="pl">▶</span>ИГРАТЬ</button>
    <button class="mi" data-a="skins"><span class="ic">🎨</span><span class="tx"><b>Скины и аксессуары</b><small id="mSkinN"></small></span><span class="ar">›</span></button>
    <button class="mi hw" data-a="hw"><span class="badge" id="hwBadge">СОБЫТИЕ</span><span class="ic">🎃</span><span class="tx"><b>Halloween</b><small id="mHwT"></small></span><span class="ar">›</span></button>
+   <button class="mi" data-a="trade" style="background:linear-gradient(120deg,#8fe3ff,#7ab8ff);color:#0a1f3a"><span class="badge" id="trBadge" style="display:none">ЗАПРОС</span><span class="ic" style="background:#fff">🤝</span><span class="tx"><b>Trades</b><small id="mTradeN" style="color:#1d3a5a">Обмен скинами и вещами</small></span><span class="ar">›</span></button>
    <button class="mi" data-a="adm" id="mAdm" style="display:none;background:linear-gradient(120deg,#ffd75e,#ff9f1a);color:#2a1a00"><span class="ic" style="background:#2a1f4d">🛠</span><span class="tx"><b>ADM</b><small style="color:#5a3a00">Выдача вещей, события, админы</small></span><span class="ar">›</span></button>
    <button class="mi" data-a="set"><span class="ic">⚙️</span><span class="tx"><b>Settings</b><small>Тема, цвет, звук, аккаунт</small></span><span class="ar">›</span></button>
   </div>
@@ -436,11 +453,17 @@ html.nofx .deco{display:none}
  <div class="scroll" style="flex:1"><div style="max-width:1000px;margin:0 auto;padding:0 14px 30px"><div class="tabs" id="admTabs"></div><div id="admBody"></div></div></div>
 </section>
 
+<section class="scr" id="trade">
+ <div class="hdr"><button class="rbtn" data-a="back">←</button><h1>🤝 Trades</h1><span class="pill" id="trNet"></span></div>
+ <div class="scroll" style="flex:1"><div style="max-width:1000px;margin:0 auto;padding:0 14px 30px" id="trBody"></div></div>
+</section>
+<div id="trPop" class="pap"></div>
+
 <div id="modal"><div id="mbox"></div></div>
 <div id="toast"></div>
 <script>
 'use strict';
-const GAME_VER='1.4.1',GAME_BUILD=11;
+const GAME_VER='1.5',GAME_BUILD=12;
 const CFG=window.CLICK||{};
 const A=window.KZAndroid||null;
 const EMB=!!(CFG.embedded||window.parent!==window);
@@ -697,7 +720,7 @@ function exitToLauncher(){save();try{if(document.fullscreenElement)document.exit
 let SCREEN='',PREV='menu';
 function show(id){if(id!=='game'){$$('.gold').forEach(e=>e.remove());goldEl=null}if(SCREEN&&SCREEN!==id&&id!=='game')PREV=SCREEN==='game'?'game':'menu';
  $$('.scr').forEach(s=>s.classList.toggle('on',s.id===id));SCREEN=id;Music.setMode(id==='hw'?'hw':'main');
- if(id==='adm'&&!isAdm())id='menu';if(id==='menu')renderMenu();if(id==='adm')renderAdm();if(id==='game')enterGame();if(id==='skins')renderSkins();if(id==='hw')renderHw();if(id==='auth')renderAuth()}
+ if(id==='adm'&&!isAdm())id='menu';if(id==='menu')renderMenu();if(id==='adm')renderAdm();if(id==='trade')trOpen();if(id==='game')enterGame();if(id==='skins')renderSkins();if(id==='hw')renderHw();if(id==='auth')renderAuth()}
 
 /* ---------- ВХОД / РЕГИСТРАЦИЯ ---------- */
 let AREG=false;
@@ -1036,6 +1059,7 @@ setInterval(()=>netPresence(),60000);
 async function verifySigned(pl){const vk=await admVKp;if(!vk)return null;let m;try{m=JSON.parse(mqDec.decode(pl))}catch(e){return null}if(!m||typeof m.c!=='string'||typeof m.s!=='string')return null;
  let ok=false;try{ok=await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},vk,b64u8(m.s),mqEnc.encode(m.c))}catch(e){}if(!ok)return null;try{return JSON.parse(m.c)}catch(e){return null}}
 function netRecv(topic,pl){
+ if(S&&topic===LTP+'tr/'+S.gid){try{trRecv(JSON.parse(mqDec.decode(pl)))}catch(e){}return}
  if(topic.startsWith(LTP+'p/')){try{const o=JSON.parse(mqDec.decode(pl));if(o&&o.t==='kcl'&&o.gid&&o.u){PLAYERS[o.gid]=o;admSoon()}}catch(e){}return}
  if(topic===LTP+'w'){verifySigned(pl).then(c=>{if(c&&c.ts>=WORLD.ts){WORLD=Object.assign({xm:1,until:0,ann:null},c);worldApply();admSoon()}});return}
  if(topic===LTP+'adms'){verifySigned(pl).then(c=>{if(!c||!Array.isArray(c.list)||c.ts<ADMS_TS)return;const was=isAdm();ADMS=c.list.map(String);ADMS_TS=c.ts;LS.set('kz_click_adms',JSON.stringify({l:ADMS,ts:ADMS_TS}));
@@ -1065,7 +1089,7 @@ function giftApply(T,it){const a=it.a||{},n=+a.n||0;
  return null}
 function worldApply(){if(!S)return;S.seen=S.seen||{};if(WORLD.ann&&WORLD.ann.id&&!S.seen['a'+WORLD.ann.id]&&Date.now()-WORLD.ann.ts<3*864e5){S.seen['a'+WORLD.ann.id]=Date.now();save();PENDING.push('📢 '+WORLD.ann.t);showPending()}
  if(worldMult()>1)toast('🔥 Событие: морковка ×'+WORLD.xm+' ещё '+Math.ceil((WORLD.until-Date.now())/60000)+' мин!');_lastChips=''}
-function netStart(){if(!ACC||!S)return;NET.start();NET.sub(LTP+'in/'+S.gid);NET.sub(LTP+'in/all');NET.sub(LTP+'w');NET.sub(LTP+'adms');if(isAdm())NET.sub(LTP+'p/+');netPresence()}
+function netStart(){if(!ACC||!S)return;NET.start();NET.sub(LTP+'in/'+S.gid);NET.sub(LTP+'tr/'+S.gid);NET.sub(LTP+'in/all');NET.sub(LTP+'w');NET.sub(LTP+'adms');if(isAdm())NET.sub(LTP+'p/+');netPresence()}
 
 /* ---------- ADM ---------- */
 const cheat=k=>isAdm()&&S&&S.adm&&!!S.adm[k];
@@ -1186,6 +1210,82 @@ $('#admBody').addEventListener('click',async e=>{const q=s=>e.target.closest(s);
   const pw=$('#akIn').value;if(!pw)return;b.disabled=true;b.textContent='⏳ Проверяю…';try{await admUnlock(pw);toast('🔓 Ключ принят!');SFX.gold();admLog('🔓 ключ введён')}catch(err){toast('❌ Неверный ключ');SFX.no()}renderAdm()}});
 $('#admBody').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='akIn'){const b=$('[data-adk=go]');b&&b.click()}});
 
+/* ---------- TRADES: обмен скинами и аксессуарами между игроками ---------- */
+const TR={st:null,reqIn:{},reqOut:null,seen:new Set(),cat:'skin',hist:[]};
+const trOk=(t,it)=>it&&it.price!==0&&!it.ex&&!it.secret&&!(t==='skin'&&it.id==='base');
+function trVal1(t,id){const it=findIt(t,id);if(!it)return 0;return it.price||(it.hw?(t==='skin'?5e9:5e7):0)}
+function trSend(gid,m){Object.assign(m,{trade:1,from:S.gid,fu:ACC,fn:NICK,mid:Math.random().toString(36).slice(2)+Date.now().toString(36)});NET.pub(LTP+'tr/'+gid,m)}
+function trOnline(){const now=Date.now(),by={};for(const p of Object.values(PLAYERS)){if(p.gid===S.gid||p.u===ACC||now-p.last>150000)continue;if(!by[p.u]||p.last>by[p.u].last)by[p.u]=p}return Object.values(by).sort((a,b)=>String(a.nick).localeCompare(String(b.nick)))}
+const trEmpty=()=>({it:[],c:0});
+function trVal(o){let v=+o.c||0;for(const k of o.it){const[t,id]=k.split(':');v+=trVal1(t,id)}return v}
+function trCanGive(o){if((+o.c||0)>S.c)return false;for(const k of o.it){const[t,id]=k.split(':');if(!S.own[t]||!S.own[t].includes(id)||!trOk(t,findIt(t,id)))return false}return true}
+const trHash=(a,b)=>JSON.stringify([a,b]);
+function trStart(p,tid,host){TR.st={tid,peer:p.gid,pu:p.u,pn:p.nick,my:trEmpty(),their:trEmpty(),myReady:false,theirReady:false,myConf:false,theirConf:false,last:Date.now(),done:false};TR.reqOut=null;delete TR.reqIn[p.gid];trPop();show('trade');SFX.gold()}
+function trCancel(why,silent){const st=TR.st;if(!st)return;if(!silent)trSend(st.peer,{t:'tcancel',tid:st.tid});TR.st=null;toast(why||'Обмен отменён');trRender()}
+function trChanged(){const st=TR.st;st.myReady=st.myConf=st.theirConf=false;trSend(st.peer,{t:'toffer',tid:st.tid,offer:st.my});trRender()}
+function trApply(){const st=TR.st;if(!st||st.done)return;if(!trCanGive(st.my)){trCancel('⚠ У тебя уже нет части вещей — обмен отменён');return}st.done=true;
+ S.c=Math.max(0,S.c-(+st.my.c||0)+(+st.their.c||0));
+ for(const k of st.my.it){const[t,id]=k.split(':');S.own[t]=S.own[t].filter(x=>x!==id);if(t==='skin'&&S.skin===id)S.skin='base';else if(t!=='skin'&&S.eq[t]===id)S.eq[t]=fresh().eq[t]}
+ for(const k of st.their.it){const[t,id]=k.split(':');const it=CATS[t]&&findIt(t,id);if(trOk(t,it)&&!S.own[t].includes(id))S.own[t].push(id)}
+ S.trades=(S.trades|0)+1;TR.hist.unshift({t:Date.now(),with:st.pu,gave:st.my.it.length,got:st.their.it.length,gc:+st.my.c||0,rc:+st.their.c||0});TR.hist.length=Math.min(TR.hist.length,15);LS.set('kz_click_trh_'+ACC,JSON.stringify(TR.hist));
+ save();netPresence();SFX.gold();vib([30,40,30]);toast('🤝 Обмен с '+st.pn+' завершён!');const r=$('#trBody');if(r){const b=r.getBoundingClientRect();parts(b.left+b.width/2,b.top+120,16,['s'],true)}TR.st=null;trRender()}
+function trRecv(m){if(!S||!m||!m.trade||m.from===S.gid||!ACC)return;if(TR.seen.has(m.mid))return;TR.seen.add(m.mid);if(TR.seen.size>2000)TR.seen.clear();
+ const st=TR.st,p={gid:m.from,u:m.fu,nick:m.fn};
+ if(m.t==='treq'){if(st){trSend(m.from,{t:'tbusy'});return}TR.reqIn[m.from]={p,tid:m.tid,t:Date.now()};trPop();tone(880,.12,'triangle',.06);trRender();return}
+ if(m.t==='tbusy'){if(TR.reqOut&&TR.reqOut.gid===m.from){TR.reqOut=null;toast(m.fn+' сейчас занят другим обменом');trRender()}return}
+ if(m.t==='tdec'){if(TR.reqOut&&TR.reqOut.gid===m.from){TR.reqOut=null;toast('😕 '+m.fn+' отказался от обмена');trRender()}return}
+ if(m.t==='tacc'){if(TR.reqOut&&TR.reqOut.gid===m.from&&TR.reqOut.tid===m.tid)trStart(p,m.tid,true);return}
+ if(!st||st.tid!==m.tid||st.peer!==m.from)return;st.last=Date.now();
+ if(m.t==='toffer'){const o=m.offer||{};st.their={it:Array.isArray(o.it)?o.it.filter(k=>{const[t,id]=String(k).split(':');return trOk(t,CATS[t]&&findIt(t,id))}).slice(0,40):[],c:Math.max(0,+o.c||0)};st.theirReady=st.myReady=st.myConf=st.theirConf=false;trRender()}
+ if(m.t==='tready'){st.theirReady=!!m.on;if(!m.on)st.myConf=st.theirConf=false;trRender()}
+ if(m.t==='tconf'){if(m.h!==trHash(st.their,st.my)){trSend(st.peer,{t:'toffer',tid:st.tid,offer:st.my});return}st.theirConf=true;if(st.myConf)trApply();else trRender()}
+ if(m.t==='tcancel'){TR.st=null;toast('❌ '+st.pn+' отменил обмен');trRender()}}
+setInterval(()=>{if(!S||!ACC)return;const st=TR.st;if(st){trSend(st.peer,{t:'tping',tid:st.tid});if(Date.now()-st.last>45000)trCancel('⌛ Связь с '+st.pn+' пропала — обмен отменён',true)}
+ for(const g in TR.reqIn)if(Date.now()-TR.reqIn[g].t>60000){delete TR.reqIn[g];trPop()}
+ if(TR.reqOut&&Date.now()-TR.reqOut.t>60000){TR.reqOut=null;toast('⌛ Игрок не ответил на обмен');trRender()}
+ const n=Object.keys(TR.reqIn).length,e=$('#mTradeN');if(e)e.textContent=n?'📩 '+n+' '+plural(n,'запрос','запроса','запросов'):'Обмен скинами и вещами';const bd=$('#trBadge');if(bd)bd.style.display=n?'':'none'},5000);
+function trPop(){const el=$('#trPop'),ids=Object.keys(TR.reqIn);if(!ids.length||TR.st){el.classList.remove('on');return}const r=TR.reqIn[ids[0]];
+ el.innerHTML=`<div class="trpi">🤝</div><div style="flex:1;min-width:0"><b>${esc(r.p.nick)}</b><small>@${esc(r.p.u)} хочет обменяться</small></div><button class="btn sm green" data-tracc="${esc(r.p.gid)}">Принять</button><button class="btn sm ghost" data-trdec="${esc(r.p.gid)}">✕</button>`;el.classList.add('on')}
+function trItem(k,attr,extra){const[t,id]=k.split(':'),it=findIt(t,id);if(!it)return'';return `<button class="ic2 tri" ${attr||''}><div class="t">${itemThumb(t,it,54)}</div><small>${esc(it.n)}</small><span class="trc">${CATS[t].ic}</span>${extra||''}</button>`}
+function trSide(o,mine){if(!o.it.length&&!o.c)return `<p class="mut" style="text-align:center;padding:18px 6px">${mine?'Пусто — выбери вещи внизу 👇':'Пока ничего'}</p>`;return `<div class="trg">${o.it.map(k=>trItem(k,mine&&!TR.st.myConf?`data-trrm="${k}"`:'',mine?'<span class="trx">✕</span>':'')).join('')}</div>${o.c?`<div class="trcar">🥕 ${fmt(o.c)} морковок</div>`:''}`}
+function trOpen(){if(!ACC){$('#trBody').innerHTML='<div class="adp pap"><h3>🔑 Нужен аккаунт</h3><p class="mut">Обмен доступен только с аккаунтом, не гостем.</p><button class="btn" data-a="acc">Войти</button></div>';return}
+ NET.start();NET.sub(LTP+'p/+');netPresence();try{TR.hist=JSON.parse(LS.get('kz_click_trh_'+ACC))||[]}catch(e){TR.hist=[]}trRender()}
+function trRender(){if(SCREEN!=='trade'||!S||!ACC)return;$('#trNet').textContent=NET.ok()?'🟢 онлайн':'🟡 связь…';const st=TR.st;let h='';
+ if(!st){const inc=Object.values(TR.reqIn);
+  if(inc.length){h+=`<div class="adp pap"><h3>📩 Запросы на обмен</h3>${inc.map(r=>`<div class="arow"><span style="flex:1"><b>${esc(r.p.nick)}</b> <span class="mut">@${esc(r.p.u)}</span></span><button class="btn sm green" data-tracc="${esc(r.p.gid)}">Принять</button><button class="btn sm ghost" data-trdec="${esc(r.p.gid)}">Отказать</button></div>`).join('')}</div>`}
+  if(TR.reqOut)h+=`<div class="adp pap"><div class="arow"><span style="flex:1">⏳ Ждём ответа от <b>${esc(TR.reqOut.nick)}</b>…</span><button class="btn sm ghost" data-trundo="1">Отменить</button></div></div>`;
+  const on=trOnline();
+  h+=`<div class="adp pap"><h3>🟢 Игроки онлайн · ${on.length}</h3><p class="mut">Выбери игрока и предложи обмен: скины, аксессуары и морковка. Нельзя обменять стандартные, эксклюзивные и секретные вещи.</p>`;
+  h+=on.length?`<div class="pcs">${on.map(p=>{const lk=lookOf(p);return `<div class="pc"><div class="pa">${avatar({skin:lk.skin,eq:lk.eq,size:'58px'})}<i class="g"></i></div><div class="pt3"><b>${esc(p.nick||'?')}</b><small>@${esc(p.u)} · ${p.dev==='phone'?'📱':'💻'}</small><small>🐰 ${esc((SKM[p.skin]||SKINS[0]).n)}</small></div><button class="btn sm" data-trreq="${esc(p.gid)}" ${TR.reqOut?'disabled':''}>🤝</button></div>`}).join('')}</div>`:`<p class="mut" style="text-align:center;padding:16px">Сейчас никого нет в сети.<br>Обмен работает с игроками, у которых открыт Kotozaic Clicker (на ПК или телефоне).</p>`;
+  h+='</div>';
+  if(TR.hist.length)h+=`<div class="adp pap"><h3>📜 Мои обмены</h3>${TR.hist.map(x=>{const d=new Date(x.t);return `<div class="mut" style="font-size:13px;padding:3px 0">${d.toLocaleDateString('ru-RU')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} — с @${esc(x.with)}: отдал ${x.gave} ${plural(x.gave,'вещь','вещи','вещей')}${x.gc?' и '+fmt(x.gc)+' 🥕':''}, получил ${x.got}${x.rc?' и '+fmt(x.rc)+' 🥕':''}</div>`}).join('')}</div>`;
+  $('#trBody').innerHTML=h;return}
+ const mv=trVal(st.my),tv=trVal(st.their),both=st.myReady&&st.theirReady;
+ h+=`<div class="adp pap"><p class="mut" style="margin:0 0 10px">Обмен с <b>${esc(st.pn)}</b> @${esc(st.pu)}. Когда оба нажмут «Готов», появится «Подтвердить». Любое изменение сбрасывает готовность.</p>
+ <div class="trcols"><div class="trside${st.myReady?' ready':''}"><div class="trh"><b>📤 Ты отдаёшь</b><span class="chip">≈ ${fmt(mv)} 🥕</span></div>${trSide(st.my,true)}
+  <div class="arow"><span>🥕</span><input class="ain" id="trC" placeholder="Морковка: 5M, 10Qa" value="${st.my.c?fmt(st.my.c):''}" ${st.myConf?'disabled':''}><button class="btn sm ghost" data-trc="1" ${st.myConf?'disabled':''}>OK</button></div><small class="mut">есть ${fmt(S.c)}</small>${st.myReady?'<div class="trok">✅ Ты готов</div>':''}</div>
+ <div class="trside${st.theirReady?' ready':''}"><div class="trh"><b>📥 Ты получаешь</b><span class="chip">≈ ${fmt(tv)} 🥕</span></div>${trSide(st.their,false)}${st.theirReady?'<div class="trok">✅ '+esc(st.pn)+' готов</div>':'<small class="mut">⏳ '+esc(st.pn)+' ещё выбирает…</small>'}</div></div>
+ <div class="arow" style="justify-content:center;margin-top:12px">${both?`<button class="btn green" data-trconf="1" ${st.myConf?'disabled':''}>${st.myConf?'⏳ Ждём подтверждения…':'✅ Подтвердить обмен'}</button>`:`<button class="btn ${st.myReady?'ghost':'green'}" data-trready="1">${st.myReady?'↩ Не готов':'👍 Готов'}</button>`}<button class="btn red" data-trcancel="1">❌ Отменить</button></div>
+ ${tv&&mv&&tv<mv*.5?'<p style="text-align:center;color:#ff8a8a;font-weight:900">⚠ Ты отдаёшь намного больше, чем получаешь — проверь, что всё честно!</p>':''}</div>`;
+ const L=(CATS[TR.cat].L||[]).filter(it=>trOk(TR.cat,it)&&S.own[TR.cat].includes(it.id));
+ h+=`<div class="adp pap"><h3>🎒 Твои вещи для обмена</h3><div class="itabs">${Object.entries(CATS).map(([k,c])=>{const n=c.L.filter(it=>trOk(k,it)&&S.own[k].includes(it.id)).length;return `<button data-trcat="${k}" class="${TR.cat===k?'on':''}"><span>${c.ic}</span>${c.n} ${n}</button>`}).join('')}</div>
+ ${L.length?`<div class="igrid" style="max-height:none">${L.map(it=>{const k=TR.cat+':'+it.id,inn=st.my.it.includes(k);return trItem(k,inn||st.myConf?'disabled':`data-tradd="${k}"`,inn?'<span class="trx" style="background:#7fe08a">✓</span>':'')}).join('')}</div>`:'<p class="mut" style="text-align:center">В этом разделе нечего менять — стандартные, эксклюзивные и секретные вещи обменять нельзя.</p>'}</div>`;
+ $('#trBody').innerHTML=h}
+document.addEventListener('click',e=>{const q=s=>e.target.closest(s);let b;
+ if(b=q('[data-trreq]')){const p=Object.values(PLAYERS).find(x=>x.gid===b.dataset.trreq);if(!p||TR.reqOut||TR.st)return;if(!NET.ok()){toast('Нет связи с онлайн-сервером');return}const tid=Math.random().toString(36).slice(2,10);TR.reqOut={gid:p.gid,nick:p.nick,tid,t:Date.now()};trSend(p.gid,{t:'treq',tid});toast('📨 Запрос отправлен '+p.nick);trRender();return}
+ if(b=q('[data-tracc]')){const r=TR.reqIn[b.dataset.tracc];if(!r)return;if(!ACC){toast('Нужен аккаунт');return}trSend(r.p.gid,{t:'tacc',tid:r.tid});trStart(r.p,r.tid,false);return}
+ if(b=q('[data-trdec]')){const r=TR.reqIn[b.dataset.trdec];if(r){trSend(r.p.gid,{t:'tdec'});delete TR.reqIn[r.p.gid]}trPop();trRender();return}
+ if(q('[data-trundo]')){TR.reqOut=null;trRender();return}
+ const st=TR.st;if(!st)return;
+ if(b=q('[data-trcat]')){TR.cat=b.dataset.trcat;SFX.click();trRender();return}
+ if(b=q('[data-tradd]')){if(st.my.it.length>=30){toast('Максимум 30 вещей за обмен');return}st.my.it.push(b.dataset.tradd);SFX.click();trChanged();return}
+ if(b=q('[data-trrm]')){st.my.it=st.my.it.filter(k=>k!==b.dataset.trrm);SFX.click();trChanged();return}
+ if(q('[data-trc]')){const v=parseNum($('#trC').value||'0');const n=isFinite(v)?clamp(Math.floor(v),0,S.c):0;st.my.c=n;trChanged();return}
+ if(q('[data-trready]')){if(!st.myReady&&!trCanGive(st.my)){toast('У тебя нет части этих вещей или морковки');return}st.myReady=!st.myReady;if(!st.myReady)st.myConf=st.theirConf=false;trSend(st.peer,{t:'tready',tid:st.tid,on:st.myReady});SFX.click();trRender();return}
+ if(q('[data-trconf]')){if(!trCanGive(st.my)){trCancel('⚠ У тебя уже нет части вещей — обмен отменён');return}st.myConf=true;trSend(st.peer,{t:'tconf',tid:st.tid,h:trHash(st.my,st.their)});if(st.theirConf)trApply();else trRender();return}
+ if(q('[data-trcancel]')){trCancel();return}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='trC'){const b=$('[data-trc]');b&&b.click()}});
+
 /* ---------- кнопки ---------- */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){const a=b.dataset.a;
  if(a==='play'){SFX.click();show('game')}
@@ -1195,6 +1295,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b)
  else if(a==='help')helpModal();
  else if(a==='daily')claimDaily();
  else if(a==='adm'){ADT=ADT||'me';show('adm')}
+ else if(a==='trade')show('trade');
  else if(a==='menu')show('menu');
  else if(a==='back')show(PREV==='game'&&SCREEN!=='game'?'game':'menu');
  else if(a==='exit')exitToLauncher();
@@ -1216,7 +1317,7 @@ $('#accBtn').addEventListener('click',()=>accModal());
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&SCREEN==='auth'&&!$('#modal').classList.contains('on')){doAuth(AREG)}
  if(e.key==='Escape'){if($('#modal').classList.contains('on'))closeModal();else if(SCREEN==='game'||SCREEN==='skins'||SCREEN==='hw')show(SCREEN==='game'?'menu':(PREV==='game'?'game':'menu'))}
  if(e.code==='Space'&&SCREEN==='game'&&!e.repeat){const r=$('#bun').getBoundingClientRect();tap({clientX:r.left+r.width/2+rnd(-r.width/4,r.width/4),clientY:r.top+r.height/2+rnd(-r.height/4,r.height/4)});e.preventDefault()}});
-window.kzBack=()=>{if($('#modal').classList.contains('on')){closeModal();return}if(SCREEN==='game'||SCREEN==='skins'||SCREEN==='hw'){show(SCREEN==='game'?'menu':(PREV==='game'?'game':'menu'));return}if(SCREEN==='adm'){show('menu');return}exitToLauncher()};
+window.kzBack=()=>{if($('#modal').classList.contains('on')){closeModal();return}if(SCREEN==='game'||SCREEN==='skins'||SCREEN==='hw'){show(SCREEN==='game'?'menu':(PREV==='game'?'game':'menu'));return}if(SCREEN==='adm'||SCREEN==='trade'){show('menu');return}exitToLauncher()};
 
 /* ---------- старт ---------- */
 try{applySet()}catch(e){console.error(e)}loadAcc();

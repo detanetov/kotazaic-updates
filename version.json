@@ -79,14 +79,14 @@
   "date": "2026-10-27"
  },
  "click": {
-  "version": 10,
-  "label": "1.4.1",
-  "name": "Kotozaic Clicker 1.4.1: ADM — выбор предмета с предпросмотром на котозайце игрока, игроки с аватарами",
+  "version": 11,
+  "label": "1.5",
+  "name": "Kotozaic Clicker 1.5: Trades — обмен скинами, аксессуарами и морковкой с игроками онлайн",
   "title": "Kotozaic Clicker",
   "desc": "Тапай котозайца, собирай морковку и открывай скины",
   "icon": "🥕",
   "file": "click.html",
-  "sha256": "5b764168c5b20f93ec9482c0566c2a93b8dcdabe55f6df46280a6ba78fb3af0a",
+  "sha256": "e17ad1825eb6af32209d5e6d701aef8f2d105f678f6c7cb21e42a6d589f4779d",
   "date": "2026-10-27"
  }
 }
