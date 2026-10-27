@@ -33,11 +33,11 @@
   "date": "2026-10-22"
  },
  "mlauncher": {
-  "version": 6,
-  "label": "1.5",
-  "name": "Kotazaic Launcher 1.5: новая игра «Котозайцы-обжоры»",
+  "version": 7,
+  "label": "1.6",
+  "name": "Kotazaic Launcher 1.6: новая игра Kotozaic Clicker",
   "file": "mlauncher.html",
-  "sha256": "c2f363cff9c667a88233243fb809b7cf293efb19d333fac8bc2bf2a120a91e37",
+  "sha256": "f6a60fc3a914d370873c79c482ce7a13e1e085aa3f0f804ccdd19cd3664dd88c",
   "date": "2026-10-27",
   "apk": {
    "label": "1.8",
@@ -55,9 +55,9 @@
   "date": "2026-10-26"
  },
  "pcext": {
-  "version": 2,
+  "version": 3,
   "file": "pcext.js",
-  "sha256": "6511c252b14b172640eb811d10561a6dd97e7c92c3c4941b85e467aba7710398",
+  "sha256": "aaaa91d2bcfb42df94321dcc21294dbce6afcc6b65bff8888699492055bffa11",
   "date": "2026-10-27"
  },
  "ilauncher": {
@@ -76,6 +76,17 @@
   "name": "Котозайцы-обжоры 1.0.3: по 100 вещей в каждом разделе гардероба (600 всего), фильтры и сортировка, 8 разделов настроек — тёмная тема, шрифты, мелодии, звуки, данные",
   "file": "fat.html",
   "sha256": "6bd378cda3903fda0fd1fac310642bd50f6bfe194158b6ac92867bb086fd2de0",
+  "date": "2026-10-27"
+ },
+ "click": {
+  "version": 1,
+  "label": "1.0",
+  "name": "Kotozaic Clicker 1.0: вход и регистрация, меню, кликер с улучшениями и помощниками, скины и аксессуары, Хэллоуин-пасс",
+  "title": "Kotozaic Clicker",
+  "desc": "Тапай котозайца, собирай морковку и открывай скины",
+  "icon": "🥕",
+  "file": "click.html",
+  "sha256": "9bc24d00ab7a6a58caa9357dd4acb7aed83fe10fa6897ec0d5c7f2c9a6ae792c",
   "date": "2026-10-27"
  }
 }

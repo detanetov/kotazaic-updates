@@ -6,7 +6,7 @@
 
 Не удаляйте и не переименовывайте `game.html` и `version.json`.
 
-Игры лаунчера: `kotoio.html` (koto.io), `lazy.html` (Ленивая жизнь), `space.html` (Котозайцы в космосе), `fat.html` (Котозайцы-обжоры). `pcext.js` — дополнения для ПК-лаунчера, он скачивает их при запуске.
+Игры лаунчера: `kotoio.html` (koto.io), `lazy.html` (Ленивая жизнь), `space.html` (Котозайцы в космосе), `fat.html` (Котозайцы-обжоры), `click.html` (Kotozaic Clicker). `pcext.js` — дополнения для ПК-лаунчера, он скачивает их при запуске.
 
 
 Лаунчер для iPhone/iPad: открой в Safari https://raw.githack.com/detanetov/kotazaic-updates/main/ilauncher.html и добавь на экран «Домой» (или установи профиль `KotazaicLauncher.mobileconfig`).
